@@ -54,6 +54,15 @@
           </el-breadcrumb>
         </div>
         <div class="header-right">
+          <div class="header-actions">
+            <el-button link @click="toggleTheme" :title="isDark ? '切换浅色模式' : '切换深色模式'">
+              <el-icon :size="20"><component :is="isDark ? 'Sunny' : 'Moon'" /></el-icon>
+            </el-button>
+            <el-button link @click="refreshPage" title="刷新">
+              <el-icon :size="20"><Refresh /></el-icon>
+            </el-button>
+            <NoticeIcon />
+          </div>
           <el-dropdown @command="handleCommand">
             <span class="user-info">
               <el-avatar :size="32" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
@@ -86,6 +95,7 @@
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import NoticeIcon from '@/components/NoticeIcon.vue'
 // 导入 Element Plus 图标
 import {
   HomeFilled,
@@ -107,13 +117,17 @@ import {
   DataLine,
   EditPen,
   Expand,
-  Fold
+  Fold,
+  Moon,
+  Sunny,
+  Refresh
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
 
 const isCollapse = ref(false)
+const isDark = ref(false)
 
 // 菜单路由（直接定义，避免访问 router.options.routes）
 const menuRoutes = [
@@ -222,6 +236,16 @@ const toggleCollapse = () => {
   isCollapse.value = !isCollapse.value
 }
 
+const toggleTheme = () => {
+  isDark.value = !isDark.value
+  document.documentElement.classList.toggle('dark', isDark.value)
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+}
+
+const refreshPage = () => {
+  location.reload()
+}
+
 const handleCommand = (command) => {
   if (command === 'logout') {
     ElMessageBox.confirm('确定要退出登录吗？', '提示', {
@@ -240,6 +264,14 @@ const handleCommand = (command) => {
     ElMessage.info('系统设置功能开发中')
   }
 }
+onMounted(() => {
+  // 检查保存的主题
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme === 'dark') {
+    isDark.value = true
+    document.documentElement.classList.add('dark')
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -327,5 +359,32 @@ const handleCommand = (command) => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+.header-actions {
+    display: flex;
+    gap: 10px;
+    margin-right: 15px;
+  }
+}
+
+/* 暗黑模式 */
+html.dark {
+  .el-card {
+    background-color: #1d1e1f;
+    border-color: #434343;
+  }
+  
+  .el-main {
+    background-color: #141414;
+  }
+  
+  .sidebar {
+    background-color: #141414 !important;
+  }
+  
+  .header {
+    background-color: #1d1e1f !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
 }
 </style>
