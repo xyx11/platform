@@ -4,7 +4,7 @@
       <!-- 搜索栏 -->
       <el-form :model="queryParams" inline>
         <el-form-item label="任务名称">
-          <el-input v-model="queryParams.jobName" placeholder="请输入任务名称" clearable />
+          <el-input v-model="queryParams.jobName" placeholder="请输入任务名称" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item label="任务组名">
           <el-select v-model="queryParams.jobGroup" placeholder="请选择任务组名" clearable>
@@ -28,10 +28,15 @@
 
     <el-card class="table-card">
       <template #header>
-        <el-button type="primary" icon="Plus" @click="handleAdd">新增任务</el-button>
+        <div class="header-actions">
+          <el-button type="primary" icon="Plus" @click="handleAdd">新增任务</el-button>
+          <el-button type="danger" icon="Delete" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
+          <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
+        </div>
       </template>
 
-      <el-table :data="jobList" border stripe v-loading="loading">
+      <el-table :data="jobList" border stripe v-loading="loading" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="50" align="center" />
         <el-table-column prop="jobId" label="任务 ID" width="80" />
         <el-table-column prop="jobName" label="任务名称" min-width="150" />
         <el-table-column prop="jobGroup" label="任务组名" width="100">
@@ -51,18 +56,18 @@
         <el-table-column prop="createTime" label="创建时间" width="180" />
         <el-table-column label="操作" width="280" fixed="right">
           <template #default="{ row }">
-            <el-button 
-              v-if="row.status === 1" 
-              link 
-              type="warning" 
-              icon="VideoPause" 
+            <el-button
+              v-if="row.status === 1"
+              link
+              type="warning"
+              icon="VideoPause"
               @click="handleStop(row)"
             >暂停</el-button>
-            <el-button 
-              v-else 
-              link 
-              type="success" 
-              icon="VideoPlay" 
+            <el-button
+              v-else
+              link
+              type="success"
+              icon="VideoPlay"
               @click="handleStart(row)"
             >启动</el-button>
             <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
@@ -106,7 +111,7 @@
         </el-form-item>
         <el-form-item label="调用目标" prop="invokeTarget">
           <el-input v-model="form.invokeTarget" placeholder="请输入调用目标，如：SystemTask.clean()" />
-          <div class="form-tip">Bean 调用示例：systemTask.clean() 或 类全路径#方法</div>
+          <div class="form-tip">Bean 调用示例：systemTask.clean() 或 类全路径 # 方法</div>
         </el-form-item>
         <el-form-item label="Cron 表达式" prop="cronExpression">
           <el-input v-model="form.cronExpression" placeholder="请输入 Cron 表达式" />
@@ -150,6 +155,8 @@ import request from '@/utils/request'
 
 const jobList = ref([])
 const loading = ref(false)
+const multiple = ref(true)
+const jobIds = ref([])
 
 const queryParams = reactive({
   jobName: '',
@@ -215,6 +222,12 @@ const resetQuery = () => {
   handleQuery()
 }
 
+// 多选框选中数据
+const handleSelectionChange = (selection) => {
+  jobIds.value = selection.map(item => item.jobId)
+  multiple.value = !selection.length
+}
+
 // 获取组名
 const getGroupName = (group) => {
   const names = {
@@ -277,6 +290,37 @@ const handleDelete = (row) => {
   })
 }
 
+// 批量删除
+const handleBatchDelete = () => {
+  ElMessageBox.confirm(`确认删除选中的 ${jobIds.value.length} 个任务吗？`, '警告', {
+    type: 'warning'
+  }).then(() => {
+    request.delete('/system/job/batch', { data: jobIds.value }).then(() => {
+      ElMessage.success('批量删除成功')
+      getJobList()
+    })
+  })
+}
+
+// 导出
+const handleExport = () => {
+  const params = {
+    jobName: queryParams.jobName,
+    jobGroup: queryParams.jobGroup,
+    status: queryParams.status
+  }
+  request.get('/system/job/export', { params, responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '定时任务_' + new Date().getTime() + '.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('导出成功')
+  })
+}
+
 // 提交表单
 const submitForm = () => {
   formRef.value.validate(valid => {
@@ -322,6 +366,11 @@ onMounted(() => {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
   }
 
   .form-tip {

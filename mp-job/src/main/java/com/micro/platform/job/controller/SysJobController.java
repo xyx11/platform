@@ -2,12 +2,17 @@ package com.micro.platform.job.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.result.Result;
+import com.micro.platform.common.log.annotation.OperationLog;
+import com.micro.platform.common.log.annotation.OperationType;
 import com.micro.platform.job.entity.SysJob;
 import com.micro.platform.job.service.SysJobService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 定时任务控制器
@@ -56,7 +61,17 @@ public class SysJobController {
         return Result.success();
     }
 
+    @Operation(summary = "批量删除定时任务")
+    @OperationLog(module = "定时任务", type = OperationType.DELETE, description = "批量删除定时任务")
+    @PreAuthorize("hasAuthority('system:job:remove')")
+    @DeleteMapping("/batch")
+    public Result<Void> batchRemove(@RequestBody List<Long> ids) {
+        sysJobService.batchDelete(ids);
+        return Result.success();
+    }
+
     @Operation(summary = "删除定时任务")
+    @OperationLog(module = "定时任务", type = OperationType.DELETE, description = "删除定时任务")
     @PreAuthorize("hasAuthority('system:job:remove')")
     @DeleteMapping("/{id}")
     public Result<Void> remove(@PathVariable Long id) {
@@ -86,5 +101,12 @@ public class SysJobController {
     public Result<Void> stop(@PathVariable Long id) {
         sysJobService.stop(id);
         return Result.success();
+    }
+
+    @Operation(summary = "导出定时任务")
+    @PreAuthorize("hasAuthority('system:job:query')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysJob job) {
+        sysJobService.exportJob(response, job);
     }
 }
