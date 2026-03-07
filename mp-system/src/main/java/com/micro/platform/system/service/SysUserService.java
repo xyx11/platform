@@ -3,6 +3,10 @@ package com.micro.platform.system.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.service.IServiceX;
 import com.micro.platform.system.entity.SysUser;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 /**
  * 用户服务接口
@@ -33,4 +37,19 @@ public interface SysUserService extends IServiceX<SysUser> {
      * 修改密码
      */
     void changePassword(Long userId, String oldPassword, String newPassword);
+
+    /**
+     * 导出用户数据
+     */
+    void exportUser(HttpServletResponse response, SysUser user);
+
+    /**
+     * 下载导入模板
+     */
+    void downloadTemplate(HttpServletResponse response);
+
+    /**
+     * 导入用户数据
+     */
+    Map<String, Object> importUser(MultipartFile file);
 }

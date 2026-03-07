@@ -631,3 +631,14 @@ ON DUPLICATE KEY UPDATE menu_name=menu_name;
 -- 重新关联超级管理员角色和所有菜单
 INSERT INTO sys_role_menu (role_id, menu_id)
 SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
+
+-- 用户管理批量删除、导入、导出权限
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+(106, 2, '批量删除', '', '', 'system:user:batchRemove', 3, '', 6, 1, NOW()),
+(107, 2, '导出用户', '', '', 'system:user:export', 3, '', 7, 1, NOW()),
+(108, 2, '导入用户', '', '', 'system:user:import', 3, '', 8, 1, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 重新关联超级管理员角色和所有菜单
+INSERT INTO sys_role_menu (role_id, menu_id)
+SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
