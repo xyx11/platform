@@ -77,6 +77,12 @@ const routes = [
         name: 'SysLog',
         component: () => import('@/views/system/log/index.vue'),
         meta: { title: '日志管理', icon: 'Document' }
+      },
+      {
+        path: 'notice',
+        name: 'SysNotice',
+        component: () => import('@/views/system/notice/index.vue'),
+        meta: { title: '通知公告', icon: 'Bell' }
       }
     ]
   },
