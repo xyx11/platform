@@ -1,17 +1,42 @@
 <template>
   <div class="menu-container">
+    <el-card>
+      <!-- 搜索栏 -->
+      <el-form :model="queryParams" inline>
+        <el-form-item label="菜单名称">
+          <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable />
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
+            <el-option label="正常" :value="1" />
+            <el-option label="禁用" :value="0" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="Search" @click="handleQuery">查询</el-button>
+          <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+
     <el-card class="table-card">
       <template #header>
-        <el-button type="primary" icon="Plus" @click="handleAdd">新增菜单</el-button>
+        <div class="header-actions">
+          <el-button type="primary" icon="Plus" @click="handleAdd(null)">新增菜单</el-button>
+          <el-button icon="Expand" @click="expandAll">展开</el-button>
+          <el-button icon="Fold" @click="collapseAll">收起</el-button>
+        </div>
       </template>
 
       <el-table
+        ref="menuTableRef"
         :data="menuList"
         row-key="menuId"
-        :default-expand-all="true"
+        :default-expand-all="defaultExpandAll"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         border
         stripe
+        v-loading="loading"
       >
         <el-table-column prop="menuName" label="菜单名称" min-width="150" />
         <el-table-column prop="icon" label="图标" width="80">
@@ -20,7 +45,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="sort" label="排序" width="80" />
-        <el-table-column prop="permission" label="权限标识" width="200" />
+        <el-table-column prop="permission" label="权限标识" width="200" :show-overflow-tooltip="true" />
         <el-table-column prop="type" label="类型" width="80">
           <template #default="{ row }">
             <el-tag v-if="row.type === 1">目录</el-tag>
@@ -119,6 +144,9 @@
             <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" :rows="3" placeholder="请输入备注" />
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="dialog.visible = false">取消</el-button>
@@ -133,7 +161,15 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'
 
+const menuTableRef = ref(null)
 const menuList = ref([])
+const loading = ref(false)
+const defaultExpandAll = ref(true)
+
+const queryParams = reactive({
+  menuName: '',
+  status: null
+})
 
 const dialog = reactive({
   visible: false,
@@ -155,26 +191,73 @@ const form = reactive({
   isFrame: 1,
   isCache: 1,
   visible: 1,
-  status: 1
+  status: 1,
+  remark: ''
 })
 
 const rules = {
-  menuName: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }]
+  menuName: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
+  path: [{ required: true, message: '请输入路由地址', trigger: 'blur', trigger: 'blur' }],
+  component: [{ required: true, message: '请输入组件路径', trigger: 'blur' }],
+  permission: [{ required: true, message: '请输入权限标识', trigger: 'blur' }]
 }
 
 // 获取菜单列表
 const getMenuList = () => {
+  loading.value = true
   request.get('/system/menu/list').then(res => {
-    menuList.value = res.data
+    menuList.value = handleTreeData(res.data || [])
+    loading.value = false
+  }).catch(() => {
+    loading.value = false
   })
+}
+
+// 树形数据转换
+const handleTreeData = (data, parentId = 0) => {
+  const result = []
+  data.forEach(item => {
+    if (item.parentId === parentId) {
+      const children = handleTreeData(data, item.menuId)
+      if (children.length > 0) {
+        item.children = children
+      }
+      result.push(item)
+    }
+  })
+  return result
+}
+
+// 查询
+const handleQuery = () => {
+  getMenuList()
+}
+
+// 重置
+const resetQuery = () => {
+  queryParams.menuName = ''
+  queryParams.status = null
+  getMenuList()
+}
+
+// 展开所有
+const expandAll = () => {
+  defaultExpandAll.value = true
+}
+
+// 收起所有
+const collapseAll = () => {
+  defaultExpandAll.value = false
 }
 
 // 新增
 const handleAdd = (row) => {
+  resetForm()
   dialog.title = '新增菜单'
   dialog.visible = true
   if (row) {
     form.parentId = row.menuId
+    form.type = row.type === 1 ? 2 : 3
   }
 }
 
@@ -227,7 +310,8 @@ const resetForm = () => {
     isFrame: 1,
     isCache: 1,
     visible: 1,
-    status: 1
+    status: 1,
+    remark: ''
   })
 }
 
@@ -238,6 +322,11 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .menu-container {
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+
   .table-card {
     margin-top: 20px;
   }
