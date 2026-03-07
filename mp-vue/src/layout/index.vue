@@ -127,14 +127,15 @@ const menuRoutes = [
     redirect: '/system/user',
     meta: { title: '系统管理', icon: 'Setting' },
     children: [
-      { path: 'user', name: 'SysUser', meta: { title: '用户管理', icon: 'User' } },
-      { path: 'role', name: 'SysRole', meta: { title: '角色管理', icon: 'Avatar' } },
-      { path: 'menu', name: 'SysMenu', meta: { title: '菜单管理', icon: 'Menu' } },
-      { path: 'dept', name: 'SysDept', meta: { title: '部门管理', icon: 'OfficeBuilding' } },
-      { path: 'dict', name: 'SysDict', meta: { title: '字典管理', icon: 'Collection' } },
-      { path: 'post', name: 'SysPost', meta: { title: '岗位管理', icon: 'Postcard' } },
-      { path: 'config', name: 'SysConfig', meta: { title: '参数设置', icon: 'Tools' } },
-      { path: 'log', name: 'SysLog', meta: { title: '日志管理', icon: 'Document' } }
+      { path: '/system/user', name: 'SysUser', meta: { title: '用户管理', icon: 'User' } },
+      { path: '/system/role', name: 'SysRole', meta: { title: '角色管理', icon: 'Avatar' } },
+      { path: '/system/menu', name: 'SysMenu', meta: { title: '菜单管理', icon: 'Menu' } },
+      { path: '/system/dept', name: 'SysDept', meta: { title: '部门管理', icon: 'OfficeBuilding' } },
+      { path: '/system/dict', name: 'SysDict', meta: { title: '字典管理', icon: 'Collection' } },
+      { path: '/system/post', name: 'SysPost', meta: { title: '岗位管理', icon: 'Postcard' } },
+      { path: '/system/config', name: 'SysConfig', meta: { title: '参数设置', icon: 'Tools' } },
+      { path: '/system/log', name: 'SysLog', meta: { title: '日志管理', icon: 'Document' } },
+      { path: '/system/notice', name: 'SysNotice', meta: { title: '通知公告', icon: 'Bell' } }
     ]
   },
   {
@@ -142,8 +143,8 @@ const menuRoutes = [
     redirect: '/job/list',
     meta: { title: '定时任务', icon: 'Timer' },
     children: [
-      { path: 'list', name: 'JobList', meta: { title: '任务管理', icon: 'List' } },
-      { path: 'log', name: 'JobLog', meta: { title: '任务日志', icon: 'Document' } }
+      { path: '/job/list', name: 'JobList', meta: { title: '任务管理', icon: 'List' } },
+      { path: '/job/log', name: 'JobLog', meta: { title: '任务日志', icon: 'Document' } }
     ]
   },
   {
@@ -151,7 +152,7 @@ const menuRoutes = [
     redirect: '/generator/table',
     meta: { title: '代码生成', icon: 'Grid' },
     children: [
-      { path: 'table', name: 'GeneratorTable', meta: { title: '数据表', icon: 'Grid' } }
+      { path: '/generator/table', name: 'GeneratorTable', meta: { title: '数据表', icon: 'Grid' } }
     ]
   },
   {
@@ -159,10 +160,10 @@ const menuRoutes = [
     redirect: '/monitor/online',
     meta: { title: '系统监控', icon: 'Monitor' },
     children: [
-      { path: 'online', name: 'OnlineUser', meta: { title: '在线用户', icon: 'User' } },
-      { path: 'redis', name: 'RedisMonitor', meta: { title: 'Redis 监控', icon: 'Folder' } },
-      { path: 'server', name: 'ServerMonitor', meta: { title: '服务器监控', icon: 'Platform' } },
-      { path: 'cache', name: 'CacheMonitor', meta: { title: '缓存监控', icon: 'DataLine' } }
+      { path: '/monitor/online', name: 'OnlineUser', meta: { title: '在线用户', icon: 'User' } },
+      { path: '/monitor/redis', name: 'RedisMonitor', meta: { title: 'Redis 监控', icon: 'Folder' } },
+      { path: '/monitor/server', name: 'ServerMonitor', meta: { title: '服务器监控', icon: 'Platform' } },
+      { path: '/monitor/cache', name: 'CacheMonitor', meta: { title: '缓存监控', icon: 'DataLine' } }
     ]
   },
   {
@@ -170,7 +171,7 @@ const menuRoutes = [
     redirect: '/tool/build',
     meta: { title: '系统工具', icon: 'Tools' },
     children: [
-      { path: 'build', name: 'ToolBuild', meta: { title: '表单构建', icon: 'EditPen' } }
+      { path: '/tool/build', name: 'ToolBuild', meta: { title: '表单构建', icon: 'EditPen' } }
     ]
   }
 ]
