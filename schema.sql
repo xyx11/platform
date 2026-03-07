@@ -504,3 +504,47 @@ ON DUPLICATE KEY UPDATE menu_name=menu_name;
 -- 重新关联超级管理员角色和所有菜单
 INSERT INTO sys_role_menu (role_id, menu_id)
 SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
+
+-- ============================================
+-- 命令执行记录表
+-- ============================================
+CREATE TABLE IF NOT EXISTS `sys_command_log` (
+  `command_id` bigint NOT NULL COMMENT '命令 ID',
+  `command_type` varchar(50) DEFAULT NULL COMMENT '命令类型',
+  `command_content` text DEFAULT NULL COMMENT '命令内容',
+  `command_result` text DEFAULT NULL COMMENT '命令结果',
+  `execute_time` bigint DEFAULT NULL COMMENT '执行时长（毫秒）',
+  `execute_by` bigint DEFAULT NULL COMMENT '执行者 ID',
+  `execute_name` varchar(50) DEFAULT NULL COMMENT '执行者名称',
+  `execute_time_str` datetime DEFAULT NULL COMMENT '执行时间',
+  `status` int DEFAULT NULL COMMENT '状态：0-失败 1-成功',
+  `error_msg` text DEFAULT NULL COMMENT '错误消息',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `deleted` int DEFAULT '0' COMMENT '删除标志 (0:正常 1:删除)',
+  PRIMARY KEY (`command_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='命令执行记录表';
+
+-- 更新菜单权限
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+-- 系统监控菜单
+(12, 0, '系统监控', '/monitor', 'layout', '', 1, 'Monitor', 2, 1),
+(13, 12, '在线用户', '/monitor/online', 'monitor/online/index', 'monitor:online:list', 2, 'User', 1, 1),
+(1101, 13, '在线用户查询', '', '', 'monitor:online:query', 3, '', 1, 1, NOW()),
+(1102, 13, '强制下线', '', '', 'monitor:online:forceLogout', 3, '', 2, 1, NOW()),
+(14, 12, 'Redis 监控', '/monitor/redis', 'monitor/redis/index', 'monitor:redis:query', 2, 'Folder', 2, 1),
+(15, 12, '服务器监控', '/monitor/server', 'monitor/server/index', 'monitor:server:query', 2, 'Platform', 3, 1),
+(16, 12, '缓存监控', '/monitor/cache', 'monitor/cache/index', 'monitor:cache:query', 2, 'DataLine', 4, 1),
+-- 代码生成菜单
+(19, 0, '代码生成', '/generator', 'layout', '', 1, 'Code', 3, 1),
+(1901, 19, '数据表管理', '/generator/table', 'generator/table/index', 'generator:table:list', 2, 'Grid', 1, 1),
+(1902, 19, '代码预览', '', '', 'generator:table:preview', 3, '', 1, 1, NOW()),
+(1903, 19, '代码生成', '', '', 'generator:table:generate', 3, '', 2, 1, NOW()),
+-- 定时任务菜单
+(10, 0, '定时任务', '/job', 'layout', '', 1, 'Timer', 4, 1),
+(1001, 10, '任务管理', '/job/list', 'job/list/index', 'system:job:list', 2, 'List', 1, 1),
+(1002, 10, '任务日志', '/job/log', 'job/log/index', 'system:joblog:list', 2, 'Document', 2, 1)
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 重新关联超级管理员角色和所有菜单
+INSERT INTO sys_role_menu (role_id, menu_id)
+SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
