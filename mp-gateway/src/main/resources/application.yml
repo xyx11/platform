@@ -10,11 +10,11 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-        namespace: ""
+        namespace: public
         group: DEFAULT_GROUP
       config:
         server-addr: 127.0.0.1:8848
-        namespace: ""
+        namespace: public
         group: DEFAULT_GROUP
         file-extension: yaml
         refresh-enabled: true
@@ -31,7 +31,7 @@ spring:
           predicates:
             - Path=/auth/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
         - id: mp-system
           uri: lb://mp-system
           predicates:

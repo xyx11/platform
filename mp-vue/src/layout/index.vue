@@ -16,6 +16,7 @@
         active-text-color="#409EFF"
       >
         <template v-for="route in menuRoutes" :key="route.path">
+          <!-- 有多个子路由，显示为子菜单 -->
           <el-sub-menu v-if="route.children && route.children.length > 1" :index="route.path">
             <template #title>
               <el-icon><component :is="route.meta.icon" /></el-icon>
@@ -30,9 +31,10 @@
               <span>{{ child.meta.title }}</span>
             </el-menu-item>
           </el-sub-menu>
-          <el-menu-item v-else :index="route.redirect || route.children[0].path">
-            <el-icon><component :is="route.meta.icon" /></el-icon>
-            <span>{{ route.meta.title }}</span>
+          <!-- 只有一个子路由或没有子路由，显示为单项菜单 -->
+          <el-menu-item v-else :index="getChildPath(route)">
+            <el-icon><component :is="getIcon(route)" /></el-icon>
+            <span>{{ getTitle(route) }}</span>
           </el-menu-item>
         </template>
       </el-menu>
@@ -84,6 +86,29 @@
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage } from 'element-plus'
+// 导入 Element Plus 图标
+import {
+  HomeFilled,
+  Setting,
+  User,
+  Avatar,
+  Menu,
+  OfficeBuilding,
+  Collection,
+  Postcard,
+  Tools,
+  Document,
+  Timer,
+  List,
+  Grid,
+  Monitor,
+  Folder,
+  Platform,
+  DataLine,
+  EditPen,
+  Expand,
+  Fold
+} from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -93,15 +118,9 @@ const isCollapse = ref(false)
 // 菜单路由（直接定义，避免访问 router.options.routes）
 const menuRoutes = [
   {
-    path: '/',
-    redirect: '/dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        name: 'Dashboard',
-        meta: { title: '首页', icon: 'HomeFilled' }
-      }
-    ]
+    path: '/dashboard',
+    name: 'Dashboard',
+    meta: { title: '首页', icon: 'HomeFilled' }
   },
   {
     path: '/system',
@@ -130,7 +149,7 @@ const menuRoutes = [
   {
     path: '/generator',
     redirect: '/generator/table',
-    meta: { title: '代码生成', icon: 'Code' },
+    meta: { title: '代码生成', icon: 'Grid' },
     children: [
       { path: 'table', name: 'GeneratorTable', meta: { title: '数据表', icon: 'Grid' } }
     ]
@@ -163,6 +182,40 @@ const activeMenu = computed(() => {
 const currentRoute = computed(() => {
   return route.matched[route.matched.length - 1]
 })
+
+// 获取子路由路径
+const getChildPath = (route) => {
+  if (route.redirect) {
+    return route.redirect
+  }
+  if (route.children && route.children.length === 1) {
+    const childPath = route.children[0].path
+    return childPath.startsWith('/') ? childPath : `${route.path}/${childPath}`
+  }
+  return route.path
+}
+
+// 获取标题
+const getTitle = (route) => {
+  if (route.meta && route.meta.title) {
+    return route.meta.title
+  }
+  if (route.children && route.children.length === 1 && route.children[0].meta) {
+    return route.children[0].meta.title
+  }
+  return ''
+}
+
+// 获取图标
+const getIcon = (route) => {
+  if (route.meta && route.meta.icon) {
+    return route.meta.icon
+  }
+  if (route.children && route.children.length === 1 && route.children[0].meta) {
+    return route.children[0].meta.icon
+  }
+  return ''
+}
 
 const toggleCollapse = () => {
   isCollapse.value = !isCollapse.value
