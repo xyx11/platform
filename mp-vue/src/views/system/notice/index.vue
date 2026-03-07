@@ -124,38 +124,34 @@
 <script setup name="Notice">
 import { ref, reactive, toRefs } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import request from '@/utils/request'
 
-const { proxy } = getCurrentInstance()
-
-const data = reactive({
-  loading: true,
-  open: false,
-  title: '',
-  noticeList: [],
-  multiple: true,
-  total: 0,
-  ids: [],
-  form: {},
-  queryParams: {
-    pageNum: 1,
-    pageSize: 10,
-    noticeTitle: undefined,
-    noticeType: undefined,
-    status: undefined
-  },
-  rules: {
-    noticeTitle: [{ required: true, message: '公告标题不能为空', trigger: 'blur' }],
-    noticeType: [{ required: true, message: '公告类型不能为空', trigger: 'change' }],
-    noticeContent: [{ required: true, message: '公告内容不能为空', trigger: 'blur' }]
-  }
+const loading = ref(true)
+const open = ref(false)
+const title = ref('')
+const noticeList = ref([])
+const multiple = ref(true)
+const total = ref(0)
+const ids = ref([])
+const form = ref({})
+const queryParams = ref({
+  pageNum: 1,
+  pageSize: 10,
+  noticeTitle: undefined,
+  noticeType: undefined,
+  status: undefined
 })
-
-const { loading, open, title, noticeList, multiple, total, ids, form, queryParams, rules } = toRefs(data)
+const rules = {
+  noticeTitle: [{ required: true, message: '公告标题不能为空', trigger: 'blur' }],
+  noticeType: [{ required: true, message: '公告类型不能为空', trigger: 'change' }],
+  noticeContent: [{ required: true, message: '公告内容不能为空', trigger: 'blur' }]
+}
+const formRef = ref(null)
 
 /** 查询公告列表 */
 function getList() {
   loading.value = true
-  proxy.request.get('/system/notice/list', { params: queryParams.value }).then(res => {
+  request.get('/system/notice/list', { params: queryParams.value }).then(res => {
     noticeList.value = res.data.records
     total.value = res.data.total
     loading.value = false
@@ -177,7 +173,7 @@ function reset() {
     noticeContent: undefined,
     status: 1
   }
-  proxy.resetForm('formRef')
+  formRef.value?.resetFields()
 }
 
 /** 搜索按钮操作 */
@@ -188,7 +184,7 @@ function handleQuery() {
 
 /** 重置按钮操作 */
 function resetQuery() {
-  proxy.resetForm('queryParams')
+  queryParams.value = { pageNum: 1, pageSize: 10, noticeTitle: undefined, noticeType: undefined, status: undefined }
   handleQuery()
 }
 
@@ -203,7 +199,7 @@ function handleAdd() {
 function handleUpdate(row) {
   reset()
   const noticeId = row.noticeId || ids.value[0]
-  proxy.request.get('/system/notice/' + noticeId).then(res => {
+  request.get('/system/notice/' + noticeId).then(res => {
     form.value = res.data
     open.value = true
     title.value = '编辑公告'
@@ -212,16 +208,16 @@ function handleUpdate(row) {
 
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs['formRef'].validate(valid => {
+  formRef.value.validate(valid => {
     if (valid) {
       if (form.value.noticeId) {
-        proxy.request.put('/system/notice', form.value).then(() => {
+        request.put('/system/notice', form.value).then(() => {
           ElMessage.success('修改成功')
           open.value = false
           getList()
         })
       } else {
-        proxy.request.post('/system/notice', form.value).then(() => {
+        request.post('/system/notice', form.value).then(() => {
           ElMessage.success('新增成功')
           open.value = false
           getList()
@@ -239,7 +235,7 @@ function handleDelete(row) {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    proxy.request.delete('/system/notice/' + noticeIds).then(() => {
+    request.delete('/system/notice/' + noticeIds).then(() => {
       ElMessage.success('删除成功')
       getList()
     })
@@ -254,7 +250,7 @@ function handleStatusChange(row) {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    proxy.request.put('/system/notice', row).then(() => {
+    request.put('/system/notice', row).then(() => {
       ElMessage.success(text + '成功')
     })
   }).catch(() => {

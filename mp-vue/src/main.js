@@ -8,6 +8,7 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
 import App from './App.vue'
 import router from './router'
+import request from './utils/request'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -15,6 +16,14 @@ const pinia = createPinia()
 // 注册 Element Plus 图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
+}
+
+// 配置全局方法
+app.config.globalProperties.request = request
+app.config.globalProperties.resetForm = (ref) => {
+  if (ref) {
+    ref.resetFields()
+  }
 }
 
 app.use(pinia)
