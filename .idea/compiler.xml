@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="mp-common-log" />
+        <module name="mp-common-redis" />
+        <module name="mp-system" />
+        <module name="mp-job" />
+        <module name="mp-common-swagger" />
+        <module name="mp-generator" />
+        <module name="mp-common-core" />
+        <module name="mp-common-security" />
+        <module name="mp-gateway" />
+        <module name="mp-auth" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>

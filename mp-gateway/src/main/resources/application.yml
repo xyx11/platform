@@ -1,0 +1,74 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: mp-gateway
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: public
+        group: DEFAULT_GROUP
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: public
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        refresh-enabled: true
+        import-check:
+          enabled: false
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: mp-auth
+          uri: lb://mp-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: mp-system
+          uri: lb://mp-system
+          predicates:
+            - Path=/system/**
+          filters:
+            - StripPrefix=1
+        - id: mp-generator
+          uri: lb://mp-generator
+          predicates:
+            - Path=/generator/**
+          filters:
+            - StripPrefix=1
+        - id: mp-job
+          uri: lb://mp-job
+          predicates:
+            - Path=/job/**
+          filters:
+            - StripPrefix=1
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      database: 0
+      timeout: 5000ms
+
+sa-token:
+  token-name: Authorization
+  timeout: 86400
+  active-timeout: -1
+  is-concurrent: true
+  is-share: true
+  token-style: uuid
+  is-log: false
+  is-print: false
+
+logging:
+  level:
+    root: INFO
+    com.micro.platform.gateway: DEBUG

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/mp-auth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-auth/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/mp-common-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/mp-common-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/mp-common-log/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/mp-common-log/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/mp-common-redis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/mp-common-redis/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/mp-common-security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/mp-common-security/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/mp-common-swagger/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/mp-common-swagger/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-generator/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-generator/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-job/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-job/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mp-system/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

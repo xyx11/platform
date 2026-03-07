@@ -1,0 +1,132 @@
+package com.micro.platform.system.controller;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.micro.platform.common.core.result.Result;
+import com.micro.platform.common.log.annotation.OperationLog;
+import com.micro.platform.common.log.annotation.OperationType;
+import com.micro.platform.common.security.util.SecurityUtil;
+import com.micro.platform.system.entity.SysDictData;
+import com.micro.platform.system.entity.SysDictType;
+import com.micro.platform.system.service.SysDictDataService;
+import com.micro.platform.system.service.SysDictTypeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * 字典管理控制器
+ */
+@Tag(name = "字典管理", description = "字典类型和数据管理")
+@RestController
+@RequestMapping("/system/dict")
+public class SysDictController {
+
+    private final SysDictTypeService dictTypeService;
+    private final SysDictDataService dictDataService;
+
+    public SysDictController(SysDictTypeService dictTypeService, SysDictDataService dictDataService) {
+        this.dictTypeService = dictTypeService;
+        this.dictDataService = dictDataService;
+    }
+
+    @Operation(summary = "获取字典类型列表")
+    @PreAuthorize("hasAuthority('system:dict:query')")
+    @GetMapping("/type/list")
+    public Result<Page<SysDictType>> typeList(SysDictType dictType,
+                                               @RequestParam(defaultValue = "1") Integer pageNum,
+                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+        Page<SysDictType> page = dictTypeService.selectDictTypePage(dictType, pageNum, pageSize);
+        return Result.success(page);
+    }
+
+    @Operation(summary = "获取字典类型详情")
+    @PreAuthorize("hasAuthority('system:dict:query')")
+    @GetMapping("/type/{dictId}")
+    public Result<SysDictType> getType(@PathVariable Long dictId) {
+        return Result.success(dictTypeService.getById(dictId));
+    }
+
+    @Operation(summary = "新增字典类型")
+    @OperationLog(module = "字典管理", type = OperationType.CREATE, description = "新增字典类型")
+    @PreAuthorize("hasAuthority('system:dict:add')")
+    @PostMapping("/type")
+    public Result<Void> addType(@RequestBody SysDictType dictType) {
+        dictType.setCreateBy(SecurityUtil.getUserId());
+        dictTypeService.save(dictType);
+        return Result.success();
+    }
+
+    @Operation(summary = "修改字典类型")
+    @OperationLog(module = "字典管理", type = OperationType.UPDATE, description = "修改字典类型")
+    @PreAuthorize("hasAuthority('system:dict:edit')")
+    @PutMapping("/type")
+    public Result<Void> updateType(@RequestBody SysDictType dictType) {
+        dictType.setUpdateBy(SecurityUtil.getUserId());
+        dictTypeService.updateById(dictType);
+        return Result.success();
+    }
+
+    @Operation(summary = "删除字典类型")
+    @OperationLog(module = "字典管理", type = OperationType.DELETE, description = "删除字典类型")
+    @PreAuthorize("hasAuthority('system:dict:remove')")
+    @DeleteMapping("/type/{dictId}")
+    public Result<Void> removeType(@PathVariable Long dictId) {
+        dictTypeService.removeById(dictId);
+        return Result.success();
+    }
+
+    @Operation(summary = "获取字典数据列表")
+    @PreAuthorize("hasAuthority('system:dict:query')")
+    @GetMapping("/data/list")
+    public Result<Page<SysDictData>> dataList(SysDictData dictData,
+                                               @RequestParam(defaultValue = "1") Integer pageNum,
+                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+        Page<SysDictData> page = dictDataService.selectDictDataPage(dictData, pageNum, pageSize);
+        return Result.success(page);
+    }
+
+    @Operation(summary = "根据类型获取字典数据")
+    @GetMapping("/data/type/{dictType}")
+    public Result<List<SysDictData>> getDataByType(@PathVariable String dictType) {
+        return Result.success(dictDataService.selectDictDataByType(dictType));
+    }
+
+    @Operation(summary = "获取字典数据详情")
+    @PreAuthorize("hasAuthority('system:dict:query')")
+    @GetMapping("/data/{dictCode}")
+    public Result<SysDictData> getData(@PathVariable Long dictCode) {
+        return Result.success(dictDataService.getById(dictCode));
+    }
+
+    @Operation(summary = "新增字典数据")
+    @OperationLog(module = "字典管理", type = OperationType.CREATE, description = "新增字典数据")
+    @PreAuthorize("hasAuthority('system:dict:add')")
+    @PostMapping("/data")
+    public Result<Void> addData(@RequestBody SysDictData dictData) {
+        dictData.setCreateBy(SecurityUtil.getUserId());
+        dictDataService.save(dictData);
+        return Result.success();
+    }
+
+    @Operation(summary = "修改字典数据")
+    @OperationLog(module = "字典管理", type = OperationType.UPDATE, description = "修改字典数据")
+    @PreAuthorize("hasAuthority('system:dict:edit')")
+    @PutMapping("/data")
+    public Result<Void> updateData(@RequestBody SysDictData dictData) {
+        dictData.setUpdateBy(SecurityUtil.getUserId());
+        dictDataService.updateById(dictData);
+        return Result.success();
+    }
+
+    @Operation(summary = "删除字典数据")
+    @OperationLog(module = "字典管理", type = OperationType.DELETE, description = "删除字典数据")
+    @PreAuthorize("hasAuthority('system:dict:remove')")
+    @DeleteMapping("/data/{dictCode}")
+    public Result<Void> removeData(@PathVariable Long dictCode) {
+        dictDataService.removeById(dictCode);
+        return Result.success();
+    }
+}

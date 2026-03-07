@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.micro.platform</groupId>
+        <artifactId>mp-common</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>mp-common-log</artifactId>
+    <name>mp-common-log</name>
+    <description>日志公共模块</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.micro.platform</groupId>
+            <artifactId>mp-common-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.micro.platform</groupId>
+            <artifactId>mp-common-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

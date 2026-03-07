@@ -1,0 +1,8 @@
+com/micro/platform/common/core/service/impl/ServiceImplX.class
+com/micro/platform/common/core/service/IServiceX.class
+com/micro/platform/common/core/mapper/BaseMapperX.class
+com/micro/platform/common/core/exception/GlobalExceptionHandler.class
+com/micro/platform/common/core/exception/BusinessException.class
+com/micro/platform/common/core/result/PageResult.class
+com/micro/platform/common/core/query/PageQuery.class
+com/micro/platform/common/core/result/Result.class

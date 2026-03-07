@@ -1,0 +1,8 @@
+/Users/xieyunxing/micro-platform/mp-common/mp-common-core/src/main/java/com/micro/platform/common/core/exception/BusinessException.java
+/Users/xieyunxing/micro-platform/mp-common/mp-common-core/src/main/java/com/micro/platform/common/core/exception/GlobalExceptionHandler.java
+/Users/xieyunxing/micro-platform/mp-common/mp-common-core/src/main/java/com/micro/platform/common/core/mapper/BaseMapperX.java
+/Users/xieyunxing/micro-platform/mp-common/mp-common-core/src/main/java/com/micro/platform/common/core/query/PageQuery.java
+/Users/xieyunxing/micro-platform/mp-common/mp-common-core/src/main/java/com/micro/platform/common/core/result/PageResult.java
+/Users/xieyunxing/micro-platform/mp-common/mp-common-core/src/main/java/com/micro/platform/common/core/result/Result.java
+/Users/xieyunxing/micro-platform/mp-common/mp-common-core/src/main/java/com/micro/platform/common/core/service/IServiceX.java
+/Users/xieyunxing/micro-platform/mp-common/mp-common-core/src/main/java/com/micro/platform/common/core/service/impl/ServiceImplX.java
