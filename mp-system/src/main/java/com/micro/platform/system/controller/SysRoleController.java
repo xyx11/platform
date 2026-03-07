@@ -9,6 +9,7 @@ import com.micro.platform.system.entity.SysRole;
 import com.micro.platform.system.service.SysRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,6 +66,15 @@ public class SysRoleController {
         return Result.success();
     }
 
+    @Operation(summary = "批量删除角色")
+    @OperationLog(module = "角色管理", type = OperationType.DELETE, description = "批量删除角色")
+    @PreAuthorize("hasAuthority('system:role:remove')")
+    @DeleteMapping("/batch")
+    public Result<Void> batchRemove(@RequestBody List<Long> ids) {
+        sysRoleService.batchDelete(ids);
+        return Result.success();
+    }
+
     @Operation(summary = "删除角色")
     @OperationLog(module = "角色管理", type = OperationType.DELETE, description = "删除角色")
     @PreAuthorize("hasAuthority('system:role:remove')")
@@ -88,6 +98,13 @@ public class SysRoleController {
     @GetMapping("/menus/{roleId}")
     public Result<List<Long>> menus(@PathVariable Long roleId) {
         return Result.success(sysRoleService.selectMenusByRoleId(roleId));
+    }
+
+    @Operation(summary = "导出角色数据")
+    @PreAuthorize("hasAuthority('system:role:query')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysRole role) {
+        sysRoleService.exportRole(response, role);
     }
 
     /**
