@@ -10,11 +10,11 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-        namespace: public
+        namespace: ""
         group: DEFAULT_GROUP
       config:
         server-addr: 127.0.0.1:8848
-        namespace: public
+        namespace: ""
         group: DEFAULT_GROUP
         file-extension: yaml
         refresh-enabled: true
@@ -50,6 +50,12 @@ spring:
             - Path=/job/**
           filters:
             - StripPrefix=1
+        - id: mp-system-monitor
+          uri: lb://mp-system
+          predicates:
+            - Path=/monitor/**
+          filters:
+            - StripPrefix=0
   data:
     redis:
       host: localhost
@@ -72,3 +78,4 @@ logging:
   level:
     root: INFO
     com.micro.platform.gateway: DEBUG
+    org.springframework.cloud.gateway: DEBUG

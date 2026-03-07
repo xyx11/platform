@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
@@ -113,6 +113,7 @@ const menuRoutes = [
       { path: 'menu', name: 'SysMenu', meta: { title: '菜单管理', icon: 'Menu' } },
       { path: 'dept', name: 'SysDept', meta: { title: '部门管理', icon: 'OfficeBuilding' } },
       { path: 'dict', name: 'SysDict', meta: { title: '字典管理', icon: 'Collection' } },
+      { path: 'post', name: 'SysPost', meta: { title: '岗位管理', icon: 'Postcard' } },
       { path: 'config', name: 'SysConfig', meta: { title: '参数设置', icon: 'Tools' } },
       { path: 'log', name: 'SysLog', meta: { title: '日志管理', icon: 'Document' } }
     ]
@@ -132,6 +133,25 @@ const menuRoutes = [
     meta: { title: '代码生成', icon: 'Code' },
     children: [
       { path: 'table', name: 'GeneratorTable', meta: { title: '数据表', icon: 'Grid' } }
+    ]
+  },
+  {
+    path: '/monitor',
+    redirect: '/monitor/online',
+    meta: { title: '系统监控', icon: 'Monitor' },
+    children: [
+      { path: 'online', name: 'OnlineUser', meta: { title: '在线用户', icon: 'User' } },
+      { path: 'redis', name: 'RedisMonitor', meta: { title: 'Redis 监控', icon: 'Folder' } },
+      { path: 'server', name: 'ServerMonitor', meta: { title: '服务器监控', icon: 'Platform' } },
+      { path: 'cache', name: 'CacheMonitor', meta: { title: '缓存监控', icon: 'DataLine' } }
+    ]
+  },
+  {
+    path: '/tool',
+    redirect: '/tool/build',
+    meta: { title: '系统工具', icon: 'Tools' },
+    children: [
+      { path: 'build', name: 'ToolBuild', meta: { title: '表单构建', icon: 'EditPen' } }
     ]
   }
 ]

@@ -1,0 +1,82 @@
+package com.micro.platform.system.controller;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.micro.platform.common.core.result.Result;
+import com.micro.platform.common.log.annotation.OperationLog;
+import com.micro.platform.common.log.annotation.OperationType;
+import com.micro.platform.common.security.util.SecurityUtil;
+import com.micro.platform.system.entity.SysPost;
+import com.micro.platform.system.service.SysPostService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * 岗位管理控制器
+ */
+@Tag(name = "岗位管理", description = "岗位增删改查")
+@RestController
+@RequestMapping("/system/post")
+public class SysPostController {
+
+    private final SysPostService sysPostService;
+
+    public SysPostController(SysPostService sysPostService) {
+        this.sysPostService = sysPostService;
+    }
+
+    @Operation(summary = "获取岗位列表")
+    @PreAuthorize("hasAuthority('system:post:query')")
+    @GetMapping("/list")
+    public Result<Page<SysPost>> list(SysPost post,
+                                       @RequestParam(defaultValue = "1") Integer pageNum,
+                                       @RequestParam(defaultValue = "10") Integer pageSize) {
+        Page<SysPost> page = sysPostService.selectPostPage(post, pageNum, pageSize);
+        return Result.success(page);
+    }
+
+    @Operation(summary = "获取所有正常岗位")
+    @GetMapping("/option")
+    public Result<List<SysPost>> option() {
+        return Result.success(sysPostService.selectNormalPosts());
+    }
+
+    @Operation(summary = "获取岗位详情")
+    @PreAuthorize("hasAuthority('system:post:query')")
+    @GetMapping("/{postId}")
+    public Result<SysPost> get(@PathVariable Long postId) {
+        return Result.success(sysPostService.getById(postId));
+    }
+
+    @Operation(summary = "新增岗位")
+    @OperationLog(module = "岗位管理", type = OperationType.CREATE, description = "新增岗位")
+    @PreAuthorize("hasAuthority('system:post:add')")
+    @PostMapping
+    public Result<Void> add(@RequestBody SysPost post) {
+        post.setCreateBy(SecurityUtil.getUserId());
+        sysPostService.save(post);
+        return Result.success();
+    }
+
+    @Operation(summary = "修改岗位")
+    @OperationLog(module = "岗位管理", type = OperationType.UPDATE, description = "修改岗位")
+    @PreAuthorize("hasAuthority('system:post:edit')")
+    @PutMapping
+    public Result<Void> update(@RequestBody SysPost post) {
+        post.setUpdateBy(SecurityUtil.getUserId());
+        sysPostService.updateById(post);
+        return Result.success();
+    }
+
+    @Operation(summary = "删除岗位")
+    @OperationLog(module = "岗位管理", type = OperationType.DELETE, description = "删除岗位")
+    @PreAuthorize("hasAuthority('system:post:remove')")
+    @DeleteMapping("/{postIds}")
+    public Result<Void> remove(@PathVariable Long[] postIds) {
+        sysPostService.removeBatchByIds(java.util.Arrays.asList(postIds));
+        return Result.success();
+    }
+}

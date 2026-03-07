@@ -267,3 +267,29 @@ INSERT INTO `sys_config` (`config_id`, `config_name`, `config_key`, `config_valu
 (2, '用户管理 - 账号初始密码', 'user.password.init', '123456', 1, 1, NOW()),
 (3, '主框架页 - 侧边栏主题', 'skin.index.theme', 'theme-dark', 1, 1, NOW())
 ON DUPLICATE KEY UPDATE `config_name`=`config_name`;
+-- 创建岗位表
+CREATE TABLE IF NOT EXISTS `sys_post` (
+  `post_id` bigint NOT NULL COMMENT '岗位 ID',
+  `post_code` varchar(50) DEFAULT NULL COMMENT '岗位编码',
+  `post_name` varchar(50) DEFAULT NULL COMMENT '岗位名称',
+  `post_sort` int DEFAULT NULL COMMENT '岗位排序',
+  `status` int DEFAULT NULL COMMENT '状态 (0:禁用 1:正常)',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `create_by` bigint DEFAULT NULL COMMENT '创建者 ID',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新者 ID',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted` int DEFAULT '0' COMMENT '删除标志 (0:正常 1:删除)',
+  PRIMARY KEY (`post_id`),
+  UNIQUE KEY `uk_post_code` (`post_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统岗位表';
+
+-- 插入岗位数据
+INSERT INTO `sys_post` (`post_id`, `post_code`, `post_name`, `post_sort`, `status`, `create_time`) VALUES
+(1, 'ceo', '董事长', 1, 1, NOW()),
+(2, 'manager', '总经理', 2, 1, NOW()),
+(3, 'hr', '人力资源', 3, 1, NOW()),
+(4, 'tech', '技术岗位', 4, 1, NOW()),
+(5, 'finance', '财务岗位', 5, 1, NOW()),
+(6, 'admin', '行政岗位', 6, 1, NOW())
+ON DUPLICATE KEY UPDATE `post_code`=`post_code`;
