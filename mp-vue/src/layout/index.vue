@@ -148,7 +148,8 @@ const menuRoutes = [
       { path: '/system/dict', name: 'SysDict', meta: { title: '字典管理', icon: 'Collection' } },
       { path: '/system/post', name: 'SysPost', meta: { title: '岗位管理', icon: 'Postcard' } },
       { path: '/system/config', name: 'SysConfig', meta: { title: '参数设置', icon: 'Tools' } },
-      { path: '/system/log', name: 'SysLog', meta: { title: '日志管理', icon: 'Document' } },
+      { path: '/system/log', name: 'SysLog', meta: { title: '操作日志', icon: 'Document' } },
+      { path: '/system/loginlog', name: 'SysLoginLog', meta: { title: '登录日志', icon: 'Document' } },
       { path: '/system/notice', name: 'SysNotice', meta: { title: '通知公告', icon: 'Bell' } }
     ]
   },

@@ -76,7 +76,13 @@ const routes = [
         path: 'log',
         name: 'SysLog',
         component: () => import('@/views/system/log/index.vue'),
-        meta: { title: '日志管理', icon: 'Document' }
+        meta: { title: '操作日志', icon: 'Document' }
+      },
+      {
+        path: 'loginlog',
+        name: 'SysLoginLog',
+        component: () => import('@/views/system/loginlog/index.vue'),
+        meta: { title: '登录日志', icon: 'Document' }
       },
       {
         path: 'notice',
