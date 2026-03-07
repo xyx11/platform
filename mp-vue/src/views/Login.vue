@@ -114,8 +114,12 @@ const handleLogin = async () => {
   await loginFormRef.value.validate(valid => {
     if (valid) {
       loading.value = true
+      const loginData = {
+        ...loginForm,
+        userAgent: navigator.userAgent
+      }
       request
-        .post('/auth/login', loginForm)
+        .post('/auth/login', loginData)
         .then(res => {
           const { accessToken, tokenType } = res.data
           localStorage.setItem('access_token', `${tokenType} ${accessToken}`)

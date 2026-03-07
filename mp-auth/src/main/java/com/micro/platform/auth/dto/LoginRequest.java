@@ -23,6 +23,8 @@ public class LoginRequest implements Serializable {
 
     private Boolean rememberMe = false;
 
+    private String userAgent;
+
     public String getUsername() {
         return username;
     }
@@ -61,5 +63,13 @@ public class LoginRequest implements Serializable {
 
     public void setRememberMe(Boolean rememberMe) {
         this.rememberMe = rememberMe;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 }
