@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 参数配置控制器
  */
@@ -69,6 +71,24 @@ public class SysConfigController {
     @DeleteMapping("/{configId}")
     public Result<Void> remove(@PathVariable Long configId) {
         sysConfigService.removeById(configId);
+        return Result.success();
+    }
+
+    @Operation(summary = "批量删除参数配置")
+    @OperationLog(module = "参数配置", type = OperationType.DELETE, description = "批量删除参数配置")
+    @PreAuthorize("hasAuthority('system:config:remove')")
+    @DeleteMapping("/batch")
+    public Result<Void> batchRemove(@RequestBody List<Long> configIds) {
+        sysConfigService.removeByIds(configIds);
+        return Result.success();
+    }
+
+    @Operation(summary = "刷新参数配置缓存")
+    @OperationLog(module = "参数配置", type = OperationType.CLEAN, description = "刷新参数配置缓存")
+    @PreAuthorize("hasAuthority('system:config:remove')")
+    @DeleteMapping("/refreshCache")
+    public Result<Void> refreshCache() {
+        sysConfigService.refreshCache();
         return Result.success();
     }
 

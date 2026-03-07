@@ -23,10 +23,21 @@
 
     <el-card class="table-card">
       <template #header>
-        <el-button type="primary" icon="Plus" @click="handleAdd">新增参数</el-button>
+        <div class="header-actions">
+          <el-button type="primary" icon="Plus" @click="handleAdd">新增参数</el-button>
+          <el-button type="danger" icon="Delete" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
+          <el-button type="warning" icon="Refresh" @click="handleRefreshCache">刷新缓存</el-button>
+        </div>
       </template>
 
-      <el-table :data="configList" border stripe v-loading="loading">
+      <el-table
+        :data="configList"
+        border
+        stripe
+        v-loading="loading"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="configId" label="参数主键" width="100" />
         <el-table-column prop="configName" label="参数名称" width="150" />
         <el-table-column prop="configKey" label="参数键名" width="150" />
@@ -109,6 +120,8 @@ import request from '@/utils/request'
 
 const configList = ref([])
 const loading = ref(false)
+const multiple = ref(true)
+const configIds = ref([])
 
 const queryParams = reactive({
   configName: '',
@@ -171,6 +184,12 @@ const resetQuery = () => {
   handleQuery()
 }
 
+// 多选框选中数据
+const handleSelectionChange = (selection) => {
+  configIds.value = selection.map(item => item.configId)
+  multiple.value = !selection.length
+}
+
 // 新增
 const handleAdd = () => {
   dialog.title = '新增参数'
@@ -192,6 +211,29 @@ const handleDelete = (row) => {
     request.delete(`/system/config/${row.configId}`).then(() => {
       ElMessage.success('删除成功')
       getConfigList()
+    })
+  })
+}
+
+// 批量删除
+const handleBatchDelete = () => {
+  ElMessageBox.confirm(`确认删除选中的 ${configIds.value.length} 条参数吗？`, '警告', {
+    type: 'warning'
+  }).then(() => {
+    request.delete('/system/config/batch', { data: configIds.value }).then(() => {
+      ElMessage.success('批量删除成功')
+      getConfigList()
+    })
+  })
+}
+
+// 刷新缓存
+const handleRefreshCache = () => {
+  ElMessageBox.confirm('确认刷新参数配置缓存吗？', '提示', {
+    type: 'warning'
+  }).then(() => {
+    request.delete('/system/config/refreshCache').then(() => {
+      ElMessage.success('缓存刷新成功')
     })
   })
 }
@@ -233,6 +275,11 @@ onMounted(() => {
 .config-container {
   .table-card {
     margin-top: 20px;
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
 
     .pagination {
       margin-top: 20px;
