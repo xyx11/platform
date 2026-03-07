@@ -1,0 +1,59 @@
+package com.micro.platform.system.controller;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.micro.platform.common.core.result.Result;
+import com.micro.platform.system.entity.SysFile;
+import com.micro.platform.system.service.SysFileService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+
+/**
+ * 文件管理控制器
+ */
+@Tag(name = "文件管理", description = "文件管理")
+@RestController
+@RequestMapping("/system/file")
+public class SysFileController {
+
+    private final SysFileService sysFileService;
+
+    public SysFileController(SysFileService sysFileService) {
+        this.sysFileService = sysFileService;
+    }
+
+    @Operation(summary = "获取文件列表")
+    @PreAuthorize("hasAuthority('system:file:query')")
+    @GetMapping("/list")
+    public Result<Page<SysFile>> list(@RequestParam(defaultValue = "1") Integer pageNum,
+                                       @RequestParam(defaultValue = "10") Integer pageSize) {
+        Page<SysFile> page = sysFileService.selectFilePage(pageNum, pageSize);
+        return Result.success(page);
+    }
+
+    @Operation(summary = "获取文件详情")
+    @PreAuthorize("hasAuthority('system:file:query')")
+    @GetMapping("/{id}")
+    public Result<SysFile> get(@PathVariable Long id) {
+        return Result.success(sysFileService.getById(id));
+    }
+
+    @Operation(summary = "删除文件")
+    @PreAuthorize("hasAuthority('system:file:remove')")
+    @DeleteMapping("/{id}")
+    public Result<Void> remove(@PathVariable Long id) {
+        sysFileService.removeFile(id);
+        return Result.success();
+    }
+
+    @Operation(summary = "批量删除文件")
+    @PreAuthorize("hasAuthority('system:file:remove')")
+    @DeleteMapping("/batch/{ids}")
+    public Result<Void> batchRemove(@PathVariable String ids) {
+        sysFileService.batchRemove(Arrays.asList(ids.split(",")));
+        return Result.success();
+    }
+}

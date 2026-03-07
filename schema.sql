@@ -548,3 +548,34 @@ ON DUPLICATE KEY UPDATE menu_name=menu_name;
 -- 重新关联超级管理员角色和所有菜单
 INSERT INTO sys_role_menu (role_id, menu_id)
 SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
+
+
+-- ============================================
+-- 文件管理表
+-- ============================================
+CREATE TABLE IF NOT EXISTS `sys_file` (
+  `file_id` bigint NOT NULL COMMENT '文件 ID',
+  `file_name` varchar(255) DEFAULT NULL COMMENT '文件名称',
+  `original_name` varchar(255) DEFAULT NULL COMMENT '原始文件名',
+  `file_ext` varchar(50) DEFAULT NULL COMMENT '文件扩展名',
+  `file_size` bigint DEFAULT NULL COMMENT '文件大小 (字节)',
+  `file_type` varchar(50) DEFAULT NULL COMMENT '文件类型',
+  `file_url` varchar(500) DEFAULT NULL COMMENT '文件 URL',
+  `create_by` bigint DEFAULT NULL COMMENT '创建者 ID',
+  `create_by_name` varchar(50) DEFAULT NULL COMMENT '创建者名称',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `deleted` int DEFAULT '0' COMMENT '删除标志 (0:正常 1:删除)',
+  PRIMARY KEY (`file_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文件管理表';
+
+-- 文件管理菜单权限
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+(20, 1, '文件管理', '/system/file', 'system/file/index', 'system:file:list', 2, 'Folder', 9, 1),
+(2001, 20, '文件查询', '', '', 'system:file:query', 3, '', 1, 1, NOW()),
+(2002, 20, '文件上传', '', '', 'system:file:upload', 3, '', 2, 1, NOW()),
+(2003, 20, '文件删除', '', '', 'system:file:remove', 3, '', 3, 1, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 重新关联超级管理员角色和所有菜单
+INSERT INTO sys_role_menu (role_id, menu_id)
+SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
