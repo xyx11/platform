@@ -4,7 +4,7 @@
       <!-- 搜索栏 -->
       <el-form :model="queryParams" inline>
         <el-form-item label="菜单名称">
-          <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable />
+          <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
@@ -25,6 +25,7 @@
           <el-button type="primary" icon="Plus" @click="handleAdd(null)">新增菜单</el-button>
           <el-button icon="Expand" @click="expandAll">展开</el-button>
           <el-button icon="Fold" @click="collapseAll">收起</el-button>
+          <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
         </div>
       </template>
 
@@ -197,7 +198,7 @@ const form = reactive({
 
 const rules = {
   menuName: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
-  path: [{ required: true, message: '请输入路由地址', trigger: 'blur', trigger: 'blur' }],
+  path: [{ required: true, message: '请输入路由地址', trigger: 'blur' }],
   component: [{ required: true, message: '请输入组件路径', trigger: 'blur' }],
   permission: [{ required: true, message: '请输入权限标识', trigger: 'blur' }]
 }
@@ -205,7 +206,7 @@ const rules = {
 // 获取菜单列表
 const getMenuList = () => {
   loading.value = true
-  request.get('/system/menu/list').then(res => {
+  request.get('/system/menu/list', { params: queryParams }).then(res => {
     menuList.value = handleTreeData(res.data || [])
     loading.value = false
   }).catch(() => {
@@ -291,6 +292,24 @@ const submitForm = () => {
         getMenuList()
       })
     }
+  })
+}
+
+// 导出
+const handleExport = () => {
+  const params = {
+    menuName: queryParams.menuName,
+    status: queryParams.status
+  }
+  request.get('/system/menu/export', { params, responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '菜单数据_' + new Date().getTime() + '.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('导出成功')
   })
 }
 

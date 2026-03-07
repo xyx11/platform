@@ -3,10 +3,10 @@
     <el-card>
       <el-form :model="queryParams" inline>
         <el-form-item label="角色名称">
-          <el-input v-model="queryParams.roleName" placeholder="请输入角色名称" clearable />
+          <el-input v-model="queryParams.roleName" placeholder="请输入角色名称" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item label="角色编码">
-          <el-input v-model="queryParams.roleCode" placeholder="请输入角色编码" clearable />
+          <el-input v-model="queryParams.roleCode" placeholder="请输入角色编码" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
@@ -23,10 +23,15 @@
 
     <el-card class="table-card">
       <template #header>
-        <el-button type="primary" icon="Plus" @click="handleAdd">新增角色</el-button>
+        <div class="header-actions">
+          <el-button type="primary" icon="Plus" @click="handleAdd">新增角色</el-button>
+          <el-button type="danger" icon="Delete" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
+          <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
+        </div>
       </template>
 
-      <el-table :data="roleList" border stripe v-loading="loading">
+      <el-table :data="roleList" border stripe v-loading="loading" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="roleId" label="角色 ID" width="100" />
         <el-table-column prop="roleName" label="角色名称" width="150" />
         <el-table-column prop="roleCode" label="角色编码" width="150" />
@@ -128,6 +133,8 @@ import request from '@/utils/request'
 const roleList = ref([])
 const menuList = ref([])
 const loading = ref(false)
+const multiple = ref(true)
+const roleIds = ref([])
 
 const queryParams = reactive({
   roleName: '',
@@ -204,6 +211,12 @@ const getMenuList = () => {
   })
 }
 
+// 多选框选中数据
+const handleSelectionChange = (selection) => {
+  roleIds.value = selection.map(item => item.roleId)
+  multiple.value = !selection.length
+}
+
 // 新增
 const handleAdd = () => {
   dialog.title = '新增角色'
@@ -224,6 +237,18 @@ const handleDelete = (row) => {
   }).then(() => {
     request.delete(`/system/role/${row.roleId}`).then(() => {
       ElMessage.success('删除成功')
+      getRoleList()
+    })
+  })
+}
+
+// 批量删除
+const handleBatchDelete = () => {
+  ElMessageBox.confirm(`确认删除选中的 ${roleIds.value.length} 个角色吗？`, '警告', {
+    type: 'warning'
+  }).then(() => {
+    request.delete('/system/role/batch', { data: roleIds.value }).then(() => {
+      ElMessage.success('批量删除成功')
       getRoleList()
     })
   })
@@ -251,6 +276,25 @@ const submitAuth = () => {
   }).then(() => {
     ElMessage.success('权限分配成功')
     authDialog.visible = false
+  })
+}
+
+// 导出
+const handleExport = () => {
+  const params = {
+    roleName: queryParams.roleName,
+    roleCode: queryParams.roleCode,
+    status: queryParams.status
+  }
+  request.get('/system/role/export', { params, responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '角色数据_' + new Date().getTime() + '.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('导出成功')
   })
 }
 
@@ -292,6 +336,12 @@ onMounted(() => {
 .role-container {
   .table-card {
     margin-top: 20px;
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
 
     .pagination {
       margin-top: 20px;

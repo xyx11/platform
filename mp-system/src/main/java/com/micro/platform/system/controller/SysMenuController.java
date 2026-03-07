@@ -8,6 +8,7 @@ import com.micro.platform.system.entity.SysMenu;
 import com.micro.platform.system.service.SysMenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,8 @@ public class SysMenuController {
 
     @Operation(summary = "获取菜单列表")
     @GetMapping("/list")
-    public Result<List<SysMenu>> list() {
-        return Result.success(sysMenuService.getMenuTree());
+    public Result<List<SysMenu>> list(SysMenu menu) {
+        return Result.success(sysMenuService.selectMenuList(menu));
     }
 
     @Operation(summary = "获取用户的菜单权限")
@@ -81,5 +82,12 @@ public class SysMenuController {
     public Result<Void> remove(@PathVariable Long menuId) {
         sysMenuService.removeById(menuId);
         return Result.success();
+    }
+
+    @Operation(summary = "导出菜单数据")
+    @PreAuthorize("hasAuthority('system:menu:query')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysMenu menu) {
+        sysMenuService.exportMenu(response, menu);
     }
 }

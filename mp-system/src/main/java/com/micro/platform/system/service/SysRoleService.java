@@ -3,6 +3,7 @@ package com.micro.platform.system.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.service.IServiceX;
 import com.micro.platform.system.entity.SysRole;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 import java.util.Set;
@@ -36,4 +37,19 @@ public interface SysRoleService extends IServiceX<SysRole> {
      * 根据角色 ID 查询菜单 ID 列表
      */
     List<Long> selectMenusByRoleId(Long roleId);
+
+    /**
+     * 批量删除角色
+     */
+    void batchDelete(List<Long> ids);
+
+    /**
+     * 导出角色数据
+     */
+    void exportRole(HttpServletResponse response, SysRole role);
+
+    /**
+     * 查询角色列表（支持条件查询）
+     */
+    List<SysRole> selectRoleList(SysRole role);
 }
