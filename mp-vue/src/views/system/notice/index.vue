@@ -4,7 +4,7 @@
       <!-- 搜索表单 -->
       <el-form :model="queryParams" :inline="true" label-width="80px">
         <el-form-item label="公告标题">
-          <el-input v-model="queryParams.noticeTitle" placeholder="请输入公告标题" clearable />
+          <el-input v-model="queryParams.noticeTitle" placeholder="请输入公告标题" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item label="公告类型">
           <el-select v-model="queryParams.noticeType" placeholder="请选择公告类型" clearable>
@@ -14,10 +14,10 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">
-            <i class="el-icon-search"></i> 搜索
+            <el-icon><Search /></el-icon> 搜索
           </el-button>
           <el-button @click="resetQuery">
-            <i class="el-icon-refresh"></i> 重置
+            <el-icon><Refresh /></el-icon> 重置
           </el-button>
         </el-form-item>
       </el-form>
@@ -26,12 +26,17 @@
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button type="primary" plain @click="handleAdd">
-            <i class="el-icon-plus"></i> 新增
+            <el-icon><Plus /></el-icon> 新增
           </el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button type="danger" plain :disabled="multiple" @click="handleDelete">
-            <i class="el-icon-delete"></i> 删除
+            <el-icon><Delete /></el-icon> 删除
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="success" plain @click="handleExport">
+            <el-icon><Download /></el-icon> 导出
           </el-button>
         </el-col>
       </el-row>
@@ -70,10 +75,10 @@
         <el-table-column label="操作" width="180" align="center" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link @click="handleUpdate(row)">
-              <i class="el-icon-edit"></i> 编辑
+              <el-icon><Edit /></el-icon> 编辑
             </el-button>
             <el-button type="danger" link @click="handleDelete(row)">
-              <i class="el-icon-delete"></i> 删除
+              <el-icon><Delete /></el-icon> 删除
             </el-button>
           </template>
         </el-table-column>
@@ -127,7 +132,7 @@
 </template>
 
 <script setup name="Notice">
-import { ref, reactive, toRefs } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'
 
@@ -234,16 +239,28 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const noticeIds = row.noticeId || ids.value
-  ElMessageBox.confirm('是否确认删除公告编号为"' + noticeIds + '"的数据项？', '警告', {
+  const noticeIds = row.noticeId ? [row.noticeId] : ids.value
+  const message = row.noticeId ? `是否确认删除公告编号为"${row.noticeId}"的数据项？` : `是否确认批量删除选中的 ${noticeIds.length} 条数据？`
+  ElMessageBox.confirm(message, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    request.delete('/system/notice/' + noticeIds).then(() => {
-      ElMessage.success('删除成功')
-      getList()
-    })
+    if (row.noticeId) {
+      request.delete('/system/notice/' + noticeIds[0]).then(() => {
+        ElMessage.success('删除成功')
+        getList()
+      })
+    } else {
+      request.delete('/system/notice/batch', { data: noticeIds }).then(() => {
+        ElMessage.success('批量删除成功')
+        getList()
+      })
+    }
+  }).catch(() => {
+    if (!row.noticeId) {
+      ids.value = []
+    }
   })
 }
 
@@ -255,7 +272,7 @@ function handleStatusChange(row) {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    request.put('/system/notice', row).then(() => {
+    request.put('/system/notice/status', row).then(() => {
       ElMessage.success(text + '成功')
     })
   }).catch(() => {
@@ -267,6 +284,25 @@ function handleStatusChange(row) {
 function handleSelectionChange(selection) {
   ids.value = selection.map(item => item.noticeId)
   multiple.value = !selection.length
+}
+
+/** 导出按钮操作 */
+function handleExport() {
+  const params = {
+    noticeTitle: queryParams.value.noticeTitle,
+    noticeType: queryParams.value.noticeType,
+    status: queryParams.value.status
+  }
+  request.get('/system/notice/export', { params, responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '通知公告_' + new Date().getTime() + '.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('导出成功')
+  })
 }
 
 getList()
