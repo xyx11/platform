@@ -9,7 +9,7 @@
               <el-icon><User /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-value">1,234</div>
+              <div class="stat-value">{{ statistics.userCount || 0 }}</div>
               <div class="stat-label">用户总数</div>
             </div>
           </div>
@@ -23,7 +23,7 @@
               <el-icon><Avatar /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-value">56</div>
+              <div class="stat-value">{{ statistics.roleCount || 0 }}</div>
               <div class="stat-label">角色总数</div>
             </div>
           </div>
@@ -37,7 +37,7 @@
               <el-icon><Menu /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-value">234</div>
+              <div class="stat-value">{{ statistics.menuCount || 0 }}</div>
               <div class="stat-label">菜单总数</div>
             </div>
           </div>
@@ -51,7 +51,7 @@
               <el-icon><Document /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-value">8,901</div>
+              <div class="stat-value">{{ statistics.logCount || 0 }}</div>
               <div class="stat-label">日志总数</div>
             </div>
           </div>
@@ -104,15 +104,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import * as echarts from 'echarts'
+import request from '@/utils/request'
 // 导入 Element Plus 图标
-import { User, Avatar, Menu, Document, OfficeBuilding, Collection } from '@element-plus/icons-vue'
+import { User, Avatar, Menu, Document, OfficeBuilding, Collection, Timer, Setting } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const lineChartRef = ref(null)
 const pieChartRef = ref(null)
+
+const statistics = reactive({
+  userCount: 0,
+  roleCount: 0,
+  menuCount: 0,
+  logCount: 0,
+  deptCount: 0,
+  postCount: 0,
+  noticeCount: 0,
+  jobCount: 0
+})
 
 const quickLinks = [
   { name: '用户管理', path: '/system/user', icon: User },
@@ -120,93 +132,124 @@ const quickLinks = [
   { name: '菜单管理', path: '/system/menu', icon: Menu },
   { name: '部门管理', path: '/system/dept', icon: OfficeBuilding },
   { name: '字典管理', path: '/system/dict', icon: Collection },
-  { name: '日志管理', path: '/system/log', icon: Document }
+  { name: '定时任务', path: '/job/list', icon: Timer },
+  { name: '系统设置', path: '/system/config', icon: Setting }
 ]
+
+// 获取统计数据
+const getStatistics = () => {
+  request.get('/system/index/statistics').then(res => {
+    Object.assign(statistics, res.data)
+  }).catch(() => {})
+}
 
 // 初始化折线图
 const initLineChart = () => {
   if (!lineChartRef.value) return
   const chart = echarts.init(lineChartRef.value)
-  chart.setOption({
-    tooltip: {
-      trigger: 'axis'
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
+  
+  // 获取访问趋势数据
+  request.get('/system/index/visitTrend').then(res => {
+    const { dates, values } = res.data
+    chart.setOption({
+      tooltip: {
+        trigger: 'axis'
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: dates || []
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          name: '访问量',
+          type: 'line',
+          smooth: true,
+          data: values || [],
+          itemStyle: {
+            color: '#409EFF'
+          },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgba(64, 158, 255, 0.5)' },
+              { offset: 1, color: 'rgba(64, 158, 255, 0.01)' }
+            ])
+          }
+        }
+      ]
+    })
+  }).catch(() => {
+    // 使用默认数据
+    chart.setOption({
+      tooltip: { trigger: 'axis' },
+      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+      xAxis: { type: 'category', boundaryGap: false, data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'] },
+      yAxis: { type: 'value' },
+      series: [{
         name: '访问量',
         type: 'line',
         smooth: true,
         data: [820, 932, 901, 934, 1290, 1330, 1320],
-        itemStyle: {
-          color: '#409EFF'
-        },
+        itemStyle: { color: '#409EFF' },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: 'rgba(64, 158, 255, 0.5)' },
             { offset: 1, color: 'rgba(64, 158, 255, 0.01)' }
           ])
         }
-      }
-    ]
+      }]
+    })
   })
 
-  // 响应式
-  window.addEventListener('resize', () => {
-    chart.resize()
-  })
+  window.addEventListener('resize', () => { chart.resize() })
 }
 
 // 初始化饼图
 const initPieChart = () => {
   if (!pieChartRef.value) return
   const chart = echarts.init(pieChartRef.value)
-  chart.setOption({
-    tooltip: {
-      trigger: 'item'
-    },
-    legend: {
-      bottom: '5%',
-      left: 'center'
-    },
-    series: [
-      {
+  
+  // 获取用户分布数据
+  request.get('/system/index/userDistribution').then(res => {
+    const { data } = res.data
+    chart.setOption({
+      tooltip: { trigger: 'item' },
+      legend: { bottom: '5%', left: 'center' },
+      series: [{
         name: '用户来源',
         type: 'pie',
         radius: ['40%', '70%'],
         avoidLabelOverlap: false,
-        itemStyle: {
-          borderRadius: 10,
-          borderColor: '#fff',
-          borderWidth: 2
-        },
-        label: {
-          show: false,
-          position: 'center'
-        },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: 20,
-            fontWeight: 'bold'
-          }
-        },
-        labelLine: {
-          show: false
-        },
+        itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+        label: { show: false, position: 'center' },
+        emphasis: { label: { show: true, fontSize: 20, fontWeight: 'bold' } },
+        labelLine: { show: false },
+        data: data || []
+      }]
+    })
+  }).catch(() => {
+    // 使用默认数据
+    chart.setOption({
+      tooltip: { trigger: 'item' },
+      legend: { bottom: '5%', left: 'center' },
+      series: [{
+        name: '用户来源',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+        label: { show: false, position: 'center' },
+        emphasis: { label: { show: true, fontSize: 20, fontWeight: 'bold' } },
+        labelLine: { show: false },
         data: [
           { value: 1048, name: '搜索引擎' },
           { value: 735, name: '直接访问' },
@@ -214,17 +257,15 @@ const initPieChart = () => {
           { value: 484, name: '联盟广告' },
           { value: 300, name: '视频广告' }
         ]
-      }
-    ]
+      }]
+    })
   })
 
-  // 响应式
-  window.addEventListener('resize', () => {
-    chart.resize()
-  })
+  window.addEventListener('resize', () => { chart.resize() })
 }
 
 onMounted(() => {
+  getStatistics()
   initLineChart()
   initPieChart()
 })
