@@ -9,6 +9,7 @@ import com.micro.platform.system.entity.SysPost;
 import com.micro.platform.system.service.SysPostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,5 +79,22 @@ public class SysPostController {
     public Result<Void> remove(@PathVariable Long[] postIds) {
         sysPostService.removeBatchByIds(java.util.Arrays.asList(postIds));
         return Result.success();
+    }
+
+    @Operation(summary = "批量删除岗位")
+    @OperationLog(module = "岗位管理", type = OperationType.DELETE, description = "批量删除岗位")
+    @PreAuthorize("hasAuthority('system:post:remove')")
+    @DeleteMapping("/batch")
+    public Result<Void> batchRemove(@RequestBody List<Long> postIds) {
+        sysPostService.removeByIds(postIds);
+        return Result.success();
+    }
+
+    @Operation(summary = "导出岗位数据")
+    @OperationLog(module = "岗位管理", type = OperationType.EXPORT, description = "导出岗位数据")
+    @PreAuthorize("hasAuthority('system:post:query')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysPost post) {
+        sysPostService.exportPost(response, post);
     }
 }

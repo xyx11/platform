@@ -2,12 +2,17 @@ package com.micro.platform.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.result.Result;
+import com.micro.platform.common.log.annotation.OperationLog;
+import com.micro.platform.common.log.annotation.OperationType;
 import com.micro.platform.system.entity.SysOperationLog;
 import com.micro.platform.system.service.SysOperationLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 操作日志控制器
@@ -41,6 +46,7 @@ public class SysLogController {
     }
 
     @Operation(summary = "删除操作日志")
+    @OperationLog(module = "操作日志", type = OperationType.DELETE, description = "删除操作日志")
     @PreAuthorize("hasAuthority('system:log:remove')")
     @DeleteMapping("/{id}")
     public Result<Void> remove(@PathVariable Long id) {
@@ -48,11 +54,29 @@ public class SysLogController {
         return Result.success();
     }
 
+    @Operation(summary = "批量删除操作日志")
+    @OperationLog(module = "操作日志", type = OperationType.DELETE, description = "批量删除操作日志")
+    @PreAuthorize("hasAuthority('system:log:remove')")
+    @DeleteMapping("/batch")
+    public Result<Void> batchRemove(@RequestBody List<Long> ids) {
+        sysOperationLogService.removeByIds(ids);
+        return Result.success();
+    }
+
     @Operation(summary = "清空操作日志")
+    @OperationLog(module = "操作日志", type = OperationType.CLEAN, description = "清空操作日志")
     @PreAuthorize("hasAuthority('system:log:remove')")
     @DeleteMapping("/clear")
     public Result<Void> clear() {
         sysOperationLogService.clean();
         return Result.success();
+    }
+
+    @Operation(summary = "导出操作日志")
+    @OperationLog(module = "操作日志", type = OperationType.EXPORT, description = "导出操作日志")
+    @PreAuthorize("hasAuthority('system:log:query')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysOperationLog log) {
+        sysOperationLogService.exportOperationLog(response, log);
     }
 }
