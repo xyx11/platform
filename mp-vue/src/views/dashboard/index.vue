@@ -109,7 +109,7 @@ import { useRouter } from 'vue-router'
 import * as echarts from 'echarts'
 import request from '@/utils/request'
 // 导入 Element Plus 图标
-import { User, Avatar, Menu, Document, OfficeBuilding, Collection, Timer, Setting } from '@element-plus/icons-vue'
+import { User, Avatar, Menu, Document, OfficeBuilding, Collection, Timer, Setting, Grid, Monitor } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const lineChartRef = ref(null)
@@ -133,6 +133,8 @@ const quickLinks = [
   { name: '部门管理', path: '/system/dept', icon: OfficeBuilding },
   { name: '字典管理', path: '/system/dict', icon: Collection },
   { name: '定时任务', path: '/job/list', icon: Timer },
+  { name: '代码生成', path: '/generator/table', icon: Grid },
+  { name: '系统监控', path: '/monitor/server', icon: Monitor },
   { name: '系统设置', path: '/system/config', icon: Setting }
 ]
 
