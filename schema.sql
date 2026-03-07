@@ -444,7 +444,6 @@ ON DUPLICATE KEY UPDATE menu_name=menu_name;
 INSERT INTO sys_role_menu (role_id, menu_id)
 SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
 
--- ============================================
 -- 示例部门数据
 -- ============================================
 INSERT INTO `sys_dept` (`dept_id`, `parent_id`, `dept_name`, `sort`, `leader`, `phone`, `email`, `status`) VALUES
@@ -455,3 +454,42 @@ INSERT INTO `sys_dept` (`dept_id`, `parent_id`, `dept_name`, `sort`, `leader`, `
 (201, 101, '市场部门', 2, 'zhaoliu', '13800000004', 'market@micro.com', 1),
 (202, 102, '市场部门', 1, 'sunqi', '13800000005', 'bjmarket@micro.com', 1)
 ON DUPLICATE KEY UPDATE dept_name=dept_name;
+
+-- ============================================
+-- 通知公告表
+-- ============================================
+CREATE TABLE IF NOT EXISTS `sys_notice` (
+  `notice_id` bigint NOT NULL COMMENT '公告 ID',
+  `notice_title` varchar(50) DEFAULT NULL COMMENT '公告标题',
+  `notice_type` varchar(10) DEFAULT NULL COMMENT '公告类型 (1:通知 2:公告)',
+  `notice_content` text DEFAULT NULL COMMENT '公告内容',
+  `status` int DEFAULT NULL COMMENT '状态 (0:关闭 1:正常)',
+  `create_by` bigint DEFAULT NULL COMMENT '创建者 ID',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新者 ID',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `deleted` int DEFAULT '0' COMMENT '删除标志 (0:正常 1:删除)',
+  PRIMARY KEY (`notice_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='通知公告表';
+
+-- 插入示例公告数据
+INSERT INTO `sys_notice` (`notice_id`, `notice_title`, `notice_type`, `notice_content`, `status`, `create_time`, `remark`) VALUES
+(1, '系统上线通知', '1', '尊敬的各位用户：\n\n您好！系统将于今日正式上线运行，欢迎大家使用。如有任何问题，请及时联系管理员。\n\n谢谢！', 1, NOW(), '系统首次上线'),
+(2, '版本更新公告', '2', '本次更新内容：\n1. 优化了用户界面\n2. 修复了已知 bug\n3. 提升了系统性能', 1, NOW(), '版本 v1.1.0')
+ON DUPLICATE KEY UPDATE `notice_title`=`notice_title`;
+
+-- ============================================
+-- 通知公告菜单权限
+-- ============================================
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+(17, 1, '通知公告', '/system/notice', 'system/notice/index', 'system:notice:list', 2, 'Bell', 8, 1),
+(1201, 17, '公告查询', '', '', 'system:notice:query', 3, '', 1, 1, NOW()),
+(1202, 17, '公告新增', '', '', 'system:notice:add', 3, '', 2, 1, NOW()),
+(1203, 17, '公告修改', '', '', 'system:notice:edit', 3, '', 3, 1, NOW()),
+(1204, 17, '公告删除', '', '', 'system:notice:remove', 3, '', 4, 1, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 重新关联超级管理员角色和所有菜单
+INSERT INTO sys_role_menu (role_id, menu_id)
+SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
