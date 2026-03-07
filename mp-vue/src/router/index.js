@@ -173,6 +173,12 @@ const routes = [
     meta: { title: '个人中心' }
   },
   {
+    path: '/system/file',
+    name: 'SysFile',
+    component: () => import('@/views/system/file/index.vue'),
+    meta: { title: '文件管理', icon: 'Folder' }
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/views/404.vue'),
