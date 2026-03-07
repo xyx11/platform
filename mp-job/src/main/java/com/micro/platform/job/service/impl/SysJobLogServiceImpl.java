@@ -7,6 +7,9 @@ import com.micro.platform.job.entity.SysJobLog;
 import com.micro.platform.job.mapper.SysJobLogMapper;
 import com.micro.platform.job.service.SysJobLogService;
 import org.springframework.stereotype.Service;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.List;
 import org.springframework.util.StringUtils;
 
 /**

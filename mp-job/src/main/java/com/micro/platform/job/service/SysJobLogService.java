@@ -18,4 +18,9 @@ public interface SysJobLogService extends IServiceX<SysJobLog> {
      * 清空任务日志
      */
     void clean();
+
+    /**
+     * 批量删除任务日志
+     */
+    void batchRemove(String ids);
 }
