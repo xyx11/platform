@@ -48,6 +48,14 @@ public class SysJobLogController {
         return Result.success();
     }
 
+    @Operation(summary = "批量删除定时任务日志")
+    @PreAuthorize("hasAuthority('system:job:remove')")
+    @DeleteMapping("/batch")
+    public Result<Void> batchRemove(@RequestParam String ids) {
+        sysJobLogService.batchRemove(ids);
+        return Result.success();
+    }
+
     @Operation(summary = "清空定时任务日志")
     @PreAuthorize("hasAuthority('system:job:remove')")
     @DeleteMapping("/clear")
