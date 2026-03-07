@@ -20,13 +20,18 @@
 
     <el-card class="table-card">
       <template #header>
-        <el-button type="primary" icon="Plus" @click="handleAdd">新增部门</el-button>
+        <div class="header-actions">
+          <el-button type="primary" icon="Plus" @click="handleAdd">新增部门</el-button>
+          <el-button icon="Expand" @click="expandAll">展开</el-button>
+          <el-button icon="Fold" @click="collapseAll">收起</el-button>
+        </div>
       </template>
 
       <el-table
+        ref="deptTableRef"
         :data="deptList"
         row-key="deptId"
-        :default-expand-all="true"
+        :default-expand-all="defaultExpandAll"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         border
         stripe
@@ -181,6 +186,16 @@ const submitForm = () => {
   })
 }
 
+// 展开所有
+const expandAll = () => {
+  defaultExpandAll.value = true
+}
+
+// 收起所有
+const collapseAll = () => {
+  defaultExpandAll.value = false
+}
+
 // 重置表单
 const resetForm = () => {
   formRef.value?.resetFields()
@@ -203,6 +218,11 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dept-container {
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+
   .table-card {
     margin-top: 20px;
   }
