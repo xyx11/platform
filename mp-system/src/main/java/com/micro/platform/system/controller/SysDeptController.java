@@ -8,6 +8,7 @@ import com.micro.platform.system.entity.SysDept;
 import com.micro.platform.system.service.SysDeptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,8 @@ public class SysDeptController {
 
     @Operation(summary = "获取部门列表")
     @GetMapping("/list")
-    public Result<List<SysDept>> list() {
-        return Result.success(sysDeptService.getDeptTree());
+    public Result<List<SysDept>> list(SysDept dept) {
+        return Result.success(sysDeptService.selectDeptList(dept));
     }
 
     @Operation(summary = "获取部门详情")
@@ -66,5 +67,12 @@ public class SysDeptController {
     public Result<Void> remove(@PathVariable Long deptId) {
         sysDeptService.removeById(deptId);
         return Result.success();
+    }
+
+    @Operation(summary = "导出部门数据")
+    @PreAuthorize("hasAuthority('system:dept:query')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysDept dept) {
+        sysDeptService.exportDept(response, dept);
     }
 }

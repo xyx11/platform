@@ -2,12 +2,17 @@ package com.micro.platform.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.result.Result;
+import com.micro.platform.common.log.annotation.OperationLog;
+import com.micro.platform.common.log.annotation.OperationType;
 import com.micro.platform.system.entity.SysNotice;
 import com.micro.platform.system.service.SysNoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 通知公告控制器
@@ -56,11 +61,35 @@ public class SysNoticeController {
         return Result.success();
     }
 
+    @Operation(summary = "批量删除通知公告")
+    @PreAuthorize("hasAuthority('system:notice:remove')")
+    @DeleteMapping("/batch")
+    public Result<Void> batchRemove(@RequestBody List<Long> ids) {
+        sysNoticeService.batchDelete(ids);
+        return Result.success();
+    }
+
     @Operation(summary = "删除通知公告")
     @PreAuthorize("hasAuthority('system:notice:remove')")
     @DeleteMapping("/{id}")
     public Result<Void> remove(@PathVariable Long id) {
         sysNoticeService.removeById(id);
+        return Result.success();
+    }
+
+    @Operation(summary = "导出通知公告")
+    @PreAuthorize("hasAuthority('system:notice:query')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysNotice notice) {
+        sysNoticeService.exportNotice(response, notice);
+    }
+
+    @Operation(summary = "修改公告状态")
+    @PreAuthorize("hasAuthority('system:notice:edit')")
+    @OperationLog(module = "通知公告", type = OperationType.UPDATE, description = "修改公告状态")
+    @PutMapping("/status")
+    public Result<Void> status(@RequestBody SysNotice notice) {
+        sysNoticeService.updateById(notice);
         return Result.success();
     }
 }

@@ -3,7 +3,7 @@
     <el-card>
       <el-form :model="queryParams" inline>
         <el-form-item label="部门名称">
-          <el-input v-model="queryParams.deptName" placeholder="请输入部门名称" clearable />
+          <el-input v-model="queryParams.deptName" placeholder="请输入部门名称" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
@@ -12,8 +12,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search">查询</el-button>
-          <el-button icon="Refresh">重置</el-button>
+          <el-button type="primary" icon="Search" @click="handleQuery">查询</el-button>
+          <el-button icon="Refresh" @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -24,6 +24,7 @@
           <el-button type="primary" icon="Plus" @click="handleAdd">新增部门</el-button>
           <el-button icon="Expand" @click="expandAll">展开</el-button>
           <el-button icon="Fold" @click="collapseAll">收起</el-button>
+          <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
         </div>
       </template>
 
@@ -122,6 +123,7 @@ const dialog = reactive({
 })
 
 const formRef = ref(null)
+const defaultExpandAll = ref(true)
 const form = reactive({
   deptId: null,
   parentId: null,
@@ -139,9 +141,21 @@ const rules = {
 
 // 获取部门列表
 const getDeptList = () => {
-  request.get('/system/dept/list').then(res => {
+  request.get('/system/dept/list', { params: queryParams }).then(res => {
     deptList.value = res.data
   })
+}
+
+// 查询
+const handleQuery = () => {
+  getDeptList()
+}
+
+// 重置
+const resetQuery = () => {
+  queryParams.deptName = ''
+  queryParams.status = null
+  getDeptList()
 }
 
 // 新增
@@ -208,6 +222,24 @@ const resetForm = () => {
     phone: '',
     email: '',
     status: 1
+  })
+}
+
+// 导出
+const handleExport = () => {
+  const params = {
+    deptName: queryParams.deptName,
+    status: queryParams.status
+  }
+  request.get('/system/dept/export', { params, responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '部门数据_' + new Date().getTime() + '.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('导出成功')
   })
 }
 
