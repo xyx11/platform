@@ -21,6 +21,10 @@ const routes = [
     ]
   },
   {
+    path: '/user',
+    redirect: '/system/user'
+  },
+  {
     path: '/system',
     component: () => import('@/layout/index.vue'),
     redirect: '/system/user',
