@@ -579,3 +579,34 @@ ON DUPLICATE KEY UPDATE menu_name=menu_name;
 -- 重新关联超级管理员角色和所有菜单
 INSERT INTO sys_role_menu (role_id, menu_id)
 SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
+
+-- ============================================
+-- 登录日志表
+-- ============================================
+CREATE TABLE IF NOT EXISTS `sys_login_log` (
+  `log_id` bigint NOT NULL COMMENT '访问 ID',
+  `user_id` bigint DEFAULT NULL COMMENT '用户 ID',
+  `username` varchar(50) DEFAULT NULL COMMENT '用户账号',
+  `status` int DEFAULT NULL COMMENT '登录状态 (0:失败 1:成功)',
+  `ip` varchar(100) DEFAULT NULL COMMENT '登录 IP 地址',
+  `location` varchar(255) DEFAULT NULL COMMENT '登录地点',
+  `browser` varchar(100) DEFAULT NULL COMMENT '浏览器类型',
+  `os` varchar(100) DEFAULT NULL COMMENT '操作系统',
+  `msg` varchar(255) DEFAULT NULL COMMENT '提示消息',
+  `login_time` datetime DEFAULT NULL COMMENT '登录时间',
+  PRIMARY KEY (`log_id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_login_time` (`login_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='登录日志表';
+
+-- 登录日志菜单权限
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+(21, 1, '登录日志', '/system/loginlog', 'system/loginlog/index', 'system:loginlog:list', 2, 'Document', 10, 1),
+(2101, 21, '登录日志查询', '', '', 'system:loginlog:query', 3, '', 1, 1, NOW()),
+(2102, 21, '登录日志删除', '', '', 'system:loginlog:remove', 3, '', 2, 1, NOW()),
+(2103, 21, '登录日志清空', '', '', 'system:loginlog:clear', 3, '', 3, 1, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 重新关联超级管理员角色和所有菜单
+INSERT INTO sys_role_menu (role_id, menu_id)
+SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;

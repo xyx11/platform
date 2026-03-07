@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.micro.platform.system.mapper.SysLoginLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.micro.platform.system.entity.SysLoginLog">
+        <id column="log_id" property="logId"/>
+        <result column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="status" property="status"/>
+        <result column="ip" property="ip"/>
+        <result column="location" property="location"/>
+        <result column="browser" property="browser"/>
+        <result column="os" property="os"/>
+        <result column="msg" property="msg"/>
+        <result column="login_time" property="loginTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        log_id, user_id, username, status, ip, location, browser, os, msg, login_time
+    </sql>
+
+    <!-- 分页查询登录日志列表 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sys_login_log
+        <where>
+            1=1
+            <if test="log.username != null and log.username != ''">
+                AND username LIKE CONCAT('%', #{log.username}, '%')
+            </if>
+            <if test="log.status != null">
+                AND status = #{log.status}
+            </if>
+            <if test="log.userId != null">
+                AND user_id = #{log.userId}
+            </if>
+            <if test="log.ip != null and log.ip != ''">
+                AND ip LIKE CONCAT('%', #{log.ip}, '%')
+            </if>
+            <if test="log.loginTime != null">
+                AND login_time &gt;= #{log.loginTime}
+            </if>
+        </where>
+        ORDER BY login_time DESC
+    </select>
+
+    <!-- 清空登录日志 -->
+    <update id="clean">
+        TRUNCATE TABLE sys_login_log
+    </update>
+
+</mapper>
