@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.micro.platform.job.mapper.SysJobLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.micro.platform.job.entity.SysJobLog">
+        <id column="job_log_id" property="jobLogId"/>
+        <result column="job_id" property="jobId"/>
+        <result column="job_name" property="jobName"/>
+        <result column="job_group" property="jobGroup"/>
+        <result column="invoke_target" property="invokeTarget"/>
+        <result column="job_message" property="jobMessage"/>
+        <result column="status" property="status"/>
+        <result column="exception_info" property="exceptionInfo"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        job_log_id, job_id, job_name, job_group, invoke_target, job_message, status, exception_info, create_time
+    </sql>
+
+    <!-- 分页查询任务日志列表 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sys_job_log
+        <where>
+            1=1
+            <if test="jobLog.jobId != null">
+                AND job_id = #{jobLog.jobId}
+            </if>
+            <if test="jobLog.jobName != null and jobLog.jobName != ''">
+                AND job_name LIKE CONCAT('%', #{jobLog.jobName}, '%')
+            </if>
+            <if test="jobLog.jobGroup != null and jobLog.jobGroup != ''">
+                AND job_group = #{jobLog.jobGroup}
+            </if>
+            <if test="jobLog.status != null">
+                AND status = #{jobLog.status}
+            </if>
+        </where>
+        ORDER BY job_log_id DESC
+    </select>
+
+    <!-- 清空任务日志 -->
+    <update id="clean">
+        TRUNCATE TABLE sys_job_log
+    </update>
+
+</mapper>

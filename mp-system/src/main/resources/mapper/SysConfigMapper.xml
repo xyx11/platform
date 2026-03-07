@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.micro.platform.system.mapper.SysConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.micro.platform.system.entity.SysConfig">
+        <id column="config_id" property="configId"/>
+        <result column="config_name" property="configName"/>
+        <result column="config_key" property="configKey"/>
+        <result column="config_value" property="configValue"/>
+        <result column="config_type" property="configType"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        config_id, config_name, config_key, config_value, config_type, status, remark, create_by, create_time, update_by, update_time, deleted
+    </sql>
+
+    <!-- 分页查询配置列表 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sys_config
+        <where>
+            deleted = 0
+            <if test="config.configName != null and config.configName != ''">
+                AND config_name LIKE CONCAT('%', #{config.configName}, '%')
+            </if>
+            <if test="config.configKey != null and config.configKey != ''">
+                AND config_key LIKE CONCAT('%', #{config.configKey}, '%')
+            </if>
+            <if test="config.configType != null">
+                AND config_type = #{config.configType}
+            </if>
+            <if test="config.status != null">
+                AND status = #{config.status}
+            </if>
+        </where>
+        ORDER BY config_id DESC
+    </select>
+
+</mapper>

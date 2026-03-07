@@ -13,4 +13,9 @@ public interface SysOperationLogService extends IServiceX<SysOperationLog> {
      * 分页查询操作日志列表
      */
     Page<SysOperationLog> selectOperationLogPage(SysOperationLog log, Integer pageNum, Integer pageSize);
+
+    /**
+     * 清空操作日志
+     */
+    void clean();
 }

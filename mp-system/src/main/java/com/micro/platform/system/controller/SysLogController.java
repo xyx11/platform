@@ -52,7 +52,7 @@ public class SysLogController {
     @PreAuthorize("hasAuthority('system:log:remove')")
     @DeleteMapping("/clear")
     public Result<Void> clear() {
-        sysOperationLogService.remove(null);
+        sysOperationLogService.clean();
         return Result.success();
     }
 }
