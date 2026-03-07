@@ -7,6 +7,7 @@ import com.micro.platform.common.core.service.impl.ServiceImplX;
 import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.mapper.SysUserMapper;
 import com.micro.platform.system.service.SysUserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -62,6 +63,19 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
         if (user == null) {
             throw new BusinessException("用户不存在");
         }
+
+    @Override
+    public void changePassword(Long userId, String oldPassword, String newPassword) {
+        SysUser user = getById(userId);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+        if (!new BCryptPasswordEncoder().matches(oldPassword, user.getPassword())) {
+            throw new RuntimeException("旧密码错误");
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+        updateById(user);
+    }
         // TODO: 需要加密密码
         user.setPassword(password);
         baseMapper.updateById(user);

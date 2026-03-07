@@ -28,4 +28,9 @@ public interface SysUserService extends IServiceX<SysUser> {
      * 重置密码
      */
     void resetPassword(Long userId, String password);
+
+    /**
+     * 修改密码
+     */
+    void changePassword(Long userId, String oldPassword, String newPassword);
 }
