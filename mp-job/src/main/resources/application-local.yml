@@ -88,3 +88,16 @@ logging:
     root: INFO
     com.micro.platform: DEBUG
     com.micro.platform.**.mapper: DEBUG
+
+xxl:
+  job:
+    admin:
+      addresses: http://localhost:8888/xxl-job-admin
+    executor:
+      appname: mp-job
+      address:
+      ip:
+      port: 9999
+      logpath: /Users/xieyunxing/applogs/xxl-job/jobhandler
+      logretentiondays: 30
+      accessToken:

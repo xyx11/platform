@@ -349,3 +349,15 @@ INSERT INTO `sys_job` (`job_id`, `job_name`, `job_group`, `invoke_target`, `cron
 (1, '系统定时清理', 'system', 'SystemTask.clean()', '0 0 2 * * ?', 3, 1, 1, '每天凌晨 2 点执行', NOW()),
 (2, '数据备份任务', 'backup', 'BackupTask.backup()', '0 0 3 * * ?', 3, 1, 0, '每天凌晨 3 点备份数据', NOW())
 ON DUPLICATE KEY UPDATE `job_name`=`job_name`;
+-- ============================================
+-- XXL-Job 调度中心数据库初始化
+-- ============================================
+-- 执行以下 SQL 创建 xxl_job 数据库:
+-- mysql -u root -p < xxl_job_init.sql
+-- 或者手动执行:
+-- CREATE DATABASE xxl_job DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- use xxl_job;
+-- source tables_xxl_job.sql
+--
+-- XXL-Job Admin 访问地址：http://localhost:8888/xxl-job-admin
+-- 默认账号密码：admin / 123456
