@@ -361,3 +361,97 @@ ON DUPLICATE KEY UPDATE `job_name`=`job_name`;
 --
 -- XXL-Job Admin 访问地址：http://localhost:8888/xxl-job-admin
 -- 默认账号密码：admin / 123456
+
+-- ============================================
+-- 完整菜单数据 (60 个菜单项)
+-- ============================================
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+-- 系统管理目录
+(1, 0, '系统管理', '/system', 'layout', '', 1, 'Setting', 1, 1),
+-- 用户管理
+(2, 1, '用户管理', '/system/user', 'system/user/index', 'system:user:list', 2, 'User', 1, 1),
+(101, 2, '用户查询', '', '', 'system:user:query', 3, '', 1, 1, NOW()),
+(102, 2, '用户新增', '', '', 'system:user:add', 3, '', 2, 1, NOW()),
+(103, 2, '用户修改', '', '', 'system:user:edit', 3, '', 3, 1, NOW()),
+(104, 2, '用户删除', '', '', 'system:user:remove', 3, '', 4, 1, NOW()),
+(105, 2, '重置密码', '', '', 'system:user:resetPwd', 3, '', 5, 1, NOW()),
+-- 角色管理
+(3, 1, '角色管理', '/system/role', 'system/role/index', 'system:role:list', 2, 'Avatar', 2, 1),
+(201, 3, '角色查询', '', '', 'system:role:query', 3, '', 1, 1, NOW()),
+(202, 3, '角色新增', '', '', 'system:role:add', 3, '', 2, 1, NOW()),
+(203, 3, '角色修改', '', '', 'system:role:edit', 3, '', 3, 1, NOW()),
+(204, 3, '角色删除', '', '', 'system:role:remove', 3, '', 4, 1, NOW()),
+-- 菜单管理
+(4, 1, '菜单管理', '/system/menu', 'system/menu/index', 'system:menu:list', 2, 'Menu', 3, 1),
+(301, 4, '菜单查询', '', '', 'system:menu:query', 3, '', 1, 1, NOW()),
+(302, 4, '菜单新增', '', '', 'system:menu:add', 3, '', 2, 1, NOW()),
+(303, 4, '菜单修改', '', '', 'system:menu:edit', 3, '', 3, 1, NOW()),
+(304, 4, '菜单删除', '', '', 'system:menu:remove', 3, '', 4, 1, NOW()),
+-- 部门管理
+(5, 1, '部门管理', '/system/dept', 'system/dept/index', 'system:dept:list', 2, 'OfficeBuilding', 4, 1),
+(401, 5, '部门查询', '', '', 'system:dept:query', 3, '', 1, 1, NOW()),
+(402, 5, '部门新增', '', '', 'system:dept:add', 3, '', 2, 1, NOW()),
+(403, 5, '部门修改', '', '', 'system:dept:edit', 3, '', 3, 1, NOW()),
+(404, 5, '部门删除', '', '', 'system:dept:remove', 3, '', 4, 1, NOW()),
+-- 岗位管理
+(6, 1, '岗位管理', '/system/post', 'system/post/index', 'system:post:list', 2, 'Postcard', 5, 1),
+(501, 6, '岗位查询', '', '', 'system:post:query', 3, '', 1, 1, NOW()),
+(502, 6, '岗位新增', '', '', 'system:post:add', 3, '', 2, 1, NOW()),
+(503, 6, '岗位修改', '', '', 'system:post:edit', 3, '', 3, 1, NOW()),
+(504, 6, '岗位删除', '', '', 'system:post:remove', 3, '', 4, 1, NOW()),
+-- 字典管理
+(7, 1, '字典管理', '/system/dict', 'system/dict/index', 'system:dict:list', 2, 'Collection', 6, 1),
+(601, 7, '字典查询', '', '', 'system:dict:query', 3, '', 1, 1, NOW()),
+(602, 7, '字典新增', '', '', 'system:dict:add', 3, '', 2, 1, NOW()),
+(603, 7, '字典修改', '', '', 'system:dict:edit', 3, '', 3, 1, NOW()),
+(604, 7, '字典删除', '', '', 'system:dict:remove', 3, '', 4, 1, NOW()),
+-- 参数配置
+(8, 1, '参数设置', '/system/config', 'system/config/index', 'system:config:list', 2, 'Tools', 7, 1),
+(701, 8, '参数查询', '', '', 'system:config:query', 3, '', 1, 1, NOW()),
+(702, 8, '参数新增', '', '', 'system:config:add', 3, '', 2, 1, NOW()),
+(703, 8, '参数修改', '', '', 'system:config:edit', 3, '', 3, 1, NOW()),
+(704, 8, '参数删除', '', '', 'system:config:remove', 3, '', 4, 1, NOW()),
+-- 日志管理
+(9, 1, '日志管理', '/system/log', 'system/log/index', 'system:log:list', 2, 'Document', 8, 1),
+(801, 9, '日志查询', '', '', 'system:log:query', 3, '', 1, 1, NOW()),
+(802, 9, '日志删除', '', '', 'system:log:remove', 3, '', 2, 1, NOW()),
+(803, 9, '日志清空', '', '', 'system:log:clear', 3, '', 3, 1, NOW()),
+-- 定时任务
+(10, 1, '定时任务', '/system/job', 'system/job/index', 'system:job:list', 2, 'Timer', 9, 1),
+(901, 10, '任务查询', '', '', 'system:job:query', 3, '', 1, 1, NOW()),
+(902, 10, '任务新增', '', '', 'system:job:add', 3, '', 2, 1, NOW()),
+(903, 10, '任务修改', '', '', 'system:job:edit', 3, '', 3, 1, NOW()),
+(904, 10, '任务删除', '', '', 'system:job:remove', 3, '', 4, 1, NOW()),
+(905, 10, '启动任务', '', '', 'system:job:start', 3, '', 5, 1, NOW()),
+(906, 10, '停止任务', '', '', 'system:job:stop', 3, '', 6, 1, NOW()),
+(907, 10, '立即执行', '', '', 'system:job:run', 3, '', 7, 1, NOW()),
+-- 任务日志
+(11, 1, '任务日志', '/system/job-log', 'system/job-log/index', 'system:joblog:list', 2, 'FileText', 10, 1),
+(1001, 11, '日志查询', '', '', 'system:joblog:query', 3, '', 1, 1, NOW()),
+(1002, 11, '日志删除', '', '', 'system:joblog:remove', 3, '', 2, 1, NOW()),
+(1003, 11, '日志清空', '', '', 'system:joblog:clear', 3, '', 3, 1, NOW()),
+-- 系统监控
+(12, 1, '系统监控', '/monitor', 'layout', '', 1, 'Monitor', 11, 1),
+(13, 12, '在线用户', '/monitor/online', 'monitor/online/index', 'monitor:online:list', 2, 'User', 1, 1),
+(1101, 13, '在线用户查询', '', '', 'monitor:online:query', 3, '', 1, 1, NOW()),
+(1102, 13, '强制下线', '', '', 'monitor:online:forceLogout', 3, '', 2, 1, NOW()),
+(14, 12, 'Redis 监控', '/monitor/redis', 'monitor/redis/index', 'monitor:redis:query', 2, 'Folder', 2, 1),
+(15, 12, '服务器监控', '/monitor/server', 'monitor/server/index', 'monitor:server:query', 2, 'Platform', 3, 1),
+(16, 12, '缓存监控', '/monitor/cache', 'monitor/cache/index', 'monitor:cache:query', 2, 'DataLine', 4, 1)
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 关联超级管理员角色和所有菜单
+INSERT INTO sys_role_menu (role_id, menu_id)
+SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
+
+-- ============================================
+-- 示例部门数据
+-- ============================================
+INSERT INTO `sys_dept` (`dept_id`, `parent_id`, `dept_name`, `sort`, `leader`, `phone`, `email`, `status`) VALUES
+(100, 0, '集团总公司', 1, 'admin', '13800000000', 'admin@micro.com', 1),
+(101, 100, '深圳分公司', 1, 'zhangsan', '13800000001', 'sz@micro.com', 1),
+(102, 100, '北京分公司', 2, 'lisi', '13800000002', 'bj@micro.com', 1),
+(200, 101, '研发部门', 1, 'wangwu', '13800000003', 'dev@micro.com', 1),
+(201, 101, '市场部门', 2, 'zhaoliu', '13800000004', 'market@micro.com', 1),
+(202, 102, '市场部门', 1, 'sunqi', '13800000005', 'bjmarket@micro.com', 1)
+ON DUPLICATE KEY UPDATE dept_name=dept_name;
