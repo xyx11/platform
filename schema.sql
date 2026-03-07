@@ -610,3 +610,14 @@ ON DUPLICATE KEY UPDATE menu_name=menu_name;
 -- 重新关联超级管理员角色和所有菜单
 INSERT INTO sys_role_menu (role_id, menu_id)
 SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
+
+-- 参数配置批量删除和刷新缓存权限
+UPDATE `sys_menu` SET `deleted` = 1 WHERE `menu_id` IN (705, 706);
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+(705, 8, '批量删除', '', '', 'system:config:batchRemove', 3, '', 5, 1, NOW()),
+(706, 8, '刷新缓存', '', '', 'system:config:refreshCache', 3, '', 6, 1, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 重新关联超级管理员角色和所有菜单
+INSERT INTO sys_role_menu (role_id, menu_id)
+SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;

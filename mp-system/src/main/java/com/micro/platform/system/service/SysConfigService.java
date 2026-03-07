@@ -28,4 +28,9 @@ public interface SysConfigService extends IServiceX<SysConfig> {
      * 更新参数配置
      */
     void updateConfig(SysConfig config);
+
+    /**
+     * 刷新参数配置缓存
+     */
+    void refreshCache();
 }
