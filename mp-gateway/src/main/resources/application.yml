@@ -31,7 +31,7 @@ spring:
           predicates:
             - Path=/auth/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
         - id: mp-system
           uri: lb://mp-system
           predicates:
@@ -50,6 +50,12 @@ spring:
             - Path=/job/**
           filters:
             - StripPrefix=1
+        - id: mp-system-monitor
+          uri: lb://mp-system
+          predicates:
+            - Path=/monitor/**
+          filters:
+            - StripPrefix=0
   data:
     redis:
       host: localhost
@@ -72,3 +78,4 @@ logging:
   level:
     root: INFO
     com.micro.platform.gateway: DEBUG
+    org.springframework.cloud.gateway: DEBUG

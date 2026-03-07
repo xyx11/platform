@@ -20,79 +20,34 @@ public class SysOperationLog implements Serializable {
     private Long id;
 
     /**
-     * 模块名称
+     * 模块标题
      */
-    private String module;
+    private String title;
 
     /**
-     * 操作类型
+     * 业务类型
      */
-    private String operationType;
+    private Integer businessType;
 
     /**
-     * 操作描述
+     * 方法名称
      */
-    private String description;
+    private String method;
 
     /**
-     * 请求方法
+     * 请求方式
      */
     private String requestMethod;
 
     /**
-     * 请求 URL
+     * 操作类别
      */
-    private String requestUrl;
+    private Integer operatorType;
 
     /**
-     * 请求参数
+     * 操作人员
      */
-    private String requestParams;
-
-    /**
-     * 响应结果
-     */
-    private String responseResult;
-
-    /**
-     * 操作 IP
-     */
-    private String operationIp;
-
-    /**
-     * 操作地点
-     */
-    private String operationLocation;
-
-    /**
-     * 浏览器类型
-     */
-    private String browser;
-
-    /**
-     * 操作系统
-     */
-    private String os;
-
-    /**
-     * 执行时长（毫秒）
-     */
-    private Long executeTime;
-
-    /**
-     * 操作人 ID
-     */
-    private Long operatorId;
-
-    /**
-     * 操作人名称
-     */
-    private String operatorName;
-
-    /**
-     * 部门 ID
-     */
-    private Long deptId;
+    private String operName;
 
     /**
      * 部门名称
@@ -100,7 +55,32 @@ public class SysOperationLog implements Serializable {
     private String deptName;
 
     /**
-     * 状态：0-失败 1-成功
+     * 请求 URL
+     */
+    private String operUrl;
+
+    /**
+     * 主机地址
+     */
+    private String operIp;
+
+    /**
+     * 操作地点
+     */
+    private String operLocation;
+
+    /**
+     * 请求参数
+     */
+    private String operParam;
+
+    /**
+     * 返回参数
+     */
+    private String jsonResult;
+
+    /**
+     * 操作状态 (0:正常 1:异常)
      */
     private Integer status;
 
@@ -110,59 +90,53 @@ public class SysOperationLog implements Serializable {
     private String errorMsg;
 
     /**
-     * 创建时间
+     * 操作时间
      */
-    private LocalDateTime createTime;
+    private LocalDateTime operTime;
+
+    /**
+     * 消耗时间
+     */
+    private Integer costTime;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getModule() { return module; }
-    public void setModule(String module) { this.module = module; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public String getOperationType() { return operationType; }
-    public void setOperationType(String operationType) { this.operationType = operationType; }
+    public Integer getBusinessType() { return businessType; }
+    public void setBusinessType(Integer businessType) { this.businessType = businessType; }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getMethod() { return method; }
+    public void setMethod(String method) { this.method = method; }
 
     public String getRequestMethod() { return requestMethod; }
     public void setRequestMethod(String requestMethod) { this.requestMethod = requestMethod; }
 
-    public String getRequestUrl() { return requestUrl; }
-    public void setRequestUrl(String requestUrl) { this.requestUrl = requestUrl; }
+    public Integer getOperatorType() { return operatorType; }
+    public void setOperatorType(Integer operatorType) { this.operatorType = operatorType; }
 
-    public String getRequestParams() { return requestParams; }
-    public void setRequestParams(String requestParams) { this.requestParams = requestParams; }
-
-    public String getResponseResult() { return responseResult; }
-    public void setResponseResult(String responseResult) { this.responseResult = responseResult; }
-
-    public String getOperationIp() { return operationIp; }
-    public void setOperationIp(String operationIp) { this.operationIp = operationIp; }
-
-    public String getOperationLocation() { return operationLocation; }
-    public void setOperationLocation(String operationLocation) { this.operationLocation = operationLocation; }
-
-    public String getBrowser() { return browser; }
-    public void setBrowser(String browser) { this.browser = browser; }
-
-    public String getOs() { return os; }
-    public void setOs(String os) { this.os = os; }
-
-    public Long getExecuteTime() { return executeTime; }
-    public void setExecuteTime(Long executeTime) { this.executeTime = executeTime; }
-
-    public Long getOperatorId() { return operatorId; }
-    public void setOperatorId(Long operatorId) { this.operatorId = operatorId; }
-
-    public String getOperatorName() { return operatorName; }
-    public void setOperatorName(String operatorName) { this.operatorName = operatorName; }
-
-    public Long getDeptId() { return deptId; }
-    public void setDeptId(Long deptId) { this.deptId = deptId; }
+    public String getOperName() { return operName; }
+    public void setOperName(String operName) { this.operName = operName; }
 
     public String getDeptName() { return deptName; }
     public void setDeptName(String deptName) { this.deptName = deptName; }
+
+    public String getOperUrl() { return operUrl; }
+    public void setOperUrl(String operUrl) { this.operUrl = operUrl; }
+
+    public String getOperIp() { return operIp; }
+    public void setOperIp(String operIp) { this.operIp = operIp; }
+
+    public String getOperLocation() { return operLocation; }
+    public void setOperLocation(String operLocation) { this.operLocation = operLocation; }
+
+    public String getOperParam() { return operParam; }
+    public void setOperParam(String operParam) { this.operParam = operParam; }
+
+    public String getJsonResult() { return jsonResult; }
+    public void setJsonResult(String jsonResult) { this.jsonResult = jsonResult; }
 
     public Integer getStatus() { return status; }
     public void setStatus(Integer status) { this.status = status; }
@@ -170,7 +144,9 @@ public class SysOperationLog implements Serializable {
     public String getErrorMsg() { return errorMsg; }
     public void setErrorMsg(String errorMsg) { this.errorMsg = errorMsg; }
 
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
+    public LocalDateTime getOperTime() { return operTime; }
+    public void setOperTime(LocalDateTime operTime) { this.operTime = operTime; }
 
+    public Integer getCostTime() { return costTime; }
+    public void setCostTime(Integer costTime) { this.costTime = costTime; }
 }

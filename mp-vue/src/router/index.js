@@ -57,6 +57,12 @@ const routes = [
         meta: { title: '字典管理', icon: 'Collection' }
       },
       {
+        path: 'post',
+        name: 'SysPost',
+        component: () => import('@/views/system/post/index.vue'),
+        meta: { title: '岗位管理', icon: 'Postcard' }
+      },
+      {
         path: 'config',
         name: 'SysConfig',
         component: () => import('@/views/system/config/index.vue'),
@@ -105,6 +111,52 @@ const routes = [
     ]
   },
   {
+    path: '/monitor',
+    component: () => import('@/layout/index.vue'),
+    redirect: '/monitor/online',
+    meta: { title: '系统监控', icon: 'Monitor' },
+    children: [
+      {
+        path: 'online',
+        name: 'OnlineUser',
+        component: () => import('@/views/monitor/online/index.vue'),
+        meta: { title: '在线用户', icon: 'User' }
+      },
+      {
+        path: 'redis',
+        name: 'RedisMonitor',
+        component: () => import('@/views/monitor/redis/index.vue'),
+        meta: { title: 'Redis 监控', icon: 'Folder' }
+      },
+      {
+        path: 'server',
+        name: 'ServerMonitor',
+        component: () => import('@/views/monitor/server/index.vue'),
+        meta: { title: '服务器监控', icon: 'Platform' }
+      },
+      {
+        path: 'cache',
+        name: 'CacheMonitor',
+        component: () => import('@/views/monitor/cache/index.vue'),
+        meta: { title: '缓存监控', icon: 'DataLine' }
+      }
+    ]
+  },
+  {
+    path: '/tool',
+    component: () => import('@/layout/index.vue'),
+    redirect: '/tool/build',
+    meta: { title: '系统工具', icon: 'Tools' },
+    children: [
+      {
+        path: 'build',
+        name: 'ToolBuild',
+        component: () => import('@/views/tool/build/index.vue'),
+        meta: { title: '表单构建', icon: 'EditPen' }
+      }
+    ]
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/views/404.vue'),
@@ -117,18 +169,25 @@ const router = createRouter({
   routes
 })
 
-// 路由守卫
+// 路由守卫 - 简化版本
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title ? `${to.meta.title} - Micro Platform` : 'Micro Platform'
+  // 设置页面标题
+  if (to.meta.title) {
+    document.title = `${to.meta.title} - Micro Platform`
+  }
 
-  const token = localStorage.getItem('access_token')
-
+  // 登录页直接访问
   if (to.path === '/login') {
     next()
-  } else if (!token) {
-    next('/login')
-  } else {
+    return
+  }
+
+  // 其他路由检查登录状态
+  const token = localStorage.getItem('access_token')
+  if (token) {
     next()
+  } else {
+    next('/login')
   }
 })
 

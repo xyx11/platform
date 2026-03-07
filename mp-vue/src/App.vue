@@ -21,4 +21,17 @@ html, body, #app {
 #app {
   overflow: hidden;
 }
+
+/* 确保布局组件正确显示 */
+.el-container {
+  height: 100%;
+}
+
+.el-aside {
+  overflow-x: hidden;
+}
+
+.el-main {
+  overflow-y: auto;
+}
 </style>

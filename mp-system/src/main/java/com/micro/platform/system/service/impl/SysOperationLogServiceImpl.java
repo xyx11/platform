@@ -19,13 +19,17 @@ public class SysOperationLogServiceImpl extends ServiceImplX<SysOperationLogMapp
     public Page<SysOperationLog> selectOperationLogPage(SysOperationLog log, Integer pageNum, Integer pageSize) {
         Page<SysOperationLog> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<SysOperationLog> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(StringUtils.hasText(log.getModule()), SysOperationLog::getModule, log.getModule())
-                .like(StringUtils.hasText(log.getOperationType()), SysOperationLog::getOperationType, log.getOperationType())
-                .like(StringUtils.hasText(log.getDescription()), SysOperationLog::getDescription, log.getDescription())
-                .like(StringUtils.hasText(log.getOperatorName()), SysOperationLog::getOperatorName, log.getOperatorName())
+        wrapper.like(StringUtils.hasText(log.getTitle()), SysOperationLog::getTitle, log.getTitle())
+                .like(StringUtils.hasText(log.getOperName()), SysOperationLog::getOperName, log.getOperName())
+                .eq(log.getBusinessType() != null, SysOperationLog::getBusinessType, log.getBusinessType())
                 .eq(log.getStatus() != null, SysOperationLog::getStatus, log.getStatus())
-                .ge(log.getCreateTime() != null, SysOperationLog::getCreateTime, log.getCreateTime())
-                .orderByDesc(SysOperationLog::getCreateTime);
+                .ge(log.getOperTime() != null, SysOperationLog::getOperTime, log.getOperTime())
+                .orderByDesc(SysOperationLog::getOperTime);
         return baseMapper.selectPage(page, wrapper);
+    }
+
+    @Override
+    public void clean() {
+        baseMapper.clean();
     }
 }

@@ -6,8 +6,6 @@ spring:
     name: mp-job
   main:
     allow-bean-definition-overriding: true
-  config:
-    import: optional:nacos:
   cloud:
     nacos:
       discovery:

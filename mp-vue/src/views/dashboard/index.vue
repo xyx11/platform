@@ -107,22 +107,25 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import * as echarts from 'echarts'
+// 导入 Element Plus 图标
+import { User, Avatar, Menu, Document, OfficeBuilding, Collection } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const lineChartRef = ref(null)
 const pieChartRef = ref(null)
 
 const quickLinks = [
-  { name: '用户管理', path: '/system/user', icon: 'User' },
-  { name: '角色管理', path: '/system/role', icon: 'Avatar' },
-  { name: '菜单管理', path: '/system/menu', icon: 'Menu' },
-  { name: '部门管理', path: '/system/dept', icon: 'OfficeBuilding' },
-  { name: '字典管理', path: '/system/dict', icon: 'Collection' },
-  { name: '日志管理', path: '/system/log', icon: 'Document' }
+  { name: '用户管理', path: '/system/user', icon: User },
+  { name: '角色管理', path: '/system/role', icon: Avatar },
+  { name: '菜单管理', path: '/system/menu', icon: Menu },
+  { name: '部门管理', path: '/system/dept', icon: OfficeBuilding },
+  { name: '字典管理', path: '/system/dict', icon: Collection },
+  { name: '日志管理', path: '/system/log', icon: Document }
 ]
 
 // 初始化折线图
 const initLineChart = () => {
+  if (!lineChartRef.value) return
   const chart = echarts.init(lineChartRef.value)
   chart.setOption({
     tooltip: {
@@ -160,10 +163,16 @@ const initLineChart = () => {
       }
     ]
   })
+
+  // 响应式
+  window.addEventListener('resize', () => {
+    chart.resize()
+  })
 }
 
 // 初始化饼图
 const initPieChart = () => {
+  if (!pieChartRef.value) return
   const chart = echarts.init(pieChartRef.value)
   chart.setOption({
     tooltip: {
@@ -208,108 +217,113 @@ const initPieChart = () => {
       }
     ]
   })
+
+  // 响应式
+  window.addEventListener('resize', () => {
+    chart.resize()
+  })
 }
 
 onMounted(() => {
   initLineChart()
   initPieChart()
-
-  window.addEventListener('resize', () => {
-    echarts.getInstanceByDom(lineChartRef.value)?.resize()
-    echarts.getInstanceByDom(pieChartRef.value)?.resize()
-  })
 })
 </script>
 
 <style lang="scss" scoped>
 .dashboard-container {
-  .stat-cards {
-    margin-bottom: 20px;
+  padding: 20px;
+  min-height: calc(100vh - 84px);
+}
 
-    .stat-card {
-      .stat-item {
-        display: flex;
-        align-items: center;
-        gap: 15px;
+.stat-cards {
+  margin-bottom: 20px;
+}
 
-        .stat-icon {
-          width: 60px;
-          height: 60px;
-          border-radius: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 28px;
-          color: #fff;
+.stat-card {
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+  }
 
-          &.user {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-          }
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #fff;
 
-          &.role {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-          }
+    &.user {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
 
-          &.menu {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-          }
+    &.role {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+    }
 
-          &.log {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-          }
-        }
+    &.menu {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+    }
 
-        .stat-info {
-          .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-          }
-
-          .stat-label {
-            font-size: 14px;
-            color: #999;
-            margin-top: 5px;
-          }
-        }
-      }
+    &.log {
+      background: linear-gradient(135deg, #43e97b, #38f9d7);
     }
   }
 
-  .charts {
-    margin-bottom: 20px;
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+  .stat-info {
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
     }
 
-    .chart {
-      height: 300px;
+    .stat-label {
+      font-size: 14px;
+      color: #999;
+      margin-top: 5px;
     }
   }
+}
 
-  .quick-links {
-    .quick-link {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      cursor: pointer;
-      transition: all 0.3s;
-      border-radius: 8px;
+.charts {
+  margin-bottom: 20px;
 
-      &:hover {
-        background-color: #f5f7fa;
-        transform: translateY(-3px);
-      }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-      span {
-        margin-top: 10px;
-        font-size: 14px;
-        color: #606266;
-      }
+  .chart {
+    height: 300px;
+    width: 100%;
+  }
+}
+
+.quick-links {
+  .quick-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: #f5f7fa;
+      transform: translateY(-3px);
+    }
+
+    span {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #606266;
     }
   }
 }

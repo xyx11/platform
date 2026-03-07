@@ -234,7 +234,21 @@ INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`
 (8, 1, '日志管理', '/system/log', 'system/log/index', 'system:log:list', 2, 'Document', 1, 7, NOW()),
 (701, 8, '日志查询', '', '', 'system:log:query', 3, '', 1, 1, NOW()),
 (702, 8, '日志删除', '', '', 'system:log:remove', 3, '', 1, 2, NOW()),
-(703, 8, '日志清空', '', '', 'system:log:clear', 3, '', 1, 3, NOW())
+(703, 8, '日志清空', '', '', 'system:log:clear', 3, '', 1, 3, NOW()),
+-- 定时任务管理
+(9, 1, '定时任务', '/system/job', 'system/job/index', 'system:job:list', 2, 'Timer', 1, 2, NOW()),
+(801, 9, '任务查询', '', '', 'system:job:query', 3, '', 1, 1, NOW()),
+(802, 9, '任务新增', '', '', 'system:job:add', 3, '', 1, 2, NOW()),
+(803, 9, '任务修改', '', '', 'system:job:edit', 3, '', 1, 3, NOW()),
+(804, 9, '任务删除', '', '', 'system:job:remove', 3, '', 1, 4, NOW()),
+(805, 9, '启动任务', '', '', 'system:job:start', 3, '', 1, 5, NOW()),
+(806, 9, '停止任务', '', '', 'system:job:stop', 3, '', 1, 6, NOW()),
+(807, 9, '立即执行', '', '', 'system:job:run', 3, '', 1, 7, NOW()),
+-- 任务日志管理
+(10, 1, '任务日志', '/system/job-log', 'system/job-log/index', 'system:joblog:list', 2, 'FileText', 1, 3, NOW()),
+(901, 10, '日志查询', '', '', 'system:joblog:query', 3, '', 1, 1, NOW()),
+(902, 10, '日志删除', '', '', 'system:joblog:remove', 3, '', 1, 2, NOW()),
+(903, 10, '日志清空', '', '', 'system:joblog:clear', 3, '', 1, 3, NOW())
 ON DUPLICATE KEY UPDATE `menu_name`=`menu_name`;
 
 -- 关联管理员和超级管理员角色
@@ -267,3 +281,71 @@ INSERT INTO `sys_config` (`config_id`, `config_name`, `config_key`, `config_valu
 (2, '用户管理 - 账号初始密码', 'user.password.init', '123456', 1, 1, NOW()),
 (3, '主框架页 - 侧边栏主题', 'skin.index.theme', 'theme-dark', 1, 1, NOW())
 ON DUPLICATE KEY UPDATE `config_name`=`config_name`;
+
+-- 创建岗位表
+CREATE TABLE IF NOT EXISTS `sys_post` (
+  `post_id` bigint NOT NULL COMMENT '岗位 ID',
+  `post_code` varchar(50) DEFAULT NULL COMMENT '岗位编码',
+  `post_name` varchar(50) DEFAULT NULL COMMENT '岗位名称',
+  `post_sort` int DEFAULT NULL COMMENT '岗位排序',
+  `status` int DEFAULT NULL COMMENT '状态 (0:禁用 1:正常)',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `create_by` bigint DEFAULT NULL COMMENT '创建者 ID',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新者 ID',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted` int DEFAULT '0' COMMENT '删除标志 (0:正常 1:删除)',
+  PRIMARY KEY (`post_id`),
+  UNIQUE KEY `uk_post_code` (`post_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系统岗位表';
+
+-- 插入岗位数据
+INSERT INTO `sys_post` (`post_id`, `post_code`, `post_name`, `post_sort`, `status`, `create_time`) VALUES
+(1, 'ceo', '董事长', 1, 1, NOW()),
+(2, 'manager', '总经理', 2, 1, NOW()),
+(3, 'hr', '人力资源', 3, 1, NOW()),
+(4, 'tech', '技术岗位', 4, 1, NOW()),
+(5, 'finance', '财务岗位', 5, 1, NOW()),
+(6, 'admin', '行政岗位', 6, 1, NOW())
+ON DUPLICATE KEY UPDATE `post_code`=`post_code`;
+
+-- 创建定时任务表
+CREATE TABLE IF NOT EXISTS `sys_job` (
+  `job_id` bigint NOT NULL COMMENT '任务 ID',
+  `job_name` varchar(50) DEFAULT NULL COMMENT '任务名称',
+  `job_group` varchar(50) DEFAULT NULL COMMENT '任务组名',
+  `invoke_target` varchar(255) DEFAULT NULL COMMENT '调用目标字符串',
+  `cron_expression` varchar(50) DEFAULT NULL COMMENT 'Cron 执行表达式',
+  `misfire_policy` int DEFAULT '3' COMMENT '执行策略 (1:立即执行 2:取消执行 3:跳过执行)',
+  `concurrent` int DEFAULT '1' COMMENT '是否并发执行 (0:允许 1:禁止)',
+  `status` int DEFAULT NULL COMMENT '状态 (0:暂停 1:正常)',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `create_by` bigint DEFAULT NULL COMMENT '创建者 ID',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新者 ID',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted` int DEFAULT '0' COMMENT '删除标志 (0:正常 1:删除)',
+  PRIMARY KEY (`job_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='定时任务表';
+
+-- 创建定时任务日志表
+CREATE TABLE IF NOT EXISTS `sys_job_log` (
+  `job_log_id` bigint NOT NULL COMMENT '日志 ID',
+  `job_id` bigint DEFAULT NULL COMMENT '任务 ID',
+  `job_name` varchar(50) DEFAULT NULL COMMENT '任务名称',
+  `job_group` varchar(50) DEFAULT NULL COMMENT '任务组名',
+  `invoke_target` varchar(255) DEFAULT NULL COMMENT '调用目标字符串',
+  `job_message` varchar(255) DEFAULT NULL COMMENT '日志信息',
+  `status` int DEFAULT NULL COMMENT '执行状态 (0:正常 1:失败)',
+  `exception_info` text DEFAULT NULL COMMENT '异常信息',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`job_log_id`),
+  KEY `idx_job_id` (`job_id`),
+  KEY `idx_create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='定时任务日志表';
+
+-- 插入定时任务示例数据
+INSERT INTO `sys_job` (`job_id`, `job_name`, `job_group`, `invoke_target`, `cron_expression`, `misfire_policy`, `concurrent`, `status`, `remark`, `create_time`) VALUES
+(1, '系统定时清理', 'system', 'SystemTask.clean()', '0 0 2 * * ?', 3, 1, 1, '每天凌晨 2 点执行', NOW()),
+(2, '数据备份任务', 'backup', 'BackupTask.backup()', '0 0 3 * * ?', 3, 1, 0, '每天凌晨 3 点备份数据', NOW())
+ON DUPLICATE KEY UPDATE `job_name`=`job_name`;

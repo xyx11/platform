@@ -1,3 +1,35 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< com.micro.platform:mp-system >--------------------
+[INFO] Building mp-system 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.2.5:run (default-cli) > test-compile @ mp-system >>>
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ mp-system ---
+[INFO] Copying 8 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.12.1:compile (default-compile) @ mp-system ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 49 source files with javac [debug target 17] to target/classes
+[WARNING] 未与 -source 17 一起设置系统模块的位置
+  不设置系统模块的位置可能会导致类文件无法在 JDK 17 上运行
+    建议使用 --release 17 而不是 -source 17 -target 17，因为它会自动设置系统模块的位置
+[INFO] /Users/xieyunxing/micro-platform/mp-system/src/main/java/com/micro/platform/system/controller/SysMonitorController.java: /Users/xieyunxing/micro-platform/mp-system/src/main/java/com/micro/platform/system/controller/SysMonitorController.java使用或覆盖了已过时的 API。
+[INFO] /Users/xieyunxing/micro-platform/mp-system/src/main/java/com/micro/platform/system/controller/SysMonitorController.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ mp-system ---
+[INFO] skip non existing resourceDirectory /Users/xieyunxing/micro-platform/mp-system/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.12.1:testCompile (default-testCompile) @ mp-system ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:3.2.5:run (default-cli) < test-compile @ mp-system <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.2.5:run (default-cli) @ mp-system ---
+[INFO] Attaching agents: []
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -7,33 +39,33 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.2.5)
 
-2026-03-07T10:59:51.273+08:00  INFO 46251 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Starting SystemApplication using Java 25.0.2 with PID 46251 (/Users/xieyunxing/micro-platform/mp-system/target/classes started by xieyunxing in /Users/xieyunxing/micro-platform/mp-system)
-2026-03-07T10:59:51.274+08:00 DEBUG 46251 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
-2026-03-07T10:59:51.275+08:00  INFO 46251 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : The following 1 profile is active: "local"
-2026-03-07T10:59:51.748+08:00  INFO 46251 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2026-03-07T10:59:51.749+08:00  INFO 46251 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2026-03-07T10:59:51.758+08:00  INFO 46251 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
-2026-03-07T10:59:51.876+08:00  INFO 46251 --- [mp-system] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=9b03e057-a1f1-31df-8e0f-688fca746ed2
-2026-03-07T10:59:52.027+08:00  WARN 46251 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T10:59:52.029+08:00  WARN 46251 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T10:59:52.029+08:00  WARN 46251 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x000001fe014a4a30] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T10:59:52.030+08:00  WARN 46251 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T10:59:52.046+08:00  WARN 46251 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T10:59:52.048+08:00  WARN 46251 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T10:59:52.053+08:00  WARN 46251 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsJakartaHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-07T20:50:32.004+08:00  INFO 45669 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Starting SystemApplication using Java 25.0.2 with PID 45669 (/Users/xieyunxing/micro-platform/mp-system/target/classes started by xieyunxing in /Users/xieyunxing/micro-platform/mp-system)
+2026-03-07T20:50:32.004+08:00 DEBUG 45669 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-07T20:50:32.004+08:00  INFO 45669 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : The following 1 profile is active: "local"
+2026-03-07T20:50:32.281+08:00  INFO 45669 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-07T20:50:32.282+08:00  INFO 45669 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-07T20:50:32.292+08:00  INFO 45669 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
+2026-03-07T20:50:32.369+08:00  INFO 45669 --- [mp-system] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=29b389fc-4db9-3c4f-be10-282435bc2eeb
+2026-03-07T20:50:32.471+08:00  WARN 45669 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-07T20:50:32.472+08:00  WARN 45669 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-07T20:50:32.473+08:00  WARN 45669 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x00001e00014a4ca8] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-07T20:50:32.474+08:00  WARN 45669 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-07T20:50:32.485+08:00  WARN 45669 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-07T20:50:32.486+08:00  WARN 45669 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-07T20:50:32.489+08:00  WARN 45669 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsJakartaHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
 WARNING: A restricted method in java.lang.System has been called
 WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/Users/xieyunxing/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.20/tomcat-embed-core-10.1.20.jar)
 WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
 WARNING: Restricted methods will be blocked in a future release unless native access is enabled
 
-2026-03-07T10:59:52.220+08:00  INFO 46251 --- [mp-system] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8082 (http)
-2026-03-07T10:59:52.228+08:00  INFO 46251 --- [mp-system] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-03-07T10:59:52.229+08:00  INFO 46251 --- [mp-system] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
-2026-03-07T10:59:52.261+08:00  INFO 46251 --- [mp-system] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-03-07T10:59:52.261+08:00  INFO 46251 --- [mp-system] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 953 ms
-2026-03-07T10:59:52.559+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1,master} inited
-2026-03-07T10:59:52.559+08:00  INFO 46251 --- [mp-system] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource - add a datasource named [master] success
-2026-03-07T10:59:52.559+08:00  INFO 46251 --- [mp-system] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+2026-03-07T20:50:32.577+08:00  INFO 45669 --- [mp-system] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8082 (http)
+2026-03-07T20:50:32.581+08:00  INFO 45669 --- [mp-system] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-07T20:50:32.581+08:00  INFO 45669 --- [mp-system] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-07T20:50:32.602+08:00  INFO 45669 --- [mp-system] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-07T20:50:32.602+08:00  INFO 45669 --- [mp-system] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 583 ms
+2026-03-07T20:50:32.772+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1,master} inited
+2026-03-07T20:50:32.772+08:00  INFO 45669 --- [mp-system] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource - add a datasource named [master] success
+2026-03-07T20:50:32.772+08:00  INFO 45669 --- [mp-system] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
  _ _   |_  _ _|_. ___ _ |    _ 
 | | |\/|_)(_| | |_\  |_)||_|_\ 
      /               |         
@@ -42,43 +74,63 @@ WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
 WARNING: sun.misc.Unsafe::objectFieldOffset has been called by io.netty.util.internal.PlatformDependent0$4 (file:/Users/xieyunxing/.m2/repository/io/netty/netty-common/4.1.109.Final/netty-common-4.1.109.Final.jar)
 WARNING: Please consider reporting this to the maintainers of class io.netty.util.internal.PlatformDependent0$4
 WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
-2026-03-07T10:59:53.172+08:00  WARN 46251 --- [mp-system] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
-
-Using generated security password: 17413085-4ad9-431c-a187-f4151db72146
-
-This generated password is for development use only. Your security configuration must be updated before running your application in production.
-
-2026-03-07T10:59:53.216+08:00  INFO 46251 --- [mp-system] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5aefdb9e, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7a491a60, org.springframework.security.web.context.SecurityContextHolderFilter@6dc7b7f, org.springframework.security.web.header.HeaderWriterFilter@3f0b5619, org.springframework.web.filter.CorsFilter@80b6098, org.springframework.security.web.csrf.CsrfFilter@49741e80, org.springframework.security.web.authentication.logout.LogoutFilter@2305aad0, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@4ac0fdc7, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@215f8d7, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@5c30decf, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@118c1faa, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@355b4c34, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1372696b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7827cdfc, org.springframework.security.web.access.ExceptionTranslationFilter@33502cfe, org.springframework.security.web.access.intercept.AuthorizationFilter@689eab53]
-2026-03-07T10:59:53.281+08:00  INFO 46251 --- [mp-system] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8082 (http) with context path ''
-2026-03-07T10:59:53.284+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ans.namespace attribute : null
-2026-03-07T10:59:53.285+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ALIBABA_ALIWARE_NAMESPACE attribute :null
-2026-03-07T10:59:53.285+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from namespace attribute :null
-2026-03-07T10:59:53.289+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : FailoverDataSource type is class com.alibaba.nacos.client.naming.backups.datasource.DiskFailoverDataSource
-2026-03-07T10:59:53.292+08:00  INFO 46251 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [req-serv] nacos-server port:8848
-2026-03-07T10:59:53.292+08:00  INFO 46251 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [http-client] connect timeout:1000
-2026-03-07T10:59:53.292+08:00  INFO 46251 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : PER_TASK_CONFIG_SIZE: 3000.0
-2026-03-07T10:59:53.293+08:00  INFO 46251 --- [mp-system] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-2026-03-07T10:59:53.293+08:00  INFO 46251 --- [mp-system] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-2026-03-07T10:59:53.303+08:00  INFO 46251 --- [mp-system] [       Thread-3] c.a.n.c.a.r.identify.CredentialWatcher   : null No credential found
-2026-03-07T10:59:53.306+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [RpcClientFactory] create a new rpc client of b1c6ba21-4037-4a90-b367-159d3a4773ef
-2026-03-07T10:59:53.311+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : Create naming rpc client for uuid->b1c6ba21-4037-4a90-b367-159d3a4773ef
-2026-03-07T10:59:53.311+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b1c6ba21-4037-4a90-b367-159d3a4773ef] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
-2026-03-07T10:59:53.311+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b1c6ba21-4037-4a90-b367-159d3a4773ef] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
-2026-03-07T10:59:53.311+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b1c6ba21-4037-4a90-b367-159d3a4773ef] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
-2026-03-07T10:59:53.312+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b1c6ba21-4037-4a90-b367-159d3a4773ef] Try to connect to server on start up, server: {serverIp = '127.0.0.1', server main port = 8848}
-2026-03-07T10:59:53.321+08:00  INFO 46251 --- [mp-system] [           main] c.a.n.c.remote.client.grpc.GrpcClient    : grpc client connection server:127.0.0.1 ip,serverPort:9848,grpcTslConfig:{"sslProvider":"","enableTls":false,"mutualAuthEnable":false,"trustAll":false}
-2026-03-07T10:59:53.472+08:00  INFO 46251 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to get current node abilities...
-2026-03-07T10:59:53.473+08:00  INFO 46251 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to initialize current node abilities, support modes: [SDK_CLIENT]
-2026-03-07T10:59:53.473+08:00  INFO 46251 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Initialize current abilities finish...
-2026-03-07T10:59:53.473+08:00  INFO 46251 --- [mp-system] [           main] c.a.n.c.a.d.NacosAbilityManagerHolder    : [AbilityControlManager] Successfully initialize AbilityControlManager
-2026-03-07T10:59:53.479+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b1c6ba21-4037-4a90-b367-159d3a4773ef] Success to connect to server [127.0.0.1:8848] on start up, connectionId = 1772852393447_127.0.0.1_63926
-2026-03-07T10:59:53.480+08:00  INFO 46251 --- [mp-system] [remote.worker.0] com.alibaba.nacos.common.remote.client   : [b1c6ba21-4037-4a90-b367-159d3a4773ef] Notify connected event to listeners.
-2026-03-07T10:59:53.480+08:00  INFO 46251 --- [mp-system] [remote.worker.0] com.alibaba.nacos.client.naming          : Grpc connection connect
-2026-03-07T10:59:53.480+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b1c6ba21-4037-4a90-b367-159d3a4773ef] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
-2026-03-07T10:59:53.480+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b1c6ba21-4037-4a90-b367-159d3a4773ef] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda/0x000001fe019a08c0
-2026-03-07T10:59:53.480+08:00  INFO 46251 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : [REGISTER-SERVICE] public registering service mp-system with instance Instance{instanceId='null', ip='192.168.0.104', port=8082, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={IPv6=null, preserved.register.source=SPRING_CLOUD}}
-2026-03-07T10:59:53.486+08:00  INFO 46251 --- [mp-system] [           main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP mp-system 192.168.0.104:8082 register finished
-2026-03-07T10:59:53.493+08:00  INFO 46251 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Started SystemApplication in 2.489 seconds (process running for 2.685)
-2026-03-07T11:02:31.250+08:00  INFO 46251 --- [mp-system] [nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-07T11:02:31.250+08:00  INFO 46251 --- [mp-system] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-03-07T11:02:31.251+08:00  INFO 46251 --- [mp-system] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-03-07T20:50:33.426+08:00  INFO 45669 --- [mp-system] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8082 (http) with context path ''
+2026-03-07T20:50:33.429+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ans.namespace attribute : null
+2026-03-07T20:50:33.429+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ALIBABA_ALIWARE_NAMESPACE attribute :null
+2026-03-07T20:50:33.429+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from namespace attribute :null
+2026-03-07T20:50:33.433+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : FailoverDataSource type is class com.alibaba.nacos.client.naming.backups.datasource.DiskFailoverDataSource
+2026-03-07T20:50:33.436+08:00  INFO 45669 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [req-serv] nacos-server port:8848
+2026-03-07T20:50:33.436+08:00  INFO 45669 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [http-client] connect timeout:1000
+2026-03-07T20:50:33.436+08:00  INFO 45669 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : PER_TASK_CONFIG_SIZE: 3000.0
+2026-03-07T20:50:33.437+08:00  INFO 45669 --- [mp-system] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+2026-03-07T20:50:33.437+08:00  INFO 45669 --- [mp-system] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+2026-03-07T20:50:33.444+08:00  INFO 45669 --- [mp-system] [       Thread-3] c.a.n.c.a.r.identify.CredentialWatcher   : null No credential found
+2026-03-07T20:50:33.447+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [RpcClientFactory] create a new rpc client of dd691cd0-89ab-494e-a745-a5f5e33e8095
+2026-03-07T20:50:33.452+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : Create naming rpc client for uuid->dd691cd0-89ab-494e-a745-a5f5e33e8095
+2026-03-07T20:50:33.452+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [dd691cd0-89ab-494e-a745-a5f5e33e8095] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
+2026-03-07T20:50:33.452+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [dd691cd0-89ab-494e-a745-a5f5e33e8095] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
+2026-03-07T20:50:33.452+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [dd691cd0-89ab-494e-a745-a5f5e33e8095] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
+2026-03-07T20:50:33.453+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [dd691cd0-89ab-494e-a745-a5f5e33e8095] Try to connect to server on start up, server: {serverIp = '127.0.0.1', server main port = 8848}
+2026-03-07T20:50:33.461+08:00  INFO 45669 --- [mp-system] [           main] c.a.n.c.remote.client.grpc.GrpcClient    : grpc client connection server:127.0.0.1 ip,serverPort:9848,grpcTslConfig:{"sslProvider":"","enableTls":false,"mutualAuthEnable":false,"trustAll":false}
+2026-03-07T20:50:33.622+08:00  INFO 45669 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to get current node abilities...
+2026-03-07T20:50:33.623+08:00  INFO 45669 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to initialize current node abilities, support modes: [SDK_CLIENT]
+2026-03-07T20:50:33.623+08:00  INFO 45669 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Initialize current abilities finish...
+2026-03-07T20:50:33.623+08:00  INFO 45669 --- [mp-system] [           main] c.a.n.c.a.d.NacosAbilityManagerHolder    : [AbilityControlManager] Successfully initialize AbilityControlManager
+2026-03-07T20:50:33.630+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [dd691cd0-89ab-494e-a745-a5f5e33e8095] Success to connect to server [127.0.0.1:8848] on start up, connectionId = 1772887833595_127.0.0.1_65147
+2026-03-07T20:50:33.630+08:00  INFO 45669 --- [mp-system] [remote.worker.0] com.alibaba.nacos.common.remote.client   : [dd691cd0-89ab-494e-a745-a5f5e33e8095] Notify connected event to listeners.
+2026-03-07T20:50:33.630+08:00  INFO 45669 --- [mp-system] [remote.worker.0] com.alibaba.nacos.client.naming          : Grpc connection connect
+2026-03-07T20:50:33.630+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [dd691cd0-89ab-494e-a745-a5f5e33e8095] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
+2026-03-07T20:50:33.631+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [dd691cd0-89ab-494e-a745-a5f5e33e8095] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda/0x00001e0001971378
+2026-03-07T20:50:33.631+08:00  INFO 45669 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : [REGISTER-SERVICE] public registering service mp-system with instance Instance{instanceId='null', ip='192.168.0.104', port=8082, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={IPv6=null, preserved.register.source=SPRING_CLOUD}}
+2026-03-07T20:50:33.638+08:00  INFO 45669 --- [mp-system] [           main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP mp-system 192.168.0.104:8082 register finished
+2026-03-07T20:50:33.644+08:00  INFO 45669 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Started SystemApplication in 1.803 seconds (process running for 1.91)
+2026-03-07T20:51:20.980+08:00  INFO 45669 --- [mp-system] [nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-07T20:51:20.981+08:00  INFO 45669 --- [mp-system] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-07T20:51:20.981+08:00  INFO 45669 --- [mp-system] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-03-07T20:51:21.020+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-1] c.m.p.s.mapper.SysPostMapper.selectList  : ==>  Preparing: SELECT post_id,post_code,post_name,post_sort,status,remark,create_by,create_time,update_by,update_time,deleted FROM sys_post WHERE deleted=0 ORDER BY post_sort ASC
+2026-03-07T20:51:21.101+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-1] c.m.p.s.mapper.SysPostMapper.selectList  : ==> Parameters: 
+2026-03-07T20:51:21.108+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-1] c.m.p.s.mapper.SysPostMapper.selectList  : <==      Total: 0
+2026-03-07T20:51:21.128+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.SysDictTypeMapper.selectList   : ==>  Preparing: SELECT dict_id,dict_name,dict_type,status,remark,create_by,create_time,update_by,update_time,deleted FROM sys_dict_type WHERE deleted=0 ORDER BY create_time DESC
+2026-03-07T20:51:21.129+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.SysDictTypeMapper.selectList   : ==> Parameters: 
+2026-03-07T20:51:21.129+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.SysDictTypeMapper.selectList   : <==      Total: 0
+2026-03-07T20:51:21.155+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.selectList                   : ==>  Preparing: SELECT id,title,business_type,method,request_method,operator_type,oper_name,dept_name,oper_url,oper_ip,oper_location,oper_param,json_result,status,error_msg,oper_time,cost_time FROM sys_operation_log ORDER BY oper_time DESC
+2026-03-07T20:51:21.155+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.selectList                   : ==> Parameters: 
+2026-03-07T20:51:21.156+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.selectList                   : <==      Total: 0
+2026-03-07T20:51:21.179+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.SysConfigMapper.selectList     : ==>  Preparing: SELECT config_id,config_name,config_key,config_value,config_type,status,remark,create_by,create_time,update_by,update_time,deleted FROM sys_config WHERE deleted=0 ORDER BY create_time DESC
+2026-03-07T20:51:21.179+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.SysConfigMapper.selectList     : ==> Parameters: 
+2026-03-07T20:51:21.182+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.SysConfigMapper.selectList     : <==      Total: 3
+2026-03-07T20:52:24.824+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-6] c.m.p.s.mapper.SysPostMapper.selectList  : ==>  Preparing: SELECT post_id,post_code,post_name,post_sort,status,remark,create_by,create_time,update_by,update_time,deleted FROM sys_post WHERE deleted=0 ORDER BY post_sort ASC
+2026-03-07T20:52:24.824+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-6] c.m.p.s.mapper.SysPostMapper.selectList  : ==> Parameters: 
+2026-03-07T20:52:24.825+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-6] c.m.p.s.mapper.SysPostMapper.selectList  : <==      Total: 6
+2026-03-07T20:52:24.852+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.SysDictTypeMapper.selectList   : ==>  Preparing: SELECT dict_id,dict_name,dict_type,status,remark,create_by,create_time,update_by,update_time,deleted FROM sys_dict_type WHERE deleted=0 ORDER BY create_time DESC
+2026-03-07T20:52:24.852+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.SysDictTypeMapper.selectList   : ==> Parameters: 
+2026-03-07T20:52:24.853+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.SysDictTypeMapper.selectList   : <==      Total: 3
+2026-03-07T20:52:24.879+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.SysDictDataMapper.selectList   : ==>  Preparing: SELECT dict_code,dict_type,dict_label,dict_value,sort,status,css_class,list_class,is_default,remark,create_by,create_time,update_by,update_time,deleted FROM sys_dict_data WHERE deleted=0 ORDER BY sort ASC
+2026-03-07T20:52:24.880+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.SysDictDataMapper.selectList   : ==> Parameters: 
+2026-03-07T20:52:24.882+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.SysDictDataMapper.selectList   : <==      Total: 6
+2026-03-07T20:52:24.905+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.SysConfigMapper.selectList     : ==>  Preparing: SELECT config_id,config_name,config_key,config_value,config_type,status,remark,create_by,create_time,update_by,update_time,deleted FROM sys_config WHERE deleted=0 ORDER BY create_time DESC
+2026-03-07T20:52:24.905+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.SysConfigMapper.selectList     : ==> Parameters: 
+2026-03-07T20:52:24.906+08:00 DEBUG 45669 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.SysConfigMapper.selectList     : <==      Total: 3
+2026-03-07T20:52:24.930+08:00 DEBUG 45669 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.S.selectList                   : ==>  Preparing: SELECT id,title,business_type,method,request_method,operator_type,oper_name,dept_name,oper_url,oper_ip,oper_location,oper_param,json_result,status,error_msg,oper_time,cost_time FROM sys_operation_log ORDER BY oper_time DESC
+2026-03-07T20:52:24.930+08:00 DEBUG 45669 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.S.selectList                   : ==> Parameters: 
+2026-03-07T20:52:24.931+08:00 DEBUG 45669 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.S.selectList                   : <==      Total: 0
