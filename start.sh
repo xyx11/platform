@@ -15,6 +15,8 @@ NACOS_HOME="/Users/xieyunxing/Downloads/nacos"
 NACOS_SERVER="127.0.0.1:8848"
 BASE_DIR="/Users/xieyunxing/micro-platform"
 LOGS_DIR="$BASE_DIR/logs"
+XXL_JOB_HOME="/Users/xieyunxing/Downloads/xxl-job-2.4.1"
+XXL_JOB_PORT="8888"
 
 # 服务配置：名称 - 模块 - 端口
 declare -a SERVICES=(
@@ -65,7 +67,6 @@ check_health() {
     local attempt=1
 
     while [ $attempt -le $max_attempts ]; do
-        # 检查 actuator/health 或者根路径 (200 或 404 都算正常，只要服务在响应)
         local status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$port/ 2>/dev/null)
         if [ "$status" = "200" ] || [ "$status" = "404" ]; then
             return 0
@@ -95,6 +96,7 @@ print_header
 
 # 确保日志目录存在
 mkdir -p $LOGS_DIR
+mkdir -p /Users/xieyunxing/applogs/xxl-job/jobhandler
 
 # 检查并启动 Nacos
 echo -e "${BLUE}检查 Nacos 服务...${NC}"
@@ -116,7 +118,27 @@ else
 fi
 echo ""
 
-# 停止旧服务（可选）
+# 启动 XXL-Job Admin
+echo -e "${BLUE}检查 XXL-Job 调度中心...${NC}"
+if curl -s -o /dev/null -w "%{http_code}" http://localhost:$XXL_JOB_PORT/xxl-job-admin/ | grep -qE "200|302"; then
+    print_success "XXL-Job Admin 已在运行 (端口 $XXL_JOB_PORT)"
+else
+    print_info "XXL-Job Admin 未运行，正在启动..."
+    if [ -d "$XXL_JOB_HOME" ]; then
+        nohup java -Dserver.port=$XXL_JOB_PORT -jar $XXL_JOB_HOME/xxl-job-admin/target/xxl-job-admin-2.4.1.jar > $LOGS_DIR/xxl-job-admin.log 2>&1 &
+        sleep 8
+        if curl -s -o /dev/null -w "%{http_code}" http://localhost:$XXL_JOB_PORT/xxl-job-admin/ | grep -qE "200|302"; then
+            print_success "XXL-Job Admin 启动完成"
+        else
+            print_warn "XXL-Job Admin 可能启动失败，请查看日志"
+        fi
+    else
+        print_warn "XXL-Job 目录不存在，跳过启动"
+    fi
+fi
+echo ""
+
+# 停止旧服务
 echo -e "${BLUE}检查旧服务进程...${NC}"
 for service in "${SERVICES[@]}"; do
     IFS=':' read -r name module port <<< "$service"
@@ -132,7 +154,6 @@ echo ""
 for service in "${SERVICES[@]}"; do
     IFS=':' read -r name module port <<< "$service"
 
-    # 检查端口
     if check_port $port; then
         print_warn "$name 端口 $port 已被占用，跳过"
         continue
@@ -177,10 +198,15 @@ echo "  - mp-auth:      http://localhost:8081"
 echo "  - mp-system:    http://localhost:8082"
 echo "  - mp-generator: http://localhost:8083"
 echo "  - mp-job:       http://localhost:8084"
+echo "  - xxl-job:      http://localhost:$XXL_JOB_PORT/xxl-job-admin"
 echo ""
 echo "Swagger 地址:"
 echo "  - http://localhost:8081/doc.html"
 echo "  - http://localhost:8082/doc.html"
+echo ""
+echo "XXL-Job 调度中心:"
+echo "  - 地址：http://localhost:$XXL_JOB_PORT/xxl-job-admin"
+echo "  - 账号：admin / 123456"
 echo ""
 echo "常用命令:"
 echo "  查看日志：tail -f logs/mp-auth.log"
