@@ -24,20 +24,22 @@
           </el-button>
         </el-form-item>
       </el-form>
+    </el-card>
 
-      <!-- 操作按钮 -->
-      <el-row :gutter="10" style="margin-bottom: 10px">
-        <el-col :span="1.5">
+    <el-card class="table-card" style="margin-top: 20px">
+      <template #header>
+        <div class="header-actions">
           <el-button type="primary" plain @click="handleAdd">
             <el-icon><Plus /></el-icon> 新增
           </el-button>
-        </el-col>
-        <el-col :span="1.5">
           <el-button type="danger" plain :disabled="multiple" @click="handleDelete">
             <el-icon><Delete /></el-icon> 删除
           </el-button>
-        </el-col>
-      </el-row>
+          <el-button type="success" plain @click="handleExport">
+            <el-icon><Download /></el-icon> 导出
+          </el-button>
+        </div>
+      </template>
 
       <!-- 表格 -->
       <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
@@ -113,7 +115,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import axios from 'axios'
+import request from '@/utils/request'
 
 const loading = ref(false)
 const postList = ref([])
@@ -150,17 +152,15 @@ const rules = {
   postSort: [{ required: true, message: '岗位排序不能为空', trigger: 'blur' }]
 }
 
-const getList = async () => {
+const getList = () => {
   loading.value = true
-  try {
-    const response = await axios.get('/api/system/post/list', { params: queryParams })
-    postList.value = response.data.data.records || []
-    total.value = response.data.data.total || 0
-  } catch (error) {
-    ElMessage.error('获取岗位列表失败')
-  } finally {
+  request.get('/system/post/list', { params: queryParams }).then(res => {
+    postList.value = res.data?.records || []
+    total.value = res.data?.total || 0
     loading.value = false
-  }
+  }).catch(() => {
+    loading.value = false
+  })
 }
 
 const handleQuery = () => {
@@ -190,40 +190,27 @@ const handleUpdate = (row) => {
   dialog.visible = true
 }
 
-const submitForm = async () => {
-  try {
-    if (dialog.isEdit) {
-      await axios.put('/api/system/post', form.value)
-      ElMessage.success('修改成功')
-    } else {
-      await axios.post('/api/system/post', form.value)
-      ElMessage.success('新增成功')
-    }
+const submitForm = () => {
+  const api = dialog.isEdit ? request.put : request.post
+  api('/system/post', form.value).then(() => {
+    ElMessage.success('操作成功')
     dialog.visible = false
     getList()
-  } catch (error) {
-    ElMessage.error(dialog.isEdit ? '修改失败' : '新增失败')
-  }
+  })
 }
 
-const handleDelete = async (row) => {
+const handleDelete = (row) => {
   const postIds = row.postId ? [row.postId] : ids.value
-  const idsStr = postIds.join(',')
-
-  try {
-    await ElMessageBox.confirm(`确认删除已选中的数据项？`, '警告', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
+  ElMessageBox.confirm(`确认删除选中的数据项？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    request.delete('/system/post/batch', { data: postIds }).then(() => {
+      ElMessage.success('删除成功')
+      getList()
     })
-    await axios.delete(`/api/system/post/${idsStr}`)
-    ElMessage.success('删除成功')
-    getList()
-  } catch (error) {
-    if (error !== 'cancel') {
-      ElMessage.error('删除失败')
-    }
-  }
+  })
 }
 
 const handleSelectionChange = (selection) => {
@@ -231,11 +218,30 @@ const handleSelectionChange = (selection) => {
   multiple.value = !selection.length
 }
 
+// 导出
+const handleExport = () => {
+  request.get('/system/post/export', { params: queryParams, responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '岗位数据_' + new Date().getTime() + '.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('导出成功')
+  })
+}
+
 getList()
 </script>
 
 <style lang="scss" scoped>
 .app-container {
-  padding: 20px;
+  .table-card {
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+  }
 }
 </style>

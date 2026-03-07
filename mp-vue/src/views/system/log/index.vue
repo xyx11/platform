@@ -27,11 +27,20 @@
     <el-card class="table-card">
       <template #header>
         <div class="header-actions">
+          <el-button type="danger" icon="Delete" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
           <el-button type="danger" icon="Delete" @click="handleClear">清空日志</el-button>
+          <el-button type="success" icon="Download" @click="handleExport">导出日志</el-button>
         </div>
       </template>
 
-      <el-table :data="logList" border stripe v-loading="loading">
+      <el-table
+        :data="logList"
+        border
+        stripe
+        v-loading="loading"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="id" label="日志 ID" width="100" />
         <el-table-column prop="module" label="模块名称" width="120" />
         <el-table-column prop="description" label="操作描述" min-width="150" />
@@ -117,6 +126,8 @@ import request from '@/utils/request'
 
 const logList = ref([])
 const loading = ref(false)
+const multiple = ref(true)
+const logIds = ref([])
 
 const queryParams = reactive({
   module: '',
@@ -193,6 +204,24 @@ const handleDetail = (row) => {
   Object.assign(detailLog, row)
 }
 
+// 多选框选中数据
+const handleSelectionChange = (selection) => {
+  logIds.value = selection.map(item => item.id)
+  multiple.value = !selection.length
+}
+
+// 批量删除
+const handleBatchDelete = () => {
+  ElMessageBox.confirm(`确认删除选中的 ${logIds.value.length} 条日志吗？`, '警告', {
+    type: 'warning'
+  }).then(() => {
+    request.delete('/system/log/batch', { data: logIds.value }).then(() => {
+      ElMessage.success('批量删除成功')
+      getLogList()
+    })
+  })
+}
+
 // 清空日志
 const handleClear = () => {
   ElMessageBox.confirm('确认清空所有操作日志吗？此操作不可恢复！', '警告', {
@@ -202,6 +231,25 @@ const handleClear = () => {
       ElMessage.success('清空成功')
       getLogList()
     })
+  })
+}
+
+// 导出日志
+const handleExport = () => {
+  const params = {
+    ...queryParams,
+    pageNum: 1,
+    pageSize: 1000
+  }
+  request.get('/system/log/export', { params, responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '操作日志_' + new Date().getTime() + '.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('导出成功')
   })
 }
 
@@ -217,7 +265,8 @@ onMounted(() => {
 
     .header-actions {
       display: flex;
-      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .pagination {
