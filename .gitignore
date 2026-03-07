@@ -49,3 +49,6 @@ build/
 .env
 .env.local
 .env.*.local
+# Vue auto imports
+mp-vue/src/components.d.ts
+
