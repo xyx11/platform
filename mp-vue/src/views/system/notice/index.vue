@@ -80,13 +80,18 @@
       </el-table>
 
       <!-- 分页 -->
-      <pagination
-        v-show="total > 0"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
-        :total="total"
-        @pagination="getList"
-      />
+      <div class="pagination-container">
+        <el-pagination
+          v-show="total > 0"
+          v-model:current-page="queryParams.pageNum"
+          v-model:page-size="queryParams.pageSize"
+          :total="total"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="getList"
+          @current-change="getList"
+        />
+      </div>
     </el-card>
 
     <!-- 添加/编辑对话框 -->
@@ -271,6 +276,12 @@ getList()
 .app-container {
   .mb8 {
     margin-bottom: 8px;
+  }
+
+  .pagination-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>
