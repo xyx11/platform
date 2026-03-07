@@ -15,8 +15,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search">查询</el-button>
-          <el-button icon="Refresh">重置</el-button>
+          <el-button type="primary" icon="Search" @click="handleQuery">查询</el-button>
+          <el-button icon="Refresh" @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -25,11 +25,21 @@
       <template #header>
         <div class="header-actions">
           <el-button type="primary" icon="Plus" @click="handleAdd">新增用户</el-button>
-          <el-button type="warning" icon="Download">导出</el-button>
+          <el-button type="danger" icon="Delete" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
+          <el-button type="warning" icon="Upload" @click="handleImport">导入</el-button>
+          <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
+          <el-button type="info" icon="Document" @click="downloadTemplate">下载模板</el-button>
         </div>
       </template>
 
-      <el-table :data="userList" border stripe v-loading="loading">
+      <el-table
+        :data="userList"
+        border
+        stripe
+        v-loading="loading"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="userId" label="用户 ID" width="100" />
         <el-table-column prop="username" label="用户名" width="120" />
         <el-table-column prop="nickname" label="昵称" width="120" />
@@ -47,7 +57,7 @@
         <el-table-column label="操作" width="220" fixed="right">
           <template #default="{ row }">
             <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
-            <el-button link type="primary" icon="Delete" @click="handleDelete(row)">删除</el-button>
+            <el-button link type="danger" icon="Delete" @click="handleDelete(row)">删除</el-button>
             <el-button link type="warning" icon="Key" @click="handleResetPwd(row)">重置密码</el-button>
           </template>
         </el-table-column>
@@ -136,18 +146,53 @@
         <el-button type="primary" @click="submitPwdForm">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 导入对话框 -->
+    <el-dialog title="导入用户数据" v-model="importDialog.visible" width="500px">
+      <el-upload
+        ref="uploadRef"
+        drag
+        :limit="1"
+        :accept="'.xlsx, .xls'"
+        :before-upload="handleBeforeUpload"
+        :on-change="handleFileChange"
+        :on-remove="handleFileRemove"
+      >
+        <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
+        <div class="el-upload__text">
+          将文件拖到此处，或<em>点击上传</em>
+        </div>
+        <template #tip>
+          <div class="el-upload__tip">
+            只能上传 xlsx/xls 文件，且不超过 10MB
+          </div>
+        </template>
+      </el-upload>
+      <template #footer>
+        <el-button @click="importDialog.visible = false">取消</el-button>
+        <el-button type="primary" @click="submitImport" :loading="importing">导入</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { UploadFilled } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const userList = ref([])
 const deptList = ref([])
 const roleList = ref([])
 const loading = ref(false)
+const multiple = ref(true)
+const userIds = ref([])
+const importDialog = reactive({
+  visible: false
+})
+const importing = ref(false)
+const uploadFile = ref(null)
 
 const queryParams = reactive({
   username: '',
@@ -172,6 +217,7 @@ const pwdDialog = reactive({
 
 const formRef = ref(null)
 const pwdFormRef = ref(null)
+const uploadRef = ref(null)
 
 const form = reactive({
   userId: null,
@@ -228,6 +274,26 @@ const getRoleList = () => {
   })
 }
 
+// 查询
+const handleQuery = () => {
+  pagination.current = 1
+  getUserList()
+}
+
+// 重置查询
+const resetQuery = () => {
+  queryParams.username = ''
+  queryParams.phone = ''
+  queryParams.status = null
+  handleQuery()
+}
+
+// 多选框选中数据
+const handleSelectionChange = (selection) => {
+  userIds.value = selection.map(item => item.userId)
+  multiple.value = !selection.length
+}
+
 // 新增
 const handleAdd = () => {
   dialog.title = '新增用户'
@@ -253,11 +319,116 @@ const handleDelete = (row) => {
   })
 }
 
+// 批量删除
+const handleBatchDelete = () => {
+  ElMessageBox.confirm(`确认删除选中的 ${userIds.value.length} 个用户吗？`, '警告', {
+    type: 'warning'
+  }).then(() => {
+    request.delete('/system/user/batch', { data: userIds.value }).then(() => {
+      ElMessage.success('批量删除成功')
+      getUserList()
+    })
+  })
+}
+
 // 重置密码
 const handleResetPwd = (row) => {
   pwdDialog.visible = true
   pwdForm.userId = row.userId
   pwdForm.password = ''
+}
+
+// 导出
+const handleExport = () => {
+  const params = {
+    ...queryParams,
+    pageNum: 1,
+    pageSize: 1000
+  }
+  request.get('/system/user/export', { params, responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '用户数据_' + new Date().getTime() + '.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('导出成功')
+  })
+}
+
+// 下载模板
+const downloadTemplate = () => {
+  request.get('/system/user/downloadTemplate', { responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '用户导入模板.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('模板下载成功')
+  })
+}
+
+// 导入
+const handleImport = () => {
+  importDialog.visible = true
+  uploadFile.value = null
+  uploadRef.value?.clearFiles()
+}
+
+// 上传前校验
+const handleBeforeUpload = (file) => {
+  const isExcel = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                  file.type === 'application/vnd.ms-excel'
+  const isLt10M = file.size / 1024 / 1024 < 10
+
+  if (!isExcel) {
+    ElMessage.error('只能上传 Excel 文件!')
+    return false
+  }
+  if (!isLt10M) {
+    ElMessage.error('文件大小不能超过 10MB!')
+    return false
+  }
+  return true
+}
+
+// 文件改变
+const handleFileChange = (file) => {
+  uploadFile.value = file.raw
+}
+
+// 文件移除
+const handleFileRemove = () => {
+  uploadFile.value = null
+}
+
+// 提交导入
+const submitImport = () => {
+  if (!uploadFile.value) {
+    ElMessage.error('请选择要导入的文件')
+    return
+  }
+
+  importing.value = true
+  const formData = new FormData()
+  formData.append('file', uploadFile.value)
+
+  request.post('/system/user/import', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }).then(res => {
+    ElMessage.success(`导入成功！成功：${res.data?.success || 0}，失败：${res.data?.failed || 0}`)
+    importDialog.visible = false
+    getUserList()
+  }).catch(() => {
+    ElMessage.error('导入失败')
+  }).finally(() => {
+    importing.value = false
+  })
 }
 
 // 提交表单
@@ -318,6 +489,7 @@ onMounted(() => {
     .header-actions {
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .pagination {
@@ -325,6 +497,12 @@ onMounted(() => {
       display: flex;
       justify-content: flex-end;
     }
+  }
+
+  .el-icon--upload {
+    font-size: 67px;
+    color: #8c939d;
+    margin: 40px 0 16px;
   }
 }
 </style>

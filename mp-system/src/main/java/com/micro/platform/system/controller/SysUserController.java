@@ -9,8 +9,12 @@ import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * 用户管理控制器
@@ -70,6 +74,38 @@ public class SysUserController {
     public Result<Void> remove(@PathVariable Long userId) {
         sysUserService.removeById(userId);
         return Result.success();
+    }
+
+    @Operation(summary = "批量删除用户")
+    @OperationLog(module = "用户管理", type = OperationType.DELETE, description = "批量删除用户")
+    @PreAuthorize("hasAuthority('system:user:remove')")
+    @DeleteMapping("/batch")
+    public Result<Void> batchRemove(@RequestBody List<Long> userIds) {
+        sysUserService.removeByIds(userIds);
+        return Result.success();
+    }
+
+    @Operation(summary = "导出用户数据")
+    @OperationLog(module = "用户管理", type = OperationType.EXPORT, description = "导出用户数据")
+    @PreAuthorize("hasAuthority('system:user:query')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysUser user) {
+        sysUserService.exportUser(response, user);
+    }
+
+    @Operation(summary = "下载导入模板")
+    @GetMapping("/downloadTemplate")
+    public void downloadTemplate(HttpServletResponse response) {
+        sysUserService.downloadTemplate(response);
+    }
+
+    @Operation(summary = "导入用户数据")
+    @OperationLog(module = "用户管理", type = OperationType.IMPORT, description = "导入用户数据")
+    @PreAuthorize("hasAuthority('system:user:add')")
+    @PostMapping("/import")
+    public Result<Object> importUser(@RequestParam("file") MultipartFile file) {
+        Object result = sysUserService.importUser(file);
+        return Result.success(result);
     }
 
     @Operation(summary = "重置密码")
