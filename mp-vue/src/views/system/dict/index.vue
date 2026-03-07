@@ -24,10 +24,21 @@
 
     <el-card class="table-card">
       <template #header>
-        <el-button type="primary" icon="Plus" @click="handleAddType">新增字典类型</el-button>
+        <div class="header-actions">
+          <el-button type="primary" icon="Plus" @click="handleAddType">新增字典类型</el-button>
+          <el-button type="danger" icon="Delete" :disabled="typeMultiple" @click="handleBatchDeleteType">批量删除</el-button>
+          <el-button type="success" icon="Download" @click="handleExportType">导出字典</el-button>
+        </div>
       </template>
 
-      <el-table :data="typeList" border stripe v-loading="typeLoading">
+      <el-table
+        :data="typeList"
+        border
+        stripe
+        v-loading="typeLoading"
+        @selection-change="handleTypeSelectionChange"
+      >
+        <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="dictId" label="字典 ID" width="100" />
         <el-table-column prop="dictName" label="字典名称" width="150" />
         <el-table-column prop="dictType" label="字典类型" width="150" />
@@ -99,9 +110,19 @@
       width="900px"
     >
       <div class="data-header">
-        <el-button type="primary" icon="Plus" @click="handleAddData">新增字典数据</el-button>
+        <div class="data-header-actions">
+          <el-button type="primary" icon="Plus" @click="handleAddData">新增字典数据</el-button>
+          <el-button type="danger" icon="Delete" :disabled="dataMultiple" @click="handleBatchDeleteData">批量删除</el-button>
+        </div>
       </div>
-      <el-table :data="dataList" border stripe v-loading="dataLoading">
+      <el-table
+        :data="dataList"
+        border
+        stripe
+        v-loading="dataLoading"
+        @selection-change="handleDataSelectionChange"
+      >
+        <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="dictCode" label="字典编码" width="100" />
         <el-table-column prop="dictLabel" label="字典标签" width="150" />
         <el-table-column prop="dictValue" label="字典值" width="150" />
@@ -174,6 +195,10 @@ const typeList = ref([])
 const dataList = ref([])
 const typeLoading = ref(false)
 const dataLoading = ref(false)
+const typeMultiple = ref(true)
+const dataMultiple = ref(true)
+const typeIds = ref([])
+const dataIds = ref([])
 
 const typeQueryParams = reactive({
   dictName: '',
@@ -270,6 +295,18 @@ const resetTypeQuery = () => {
   handleTypeQuery()
 }
 
+// 类型多选框选中数据
+const handleTypeSelectionChange = (selection) => {
+  typeIds.value = selection.map(item => item.dictId)
+  typeMultiple.value = !selection.length
+}
+
+// 数据多选框选中数据
+const handleDataSelectionChange = (selection) => {
+  dataIds.value = selection.map(item => item.dictCode)
+  dataMultiple.value = !selection.length
+}
+
 // 新增类型
 const handleAddType = () => {
   typeDialog.title = '新增字典类型'
@@ -292,6 +329,37 @@ const handleDeleteType = (row) => {
       ElMessage.success('删除成功')
       getTypeList()
     })
+  })
+}
+
+// 批量删除类型
+const handleBatchDeleteType = () => {
+  ElMessageBox.confirm(`确认删除选中的 ${typeIds.value.length} 条字典类型吗？`, '警告', {
+    type: 'warning'
+  }).then(() => {
+    request.delete('/system/dict/type/batch', { data: typeIds.value }).then(() => {
+      ElMessage.success('批量删除成功')
+      getTypeList()
+    })
+  })
+}
+
+// 导出字典
+const handleExportType = () => {
+  const queryParams = {
+    ...typeQueryParams,
+    pageNum: 1,
+    pageSize: 1000
+  }
+  request.get('/system/dict/type/export', { params: queryParams, responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '字典数据_' + new Date().getTime() + '.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success('导出成功')
   })
 }
 
@@ -323,6 +391,18 @@ const handleDeleteData = (row) => {
   }).then(() => {
     request.delete(`/system/dict/data/${row.dictCode}`).then(() => {
       ElMessage.success('删除成功')
+      getDataList()
+    })
+  })
+}
+
+// 批量删除数据
+const handleBatchDeleteData = () => {
+  ElMessageBox.confirm(`确认删除选中的 ${dataIds.value.length} 条字典数据吗？`, '警告', {
+    type: 'warning'
+  }).then(() => {
+    request.delete('/system/dict/data/batch', { data: dataIds.value }).then(() => {
+      ElMessage.success('批量删除成功')
       getDataList()
     })
   })
@@ -393,6 +473,11 @@ onMounted(() => {
   .table-card {
     margin-top: 20px;
 
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
     .pagination {
       margin-top: 20px;
       display: flex;
@@ -402,6 +487,11 @@ onMounted(() => {
 
   .data-header {
     margin-bottom: 15px;
+
+    .data-header-actions {
+      display: flex;
+      gap: 10px;
+    }
   }
 }
 </style>

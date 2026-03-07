@@ -11,6 +11,7 @@ import com.micro.platform.system.service.SysDictDataService;
 import com.micro.platform.system.service.SysDictTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,6 +79,23 @@ public class SysDictController {
         return Result.success();
     }
 
+    @Operation(summary = "批量删除字典类型")
+    @OperationLog(module = "字典管理", type = OperationType.DELETE, description = "批量删除字典类型")
+    @PreAuthorize("hasAuthority('system:dict:remove')")
+    @DeleteMapping("/type/batch")
+    public Result<Void> batchRemoveType(@RequestBody List<Long> dictIds) {
+        dictTypeService.removeByIds(dictIds);
+        return Result.success();
+    }
+
+    @Operation(summary = "导出字典数据")
+    @OperationLog(module = "字典管理", type = OperationType.EXPORT, description = "导出字典数据")
+    @PreAuthorize("hasAuthority('system:dict:query')")
+    @GetMapping("/type/export")
+    public void exportDictType(HttpServletResponse response, SysDictType dictType) {
+        dictTypeService.exportDictType(response, dictType);
+    }
+
     @Operation(summary = "获取字典数据列表")
     @PreAuthorize("hasAuthority('system:dict:query')")
     @GetMapping("/data/list")
@@ -127,6 +145,15 @@ public class SysDictController {
     @DeleteMapping("/data/{dictCode}")
     public Result<Void> removeData(@PathVariable Long dictCode) {
         dictDataService.removeById(dictCode);
+        return Result.success();
+    }
+
+    @Operation(summary = "批量删除字典数据")
+    @OperationLog(module = "字典管理", type = OperationType.DELETE, description = "批量删除字典数据")
+    @PreAuthorize("hasAuthority('system:dict:remove')")
+    @DeleteMapping("/data/batch")
+    public Result<Void> batchRemoveData(@RequestBody List<Long> dictCodes) {
+        dictDataService.removeByIds(dictCodes);
         return Result.success();
     }
 }
