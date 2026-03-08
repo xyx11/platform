@@ -147,7 +147,7 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessageBox, ElMessage, ElDropdownMenu } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import NoticeIcon from '@/components/NoticeIcon.vue'
 // 导入 Element Plus 图标
 import {
@@ -537,13 +537,14 @@ onMounted(() => {
 <style lang="scss" scoped>
 .layout-container {
   display: flex;
-  height: 100%;
+  height: 100vh;
 }
 
 .sidebar {
   background-color: #304156;
   transition: width 0.3s;
   overflow-x: hidden;
+  flex-shrink: 0;
 
   .logo {
     height: 60px;
@@ -565,6 +566,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-height: 0;
 }
 
 .header {
@@ -575,6 +577,7 @@ onMounted(() => {
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   padding: 0 20px;
   height: 50px;
+  flex-shrink: 0;
 
   .header-left {
     display: flex;
@@ -617,6 +620,7 @@ onMounted(() => {
   border-bottom: 1px solid #e4e7ed;
   padding: 0 10px;
   position: relative;
+  flex-shrink: 0;
 
   :deep(.el-tabs) {
     .el-tabs__header {
@@ -683,6 +687,7 @@ onMounted(() => {
   padding: 20px;
   overflow-y: auto;
   flex: 1;
+  min-height: 0;
 }
 
 .fade-enter-active,
