@@ -9,10 +9,12 @@ import com.micro.platform.system.entity.SysConfig;
 import com.micro.platform.system.service.SysConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 参数配置控制器
@@ -96,5 +98,26 @@ public class SysConfigController {
     @GetMapping("/configKey/{configKey}")
     public Result<SysConfig> getByKey(@PathVariable String configKey) {
         return Result.success(sysConfigService.selectConfigByKey(configKey));
+    }
+
+    @Operation(summary = "根据键名获取参数配置值")
+    @GetMapping("/configValue/{configKey}")
+    public Result<String> getValueByKey(@PathVariable String configKey) {
+        return Result.success(sysConfigService.selectConfigValueByKey(configKey));
+    }
+
+    @Operation(summary = "获取参数配置统计信息")
+    @PreAuthorize("hasAuthority('system:config:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats() {
+        return Result.success(sysConfigService.getConfigStats());
+    }
+
+    @Operation(summary = "导出参数配置数据")
+    @OperationLog(module = "参数配置", type = OperationType.EXPORT, description = "导出参数配置数据")
+    @PreAuthorize("hasAuthority('system:config:query')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysConfig config) {
+        sysConfigService.exportConfig(response, config);
     }
 }

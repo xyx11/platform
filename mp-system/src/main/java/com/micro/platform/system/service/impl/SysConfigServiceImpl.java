@@ -1,5 +1,6 @@
 package com.micro.platform.system.service.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.exception.BusinessException;
@@ -8,10 +9,15 @@ import com.micro.platform.common.redis.util.RedisUtil;
 import com.micro.platform.system.entity.SysConfig;
 import com.micro.platform.system.mapper.SysConfigMapper;
 import com.micro.platform.system.service.SysConfigService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,7 +54,7 @@ public class SysConfigServiceImpl extends ServiceImplX<SysConfigMapper, SysConfi
             return (SysConfig) cached;
         }
 
-        // 缓存中没有则从数据库查询
+        // 缓存没有则从数据库查询
         LambdaQueryWrapper<SysConfig> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysConfig::getConfigKey, configKey);
         SysConfig config = baseMapper.selectOne(wrapper);
@@ -58,6 +64,12 @@ public class SysConfigServiceImpl extends ServiceImplX<SysConfigMapper, SysConfi
             redisUtil.set(cacheKey, config, 30, TimeUnit.MINUTES);
         }
         return config;
+    }
+
+    @Override
+    public String selectConfigValueByKey(String configKey) {
+        SysConfig config = selectConfigByKey(configKey);
+        return config != null ? config.getConfigValue() : null;
     }
 
     @Override
@@ -93,6 +105,75 @@ public class SysConfigServiceImpl extends ServiceImplX<SysConfigMapper, SysConfi
                 String cacheKey = CONFIG_KEY_PREFIX + config.getConfigKey();
                 redisUtil.set(cacheKey, config, 30, TimeUnit.MINUTES);
             }
+        }
+    }
+
+    @Override
+    public Map<String, Object> getConfigStats() {
+        Map<String, Object> stats = new HashMap<>();
+
+        // 统计参数配置总数
+        long totalConfigCount = baseMapper.selectCount(null);
+        stats.put("totalConfigCount", totalConfigCount);
+
+        // 统计正常状态的配置
+        long activeConfigCount = baseMapper.selectCount(new LambdaQueryWrapper<SysConfig>().eq(SysConfig::getStatus, 1));
+        stats.put("activeConfigCount", activeConfigCount);
+
+        // 统计禁用状态的配置
+        long disabledConfigCount = baseMapper.selectCount(new LambdaQueryWrapper<SysConfig>().eq(SysConfig::getStatus, 0));
+        stats.put("disabledConfigCount", disabledConfigCount);
+
+        // 内置配置数量（configType 为 1）
+        long builtInConfigCount = baseMapper.selectCount(new LambdaQueryWrapper<SysConfig>().eq(SysConfig::getConfigType, 1));
+        stats.put("builtInConfigCount", builtInConfigCount);
+
+        // 自定义配置数量（configType 为 2）
+        long customConfigCount = baseMapper.selectCount(new LambdaQueryWrapper<SysConfig>().eq(SysConfig::getConfigType, 2));
+        stats.put("customConfigCount", customConfigCount);
+
+        return stats;
+    }
+
+    @Override
+    public void batchSaveConfig(List<SysConfig> configs) {
+        for (SysConfig config : configs) {
+            try {
+                SysConfig existConfig = selectConfigByKey(config.getConfigKey());
+                if (existConfig != null) {
+                    // 已存在则更新
+                    config.setConfigId(existConfig.getConfigId());
+                    updateConfig(config);
+                } else {
+                    // 不存在则新增
+                    saveConfig(config);
+                }
+            } catch (Exception e) {
+                throw new BusinessException("批量保存配置失败：" + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void exportConfig(HttpServletResponse response, SysConfig config) {
+        try {
+            LambdaQueryWrapper<SysConfig> wrapper = new LambdaQueryWrapper<>();
+            wrapper.like(StringUtils.hasText(config.getConfigName()), SysConfig::getConfigName, config.getConfigName())
+                    .like(StringUtils.hasText(config.getConfigKey()), SysConfig::getConfigKey, config.getConfigKey())
+                    .eq(config.getStatus() != null, SysConfig::getStatus, config.getStatus())
+                    .orderByDesc(SysConfig::getCreateTime);
+            List<SysConfig> list = baseMapper.selectList(wrapper);
+
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setCharacterEncoding("utf-8");
+            String fileName = URLEncoder.encode("参数配置", "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+
+            EasyExcel.write(response.getOutputStream(), SysConfig.class)
+                    .sheet("参数配置")
+                    .doWrite(list);
+        } catch (Exception e) {
+            throw new RuntimeException("导出参数配置失败：" + e.getMessage());
         }
     }
 }
