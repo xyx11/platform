@@ -8,12 +8,14 @@ import com.micro.platform.system.entity.SysFile;
 import com.micro.platform.system.service.SysFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -75,5 +77,30 @@ public class SysFileController {
     public Result<Void> batchRemove(@RequestBody List<Long> ids) {
         sysFileService.batchRemove(ids);
         return Result.success();
+    }
+
+    @Operation(summary = "根据条件查询文件列表")
+    @PreAuthorize("hasAuthority('system:file:query')")
+    @GetMapping("/listByCondition")
+    public Result<Page<SysFile>> listByCondition(SysFile file,
+                                                  @RequestParam(defaultValue = "1") Integer pageNum,
+                                                  @RequestParam(defaultValue = "10") Integer pageSize) {
+        Page<SysFile> page = sysFileService.selectFilePage(file, pageNum, pageSize);
+        return Result.success(page);
+    }
+
+    @Operation(summary = "获取文件统计信息")
+    @PreAuthorize("hasAuthority('system:file:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats() {
+        return Result.success(sysFileService.getFileStats());
+    }
+
+    @Operation(summary = "导出文件数据")
+    @OperationLog(module = "文件管理", type = OperationType.EXPORT, description = "导出文件数据")
+    @PreAuthorize("hasAuthority('system:file:query')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysFile file) {
+        sysFileService.exportFile(response, file);
     }
 }
