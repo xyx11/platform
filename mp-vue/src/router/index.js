@@ -129,9 +129,15 @@ const routes = [
   {
     path: '/monitor',
     component: () => import('@/layout/index.vue'),
-    redirect: '/monitor/online',
+    redirect: '/monitor/overview',
     meta: { title: '系统监控', icon: 'Monitor' },
     children: [
+      {
+        path: 'overview',
+        name: 'SystemOverview',
+        component: () => import('@/views/system/monitor/index.vue'),
+        meta: { title: '监控总览', icon: 'Monitor' }
+      },
       {
         path: 'online',
         name: 'OnlineUser',
