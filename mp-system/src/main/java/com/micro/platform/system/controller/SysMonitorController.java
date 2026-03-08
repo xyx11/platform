@@ -16,10 +16,14 @@ import com.micro.platform.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.RuntimeMXBean;
+import java.lang.management.ThreadMXBean;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -34,13 +38,16 @@ public class SysMonitorController {
     private final RedisTemplate<String, Object> redisTemplate;
     private final SysLoginLogService sysLoginLogService;
     private final SysUserService sysUserService;
+    private final JdbcTemplate jdbcTemplate;
 
     public SysMonitorController(RedisTemplate<String, Object> redisTemplate,
                                 SysLoginLogService sysLoginLogService,
-                                SysUserService sysUserService) {
+                                SysUserService sysUserService,
+                                JdbcTemplate jdbcTemplate) {
         this.redisTemplate = redisTemplate;
         this.sysLoginLogService = sysLoginLogService;
         this.sysUserService = sysUserService;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Operation(summary = "获取在线用户列表")
@@ -294,6 +301,71 @@ public class SysMonitorController {
         }
 
         return Result.success(stats);
+    }
+
+    @Operation(summary = "系统健康检查")
+    @GetMapping("/health")
+    public Result<Map<String, Object>> health() {
+        Map<String, Object> health = new HashMap<>();
+        Map<String, Object> details = new HashMap<>();
+        boolean overallHealth = true;
+
+        try {
+            // 检查数据库连接
+            Map<String, Object> dbHealth = new HashMap<>();
+            try {
+                Integer result = jdbcTemplate.queryForObject("SELECT 1", Integer.class);
+                dbHealth.put("status", "UP");
+                dbHealth.put("message", "数据库连接正常");
+            } catch (Exception e) {
+                dbHealth.put("status", "DOWN");
+                dbHealth.put("message", "数据库连接失败：" + e.getMessage());
+                overallHealth = false;
+            }
+            details.put("database", dbHealth);
+
+            // 检查 Redis 连接
+            Map<String, Object> redisHealth = new HashMap<>();
+            try {
+                redisTemplate.getConnectionFactory().getConnection().ping();
+                redisHealth.put("status", "UP");
+                redisHealth.put("message", "Redis 连接正常");
+            } catch (Exception e) {
+                redisHealth.put("status", "DOWN");
+                redisHealth.put("message", "Redis 连接失败：" + e.getMessage());
+                overallHealth = false;
+            }
+            details.put("redis", redisHealth);
+
+            // JVM 信息
+            Map<String, Object> jvmHealth = new HashMap<>();
+            RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+            ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+            OperatingSystemMXBean osMXBean = ManagementFactory.getOperatingSystemMXBean();
+
+            jvmHealth.put("uptime", runtimeMXBean.getUptime() + "ms");
+            jvmHealth.put("threadCount", threadMXBean.getThreadCount());
+            jvmHealth.put("peakThreadCount", threadMXBean.getPeakThreadCount());
+            jvmHealth.put("availableProcessors", osMXBean.getAvailableProcessors());
+            jvmHealth.put("systemLoadAverage", osMXBean.getSystemLoadAverage());
+
+            // 内存使用率
+            Runtime runtime = Runtime.getRuntime();
+            double usedMemoryPercent = (double) (runtime.totalMemory() - runtime.freeMemory()) / runtime.maxMemory() * 100;
+            jvmHealth.put("usedMemoryPercent", String.format("%.2f", usedMemoryPercent) + "%");
+
+            details.put("jvm", jvmHealth);
+
+            health.put("status", overallHealth ? "UP" : "DOWN");
+            health.put("timestamp", System.currentTimeMillis());
+            health.put("details", details);
+
+        } catch (Exception e) {
+            health.put("status", "DOWN");
+            health.put("message", "健康检查失败：" + e.getMessage());
+        }
+
+        return Result.success(health);
     }
 
     /**
