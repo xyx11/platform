@@ -233,7 +233,7 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
 
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("部门数据_" + System.currentTimeMillis(), "UTF-8").replaceAll("\+", "%20");
+            String fileName = URLEncoder.encode("部门数据_" + System.currentTimeMillis(), "UTF-8").replaceAll("\\+", "%20");
             response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
 
             // 添加层级列

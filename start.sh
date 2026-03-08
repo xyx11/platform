@@ -17,6 +17,7 @@ BASE_DIR="/Users/xieyunxing/micro-platform"
 LOGS_DIR="$BASE_DIR/logs"
 XXL_JOB_HOME="/Users/xieyunxing/Downloads/xxl-job-2.4.1"
 XXL_JOB_PORT="8888"
+VUE_PORT="3001"
 
 # 服务配置：名称 - 模块 - 端口
 declare -a SERVICES=(
@@ -188,6 +189,30 @@ for service in "${SERVICES[@]}"; do
 done
 
 echo ""
+
+# 启动前端 Vue 应用
+echo -e "${BLUE}检查前端 Vue 应用...${NC}"
+VUE_PID=$(lsof -ti :$VUE_PORT 2>/dev/null)
+if [ -n "$VUE_PID" ]; then
+    print_success "前端应用已在运行 (端口 $VUE_PORT)"
+else
+    if [ -d "$BASE_DIR/mp-vue" ]; then
+        echo -n "  启动前端应用 (端口 $VUE_PORT)... "
+        cd $BASE_DIR/mp-vue
+        nohup npm run dev > $LOGS_DIR/mp-vue.log 2>&1 &
+        sleep 8
+        if lsof -i :$VUE_PORT &>/dev/null; then
+            print_success "已启动"
+        else
+            print_warn "可能启动失败，请查看日志"
+        fi
+        cd $BASE_DIR
+    else
+        print_warn "mp-vue 目录不存在，跳过启动"
+    fi
+fi
+
+echo ""
 echo "========================================"
 echo -e "${GREEN}   所有服务启动完成!${NC}"
 echo "========================================"
@@ -199,6 +224,7 @@ echo "  - mp-system:    http://localhost:8082"
 echo "  - mp-generator: http://localhost:8083"
 echo "  - mp-job:       http://localhost:8084"
 echo "  - xxl-job:      http://localhost:$XXL_JOB_PORT/xxl-job-admin"
+echo "  - mp-vue:       http://localhost:$VUE_PORT"
 echo ""
 echo "Swagger 地址:"
 echo "  - http://localhost:8081/doc.html"
@@ -212,4 +238,5 @@ echo "常用命令:"
 echo "  查看日志：tail -f logs/mp-auth.log"
 echo "  停止服务：pkill -f 'spring-boot.run.profiles=local'"
 echo "  停止 Nacos: $NACOS_HOME/bin/shutdown.sh"
+echo "  停止前端：pkill -f 'npm run dev'"
 echo ""
