@@ -1,29 +1,3 @@
-[INFO] Scanning for projects...
-[INFO] 
-[INFO] ---------------------< com.micro.platform:mp-auth >---------------------
-[INFO] Building mp-auth 1.0.0
-[INFO]   from pom.xml
-[INFO] --------------------------------[ jar ]---------------------------------
-[INFO] 
-[INFO] >>> spring-boot:3.2.5:run (default-cli) > test-compile @ mp-auth >>>
-[INFO] 
-[INFO] --- resources:3.4.0:resources (default-resources) @ mp-auth ---
-[INFO] Copying 3 resources from src/main/resources to target/classes
-[INFO] 
-[INFO] --- compiler:3.12.1:compile (default-compile) @ mp-auth ---
-[INFO] Nothing to compile - all classes are up to date.
-[INFO] 
-[INFO] --- resources:3.4.0:testResources (default-testResources) @ mp-auth ---
-[INFO] skip non existing resourceDirectory /Users/xieyunxing/micro-platform/mp-auth/src/test/resources
-[INFO] 
-[INFO] --- compiler:3.12.1:testCompile (default-testCompile) @ mp-auth ---
-[INFO] No sources to compile
-[INFO] 
-[INFO] <<< spring-boot:3.2.5:run (default-cli) < test-compile @ mp-auth <<<
-[INFO] 
-[INFO] 
-[INFO] --- spring-boot:3.2.5:run (default-cli) @ mp-auth ---
-[INFO] Attaching agents: []
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -31,314 +5,213 @@
  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
   '  |____| .__|_| |_|_| |_\__, | / / / /
  =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::                (v3.2.5)
+[32m :: Spring Boot :: [39m              [2m (v3.2.5)[0;39m
 
-2026-03-07T19:57:27.001+08:00  INFO 33359 --- [mp-auth] [           main] c.micro.platform.auth.AuthApplication    : Starting AuthApplication using Java 25.0.2 with PID 33359 (/Users/xieyunxing/micro-platform/mp-auth/target/classes started by xieyunxing in /Users/xieyunxing/micro-platform/mp-auth)
-2026-03-07T19:57:27.002+08:00 DEBUG 33359 --- [mp-auth] [           main] c.micro.platform.auth.AuthApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
-2026-03-07T19:57:27.002+08:00  INFO 33359 --- [mp-auth] [           main] c.micro.platform.auth.AuthApplication    : The following 1 profile is active: "local"
-2026-03-07T19:57:27.264+08:00  INFO 33359 --- [mp-auth] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2026-03-07T19:57:27.265+08:00  INFO 33359 --- [mp-auth] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2026-03-07T19:57:27.273+08:00  INFO 33359 --- [mp-auth] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 4 ms. Found 0 Redis repository interfaces.
-2026-03-07T19:57:27.345+08:00  INFO 33359 --- [mp-auth] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=997c3608-246f-3447-9b82-6b3f1bfa53be
-2026-03-07T19:57:27.481+08:00  WARN 33359 --- [mp-auth] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T19:57:27.484+08:00  WARN 33359 --- [mp-auth] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T19:57:27.485+08:00  WARN 33359 --- [mp-auth] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x00000ffe014855b0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T19:57:27.486+08:00  WARN 33359 --- [mp-auth] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T19:57:27.502+08:00  WARN 33359 --- [mp-auth] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T19:57:27.504+08:00  WARN 33359 --- [mp-auth] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-07T19:57:27.508+08:00  WARN 33359 --- [mp-auth] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsJakartaHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:22:57.283+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.micro.platform.auth.AuthApplication   [0;39m [2m:[0;39m Starting AuthApplication using Java 24.0.2 with PID 54411 (/Users/xieyunxing/micro-platform/mp-auth/target/mp-auth-1.0.0.jar started by xieyunxing in /Users/xieyunxing/micro-platform)
+[2m2026-03-08T15:22:57.285+08:00[0;39m [32mDEBUG[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.micro.platform.auth.AuthApplication   [0;39m [2m:[0;39m Running with Spring Boot v3.2.5, Spring v6.1.6
+[2m2026-03-08T15:22:57.285+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.micro.platform.auth.AuthApplication   [0;39m [2m:[0;39m The following 1 profile is active: "local"
+[2m2026-03-08T15:22:58.168+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Multiple Spring Data modules found, entering strict repository configuration mode
+[2m2026-03-08T15:22:58.170+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[2m2026-03-08T15:22:58.191+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+[2m2026-03-08T15:22:58.347+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.s.cloud.context.scope.GenericScope    [0;39m [2m:[0;39m BeanFactory id=005dbcb8-23fa-381b-8ee0-c47224e2aea6
+[2m2026-03-08T15:22:58.552+08:00[0;39m [33m WARN[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:22:58.554+08:00[0;39m [33m WARN[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:22:58.555+08:00[0;39m [33m WARN[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x000003c0013d6110] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:22:58.556+08:00[0;39m [33m WARN[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:22:58.566+08:00[0;39m [33m WARN[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:22:58.568+08:00[0;39m [33m WARN[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:22:58.576+08:00[0;39m [33m WARN[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsJakartaHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
 WARNING: A restricted method in java.lang.System has been called
-WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/Users/xieyunxing/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.20/tomcat-embed-core-10.1.20.jar)
+WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (jar:nested:/Users/xieyunxing/micro-platform/mp-auth/target/mp-auth-1.0.0.jar/!BOOT-INF/lib/tomcat-embed-core-10.1.20.jar!/)
 WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
 WARNING: Restricted methods will be blocked in a future release unless native access is enabled
 
-2026-03-07T19:57:27.603+08:00  INFO 33359 --- [mp-auth] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
-2026-03-07T19:57:27.608+08:00  INFO 33359 --- [mp-auth] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-03-07T19:57:27.609+08:00  INFO 33359 --- [mp-auth] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
-2026-03-07T19:57:27.630+08:00  INFO 33359 --- [mp-auth] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-03-07T19:57:27.630+08:00  INFO 33359 --- [mp-auth] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 612 ms
+[2m2026-03-08T15:22:58.779+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat initialized with port 8081 (http)
+[2m2026-03-08T15:22:58.788+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.apache.catalina.core.StandardService  [0;39m [2m:[0;39m Starting service [Tomcat]
+[2m2026-03-08T15:22:58.788+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.apache.catalina.core.StandardEngine   [0;39m [2m:[0;39m Starting Servlet engine: [Apache Tomcat/10.1.20]
+[2m2026-03-08T15:22:58.821+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring embedded WebApplicationContext
+[2m2026-03-08T15:22:58.821+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mw.s.c.ServletWebServerApplicationContext[0;39m [2m:[0;39m Root WebApplicationContext: initialization completed in 1476 ms
 WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
-WARNING: sun.misc.Unsafe::objectFieldOffset has been called by io.netty.util.internal.PlatformDependent0$4 (file:/Users/xieyunxing/.m2/repository/io/netty/netty-common/4.1.109.Final/netty-common-4.1.109.Final.jar)
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by io.netty.util.internal.PlatformDependent0$4 (jar:nested:/Users/xieyunxing/micro-platform/mp-auth/target/mp-auth-1.0.0.jar/!BOOT-INF/lib/netty-common-4.1.109.Final.jar!/)
 WARNING: Please consider reporting this to the maintainers of class io.netty.util.internal.PlatformDependent0$4
 WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
-2026-03-07T19:57:27.999+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1,master} inited
-2026-03-07T19:57:27.999+08:00  INFO 33359 --- [mp-auth] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource - add a datasource named [master] success
-2026-03-07T19:57:27.999+08:00  INFO 33359 --- [mp-auth] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+[2m2026-03-08T15:22:59.401+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.druid.pool.DruidDataSource  [0;39m [2m:[0;39m {dataSource-1,master} inited
+[2m2026-03-08T15:22:59.402+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.DynamicRoutingDataSource        [0;39m [2m:[0;39m dynamic-datasource - add a datasource named [master] success
+[2m2026-03-08T15:22:59.403+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.DynamicRoutingDataSource        [0;39m [2m:[0;39m dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
  _ _   |_  _ _|_. ___ _ |    _ 
 | | |\/|_)(_| | |_\  |_)||_|_\ 
      /               |         
                         3.5.6 
-2026-03-07T19:57:28.640+08:00  INFO 33359 --- [mp-auth] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path ''
-2026-03-07T19:57:28.645+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ans.namespace attribute : null
-2026-03-07T19:57:28.645+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ALIBABA_ALIWARE_NAMESPACE attribute :null
-2026-03-07T19:57:28.645+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.client.naming          : initializer namespace from namespace attribute :null
-2026-03-07T19:57:28.655+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.client.naming          : FailoverDataSource type is class com.alibaba.nacos.client.naming.backups.datasource.DiskFailoverDataSource
-2026-03-07T19:57:28.663+08:00  INFO 33359 --- [mp-auth] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [req-serv] nacos-server port:8848
-2026-03-07T19:57:28.663+08:00  INFO 33359 --- [mp-auth] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [http-client] connect timeout:1000
-2026-03-07T19:57:28.664+08:00  INFO 33359 --- [mp-auth] [           main] c.alibaba.nacos.client.utils.ParamUtil   : PER_TASK_CONFIG_SIZE: 3000.0
-2026-03-07T19:57:28.666+08:00  INFO 33359 --- [mp-auth] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-2026-03-07T19:57:28.666+08:00  INFO 33359 --- [mp-auth] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-2026-03-07T19:57:28.666+08:00  INFO 33359 --- [mp-auth] [       Thread-3] c.a.n.c.a.r.identify.CredentialWatcher   : null No credential found
-2026-03-07T19:57:28.671+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.common.remote.client   : [RpcClientFactory] create a new rpc client of 0dadef33-034f-4b5e-8bb3-1329b8a9c3e7
-2026-03-07T19:57:28.683+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.client.naming          : Create naming rpc client for uuid->0dadef33-034f-4b5e-8bb3-1329b8a9c3e7
-2026-03-07T19:57:28.684+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.common.remote.client   : [0dadef33-034f-4b5e-8bb3-1329b8a9c3e7] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
-2026-03-07T19:57:28.684+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.common.remote.client   : [0dadef33-034f-4b5e-8bb3-1329b8a9c3e7] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
-2026-03-07T19:57:28.684+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.common.remote.client   : [0dadef33-034f-4b5e-8bb3-1329b8a9c3e7] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
-2026-03-07T19:57:28.685+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.common.remote.client   : [0dadef33-034f-4b5e-8bb3-1329b8a9c3e7] Try to connect to server on start up, server: {serverIp = '127.0.0.1', server main port = 8848}
-2026-03-07T19:57:28.697+08:00  INFO 33359 --- [mp-auth] [           main] c.a.n.c.remote.client.grpc.GrpcClient    : grpc client connection server:127.0.0.1 ip,serverPort:9848,grpcTslConfig:{"sslProvider":"","enableTls":false,"mutualAuthEnable":false,"trustAll":false}
-2026-03-07T19:57:28.964+08:00  INFO 33359 --- [mp-auth] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to get current node abilities...
-2026-03-07T19:57:28.965+08:00  INFO 33359 --- [mp-auth] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to initialize current node abilities, support modes: [SDK_CLIENT]
-2026-03-07T19:57:28.965+08:00  INFO 33359 --- [mp-auth] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Initialize current abilities finish...
-2026-03-07T19:57:28.965+08:00  INFO 33359 --- [mp-auth] [           main] c.a.n.c.a.d.NacosAbilityManagerHolder    : [AbilityControlManager] Successfully initialize AbilityControlManager
-2026-03-07T19:57:28.977+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.common.remote.client   : [0dadef33-034f-4b5e-8bb3-1329b8a9c3e7] Success to connect to server [127.0.0.1:8848] on start up, connectionId = 1772884648920_127.0.0.1_62977
-2026-03-07T19:57:28.977+08:00  INFO 33359 --- [mp-auth] [remote.worker.0] com.alibaba.nacos.common.remote.client   : [0dadef33-034f-4b5e-8bb3-1329b8a9c3e7] Notify connected event to listeners.
-2026-03-07T19:57:28.977+08:00  INFO 33359 --- [mp-auth] [remote.worker.0] com.alibaba.nacos.client.naming          : Grpc connection connect
-2026-03-07T19:57:28.978+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.common.remote.client   : [0dadef33-034f-4b5e-8bb3-1329b8a9c3e7] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
-2026-03-07T19:57:28.978+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.common.remote.client   : [0dadef33-034f-4b5e-8bb3-1329b8a9c3e7] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda/0x00000ffe01949790
-2026-03-07T19:57:28.978+08:00  INFO 33359 --- [mp-auth] [           main] com.alibaba.nacos.client.naming          : [REGISTER-SERVICE] public registering service mp-auth with instance Instance{instanceId='null', ip='192.168.0.104', port=8081, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={IPv6=null, preserved.register.source=SPRING_CLOUD}}
-2026-03-07T19:57:28.987+08:00  INFO 33359 --- [mp-auth] [           main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP mp-auth 192.168.0.104:8081 register finished
-2026-03-07T19:57:28.998+08:00  INFO 33359 --- [mp-auth] [           main] c.micro.platform.auth.AuthApplication    : Started AuthApplication in 2.167 seconds (process running for 2.293)
-2026-03-07T19:57:40.646+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-07T19:57:40.646+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-03-07T19:57:40.647+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2026-03-07T19:58:38.618+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T19:58:38.697+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T19:58:38.706+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T19:58:38.790+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-4] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T19:58:48.654+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T19:58:48.655+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T19:58:48.657+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T19:58:48.731+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-8] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T19:59:11.197+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-2] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T19:59:11.197+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-2] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T19:59:11.199+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-2] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T19:59:11.283+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-2] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T19:59:46.119+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-6] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T19:59:46.119+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-6] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T19:59:46.120+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-6] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T19:59:46.200+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-6] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:00:25.607+08:00 DEBUG 33359 --- [mp-auth] [io-8081-exec-10] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:00:25.608+08:00 DEBUG 33359 --- [mp-auth] [io-8081-exec-10] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:00:25.610+08:00 DEBUG 33359 --- [mp-auth] [io-8081-exec-10] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:00:25.686+08:00  INFO 33359 --- [mp-auth] [io-8081-exec-10] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:10:39.422+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:10:39.422+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:10:39.424+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:10:39.514+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-4] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:10:59.222+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:10:59.222+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:10:59.224+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:10:59.303+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-8] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:11:55.158+08:00 ERROR 33359 --- [mp-auth] [nio-8081-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: com.micro.platform.common.core.exception.BusinessException: 验证码错误] with root cause
+[2m2026-03-08T15:23:00.040+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat started on port 8081 (http) with context path ''
+[2m2026-03-08T15:23:00.046+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.client.naming         [0;39m [2m:[0;39m initializer namespace from ans.namespace attribute : null
+[2m2026-03-08T15:23:00.047+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.client.naming         [0;39m [2m:[0;39m initializer namespace from ALIBABA_ALIWARE_NAMESPACE attribute :null
+[2m2026-03-08T15:23:00.048+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.client.naming         [0;39m [2m:[0;39m initializer namespace from namespace attribute :null
+[2m2026-03-08T15:23:00.057+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.client.naming         [0;39m [2m:[0;39m FailoverDataSource type is class com.alibaba.nacos.client.naming.backups.datasource.DiskFailoverDataSource
+[2m2026-03-08T15:23:00.061+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [       Thread-3][0;39m [2m[0;39m[36mc.a.n.c.a.r.identify.CredentialWatcher  [0;39m [2m:[0;39m null No credential found
+[2m2026-03-08T15:23:00.068+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.alibaba.nacos.client.utils.ParamUtil  [0;39m [2m:[0;39m [settings] [req-serv] nacos-server port:8848
+[2m2026-03-08T15:23:00.068+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.alibaba.nacos.client.utils.ParamUtil  [0;39m [2m:[0;39m [settings] [http-client] connect timeout:1000
+[2m2026-03-08T15:23:00.068+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.alibaba.nacos.client.utils.ParamUtil  [0;39m [2m:[0;39m PER_TASK_CONFIG_SIZE: 3000.0
+[2m2026-03-08T15:23:00.072+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.a.n.p.a.s.c.ClientAuthPluginManager   [0;39m [2m:[0;39m [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+[2m2026-03-08T15:23:00.072+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.a.n.p.a.s.c.ClientAuthPluginManager   [0;39m [2m:[0;39m [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+[2m2026-03-08T15:23:00.079+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.common.remote.client  [0;39m [2m:[0;39m [RpcClientFactory] create a new rpc client of c87fac36-c91f-41cd-bdb6-261d5e920dd4
+[2m2026-03-08T15:23:00.097+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.client.naming         [0;39m [2m:[0;39m Create naming rpc client for uuid->c87fac36-c91f-41cd-bdb6-261d5e920dd4
+[2m2026-03-08T15:23:00.097+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.common.remote.client  [0;39m [2m:[0;39m [c87fac36-c91f-41cd-bdb6-261d5e920dd4] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
+[2m2026-03-08T15:23:00.098+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.common.remote.client  [0;39m [2m:[0;39m [c87fac36-c91f-41cd-bdb6-261d5e920dd4] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
+[2m2026-03-08T15:23:00.098+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.common.remote.client  [0;39m [2m:[0;39m [c87fac36-c91f-41cd-bdb6-261d5e920dd4] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
+[2m2026-03-08T15:23:00.099+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.common.remote.client  [0;39m [2m:[0;39m [c87fac36-c91f-41cd-bdb6-261d5e920dd4] Try to connect to server on start up, server: {serverIp = '127.0.0.1', server main port = 8848}
+[2m2026-03-08T15:23:00.115+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.a.n.c.remote.client.grpc.GrpcClient   [0;39m [2m:[0;39m grpc client connection server:127.0.0.1 ip,serverPort:9848,grpcTslConfig:{"sslProvider":"","enableTls":false,"mutualAuthEnable":false,"trustAll":false}
+[2m2026-03-08T15:23:00.547+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.a.n.c.a.AbstractAbilityControlManager [0;39m [2m:[0;39m Ready to get current node abilities...
+[2m2026-03-08T15:23:00.548+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.a.n.c.a.AbstractAbilityControlManager [0;39m [2m:[0;39m Ready to initialize current node abilities, support modes: [SDK_CLIENT]
+[2m2026-03-08T15:23:00.549+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.a.n.c.a.AbstractAbilityControlManager [0;39m [2m:[0;39m Initialize current abilities finish...
+[2m2026-03-08T15:23:00.549+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.a.n.c.a.d.NacosAbilityManagerHolder   [0;39m [2m:[0;39m [AbilityControlManager] Successfully initialize AbilityControlManager
+[2m2026-03-08T15:23:00.560+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.common.remote.client  [0;39m [2m:[0;39m [c87fac36-c91f-41cd-bdb6-261d5e920dd4] Success to connect to server [127.0.0.1:8848] on start up, connectionId = 1772954580485_127.0.0.1_55947
+[2m2026-03-08T15:23:00.560+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [remote.worker.0][0;39m [2m[0;39m[36mcom.alibaba.nacos.common.remote.client  [0;39m [2m:[0;39m [c87fac36-c91f-41cd-bdb6-261d5e920dd4] Notify connected event to listeners.
+[2m2026-03-08T15:23:00.560+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [remote.worker.0][0;39m [2m[0;39m[36mcom.alibaba.nacos.client.naming         [0;39m [2m:[0;39m Grpc connection connect
+[2m2026-03-08T15:23:00.560+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.common.remote.client  [0;39m [2m:[0;39m [c87fac36-c91f-41cd-bdb6-261d5e920dd4] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
+[2m2026-03-08T15:23:00.560+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.common.remote.client  [0;39m [2m:[0;39m [c87fac36-c91f-41cd-bdb6-261d5e920dd4] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda/0x000003c00174e0f8
+[2m2026-03-08T15:23:00.561+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.nacos.client.naming         [0;39m [2m:[0;39m [REGISTER-SERVICE] public registering service mp-auth with instance Instance{instanceId='null', ip='192.168.0.104', port=8081, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={IPv6=null, preserved.register.source=SPRING_CLOUD}}
+[2m2026-03-08T15:23:00.568+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.a.c.n.registry.NacosServiceRegistry   [0;39m [2m:[0;39m nacos registry, DEFAULT_GROUP mp-auth 192.168.0.104:8081 register finished
+[2m2026-03-08T15:23:00.575+08:00[0;39m [32m INFO[0;39m [35m54411[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.micro.platform.auth.AuthApplication   [0;39m [2m:[0;39m Started AuthApplication in 3.633 seconds (process running for 3.935)
 
-com.micro.platform.common.core.exception.BusinessException: 验证码错误
-	at com.micro.platform.auth.service.AuthService.validateCaptcha(AuthService.java:118) ~[classes/:na]
-	at com.micro.platform.auth.service.AuthService.login(AuthService.java:63) ~[classes/:na]
-	at com.micro.platform.auth.controller.AuthController.login(AuthController.java:39) ~[classes/:na]
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
-	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:547) ~[jakarta.servlet-api-6.0.0.jar:6.0.0]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614) ~[jakarta.servlet-api-6.0.0.jar:6.0.0]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:206) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1736) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+[32m :: Spring Boot :: [39m              [2m (v3.2.5)[0;39m
 
-2026-03-07T20:12:00.944+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-3] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:12:00.945+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-3] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:12:00.945+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-3] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:12:01.026+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-3] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:13:02.049+08:00 ERROR 33359 --- [mp-auth] [nio-8081-exec-5] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: com.micro.platform.common.core.exception.BusinessException: 验证码错误] with root cause
+[2m2026-03-08T15:24:24.098+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.micro.platform.auth.AuthApplication   [0;39m [2m:[0;39m Starting AuthApplication using Java 24.0.2 with PID 54636 (/Users/xieyunxing/micro-platform/mp-auth/target/mp-auth-1.0.0.jar started by xieyunxing in /Users/xieyunxing/micro-platform)
+[2m2026-03-08T15:24:24.102+08:00[0;39m [32mDEBUG[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.micro.platform.auth.AuthApplication   [0;39m [2m:[0;39m Running with Spring Boot v3.2.5, Spring v6.1.6
+[2m2026-03-08T15:24:24.102+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.micro.platform.auth.AuthApplication   [0;39m [2m:[0;39m The following 1 profile is active: "local"
+[2m2026-03-08T15:24:25.103+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Multiple Spring Data modules found, entering strict repository configuration mode
+[2m2026-03-08T15:24:25.106+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[2m2026-03-08T15:24:25.128+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+[2m2026-03-08T15:24:25.317+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.s.cloud.context.scope.GenericScope    [0;39m [2m:[0;39m BeanFactory id=005dbcb8-23fa-381b-8ee0-c47224e2aea6
+[2m2026-03-08T15:24:25.526+08:00[0;39m [33m WARN[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:24:25.528+08:00[0;39m [33m WARN[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:24:25.529+08:00[0;39m [33m WARN[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x000000fc013d7970] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:24:25.531+08:00[0;39m [33m WARN[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:24:25.542+08:00[0;39m [33m WARN[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:24:25.544+08:00[0;39m [33m WARN[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:24:25.556+08:00[0;39m [33m WARN[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsJakartaHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (jar:nested:/Users/xieyunxing/micro-platform/mp-auth/target/mp-auth-1.0.0.jar/!BOOT-INF/lib/tomcat-embed-core-10.1.20.jar!/)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
 
-com.micro.platform.common.core.exception.BusinessException: 验证码错误
-	at com.micro.platform.auth.service.AuthService.validateCaptcha(AuthService.java:118) ~[classes/:na]
-	at com.micro.platform.auth.service.AuthService.login(AuthService.java:63) ~[classes/:na]
-	at com.micro.platform.auth.controller.AuthController.login(AuthController.java:39) ~[classes/:na]
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
-	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:547) ~[jakarta.servlet-api-6.0.0.jar:6.0.0]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614) ~[jakarta.servlet-api-6.0.0.jar:6.0.0]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:206) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1736) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
+[2m2026-03-08T15:24:25.765+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat initialized with port 8081 (http)
+[2m2026-03-08T15:24:25.774+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.apache.catalina.core.StandardService  [0;39m [2m:[0;39m Starting service [Tomcat]
+[2m2026-03-08T15:24:25.775+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.apache.catalina.core.StandardEngine   [0;39m [2m:[0;39m Starting Servlet engine: [Apache Tomcat/10.1.20]
+[2m2026-03-08T15:24:25.807+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring embedded WebApplicationContext
+[2m2026-03-08T15:24:25.807+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mw.s.c.ServletWebServerApplicationContext[0;39m [2m:[0;39m Root WebApplicationContext: initialization completed in 1641 ms
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by io.netty.util.internal.PlatformDependent0$4 (jar:nested:/Users/xieyunxing/micro-platform/mp-auth/target/mp-auth-1.0.0.jar/!BOOT-INF/lib/netty-common-4.1.109.Final.jar!/)
+WARNING: Please consider reporting this to the maintainers of class io.netty.util.internal.PlatformDependent0$4
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[2m2026-03-08T15:24:26.345+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.druid.pool.DruidDataSource  [0;39m [2m:[0;39m {dataSource-1,master} inited
+[2m2026-03-08T15:24:26.345+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.DynamicRoutingDataSource        [0;39m [2m:[0;39m dynamic-datasource - add a datasource named [master] success
+[2m2026-03-08T15:24:26.346+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.DynamicRoutingDataSource        [0;39m [2m:[0;39m dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.6 
+[2m2026-03-08T15:24:27.040+08:00[0;39m [33m WARN[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mConfigServletWebServerApplicationContext[0;39m [2m:[0;39m Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+[2m2026-03-08T15:24:27.042+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.DynamicRoutingDataSource        [0;39m [2m:[0;39m dynamic-datasource start closing ....
+[2m2026-03-08T15:24:27.043+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.druid.pool.DruidDataSource  [0;39m [2m:[0;39m {dataSource-1} closing ...
+[2m2026-03-08T15:24:27.048+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.druid.pool.DruidDataSource  [0;39m [2m:[0;39m {dataSource-1} closed
+[2m2026-03-08T15:24:27.048+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.d.DefaultDataSourceDestroyer    [0;39m [2m:[0;39m dynamic-datasource close the datasource named [master] success,
+[2m2026-03-08T15:24:27.048+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.DynamicRoutingDataSource        [0;39m [2m:[0;39m dynamic-datasource all closed success,bye
+[2m2026-03-08T15:24:27.057+08:00[0;39m [32m INFO[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.b.a.l.ConditionEvaluationReportLogger[0;39m [2m:[0;39m 
 
-2026-03-07T20:13:09.153+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:13:09.154+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:13:09.167+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:13:09.260+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-8] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:13:51.312+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-1] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:13:51.312+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-1] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:13:51.313+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-1] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:13:51.386+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-1] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:14:16.753+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-6] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:14:16.753+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-6] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:14:16.754+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-6] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:14:16.831+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-6] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:18:39.548+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:18:39.548+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:18:39.549+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:18:39.620+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-4] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:19:57.894+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-9] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:19:57.894+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-9] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:19:57.895+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-9] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:19:57.962+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-9] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:21:39.069+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-5] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:21:39.069+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-5] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:21:39.071+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-5] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:21:39.143+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-5] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:21:39.181+08:00 ERROR 33359 --- [mp-auth] [nio-8081-exec-8] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: com.micro.platform.common.core.exception.BusinessException: 验证码已过期，请重新获取] with root cause
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[2m2026-03-08T15:24:27.069+08:00[0;39m [31mERROR[0;39m [35m54636[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.s.b.d.LoggingFailureAnalysisReporter  [0;39m [2m:[0;39m 
 
-com.micro.platform.common.core.exception.BusinessException: 验证码已过期，请重新获取
-	at com.micro.platform.auth.service.AuthService.validateCaptcha(AuthService.java:114) ~[classes/:na]
-	at com.micro.platform.auth.service.AuthService.login(AuthService.java:63) ~[classes/:na]
-	at com.micro.platform.auth.controller.AuthController.login(AuthController.java:39) ~[classes/:na]
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
-	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:547) ~[jakarta.servlet-api-6.0.0.jar:6.0.0]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614) ~[jakarta.servlet-api-6.0.0.jar:6.0.0]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:206) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1736) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
+***************************
+APPLICATION FAILED TO START
+***************************
 
-2026-03-07T20:21:39.205+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-9] c.m.platform.auth.service.AuthService    : 用户登出成功
-2026-03-07T20:22:11.767+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-3] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:22:11.767+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-3] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:22:11.768+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-3] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:22:11.841+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-3] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:23:17.065+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:23:17.066+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:23:17.067+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-8] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:23:17.136+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-8] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:23:38.842+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-2] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:23:38.842+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-2] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:23:38.843+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-2] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:23:38.913+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-2] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:28:20.615+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-5] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:28:20.616+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-5] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:28:20.617+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-5] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:28:20.705+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-5] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:40:07.119+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-9] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:40:07.119+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-9] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:40:07.119+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-9] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:40:07.191+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-9] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:51:20.867+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-3] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:51:20.867+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-3] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:51:20.868+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-3] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:51:20.943+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-3] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
-2026-03-07T20:52:24.735+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-7] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = ? AND deleted = ?)
-2026-03-07T20:52:24.735+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-7] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
-2026-03-07T20:52:24.736+08:00 DEBUG 33359 --- [mp-auth] [nio-8081-exec-7] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
-2026-03-07T20:52:24.811+08:00  INFO 33359 --- [mp-auth] [nio-8081-exec-7] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
+Description:
+
+Web server failed to start. Port 8081 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
+
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+[32m :: Spring Boot :: [39m              [2m (v3.2.5)[0;39m
+
+[2m2026-03-08T15:25:43.168+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.micro.platform.auth.AuthApplication   [0;39m [2m:[0;39m Starting AuthApplication using Java 24.0.2 with PID 54816 (/Users/xieyunxing/micro-platform/mp-auth/target/mp-auth-1.0.0.jar started by xieyunxing in /Users/xieyunxing/micro-platform)
+[2m2026-03-08T15:25:43.170+08:00[0;39m [32mDEBUG[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.micro.platform.auth.AuthApplication   [0;39m [2m:[0;39m Running with Spring Boot v3.2.5, Spring v6.1.6
+[2m2026-03-08T15:25:43.170+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.micro.platform.auth.AuthApplication   [0;39m [2m:[0;39m The following 1 profile is active: "local"
+[2m2026-03-08T15:25:44.280+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Multiple Spring Data modules found, entering strict repository configuration mode
+[2m2026-03-08T15:25:44.283+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[2m2026-03-08T15:25:44.305+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+[2m2026-03-08T15:25:44.503+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.s.cloud.context.scope.GenericScope    [0;39m [2m:[0;39m BeanFactory id=005dbcb8-23fa-381b-8ee0-c47224e2aea6
+[2m2026-03-08T15:25:44.747+08:00[0;39m [33m WARN[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:25:44.751+08:00[0;39m [33m WARN[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:25:44.752+08:00[0;39m [33m WARN[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x00000380013d6ef0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:25:44.754+08:00[0;39m [33m WARN[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:25:44.766+08:00[0;39m [33m WARN[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:25:44.769+08:00[0;39m [33m WARN[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2m2026-03-08T15:25:44.778+08:00[0;39m [33m WARN[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mtrationDelegate$BeanPostProcessorChecker[0;39m [2m:[0;39m Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsJakartaHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (jar:nested:/Users/xieyunxing/micro-platform/mp-auth/target/mp-auth-1.0.0.jar/!BOOT-INF/lib/tomcat-embed-core-10.1.20.jar!/)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+[2m2026-03-08T15:25:45.028+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat initialized with port 8081 (http)
+[2m2026-03-08T15:25:45.037+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.apache.catalina.core.StandardService  [0;39m [2m:[0;39m Starting service [Tomcat]
+[2m2026-03-08T15:25:45.038+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.apache.catalina.core.StandardEngine   [0;39m [2m:[0;39m Starting Servlet engine: [Apache Tomcat/10.1.20]
+[2m2026-03-08T15:25:45.077+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring embedded WebApplicationContext
+[2m2026-03-08T15:25:45.077+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mw.s.c.ServletWebServerApplicationContext[0;39m [2m:[0;39m Root WebApplicationContext: initialization completed in 1830 ms
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by io.netty.util.internal.PlatformDependent0$4 (jar:nested:/Users/xieyunxing/micro-platform/mp-auth/target/mp-auth-1.0.0.jar/!BOOT-INF/lib/netty-common-4.1.109.Final.jar!/)
+WARNING: Please consider reporting this to the maintainers of class io.netty.util.internal.PlatformDependent0$4
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[2m2026-03-08T15:25:45.692+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.druid.pool.DruidDataSource  [0;39m [2m:[0;39m {dataSource-1,master} inited
+[2m2026-03-08T15:25:45.692+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.DynamicRoutingDataSource        [0;39m [2m:[0;39m dynamic-datasource - add a datasource named [master] success
+[2m2026-03-08T15:25:45.693+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.DynamicRoutingDataSource        [0;39m [2m:[0;39m dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.6 
+[2m2026-03-08T15:25:46.383+08:00[0;39m [33m WARN[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mConfigServletWebServerApplicationContext[0;39m [2m:[0;39m Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+[2m2026-03-08T15:25:46.384+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.DynamicRoutingDataSource        [0;39m [2m:[0;39m dynamic-datasource start closing ....
+[2m2026-03-08T15:25:46.386+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.druid.pool.DruidDataSource  [0;39m [2m:[0;39m {dataSource-1} closing ...
+[2m2026-03-08T15:25:46.390+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mcom.alibaba.druid.pool.DruidDataSource  [0;39m [2m:[0;39m {dataSource-1} closed
+[2m2026-03-08T15:25:46.390+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.d.DefaultDataSourceDestroyer    [0;39m [2m:[0;39m dynamic-datasource close the datasource named [master] success,
+[2m2026-03-08T15:25:46.390+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mc.b.d.d.DynamicRoutingDataSource        [0;39m [2m:[0;39m dynamic-datasource all closed success,bye
+[2m2026-03-08T15:25:46.401+08:00[0;39m [32m INFO[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36m.s.b.a.l.ConditionEvaluationReportLogger[0;39m [2m:[0;39m 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[2m2026-03-08T15:25:46.416+08:00[0;39m [31mERROR[0;39m [35m54816[0;39m [2m---[0;39m [2m[mp-auth] [           main][0;39m [2m[0;39m[36mo.s.b.d.LoggingFailureAnalysisReporter  [0;39m [2m:[0;39m 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8081 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
+
+sleep: invalid time interval: nohup
+sleep: invalid time interval: java
+sleep: invalid time interval: -XX:TieredStopAtLevel=1
+sleep: invalid time interval: -Xmx512m
+sleep: invalid time interval: -jar
+sleep: invalid time interval: mp-auth/target/mp-auth-1.0.0.jar
+sleep: invalid time interval: --spring.profiles.active=local
+usage: sleep number[unit] [...]
+Unit can be 's' (seconds, the default), m (minutes), h (hours), or d (days).
