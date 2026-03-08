@@ -5,6 +5,7 @@ import com.micro.platform.system.entity.SysMenu;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,4 +37,19 @@ public interface SysMenuService extends IServiceX<SysMenu> {
      * 查询菜单列表（支持条件查询）
      */
     List<SysMenu> selectMenuList(SysMenu menu);
+
+    /**
+     * 获取菜单统计信息
+     */
+    Map<String, Object> getMenuStats();
+
+    /**
+     * 获取菜单树形结构（包含按钮）
+     */
+    List<Map<String, Object>> getMenuTreeWithButtons();
+
+    /**
+     * 获取指定角色的菜单权限列表
+     */
+    List<Map<String, Object>> getMenusByRoleId(Long roleId);
 }

@@ -80,6 +80,57 @@ public class SysMenuServiceImpl extends ServiceImplX<SysMenuMapper, SysMenu> imp
         }
     }
 
+    @Override
+    public Map<String, Object> getMenuStats() {
+        Map<String, Object> stats = new HashMap<>();
+
+        // 统计菜单总数
+        long totalMenuCount = baseMapper.selectCount(null);
+        stats.put("totalMenuCount", totalMenuCount);
+
+        // 统计目录数量
+        long directoryCount = baseMapper.selectCount(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getType, 1));
+        stats.put("directoryCount", directoryCount);
+
+        // 统计菜单数量
+        long menuCount = baseMapper.selectCount(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getType, 2));
+        stats.put("menuCount", menuCount);
+
+        // 统计按钮数量
+        long buttonCount = baseMapper.selectCount(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getType, 3));
+        stats.put("buttonCount", buttonCount);
+
+        // 统计正常状态的菜单
+        long activeMenuCount = baseMapper.selectCount(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus, 1));
+        stats.put("activeMenuCount", activeMenuCount);
+
+        // 统计禁用的菜单
+        long disabledMenuCount = baseMapper.selectCount(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus, 0));
+        stats.put("disabledMenuCount", disabledMenuCount);
+
+        return stats;
+    }
+
+    @Override
+    public List<Map<String, Object>> getMenuTreeWithButtons() {
+        List<SysMenu> menus = list(new LambdaQueryWrapper<SysMenu>()
+                .in(SysMenu::getType, 1, 2, 3)
+                .eq(SysMenu::getStatus, 1)
+                .orderByAsc(SysMenu::getSort));
+
+        List<SysMenu> treeMenus = buildMenuTree(menus, 0L);
+
+        // 转换为 Map 结构
+        return menusToTreeMaps(treeMenus);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMenusByRoleId(Long roleId) {
+        List<SysMenu> menus = baseMapper.selectMenusByRoleId(roleId);
+        List<SysMenu> treeMenus = buildMenuTree(menus, 0L);
+        return menusToTreeMaps(treeMenus);
+    }
+
     /**
      * 构建菜单树
      */
@@ -88,5 +139,32 @@ public class SysMenuServiceImpl extends ServiceImplX<SysMenuMapper, SysMenu> imp
                 .filter(menu -> parentId.equals(menu.getParentId()))
                 .peek(menu -> menu.setChildren(buildMenuTree(menus, menu.getMenuId())))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 将菜单列表转换为树形 Map 结构
+     */
+    private List<Map<String, Object>> menusToTreeMaps(List<SysMenu> menus) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (SysMenu menu : menus) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", menu.getMenuId());
+            map.put("parentId", menu.getParentId());
+            map.put("label", menu.getMenuName());
+            map.put("type", menu.getType());
+            map.put("icon", menu.getIcon());
+            map.put("path", menu.getPath());
+            map.put("component", menu.getComponent());
+            map.put("permission", menu.getPermission());
+            map.put("sort", menu.getSort());
+            map.put("visible", menu.getVisible());
+            map.put("status", menu.getStatus());
+
+            if (menu.getChildren() != null && !menu.getChildren().isEmpty()) {
+                map.put("children", menusToTreeMaps(menu.getChildren()));
+            }
+            result.add(map);
+        }
+        return result;
     }
 }

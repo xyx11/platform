@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -89,5 +90,26 @@ public class SysMenuController {
     @GetMapping("/export")
     public void export(HttpServletResponse response, SysMenu menu) {
         sysMenuService.exportMenu(response, menu);
+    }
+
+    @Operation(summary = "获取菜单统计信息")
+    @PreAuthorize("hasAuthority('system:menu:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats() {
+        return Result.success(sysMenuService.getMenuStats());
+    }
+
+    @Operation(summary = "获取菜单树形结构（包含按钮）")
+    @PreAuthorize("hasAuthority('system:menu:query')")
+    @GetMapping("/tree")
+    public Result<List<Map<String, Object>>> getTreeWithButtons() {
+        return Result.success(sysMenuService.getMenuTreeWithButtons());
+    }
+
+    @Operation(summary = "获取角色的菜单权限列表")
+    @PreAuthorize("hasAuthority('system:menu:query')")
+    @GetMapping("/role/{roleId}")
+    public Result<List<Map<String, Object>>> getMenusByRoleId(@PathVariable Long roleId) {
+        return Result.success(sysMenuService.getMenusByRoleId(roleId));
     }
 }
