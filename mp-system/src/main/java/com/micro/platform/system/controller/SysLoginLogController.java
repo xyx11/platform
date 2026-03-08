@@ -12,6 +12,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 登录日志控制器
  */
@@ -48,8 +51,8 @@ public class SysLoginLogController {
     @OperationLog(module = "登录日志", type = OperationType.DELETE, description = "批量删除登录日志")
     @PreAuthorize("hasAuthority('system:loginlog:remove')")
     @DeleteMapping("/batch")
-    public Result<Void> batchRemove(@RequestBody Long[] logIds) {
-        sysLoginLogService.removeByIds(java.util.Arrays.asList(logIds));
+    public Result<Void> batchRemove(@RequestBody List<Long> logIds) {
+        sysLoginLogService.removeByIds(logIds);
         return Result.success();
     }
 
@@ -68,5 +71,12 @@ public class SysLoginLogController {
     @GetMapping("/export")
     public void export(HttpServletResponse response, SysLoginLog log) {
         sysLoginLogService.exportLoginLog(response, log);
+    }
+
+    @Operation(summary = "获取登录日志统计信息")
+    @PreAuthorize("hasAuthority('system:loginlog:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats() {
+        return Result.success(sysLoginLogService.getLoginLogStats());
     }
 }
