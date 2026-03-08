@@ -120,6 +120,9 @@
             </el-tabs>
           </div>
           <div class="tabs-extra">
+            <span class="tabs-count" :class="{ warning: visitedViews.length >= MAX_TABS - 2 }">
+              {{ visitedViews.length }}/{{ MAX_TABS }}
+            </span>
             <el-dropdown :hide-on-click="false">
               <div class="extra-btn">
                 <el-icon :size="16"><MoreFilled /></el-icon>
@@ -285,6 +288,9 @@
             </el-tabs>
           </div>
           <div class="tabs-extra">
+            <span class="tabs-count" :class="{ warning: visitedViews.length >= MAX_TABS - 2 }">
+              {{ visitedViews.length }}/{{ MAX_TABS }}
+            </span>
             <el-dropdown :hide-on-click="false">
               <div class="extra-btn">
                 <el-icon :size="16"><MoreFilled /></el-icon>
@@ -889,6 +895,21 @@ $top-nav-height: 60px;
         justify-content: center;
         color: #fff;
         margin-right: 10px;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 2px 8px rgba(30, 128, 255, 0.2);
+
+        &:hover {
+          transform: rotate(15deg) scale(1.1);
+          box-shadow: 0 4px 16px rgba(30, 128, 255, 0.4);
+        }
+
+        .el-icon {
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        &:hover .el-icon {
+          transform: scale(1.2);
+        }
       }
 
       .logo-text {
@@ -896,7 +917,12 @@ $top-nav-height: 60px;
         font-weight: 600;
         color: $text-primary;
         white-space: nowrap;
+        transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
+    }
+
+    .logo:hover .logo-text {
+      color: $primary-color;
     }
 
     :deep(.el-menu) {
@@ -930,21 +956,52 @@ $top-nav-height: 60px;
         border: none;
         font-size: 14px;
         color: $text-regular;
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 3px;
+          background: linear-gradient(90deg, $primary-color 0%, #3d8bfd 100%);
+          opacity: 0;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          border-radius: 3px 3px 0 0;
+        }
 
         &:hover {
           background: $bg-color-gray;
           color: $primary-color;
+
+          &::after {
+            width: 80%;
+            opacity: 1;
+          }
         }
 
         &.is-active {
           background: $primary-light;
           color: $primary-color;
           font-weight: 500;
+
+          &::after {
+            width: 80%;
+            opacity: 1;
+          }
         }
 
         .menu-icon {
           margin-right: 6px;
           font-size: 16px;
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        &:hover .menu-icon {
+          transform: scale(1.1) rotate(5deg);
         }
       }
 
@@ -988,7 +1045,7 @@ $top-nav-height: 60px;
         justify-content: center;
         border-radius: 4px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         color: $text-secondary;
 
         &:hover {
@@ -1010,7 +1067,7 @@ $top-nav-height: 60px;
       cursor: pointer;
       padding: 6px 10px;
       border-radius: 4px;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
         background: $bg-color-gray;
@@ -1078,22 +1135,53 @@ $top-nav-height: 60px;
       font-size: 14px;
       color: $text-regular;
       padding-left: 16px !important;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 60%;
+        background: linear-gradient(90deg, $primary-color 0%, transparent 100%);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 0 4px 4px 0;
+      }
 
       &:hover {
         background: $bg-color-gray;
         color: $primary-color;
+        transform: translateX(4px);
+
+        &::before {
+          width: 4px;
+          opacity: 1;
+        }
       }
 
       &.is-active {
         background: $primary-light;
         color: $primary-color;
         font-weight: 500;
+
+        &::before {
+          width: 4px;
+          opacity: 1;
+        }
       }
 
       .menu-icon {
         width: 16px;
         margin-right: 10px;
         font-size: 16px;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      &:hover .menu-icon {
+        transform: scale(1.1);
       }
     }
 
@@ -1105,15 +1193,40 @@ $top-nav-height: 60px;
       font-size: 14px;
       color: $text-regular;
       padding-left: 16px !important;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 60%;
+        background: linear-gradient(90deg, $primary-color 0%, transparent 100%);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 0 4px 4px 0;
+      }
 
       &:hover {
         background: $bg-color-gray;
+
+        &::before {
+          width: 4px;
+          opacity: 1;
+        }
       }
 
       .menu-icon {
         width: 16px;
         margin-right: 10px;
         font-size: 16px;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      &:hover .menu-icon {
+        transform: scale(1.1);
       }
     }
 
@@ -1181,7 +1294,7 @@ $top-nav-height: 60px;
       justify-content: center;
       border-radius: 4px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       color: $text-secondary;
 
       &:hover {
@@ -1198,7 +1311,7 @@ $top-nav-height: 60px;
       justify-content: center;
       border-radius: 4px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       color: $text-secondary;
 
       &:hover {
@@ -1240,7 +1353,7 @@ $top-nav-height: 60px;
         justify-content: center;
         border-radius: 4px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         color: $text-secondary;
 
         &:hover {
@@ -1262,7 +1375,7 @@ $top-nav-height: 60px;
       cursor: pointer;
       padding: 6px 10px;
       border-radius: 4px;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
         background: $bg-color-gray;
@@ -1306,11 +1419,34 @@ $top-nav-height: 60px;
         padding: 0 14px;
         font-size: 13px;
         color: $text-regular;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+          border-radius: 4px 4px 0 0;
+        }
+
+        &:hover::before {
+          opacity: 1;
+        }
 
         .tab-label {
           cursor: pointer;
           user-select: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          transition: color 0.3s ease;
 
           &:hover {
             color: $primary-color;
@@ -1319,14 +1455,30 @@ $top-nav-height: 60px;
 
         &:hover {
           background: #f0f2f5;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
 
         &.is-active {
           background: $bg-color-white;
           color: $primary-color;
           border-bottom-color: $bg-color-white;
+          border-right-color: transparent;
           font-weight: 500;
           padding: 0 12px;
+          box-shadow: 0 -2px 8px rgba(30, 128, 255, 0.1);
+          z-index: 1;
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, $primary-color 0%, #3d8bfd 100%);
+            border-radius: 4px 4px 0 0;
+          }
         }
 
         .is-icon-close {
@@ -1334,10 +1486,12 @@ $top-nav-height: 60px;
           font-size: 11px;
           padding: 2px;
           border-radius: 2px;
+          transition: all 0.2s ease;
 
           &:hover {
             background-color: #ff4d4f;
             color: #fff;
+            transform: scale(1.1);
           }
         }
       }
@@ -1369,7 +1523,7 @@ $top-nav-height: 60px;
       padding: 2px 8px;
       background: $bg-color-gray;
       border-radius: 4px;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
       &.warning {
         color: #ff4d4f;
@@ -1402,20 +1556,21 @@ $top-nav-height: 60px;
   z-index: 9999;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   padding: 4px 0;
-  min-width: 140px;
-  animation: context-menu-fade-in 0.15s ease;
+  min-width: 160px;
+  animation: context-menu-fade-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 @keyframes context-menu-fade-in {
   from {
     opacity: 0;
-    transform: translateY(-4px);
+    transform: translateY(-8px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -1424,21 +1579,62 @@ $top-nav-height: 60px;
   border: none;
 
   .el-menu-item {
-    height: 36px;
-    line-height: 36px;
+    height: 40px;
+    line-height: 40px;
     font-size: 13px;
     color: $text-regular;
     padding: 0 16px;
-    margin: 0;
+    margin: 2px 0;
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 60%;
+      background: linear-gradient(90deg, $primary-color 0%, transparent 100%);
+      opacity: 0;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 0 2px 2px 0;
+    }
 
     &:hover {
       background: $bg-color-gray;
       color: $primary-color;
+
+      &::before {
+        width: 3px;
+        opacity: 1;
+      }
+    }
+
+    &.is-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover {
+        background: transparent;
+        color: $text-regular;
+
+        &::before {
+          width: 0;
+          opacity: 0;
+        }
+      }
     }
 
     .el-icon {
-      margin-right: 8px;
-      font-size: 14px;
+      margin-right: 10px;
+      font-size: 15px;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:hover .el-icon {
+      transform: scale(1.1);
     }
 
     span {
@@ -1462,6 +1658,7 @@ $top-nav-height: 60px;
   padding: 16px;
   overflow-y: auto;
   min-height: 0;
+  scroll-behavior: smooth;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -1472,38 +1669,82 @@ $top-nav-height: 60px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #d9d9d9;
+    background: linear-gradient(180deg, #c1c1c1 0%, #d9d9d9 100%);
     border-radius: 3px;
+    transition: background 0.3s ease;
 
     &:hover {
-      background: #bfbfbf;
+      background: linear-gradient(180deg, #a8a8a8 0%, #bfbfbf 100%);
     }
   }
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .fade-enter-from {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(8px) scale(0.98);
 }
 
 .fade-enter-to {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .fade-leave-from {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .fade-leave-to {
   opacity: 0;
-  transform: translateY(-12px);
+  transform: translateY(-8px) scale(0.98);
+}
+
+// 标签页动画
+.tabs-fade-enter-active,
+.tabs-fade-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tabs-fade-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.tabs-fade-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.tabs-fade-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+  max-width: 200px;
+}
+
+.tabs-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+  max-width: 0;
+  overflow: hidden;
+  padding: 0;
+  margin-right: 0;
+}
+
+// 按钮点击波纹效果
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
 }
 
 /* 暗黑模式 */
