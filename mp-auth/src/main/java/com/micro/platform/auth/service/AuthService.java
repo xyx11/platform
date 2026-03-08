@@ -280,4 +280,71 @@ public class AuthService {
         // TODO: 实现刷新逻辑
         return "new-token";
     }
+
+    /**
+     * 发送找回密码验证码
+     */
+    public void sendResetPasswordCode(String phone) {
+        if (phone == null || phone.isEmpty()) {
+            throw new BusinessException("手机号不能为空");
+        }
+
+        // 查询用户是否存在
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysUser::getPhone, phone);
+        SysUser user = userMapper.selectOne(wrapper);
+
+        if (user == null) {
+            throw new BusinessException("该手机号未注册");
+        }
+
+        // 生成 6 位验证码
+        String code = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
+        String redisKey = "reset_password:" + phone;
+
+        // 存储验证码，10 分钟过期
+        redisUtil.set(redisKey, code, 600, TimeUnit.SECONDS);
+
+        // TODO: 实际项目中应该调用短信服务发送验证码
+        log.info("发送找回密码验证码到手机号：{}，验证码：{}", phone, code);
+    }
+
+    /**
+     * 重置密码
+     */
+    public void resetPassword(String phone, String code, String newPassword) {
+        if (phone == null || phone.isEmpty()) {
+            throw new BusinessException("手机号不能为空");
+        }
+
+        // 验证验证码
+        String redisKey = "reset_password:" + phone;
+        Object storedCode = redisUtil.get(redisKey);
+
+        if (storedCode == null) {
+            throw new BusinessException("验证码已过期，请重新获取");
+        }
+
+        if (!String.valueOf(storedCode).equals(code)) {
+            throw new BusinessException("验证码错误");
+        }
+
+        // 查询用户
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysUser::getPhone, phone);
+        SysUser user = userMapper.selectOne(wrapper);
+
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+
+        // 更新密码
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userMapper.updateById(user);
+
+        // 删除验证码
+        redisUtil.delete(redisKey);
+
+        log.info("用户 {} 重置密码成功", phone);
+    }
 }

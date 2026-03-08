@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 认证控制器
  */
@@ -51,5 +54,25 @@ public class AuthController {
     @PostMapping("/refresh")
     public Result<String> refresh(@RequestParam String refreshToken) {
         return Result.success(authService.refreshToken(refreshToken));
+    }
+
+    @Operation(summary = "发送找回密码验证码")
+    @OperationLog(module = "认证管理", type = OperationType.OTHER, description = "发送找回密码验证码")
+    @PostMapping("/reset-password/code")
+    public Result<Void> sendResetPasswordCode(@RequestBody Map<String, String> params) {
+        String phone = params.get("phone");
+        authService.sendResetPasswordCode(phone);
+        return Result.success();
+    }
+
+    @Operation(summary = "重置密码")
+    @OperationLog(module = "认证管理", type = OperationType.UPDATE, description = "重置密码")
+    @PostMapping("/reset-password")
+    public Result<Void> resetPassword(@RequestBody Map<String, String> params) {
+        String phone = params.get("phone");
+        String code = params.get("code");
+        String newPassword = params.get("newPassword");
+        authService.resetPassword(phone, code, newPassword);
+        return Result.success();
     }
 }
