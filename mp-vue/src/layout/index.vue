@@ -89,12 +89,16 @@
               @edit="handleTabsEdit"
             >
               <el-tab-pane
-                v-for="item in visitedViews"
+                v-for="(item, index) in visitedViews"
                 :key="item.path"
                 :name="item.path"
+                :closable="item.path !== '/dashboard'"
               >
                 <template #label>
-                  <span @contextmenu.prevent="handleContextMenu($event, item.path)">{{ item.title }}</span>
+                  <span @contextmenu.prevent="handleContextMenu($event, item.path)">
+                    <el-icon v-if="item.path === '/dashboard'" style="margin-right: 4px; vertical-align: middle;"><HomeFilled /></el-icon>
+                    {{ item.title }}
+                  </span>
                 </template>
               </el-tab-pane>
             </el-tabs>
@@ -236,12 +240,16 @@
               @edit="handleTabsEdit"
             >
               <el-tab-pane
-                v-for="item in visitedViews"
+                v-for="(item, index) in visitedViews"
                 :key="item.path"
                 :name="item.path"
+                :closable="item.path !== '/dashboard'"
               >
                 <template #label>
-                  <span @contextmenu.prevent="handleContextMenu($event, item.path)">{{ item.title }}</span>
+                  <span @contextmenu.prevent="handleContextMenu($event, item.path)">
+                    <el-icon v-if="item.path === '/dashboard'" style="margin-right: 4px; vertical-align: middle;"><HomeFilled /></el-icon>
+                    {{ item.title }}
+                  </span>
                 </template>
               </el-tab-pane>
             </el-tabs>
@@ -292,16 +300,25 @@
         <el-menu-item @click="executeMenuCommand('refresh')">
           <el-icon><Refresh /></el-icon> <span>刷新</span>
         </el-menu-item>
-        <el-menu-item @click="executeMenuCommand('close')">
+        <el-menu-item 
+          v-if="currentContextMenuPath !== '/dashboard'"
+          @click="executeMenuCommand('close')"
+        >
           <el-icon><Close /></el-icon> <span>关闭</span>
         </el-menu-item>
         <el-menu-item @click="executeMenuCommand('closeOther')">
           <el-icon><FolderDelete /></el-icon> <span>关闭其他</span>
         </el-menu-item>
-        <el-menu-item @click="executeMenuCommand('closeLeft')">
+        <el-menu-item 
+          v-if="currentContextMenuPath !== '/dashboard' && visitedViews.findIndex(i => i.path === currentContextMenuPath) > 1"
+          @click="executeMenuCommand('closeLeft')"
+        >
           <el-icon><DArrowLeft /></el-icon> <span>关闭左侧</span>
         </el-menu-item>
-        <el-menu-item @click="executeMenuCommand('closeRight')">
+        <el-menu-item 
+          v-if="currentContextMenuPath !== '/dashboard' && currentContextMenuPath !== activeTab"
+          @click="executeMenuCommand('closeRight')"
+        >
           <el-icon><DArrowRight /></el-icon> <span>关闭右侧</span>
         </el-menu-item>
         <el-divider style="margin: 4px 0;" />
@@ -311,6 +328,14 @@
       </el-menu>
     </div>
     <div v-if="contextMenuVisible" class="context-menu-overlay" @click="closeContextMenu"></div>
+    
+    <!-- 页面加载进度条 -->
+    <div v-if="loading" class="page-loading">
+      <div class="loading-spinner">
+        <div class="spinner-circle"></div>
+        <p class="loading-text">加载中...</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -321,7 +346,7 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import NoticeIcon from '@/components/NoticeIcon.vue'
 import {
   Platform, Expand, Fold, Moon, Sunny, Refresh, Close, FolderDelete, Delete,
-  MoreFilled, ArrowDown, DArrowLeft, DArrowRight, FullScreen, Menu
+  MoreFilled, ArrowDown, DArrowLeft, DArrowRight, FullScreen, Menu, HomeFilled
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
@@ -331,6 +356,7 @@ const isRouterAlive = ref(true)
 
 const isDark = ref(false)
 const isFullScreen = ref(false)
+const loading = ref(false)
 const activeTab = ref(route.path || '/dashboard')
 const visitedViews = ref([])
 const userInfo = ref({})
@@ -507,7 +533,11 @@ const closeCurrent = () => {
 const closeOtherTabs = () => {
   const keep = ['/dashboard', activeTab.value]
   visitedViews.value = visitedViews.value.filter(item => keep.includes(item.path))
-  ElMessage.success('已关闭其他标签页')
+  if (activeTab.value !== '/dashboard') {
+    ElMessage.success('已关闭其他标签页')
+  } else {
+    ElMessage.info('首页无法关闭')
+  }
 }
 
 const closeAllTabs = () => {
@@ -516,6 +546,9 @@ const closeAllTabs = () => {
   router.push('/dashboard')
   ElMessage.success('已关闭全部标签页')
 }
+
+// 检查是否是首页
+const isHome = (path) => path === '/dashboard'
 
 // 切换布局模式
 const toggleLayoutMode = () => {
@@ -596,6 +629,10 @@ const executeMenuCommand = (command) => {
 }
 
 const closeLeftTabs = (targetPath) => {
+  if (targetPath === '/dashboard') {
+    ElMessage.info('首页左侧无法关闭')
+    return
+  }
   const targetIndex = visitedViews.value.findIndex(item => item.path === targetPath)
   if (targetIndex === -1) return
   const keepPaths = ['/dashboard']
@@ -613,6 +650,10 @@ const closeLeftTabs = (targetPath) => {
 }
 
 const closeRightTabs = (targetPath) => {
+  if (targetPath === '/dashboard') {
+    ElMessage.info('首页右侧无法关闭')
+    return
+  }
   const targetIndex = visitedViews.value.findIndex(item => item.path === targetPath)
   if (targetIndex === -1) return
   const keepPaths = ['/dashboard']
@@ -685,12 +726,17 @@ const addView = (routerView) => {
   activeTab.value = routerView.path
 }
 
-watch(() => route.path, (newPath) => {
-  if (newPath && !visitedViews.value.find(item => item.path === newPath)) {
-    const currentRouteMatched = route.matched[route.matched.length - 1]
-    if (currentRouteMatched && currentRouteMatched.meta) {
-      addView({ path: newPath, meta: currentRouteMatched.meta, name: currentRouteMatched.name })
+watch(() => route.path, async (newPath) => {
+  if (newPath) {
+    loading.value = true
+    if (!visitedViews.value.find(item => item.path === newPath)) {
+      const currentRouteMatched = route.matched[route.matched.length - 1]
+      if (currentRouteMatched && currentRouteMatched.meta) {
+        addView({ path: newPath, meta: currentRouteMatched.meta, name: currentRouteMatched.name })
+      }
     }
+    await nextTick()
+    loading.value = false
   }
 }, { immediate: true })
 
@@ -703,6 +749,29 @@ onMounted(() => {
   }
   document.addEventListener('fullscreenchange', () => {
     isFullScreen.value = !!document.fullscreenElement
+  })
+
+  // 键盘快捷键
+  document.addEventListener('keydown', (e) => {
+    // Ctrl/Cmd + R: 刷新当前标签页
+    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+      e.preventDefault()
+      refreshCurrent()
+    }
+    // Ctrl/Cmd + W: 关闭当前标签页
+    if ((e.ctrlKey || e.metaKey) && e.key === 'w') {
+      e.preventDefault()
+      closeCurrent()
+    }
+    // Ctrl/Cmd + 数字：切换标签页
+    if ((e.ctrlKey || e.metaKey) && /^[1-9]$/.test(e.key)) {
+      e.preventDefault()
+      const index = parseInt(e.key) - 1
+      if (visitedViews.value[index]) {
+        activeTab.value = visitedViews.value[index].path
+        router.push(activeTab.value)
+      }
+    }
   })
 })
 </script>
@@ -788,6 +857,23 @@ $top-nav-height: 60px;
       background: transparent;
       overflow: hidden;
       overflow-x: auto;
+
+      &::-webkit-scrollbar {
+        height: 4px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #d9d9d9;
+        border-radius: 2px;
+
+        &:hover {
+          background: #bfbfbf;
+        }
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
 
       .el-menu-item {
         height: $top-nav-height;
@@ -1309,13 +1395,27 @@ $top-nav-height: 60px;
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.fade-enter-from,
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.fade-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .fade-leave-to {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(-12px);
 }
 
 /* 暗黑模式 */
@@ -1534,5 +1634,61 @@ html.dark {
     background-color: #1d1e1f;
     border-color: #434343;
   }
+
+  .page-loading {
+    background: #1d1e1f;
+
+    .loading-spinner {
+      .loading-text {
+        color: #94a3b8;
+      }
+
+      .spinner-circle {
+        border-color: #667eea;
+      }
+    }
+  }
 }
 </style>
+
+// 页面加载进度条
+.page-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+
+  .loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    .spinner-circle {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e3e4e6;
+      border-top-color: $primary-color;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .loading-text {
+      font-size: 14px;
+      color: $text-secondary;
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
