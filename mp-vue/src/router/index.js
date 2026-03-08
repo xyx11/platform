@@ -89,6 +89,12 @@ const routes = [
         name: 'SysNotice',
         component: () => import('@/views/system/notice/index.vue'),
         meta: { title: '通知公告', icon: 'Bell' }
+      },
+      {
+        path: 'command',
+        name: 'SysCommand',
+        component: () => import('@/views/system/command/index.vue'),
+        meta: { title: '命令执行', icon: 'Terminal' }
       }
     ]
   },
