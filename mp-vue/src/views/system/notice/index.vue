@@ -39,6 +39,7 @@
             <el-icon><Download /></el-icon> 导出
           </el-button>
         </el-col>
+        <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" />
       </el-row>
 
       <!-- 表格 -->
@@ -67,18 +68,35 @@
             />
           </template>
         </el-table-column>
+        <el-table-column label="阅读情况" width="150" align="center">
+          <template #default="{ row }">
+            <el-tooltip placement="top">
+              <template #content>
+                <div>已读：{{ row.readCount || 0 }} 人</div>
+                <div>未读：{{ row.unreadCount || 0 }} 人</div>
+              </template>
+              <div class="read-status">
+                <el-tag size="small" type="success">已读：{{ row.readCount || 0 }}</el-tag>
+                <el-tag size="small" type="warning" style="margin-left: 5px">未读：{{ row.unreadCount || 0 }}</el-tag>
+              </div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column label="创建时间" prop="createTime" width="180">
           <template #default="{ row }">
             {{ row.createTime ? row.createTime.substring(0, 10) : '' }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center" fixed="right">
+        <el-table-column label="操作" width="230" align="center" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link @click="handleUpdate(row)">
-              <el-icon><Edit /></el-icon> 编辑
+            <el-button type="primary" link icon="View" @click="handleView(row)">
+              详情
             </el-button>
-            <el-button type="danger" link @click="handleDelete(row)">
-              <el-icon><Delete /></el-icon> 删除
+            <el-button type="primary" link icon="Edit" @click="handleUpdate(row)">
+              编辑
+            </el-button>
+            <el-button type="danger" link icon="Delete" @click="handleDelete(row)">
+              删除
             </el-button>
           </template>
         </el-table-column>
@@ -98,6 +116,38 @@
         />
       </div>
     </el-card>
+
+    <!-- 公告详情对话框 -->
+    <el-dialog title="公告详情" v-model="viewVisible" width="800px" append-to-body>
+      <el-descriptions :column="2" border>
+        <el-descriptions-item label="公告标题">
+          {{ viewForm.noticeTitle }}
+        </el-descriptions-item>
+        <el-descriptions-item label="公告类型">
+          <el-tag :type="viewForm.noticeType === '1' ? 'warning' : 'success'">
+            {{ viewForm.noticeType === '1' ? '通知' : '公告' }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="状态">
+          <el-tag :type="viewForm.status === 1 ? 'success' : 'info'">
+            {{ viewForm.status === 1 ? '正常' : '关闭' }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="创建时间">
+          {{ viewForm.createTime }}
+        </el-descriptions-item>
+        <el-descriptions-item label="阅读统计" :span="2">
+          <el-tag type="success">已读：{{ viewForm.readCount || 0 }} 人</el-tag>
+          <el-tag type="warning" style="margin-left: 10px">未读：{{ viewForm.unreadCount || 0 }} 人</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="公告内容" :span="2">
+          <div class="notice-content" v-html="viewForm.noticeContent"></div>
+        </el-descriptions-item>
+      </el-descriptions>
+      <template #footer>
+        <el-button @click="viewVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
 
     <!-- 添加/编辑对话框 -->
     <el-dialog :title="title" v-model="open" width="800px">
@@ -139,11 +189,14 @@ import request from '@/utils/request'
 const loading = ref(true)
 const open = ref(false)
 const title = ref('')
+const viewVisible = ref(false)
 const noticeList = ref([])
 const multiple = ref(true)
 const total = ref(0)
 const ids = ref([])
+const showSearch = ref(true)
 const form = ref({})
+const viewForm = ref({})
 const queryParams = ref({
   pageNum: 1,
   pageSize: 10,
@@ -162,8 +215,22 @@ const formRef = ref(null)
 function getList() {
   loading.value = true
   request.get('/system/notice/list', { params: queryParams.value }).then(res => {
-    noticeList.value = res.data.records
-    total.value = res.data.total
+    noticeList.value = res.data.records || []
+    // 为每条公告获取阅读统计
+    noticeList.value.forEach(item => {
+      if (item.noticeId) {
+        request.get('/system/notice/stats/' + item.noticeId).then(statRes => {
+          item.readCount = statRes.data.readCount
+          item.unreadCount = statRes.data.unreadCount
+        }).catch(() => {
+          item.readCount = 0
+          item.unreadCount = 0
+        })
+      }
+    })
+    total.value = res.data.total || 0
+    loading.value = false
+  }).catch(() => {
     loading.value = false
   })
 }
@@ -203,6 +270,14 @@ function handleAdd() {
   reset()
   open.value = true
   title.value = '添加公告'
+}
+
+/** 查看详情 */
+function handleView(row) {
+  request.get('/system/notice/' + row.noticeId).then(res => {
+    viewForm.value = res.data
+    viewVisible.value = true
+  })
 }
 
 /** 修改按钮操作 */
@@ -318,6 +393,17 @@ getList()
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
+  }
+
+  .read-status {
+    display: flex;
+    align-items: center;
+  }
+
+  .notice-content {
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-all;
   }
 }
 </style>
