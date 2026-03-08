@@ -57,4 +57,14 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * 批量删除用户角色关联（指定用户）
      */
     int batchDeleteUserRole(@Param("roleId") Long roleId, @Param("userIds") List<Long> userIds);
+
+    /**
+     * 根据用户 ID 删除角色关联
+     */
+    int deleteUserRoleByUserId(@Param("userId") Long userId);
+
+    /**
+     * 批量插入用户角色关联（根据用户 ID）
+     */
+    int batchInsertUserRoleByUserId(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
 }

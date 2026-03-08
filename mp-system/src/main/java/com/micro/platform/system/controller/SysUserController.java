@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户管理控制器
@@ -115,6 +116,36 @@ public class SysUserController {
     public Result<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
         sysUserService.resetPassword(request.getUserId(), request.getPassword());
         return Result.success();
+    }
+
+    @Operation(summary = "获取用户统计信息")
+    @PreAuthorize("hasAuthority('system:user:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats(@RequestParam(required = false) Long userId) {
+        return Result.success(sysUserService.getUserStats(userId));
+    }
+
+    @Operation(summary = "获取用户的角色 ID 列表")
+    @PreAuthorize("hasAuthority('system:user:query')")
+    @GetMapping("/roles/{userId}")
+    public Result<Map<String, Object>> getUserRoles(@PathVariable Long userId) {
+        return Result.success(sysUserService.getUserRoles(userId));
+    }
+
+    @Operation(summary = "分配角色到用户")
+    @OperationLog(module = "用户管理", type = OperationType.GRANT, description = "分配角色到用户")
+    @PreAuthorize("hasAuthority('system:user:edit')")
+    @PostMapping("/roles")
+    public Result<Void> assignRoles(@RequestParam Long userId, @RequestBody Long[] roleIds) {
+        sysUserService.assignRoles(userId, roleIds);
+        return Result.success();
+    }
+
+    @Operation(summary = "获取用户详情（包含部门、角色等信息）")
+    @PreAuthorize("hasAuthority('system:user:query')")
+    @GetMapping("/detail/{userId}")
+    public Result<Map<String, Object>> getDetail(@PathVariable Long userId) {
+        return Result.success(sysUserService.getUserDetail(userId));
     }
 
     /**

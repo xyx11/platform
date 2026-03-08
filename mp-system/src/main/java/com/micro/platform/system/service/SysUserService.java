@@ -62,4 +62,24 @@ public interface SysUserService extends IServiceX<SysUser> {
      * 获取用户详情（包含部门等信息）
      */
     Map<String, Object> getUserDetail(Long userId);
+
+    /**
+     * 获取用户统计信息
+     */
+    Map<String, Object> getUserStats(Long userId);
+
+    /**
+     * 获取用户的角色 ID 列表
+     */
+    Map<String, Object> getUserRoles(Long userId);
+
+    /**
+     * 分配角色到用户
+     */
+    void assignRoles(Long userId, Long[] roleIds);
+
+    /**
+     * 批量新增用户
+     */
+    Map<String, Object> batchSaveUser(java.util.List<SysUser> users);
 }

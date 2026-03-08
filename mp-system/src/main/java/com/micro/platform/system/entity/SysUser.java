@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 系统用户实体
@@ -101,6 +102,12 @@ public class SysUser implements Serializable {
      */
     @TableLogic
     private Integer deleted;
+
+    /**
+     * 角色 ID 列表（非数据库字段）
+     */
+    @TableField(exist = false)
+    private List<Long> roleIds;
 
     public Long getUserId() {
         return userId;
@@ -236,5 +243,13 @@ public class SysUser implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public List<Long> getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(List<Long> roleIds) {
+        this.roleIds = roleIds;
     }
 }

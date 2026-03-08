@@ -51,8 +51,17 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
                 .like(StringUtils.hasText(user.getPhone()), SysUser::getPhone, user.getPhone())
                 .like(StringUtils.hasText(user.getEmail()), SysUser::getEmail, user.getEmail())
                 .eq(user.getStatus() != null, SysUser::getStatus, user.getStatus())
+                .eq(user.getDeptId() != null, SysUser::getDeptId, user.getDeptId())
                 .orderByDesc(SysUser::getCreateTime);
-        return baseMapper.selectPage(page, wrapper);
+        Page<SysUser> resultPage = baseMapper.selectPage(page, wrapper);
+
+        // 填充角色名称
+        for (SysUser u : resultPage.getRecords()) {
+            List<Long> roleIds = sysUserMapper.selectRoleIdsByUserId(u.getUserId());
+            u.setRoleIds(roleIds);
+        }
+
+        return resultPage;
     }
 
     @Override
@@ -259,6 +268,122 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
             result.put("dept", dept);
         }
 
+        // 获取角色信息
+        List<Long> roleIds = sysUserMapper.selectRoleIdsByUserId(userId);
+        result.put("roleIds", roleIds);
+
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> getUserStats(Long userId) {
+        Map<String, Object> stats = new HashMap<>();
+
+        if (userId == null) {
+            // 统计所有用户
+            long totalUserCount = baseMapper.selectCount(null);
+            long activeUserCount = baseMapper.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getStatus, 1));
+            long inactiveUserCount = baseMapper.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getStatus, 0));
+            stats.put("totalUserCount", totalUserCount);
+            stats.put("activeUserCount", activeUserCount);
+            stats.put("inactiveUserCount", inactiveUserCount);
+
+            // 按性别统计
+            long maleCount = baseMapper.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getGender, 1));
+            long femaleCount = baseMapper.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getGender, 0));
+            long unknownCount = baseMapper.selectCount(new LambdaQueryWrapper<SysUser>().isNull(SysUser::getGender));
+            stats.put("maleCount", maleCount);
+            stats.put("femaleCount", femaleCount);
+            stats.put("unknownCount", unknownCount);
+
+            // 按部门统计用户数
+            List<Map<String, Object>> deptStats = new ArrayList<>();
+            // 这里简化处理，实际应该联表查询统计每个部门的用户数
+            stats.put("deptStats", deptStats);
+        } else {
+            // 统计指定用户
+            SysUser user = getById(userId);
+            if (user == null) {
+                throw new BusinessException("用户不存在");
+            }
+
+            stats.put("userId", userId);
+            stats.put("username", user.getUsername());
+            stats.put("nickname", user.getNickname());
+            stats.put("status", user.getStatus());
+        }
+
+        return stats;
+    }
+
+    @Override
+    public Map<String, Object> getUserRoles(Long userId) {
+        Map<String, Object> result = new HashMap<>();
+        SysUser user = getById(userId);
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+
+        List<Long> roleIds = sysUserMapper.selectRoleIdsByUserId(userId);
+        result.put("userId", userId);
+        result.put("roleIds", roleIds);
+
+        return result;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void assignRoles(Long userId, Long[] roleIds) {
+        // 检查用户是否存在
+        SysUser user = getById(userId);
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+
+        // 先删除原有的用户角色关联
+        sysUserMapper.deleteUserRoleByUserId(userId);
+
+        // 再插入新的关联
+        if (roleIds != null && roleIds.length > 0) {
+            sysUserMapper.batchInsertUserRoleByUserId(userId, Arrays.asList(roleIds));
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> batchSaveUser(List<SysUser> users) {
+        Map<String, Object> result = new HashMap<>();
+        int success = 0;
+        int failed = 0;
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        for (SysUser user : users) {
+            try {
+                // 检查用户名是否存在
+                SysUser existUser = baseMapper.selectByUsername(user.getUsername());
+                if (existUser != null) {
+                    failed++;
+                    continue;
+                }
+
+                // 加密密码
+                String password = user.getPassword();
+                if (!StringUtils.hasText(password)) {
+                    password = "admin123"; // 默认密码
+                }
+                user.setPassword(encoder.encode(password));
+                user.setCreateTime(LocalDateTime.now());
+                user.setDeleted(0);
+
+                baseMapper.insert(user);
+                success++;
+            } catch (Exception e) {
+                failed++;
+            }
+        }
+
+        result.put("success", success);
+        result.put("failed", failed);
         return result;
     }
 
