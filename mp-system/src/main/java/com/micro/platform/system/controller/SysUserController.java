@@ -124,8 +124,9 @@ public class SysUserController {
     @PutMapping("/password/batch")
     public Result<Void> batchResetPassword(@RequestBody Map<String, Object> params) {
         @SuppressWarnings("unchecked")
-        List<Long> userIds = (List<Long>) params.get("userIds");
+        List<Integer> userIdsInt = (List<Integer>) params.get("userIds");
         String password = (String) params.get("password");
+        List<Long> userIds = userIdsInt != null ? userIdsInt.stream().map(Long::valueOf).toList() : null;
         sysUserService.batchResetPassword(userIds, password);
         return Result.success();
     }

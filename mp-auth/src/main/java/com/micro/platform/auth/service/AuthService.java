@@ -12,8 +12,8 @@ import com.micro.platform.auth.entity.SysUser;
 import com.micro.platform.auth.mapper.SysUserMapper;
 import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.common.redis.util.RedisUtil;
-import com.micro.platform.system.entity.SysLoginLog;
-import com.micro.platform.system.service.SysLoginLogService;
+import com.micro.platform.auth.entity.SysLoginLog;
+import com.micro.platform.auth.mapper.SysLoginLogMapper;
 import com.wf.captcha.SpecCaptcha;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -37,13 +37,13 @@ public class AuthService {
 
     private final RedisUtil redisUtil;
     private final SysUserMapper userMapper;
-    private final SysLoginLogService loginLogService;
+    private final SysLoginLogMapper loginLogMapper;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public AuthService(RedisUtil redisUtil, SysUserMapper userMapper, SysLoginLogService loginLogService) {
+    public AuthService(RedisUtil redisUtil, SysUserMapper userMapper, SysLoginLogMapper loginLogMapper) {
         this.redisUtil = redisUtil;
         this.userMapper = userMapper;
-        this.loginLogService = loginLogService;
+        this.loginLogMapper = loginLogMapper;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -200,7 +200,7 @@ public class AuthService {
      */
     private void saveLoginLog(SysLoginLog loginLog) {
         try {
-            loginLogService.save(loginLog);
+            loginLogMapper.insert(loginLog);
         } catch (Exception e) {
             log.error("保存登录日志失败：{}", e.getMessage());
         }
