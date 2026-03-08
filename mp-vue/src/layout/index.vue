@@ -42,21 +42,31 @@
         </div>
         <div class="top-nav-right">
           <div class="header-actions">
-            <div class="action-btn" @click="toggleLayoutMode" title="切换到侧边栏模式">
-              <el-icon :size="18"><Menu /></el-icon>
-            </div>
-            <div class="action-btn" @click="toggleTheme" :title="isDark ? '切换浅色模式' : '切换深色模式'">
-              <el-icon :size="18"><component :is="isDark ? 'Sunny' : 'Moon'" /></el-icon>
-            </div>
-            <div class="action-btn" @click="refreshPage" title="刷新">
-              <el-icon :size="18"><Refresh /></el-icon>
-            </div>
-            <div class="action-btn" @click="toggleFullScreen" :title="isFullScreen ? '退出全屏' : '全屏'">
-              <el-icon :size="18"><FullScreen /></el-icon>
-            </div>
-            <div class="action-btn">
-              <NoticeIcon />
-            </div>
+            <el-tooltip :content="layoutMode === 'horizontal' ? '切换到侧边栏模式' : '切换到顶部菜单模式'" placement="bottom">
+              <div class="action-btn" @click="toggleLayoutMode">
+                <el-icon :size="18"><Menu /></el-icon>
+              </div>
+            </el-tooltip>
+            <el-tooltip :content="isDark ? '切换浅色模式' : '切换深色模式'" placement="bottom">
+              <div class="action-btn" @click="toggleTheme">
+                <el-icon :size="18"><component :is="isDark ? 'Sunny' : 'Moon'" /></el-icon>
+              </div>
+            </el-tooltip>
+            <el-tooltip content="刷新页面 (Ctrl+R)" placement="bottom">
+              <div class="action-btn" @click="refreshPage">
+                <el-icon :size="18"><Refresh /></el-icon>
+              </div>
+            </el-tooltip>
+            <el-tooltip :content="isFullScreen ? '退出全屏' : '全屏'" placement="bottom">
+              <div class="action-btn" @click="toggleFullScreen">
+                <el-icon :size="18"><FullScreen /></el-icon>
+              </div>
+            </el-tooltip>
+            <el-tooltip content="消息通知" placement="bottom">
+              <div class="action-btn">
+                <NoticeIcon />
+              </div>
+            </el-tooltip>
           </div>
           <el-divider direction="vertical" />
           <el-dropdown @command="handleCommand">
@@ -84,9 +94,11 @@
               v-model="activeTab"
               type="card"
               closable
+              draggable
               @tab-click="handleTabClick"
               @tab-remove="handleTabClose"
               @edit="handleTabsEdit"
+              @tab-change="handleTabChange"
             >
               <el-tab-pane
                 v-for="(item, index) in visitedViews"
@@ -95,7 +107,11 @@
                 :closable="item.path !== '/dashboard'"
               >
                 <template #label>
-                  <span @contextmenu.prevent="handleContextMenu($event, item.path)">
+                  <span 
+                    @contextmenu.prevent="handleContextMenu($event, item.path)"
+                    @dblclick="handleTabDoubleClick(item.path)"
+                    class="tab-label"
+                  >
                     <el-icon v-if="item.path === '/dashboard'" style="margin-right: 4px; vertical-align: middle;"><HomeFilled /></el-icon>
                     {{ item.title }}
                   </span>
@@ -198,18 +214,26 @@
           </div>
           <div class="header-right">
             <div class="header-actions">
-              <div class="action-btn" @click="toggleTheme" :title="isDark ? '切换浅色模式' : '切换深色模式'">
-                <el-icon :size="18"><component :is="isDark ? 'Sunny' : 'Moon'" /></el-icon>
-              </div>
-              <div class="action-btn" @click="refreshPage" title="刷新">
-                <el-icon :size="18"><Refresh /></el-icon>
-              </div>
-              <div class="action-btn" @click="toggleFullScreen" :title="isFullScreen ? '退出全屏' : '全屏'">
-                <el-icon :size="18"><FullScreen /></el-icon>
-              </div>
-              <div class="action-btn">
-                <NoticeIcon />
-              </div>
+              <el-tooltip :content="isDark ? '切换浅色模式' : '切换深色模式'" placement="bottom">
+                <div class="action-btn" @click="toggleTheme">
+                  <el-icon :size="18"><component :is="isDark ? 'Sunny' : 'Moon'" /></el-icon>
+                </div>
+              </el-tooltip>
+              <el-tooltip content="刷新页面 (Ctrl+R)" placement="bottom">
+                <div class="action-btn" @click="refreshPage">
+                  <el-icon :size="18"><Refresh /></el-icon>
+                </div>
+              </el-tooltip>
+              <el-tooltip :content="isFullScreen ? '退出全屏' : '全屏'" placement="bottom">
+                <div class="action-btn" @click="toggleFullScreen">
+                  <el-icon :size="18"><FullScreen /></el-icon>
+                </div>
+              </el-tooltip>
+              <el-tooltip content="消息通知" placement="bottom">
+                <div class="action-btn">
+                  <NoticeIcon />
+                </div>
+              </el-tooltip>
             </div>
             <el-divider direction="vertical" />
             <el-dropdown @command="handleCommand">
@@ -235,9 +259,11 @@
               v-model="activeTab"
               type="card"
               closable
+              draggable
               @tab-click="handleTabClick"
               @tab-remove="handleTabClose"
               @edit="handleTabsEdit"
+              @tab-change="handleTabChange"
             >
               <el-tab-pane
                 v-for="(item, index) in visitedViews"
@@ -246,7 +272,11 @@
                 :closable="item.path !== '/dashboard'"
               >
                 <template #label>
-                  <span @contextmenu.prevent="handleContextMenu($event, item.path)">
+                  <span 
+                    @contextmenu.prevent="handleContextMenu($event, item.path)"
+                    @dblclick="handleTabDoubleClick(item.path)"
+                    class="tab-label"
+                  >
                     <el-icon v-if="item.path === '/dashboard'" style="margin-right: 4px; vertical-align: middle;"><HomeFilled /></el-icon>
                     {{ item.title }}
                   </span>
@@ -360,6 +390,7 @@ const loading = ref(false)
 const activeTab = ref(route.path || '/dashboard')
 const visitedViews = ref([])
 const userInfo = ref({})
+const MAX_TABS = 10  // 最大标签页数量
 
 // 布局模式：horizontal = 横向菜单，vertical = 侧边栏菜单
 const layoutMode = ref(localStorage.getItem('layoutMode') || 'horizontal')
@@ -486,6 +517,10 @@ const handleMenuSelect = (index) => {
 const addTab = (route) => {
   const exists = visitedViews.value.find(item => item.path === route.path)
   if (!exists) {
+    if (visitedViews.value.length >= MAX_TABS) {
+      ElMessage.warning(`最多只能打开${MAX_TABS}个标签页，请先关闭一些标签页`)
+      return
+    }
     visitedViews.value.push({ path: route.path, title: route.meta.title, name: route.name })
   }
   activeTab.value = route.path
@@ -513,6 +548,20 @@ const handleTabClose = (path) => {
 
 const handleTabsEdit = (target, action) => {
   if (action === 'remove') handleTabClose(target)
+}
+
+// 双击关闭标签页
+const handleTabDoubleClick = (path) => {
+  if (path !== '/dashboard') {
+    handleTabClose(path)
+  }
+}
+
+// 标签页顺序变化处理
+const handleTabChange = (newOrder) => {
+  // 标签页拖拽后自动保存顺序到 localStorage
+  const order = visitedViews.value.map(item => item.path)
+  localStorage.setItem('tabsOrder', JSON.stringify(order))
 }
 
 const refreshCurrent = () => {
@@ -1259,6 +1308,15 @@ $top-nav-height: 60px;
         color: $text-regular;
         transition: all 0.2s ease;
 
+        .tab-label {
+          cursor: pointer;
+          user-select: none;
+
+          &:hover {
+            color: $primary-color;
+          }
+        }
+
         &:hover {
           background: #f0f2f5;
         }
@@ -1299,8 +1357,26 @@ $top-nav-height: 60px;
   }
 
   .tabs-extra {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     flex-shrink: 0;
     margin-left: 8px;
+
+    .tabs-count {
+      font-size: 12px;
+      color: $text-secondary;
+      padding: 2px 8px;
+      background: $bg-color-gray;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+
+      &.warning {
+        color: #ff4d4f;
+        background: #fff1f0;
+        font-weight: 500;
+      }
+    }
 
     .extra-btn {
       width: 28px;
@@ -1329,6 +1405,18 @@ $top-nav-height: 60px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   padding: 4px 0;
   min-width: 140px;
+  animation: context-menu-fade-in 0.15s ease;
+}
+
+@keyframes context-menu-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .context-menu-list {
@@ -1583,6 +1671,16 @@ html.dark {
           background: #2d2d2d;
           color: #fff;
         }
+      }
+    }
+
+    .tabs-count {
+      background: #2d2d3a;
+      color: #94a3b8;
+
+      &.warning {
+        color: #ff4d4f;
+        background: rgba(255, 77, 79, 0.15);
       }
     }
 
