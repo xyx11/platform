@@ -70,7 +70,7 @@ sa-token:
   token-style: uuid
   is-log: false
   is-print: false
-
+  exclude-path: /auth/**,/captcha,/doc.html,/webjars/**,/v3/api-docs/**,/knife4j/**,/swagger-resources/**,/actuator/**,/error
 springdoc:
   api-docs:
     enabled: true
