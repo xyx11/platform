@@ -26,7 +26,6 @@ public class SysDept implements Serializable {
     /**
      * 父部门 ID
      */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     /**

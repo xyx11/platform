@@ -32,7 +32,7 @@ public class SysDeptController {
     @Operation(summary = "获取部门列表")
     @GetMapping("/list")
     public Result<List<SysDept>> list(SysDept dept) {
-        return Result.success(sysDeptService.selectDeptList(dept));
+        return Result.success(sysDeptService.selectDeptTree(dept));
     }
 
     @Operation(summary = "获取部门树")

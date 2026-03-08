@@ -163,7 +163,7 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
     private List<SysDept> buildDeptTree(List<SysDept> depts, Long parentId) {
         List<SysDept> tree = new ArrayList<>();
         for (SysDept dept : depts) {
-            if (parentId.equals(dept.getParentId())) {
+            if (String.valueOf(parentId).equals(String.valueOf(dept.getParentId()))) {
                 dept.setChildren(buildDeptTree(depts, dept.getDeptId()));
                 tree.add(dept);
             }
@@ -221,5 +221,70 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
             dept.setStatus(status);
         }
         updateBatchById(depts);
+    }
+
+    /**
+     * 导出部门数据（包含树形结构）
+     */
+    @Override
+    public void exportDeptWithTree(HttpServletResponse response, SysDept dept) {
+        try {
+            List<SysDept> list = selectDeptTree(dept);
+
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setCharacterEncoding("utf-8");
+            String fileName = URLEncoder.encode("部门数据_" + System.currentTimeMillis(), "UTF-8").replaceAll("\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+
+            // 添加层级列
+            List<Map<String, Object>> dataList = new ArrayList<>();
+            for (SysDept d : list) {
+                convertDeptToMap(d, 0, dataList);
+            }
+
+            EasyExcel.write(response.getOutputStream())
+                .head(createDeptExcelHead())
+                .sheet("部门数据")
+                .doWrite(dataList);
+        } catch (Exception e) {
+            throw new RuntimeException("导出部门数据失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 递归转换部门数据为 Map
+     */
+    private void convertDeptToMap(SysDept dept, int level, List<Map<String, Object>> dataList) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("deptName", dept.getDeptName());
+        map.put("leader", dept.getLeader());
+        map.put("phone", dept.getPhone());
+        map.put("email", dept.getEmail());
+        map.put("status", dept.getStatus() == 1 ? "正常" : "停用");
+        map.put("sort", dept.getSort());
+        map.put("createTime", dept.getCreateTime());
+
+        dataList.add(map);
+
+        if (dept.getChildren() != null && !dept.getChildren().isEmpty()) {
+            for (SysDept child : dept.getChildren()) {
+                convertDeptToMap(child, level + 1, dataList);
+            }
+        }
+    }
+
+    /**
+     * 创建 Excel 表头
+     */
+    private List<List<String>> createDeptExcelHead() {
+        List<List<String>> head = new ArrayList<>();
+        head.add(Collections.singletonList("部门名称"));
+        head.add(Collections.singletonList("负责人"));
+        head.add(Collections.singletonList("联系电话"));
+        head.add(Collections.singletonList("邮箱"));
+        head.add(Collections.singletonList("状态"));
+        head.add(Collections.singletonList("排序"));
+        head.add(Collections.singletonList("创建时间"));
+        return head;
     }
 }

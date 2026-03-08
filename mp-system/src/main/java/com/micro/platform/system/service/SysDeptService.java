@@ -33,6 +33,11 @@ public interface SysDeptService extends IServiceX<SysDept> {
     List<SysDept> selectDeptList(SysDept dept);
 
     /**
+     * 查询部门树（支持条件查询）
+     */
+    List<SysDept> selectDeptTree(SysDept dept);
+
+    /**
      * 获取部门统计信息
      */
     Map<String, Object> getDeptStats(Long deptId);

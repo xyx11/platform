@@ -46,7 +46,7 @@
         <div class="header-top">
           <div class="header-actions">
             <el-button type="primary" icon="Plus" @click="handleAdd()">新增部门</el-button>
-            <el-button icon="Refresh" circle @click="refresh" :loading="refreshing" />
+            <el-button icon="Refresh" circle @click="refresh" :loading="refreshing" title="刷新 (Ctrl+R)" />
             <el-divider direction="vertical" />
             <el-dropdown trigger="click" @command="handleExpandCommand">
               <el-button icon="List">展开/收起</el-button>
@@ -64,18 +64,20 @@
               <el-button icon="Grid" :disabled="selectedRows.length === 0">批量操作</el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item command="export-selected"><el-icon icon="Download" /> 导出选中</el-dropdown-item>
-                  <el-dropdown-item command="delete-selected" divided style="color: #f56c6c">
+                  <el-dropdown-item command="status-batch"><el-icon icon="CircleCheck" /> 批量启用</el-dropdown-item>
+                  <el-dropdown-item command="status-batch-disable"><el-icon icon="CircleClose" /> 批量停用</el-dropdown-item>
+                  <el-dropdown-item command="export-selected" divided><el-icon icon="Download" /> 导出选中</el-dropdown-item>
+                  <el-dropdown-item command="delete-selected" style="color: #f56c6c">
                     <el-icon icon="Delete" /> 批量删除
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
-            <el-button type="success" icon="Download" @click="handleExport">全部导出</el-button>
+            <el-button type="success" icon="Download" @click="handleExport" :loading="exporting">全部导出</el-button>
             
             <!-- 表格设置 -->
             <el-dropdown trigger="click" class="table-setting">
-              <el-button icon="Setting" circle />
+              <el-button icon="Setting" circle title="表格设置" />
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item v-for="col in columns" :key="col.prop" :disabled="col.disabled">
@@ -163,7 +165,7 @@
               <el-icon v-else class="dept-no-children"><Folder /></el-icon>
               {{ row.deptName }}
             </span>
-            <el-tag v-if="row.parentId === '0'" size="small" type="info" class="root-tag">根部门</el-tag>
+            <el-tag v-if="row.parentId === '0' || row.parentId === 0" size="small" type="info" class="root-tag">根部门</el-tag>
           </template>
         </el-table-column>
         <el-table-column 
@@ -261,6 +263,7 @@
       width="600px"
       @close="resetForm"
       @open="handleDialogOpen"
+      :before-close="handleDialogClose"
       destroy-on-close
       :close-on-click-modal="false"
       top="8vh"
@@ -337,7 +340,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="dialog.visible = false">取消</el-button>
+        <el-button @click="handleDialogCancel">取消</el-button>
         <el-button type="primary" @click="submitForm" :loading="submitLoading">
           <el-icon v-if="submitLoading" class="is-loading"><Loading /></el-icon>
           {{ submitLoading ? '提交中...' : '确定' }}
@@ -372,6 +375,7 @@ const loading = ref(false)
 const refreshing = ref(false)
 const resetting = ref(false)
 const submitLoading = ref(false)
+const exporting = ref(false)
 const selectedRows = ref([])
 const dateRange = ref([])
 
@@ -417,6 +421,9 @@ const rules = {
   deptName: [
     { required: true, message: '请输入部门名称', trigger: 'blur' },
     { min: 2, max: 50, message: '部门名称长度在 2 到 50 个字符', trigger: 'blur' }
+  ],
+  parentId: [
+    { required: true, message: '请选择上级部门', trigger: 'change' }
   ]
 }
 
@@ -448,16 +455,23 @@ const getDeptList = () => {
 
   request.get('/system/dept/list', { params }).then(res => {
     const rawData = res.data || res || []
-    console.log('原始数据:', rawData)
-    // 使用 JSON 序列化再反序列化，确保响应式
-    const treeData = JSON.parse(JSON.stringify(rawData))
-    console.log('树形数据:', treeData)
-    tableKey.value++
+    // 处理 ID 为字符串，避免精度丢失
+    const safeData = rawData.map(item => ({
+      ...item,
+      deptId: String(item.deptId),
+      parentId: String(item.parentId)
+    }))
+    deptList.value = safeData
+    deptTreeData.value = buildDeptTree(safeData, '0')
+    window.debugDeptList = safeData
+    loading.value = false
+    // 手动展开所有行
     nextTick(() => {
-      deptList.value = treeData
-      window.debugDeptList = treeData
-      deptTreeData.value = treeData
-      loading.value = false
+      if (deptTableRef.value) {
+        deptList.value.forEach(item => {
+          deptTableRef.value.toggleRowExpansion(item, true)
+        })
+      }
     })
   }).catch(err => {
     loading.value = false
@@ -466,12 +480,12 @@ const getDeptList = () => {
   })
 }
 
-// 树形数据转换
-const handleTreeData = (data, parentId = '0') => {
+// 前端构建树形结构
+const buildDeptTree = (data, parentId = '0') => {
   const result = []
   data.forEach(item => {
     if (String(item.parentId) === String(parentId)) {
-      const children = handleTreeData(data, String(item.deptId))
+      const children = buildDeptTree(data, String(item.deptId))
       if (children.length > 0) {
         item.children = children
       }
@@ -509,27 +523,42 @@ const resetQuery = () => {
 
 // 展开收起命令
 const handleExpandCommand = (command) => {
+  if (!deptTableRef.value) return
+
   switch (command) {
     case 'expand':
       defaultExpandAll.value = true
+      nextTick(() => {
+        deptList.value.forEach(item => {
+          deptTableRef.value.toggleRowExpansion(item, true)
+        })
+      })
       ElMessage.success('展开全部')
       break
     case 'collapse':
       defaultExpandAll.value = false
+      nextTick(() => {
+        deptList.value.forEach(item => {
+          deptTableRef.value.toggleRowExpansion(item, false)
+        })
+      })
       ElMessage.success('收起全部')
       break
     case 'expand-first':
       defaultExpandAll.value = false
       nextTick(() => {
+        // 只展开第一级（根节点的直接子节点）
         deptList.value.forEach(item => {
-          deptTableRef.value?.toggleRowExpansion(item, true)
+          deptTableRef.value.toggleRowExpansion(item, true)
         })
-        ElMessage.success('展开一级')
       })
+      ElMessage.success('展开一级')
       break
     case 'collapse-first':
-      deptList.value.forEach(item => {
-        deptTableRef.value?.toggleRowExpansion(item, false)
+      nextTick(() => {
+        deptList.value.forEach(item => {
+          deptTableRef.value.toggleRowExpansion(item, false)
+        })
       })
       ElMessage.success('收起一级')
       break
@@ -539,6 +568,12 @@ const handleExpandCommand = (command) => {
 // 批量操作命令
 const handleBatchCommand = (command) => {
   switch (command) {
+    case 'status-batch':
+      handleBatchStatus(1)
+      break
+    case 'status-batch-disable':
+      handleBatchStatus(0)
+      break
     case 'export-selected':
       exportSelected()
       break
@@ -548,25 +583,63 @@ const handleBatchCommand = (command) => {
   }
 }
 
+// 批量修改状态
+const handleBatchStatus = (status) => {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning('请先选择部门')
+    return
+  }
+
+  const statusText = status === 1 ? '启用' : '停用'
+  ElMessageBox.confirm(
+    `确认${statusText}选中的 ${selectedRows.value.length} 个部门吗？`,
+    '提示',
+    { type: 'warning' }
+  ).then(() => {
+    const deptIds = selectedRows.value.map(item => item.deptId)
+    request.put('/system/dept/status/batch', { deptIds, status }).then(() => {
+      ElMessage.success(`${statusText}成功`)
+      clearSelection()
+      getDeptList()
+    }).catch(() => {
+      ElMessage.error(`${statusText}失败`)
+    })
+  }).catch(() => {})
+}
+
 // 导出选中
+// 导出选中部门
 const exportSelected = () => {
   if (selectedRows.value.length === 0) {
     ElMessage.warning('请先选择要导出的部门')
     return
   }
 
-  const deptIds = selectedRows.value.map(item => item.deptId)
-  request.post('/system/dept/export/batch', deptIds, { responseType: 'blob' }).then(res => {
+  ElMessage.info('正在准备导出选中数据...')
+  const deptIds = selectedRows.value.map(item => String(item.deptId))
+  request.post('/system/dept/export/batch', deptIds, { 
+    responseType: 'blob',
+    timeout: 30000
+  }).then(res => {
+    if (!res || res.size === 0) {
+      ElMessage.error('导出数据为空')
+      return
+    }
     const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = '部门数据_' + new Date().getTime() + '.xlsx'
+    link.download = '部门数据_选中_' + formatDate(new Date()) + '.xlsx'
+    document.body.appendChild(link)
     link.click()
+    document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
     ElMessage.success(`导出 ${selectedRows.value.length} 项成功`)
-  }).catch(() => {
-    ElMessage.error('导出失败')
+  }).catch((err) => {
+    console.error('导出失败:', err)
+    ElMessage.error('导出失败：' + (err.message || '未知错误'))
+  }).finally(() => {
+    exporting.value = false
   })
 }
 
@@ -629,35 +702,42 @@ const handleRowClick = (row, column) => {
   }
 }
 
-// 行双击
+// 行双击 - 快速编辑
 const handleRowDblClick = (row) => {
-  // 双击行可以查看详情或快速编辑
-  ElMessage.info(`双击了：${row.deptName}`)
+  handleUpdate(row)
+}
+
+// 确认状态变更
+const confirmStatusChange = (row) => {
+  return new Promise((resolve) => {
+    const statusText = row.status === 1 ? '启用' : '停用'
+    ElMessageBox.confirm(
+      `确认${statusText}部门 "${row.deptName}" 吗？`,
+      '提示',
+      { type: 'warning' }
+    ).then(() => {
+      resolve(true)
+    }).catch(() => {
+      resolve(false)
+    })
+  })
 }
 
 // 状态变化
 const handleStatusChange = (row) => {
   const statusText = row.status === 1 ? '正常' : '停用'
-  ElMessageBox.confirm(
-    `确认${statusText === '正常' ? '启用' : '停用'}部门 "${row.deptName}" 吗？`,
-    '提示',
-    { type: 'warning' }
-  ).then(() => {
-    request.put('/system/dept/status', { deptId: row.deptId, status: row.status }).then(() => {
-      ElMessage.success(`${statusText === '正常' ? '启用' : '停用'}成功`)
-      getDeptList()
-    }).catch(() => {
-      row.status = row.status === 1 ? 0 : 1
-      ElMessage.error('操作失败')
-    })
+  request.put('/system/dept/status', { deptId: row.deptId, status: row.status }).then(() => {
+    ElMessage.success(`${statusText}成功`)
+    getDeptList()
   }).catch(() => {
     row.status = row.status === 1 ? 0 : 1
+    ElMessage.error('操作失败')
   })
 }
 
 // 复制
 const copyToClipboard = (text, label) => {
-  if (!text || text === '-') {
+  if (!text || text === '-' || text === '') {
     ElMessage.warning(`${label}为空`)
     return
   }
@@ -673,11 +753,8 @@ const handleAdd = (row) => {
   dialog.type = 'add'
   dialog.title = '新增部门'
   dialog.visible = true
-  form.parentId = null
+  form.parentId = row ? row.deptId : '0'
   form.deptId = null
-  if (row) {
-    form.parentId = row.deptId
-  }
   nextTick(() => {
     deptNameInputRef.value?.focus()
   })
@@ -688,23 +765,38 @@ const handleUpdate = (row) => {
   dialog.type = 'edit'
   dialog.title = '修改部门'
   dialog.visible = true
-  Object.assign(form, row)
+  // 深拷贝，避免直接修改原数据
+  Object.assign(form, {
+    deptId: row.deptId,
+    parentId: row.parentId,
+    deptName: row.deptName,
+    sort: row.sort,
+    leader: row.leader,
+    phone: row.phone,
+    email: row.email,
+    status: row.status
+  })
 }
 
 // 对话框打开时
 const handleDialogOpen = () => {
-  if (dialog.type === 'add') {
-    form.deptId = null
-    form.deptName = ''
-    form.sort = 0
-    form.leader = ''
-    form.phone = ''
-    form.email = ''
-    form.status = 1
-  }
   nextTick(() => {
     deptNameInputRef.value?.focus()
   })
+}
+
+// 对话框关闭前
+const handleDialogClose = (done) => {
+  ElMessageBox.confirm('确认关闭对话框吗？未保存的内容将丢失', '提示', {
+    type: 'warning'
+  }).then(() => {
+    done()
+  }).catch(() => {})
+}
+
+// 对话框取消
+const handleDialogCancel = () => {
+  dialog.visible = false
 }
 
 // 删除
@@ -735,8 +827,14 @@ const submitForm = () => {
   formRef.value.validate(valid => {
     if (valid) {
       submitLoading.value = true
+      // 转换 ID 为字符串类型
+      const submitData = {
+        ...form,
+        deptId: form.deptId ? String(form.deptId) : null,
+        parentId: form.parentId ? String(form.parentId) : '0'
+      }
       const api = form.deptId ? request.put : request.post
-      api('/system/dept', form).then(() => {
+      api('/system/dept', submitData).then(() => {
         ElMessage.success('操作成功')
         dialog.visible = false
         getDeptList()
@@ -765,26 +863,55 @@ const resetForm = () => {
 }
 
 // 导出
+// 全部导出
 const handleExport = () => {
+  if (exporting.value) return
+  
+  ElMessage.info('正在准备导出数据...')
+  exporting.value = true
   const params = {
     deptName: queryParams.deptName,
     status: queryParams.status
   }
-  request.get('/system/dept/export', { params, responseType: 'blob' }).then(res => {
+  request.get('/system/dept/export', { 
+    params, 
+    responseType: 'blob',
+    timeout: 30000
+  }).then(res => {
+    if (!res || res.size === 0) {
+      ElMessage.error('导出数据为空')
+      return
+    }
     const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = '部门数据_' + new Date().getTime() + '.xlsx'
+    link.download = '部门数据_' + formatDate(new Date()) + '.xlsx'
+    document.body.appendChild(link)
     link.click()
+    document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
     ElMessage.success('导出成功')
-  }).catch(() => {
-    ElMessage.error('导出失败')
+  }).catch((err) => {
+    console.error('导出失败:', err)
+    ElMessage.error('导出失败：' + (err.message || '未知错误'))
+  }).finally(() => {
+    exporting.value = false
   })
 }
 
 // 快捷键
+// 格式化日期
+const formatDate = (date) => {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  const h = String(date.getHours()).padStart(2, '0')
+  const min = String(date.getMinutes()).padStart(2, '0')
+  const s = String(date.getSeconds()).padStart(2, '0')
+  return `${y}${m}${d}${h}${min}${s}`
+}
+
 onMounted(() => {
   getDeptList()
   
