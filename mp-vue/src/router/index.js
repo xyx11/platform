@@ -95,6 +95,12 @@ const routes = [
         name: 'SysCommand',
         component: () => import('@/views/system/command/index.vue'),
         meta: { title: '命令执行', icon: 'Terminal' }
+      },
+      {
+        path: 'todo',
+        name: 'SysTodo',
+        component: () => import('@/views/system/todo/index.vue'),
+        meta: { title: '待办事项', icon: 'List' }
       }
     ]
   },
