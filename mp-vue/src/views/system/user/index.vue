@@ -1,84 +1,118 @@
 <template>
   <div class="user-container">
-    <el-card>
-      <el-form :model="queryParams" inline>
-        <el-form-item label="用户名">
-          <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable />
-        </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="queryParams.phone" placeholder="请输入手机号" clearable />
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
-            <el-option label="正常" :value="1" />
-            <el-option label="禁用" :value="0" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="Search" @click="handleQuery">查询</el-button>
-          <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
-
-    <el-card class="table-card">
-      <template #header>
-        <div class="header-actions">
-          <el-button type="primary" icon="Plus" @click="handleAdd">新增用户</el-button>
-          <el-button type="danger" icon="Delete" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
-          <el-button type="warning" icon="Key" :disabled="multiple" @click="handleBatchResetPwd">批量重置密码</el-button>
-          <el-button type="success" icon="Unlock" :disabled="multiple" @click="handleBatchUnlock">批量解锁</el-button>
-          <el-button type="info" icon="Upload" @click="handleImport">导入</el-button>
-          <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
-          <el-button type="info" icon="Document" @click="downloadTemplate">下载模板</el-button>
-        </div>
-      </template>
-
-      <el-table
-        :data="userList"
-        border
-        stripe
-        v-loading="loading"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="55" align="center" />
-        <el-table-column prop="userId" label="用户 ID" width="100" />
-        <el-table-column prop="username" label="用户名" width="120" />
-        <el-table-column prop="nickname" label="昵称" width="120" />
-        <el-table-column prop="deptName" label="部门" width="150" />
-        <el-table-column prop="phone" label="手机号" width="130" />
-        <el-table-column prop="email" label="邮箱" width="180" />
-        <el-table-column prop="status" label="状态" width="80">
-          <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'danger'">
-              {{ row.status === 1 ? '正常' : '禁用' }}
-            </el-tag>
+    <el-row :gutter="16" style="height: calc(100vh - 120px)">
+      <!-- 左侧部门树 -->
+      <el-col :span="4" class="dept-tree-col">
+        <el-card shadow="never" class="dept-tree-card">
+          <template #header>
+            <div class="dept-tree-header">
+              <span>组织机构</span>
+              <el-button link type="primary" icon="Refresh" @click="refreshDeptTree" />
+            </div>
           </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="180" />
-        <el-table-column label="操作" width="320" fixed="right">
-          <template #default="{ row }">
-            <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
-            <el-button link type="danger" icon="Delete" @click="handleDelete(row)">删除</el-button>
-            <el-button link type="warning" icon="Key" @click="handleResetPwd(row)">重置密码</el-button>
-            <el-button link type="success" icon="Unlock" @click="handleUnlock(row)">解锁</el-button>
-            <el-button link type="primary" icon="CircleCheck" @click="handleAssignRole(row)">分配角色</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+          <el-tree
+            ref="deptTreeRef"
+            :data="deptTreeData"
+            :props="{ id: 'deptId', label: 'deptName', children: 'children' }"
+            node-key="deptId"
+            highlight-current
+            default-expand-all
+            @node-click="handleNodeClick"
+            class="dept-tree"
+          >
+            <template #default="{ data }">
+              <span class="dept-tree-node">
+                <el-icon><OfficeBuilding /></el-icon>
+                <span>{{ data.deptName }}</span>
+              </span>
+            </template>
+          </el-tree>
+        </el-card>
+      </el-col>
 
-      <div class="pagination">
-        <el-pagination
-          v-model:current-page="pagination.current"
-          v-model:page-size="pagination.size"
-          :total="pagination.total"
-          :page-sizes="[10, 20, 50, 100]"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="getUserList"
-          @current-change="getUserList"
-        />
-      </div>
-    </el-card>
+      <!-- 右侧用户列表 -->
+      <el-col :span="20">
+        <el-card>
+          <el-form :model="queryParams" inline>
+            <el-form-item label="用户名">
+              <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable />
+            </el-form-item>
+            <el-form-item label="手机号">
+              <el-input v-model="queryParams.phone" placeholder="请输入手机号" clearable />
+            </el-form-item>
+            <el-form-item label="状态">
+              <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
+                <el-option label="正常" :value="1" />
+                <el-option label="禁用" :value="0" />
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search" @click="handleQuery">查询</el-button>
+              <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+
+        <el-card class="table-card">
+          <template #header>
+            <div class="header-actions">
+              <el-button type="primary" icon="Plus" @click="handleAdd">新增用户</el-button>
+              <el-button type="danger" icon="Delete" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
+              <el-button type="warning" icon="Key" :disabled="multiple" @click="handleBatchResetPwd">批量重置密码</el-button>
+              <el-button type="success" icon="Unlock" :disabled="multiple" @click="handleBatchUnlock">批量解锁</el-button>
+              <el-button type="info" icon="Upload" @click="handleImport">导入</el-button>
+              <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
+              <el-button type="info" icon="Document" @click="downloadTemplate">下载模板</el-button>
+            </div>
+          </template>
+
+          <el-table
+            :data="userList"
+            border
+            stripe
+            v-loading="loading"
+            @selection-change="handleSelectionChange"
+          >
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column prop="userId" label="用户 ID" width="100" />
+            <el-table-column prop="username" label="用户名" width="120" />
+            <el-table-column prop="nickname" label="昵称" width="120" />
+            <el-table-column prop="deptName" label="部门" width="150" />
+            <el-table-column prop="phone" label="手机号" width="130" />
+            <el-table-column prop="email" label="邮箱" width="180" />
+            <el-table-column prop="status" label="状态" width="80">
+              <template #default="{ row }">
+                <el-tag :type="row.status === 1 ? 'success' : 'danger'">
+                  {{ row.status === 1 ? '正常' : '禁用' }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="createTime" label="创建时间" width="180" />
+            <el-table-column label="操作" width="320" fixed="right">
+              <template #default="{ row }">
+                <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
+                <el-button link type="danger" icon="Delete" @click="handleDelete(row)">删除</el-button>
+                <el-button link type="warning" icon="Key" @click="handleResetPwd(row)">重置密码</el-button>
+                <el-button link type="success" icon="Unlock" @click="handleUnlock(row)">解锁</el-button>
+                <el-button link type="primary" icon="CircleCheck" @click="handleAssignRole(row)">分配角色</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <div class="pagination">
+            <el-pagination
+              v-model:current-page="pagination.current"
+              v-model:page-size="pagination.size"
+              :total="pagination.total"
+              :page-sizes="[10, 20, 50, 100]"
+              layout="total, sizes, prev, pager, next, jumper"
+              @size-change="getUserList"
+              @current-change="getUserList"
+            />
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
 
     <!-- 新增/编辑对话框 -->
     <el-dialog
@@ -100,7 +134,7 @@
         <el-form-item label="部门" prop="deptId">
           <el-tree-select
             v-model="form.deptId"
-            :data="deptList"
+            :data="deptTreeData"
             :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
             check-strictly
             placeholder="请选择部门"
@@ -200,11 +234,11 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { UploadFilled } from '@element-plus/icons-vue'
+import { UploadFilled, OfficeBuilding } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const userList = ref([])
-const deptList = ref([])
+const deptTreeData = ref([])
 const roleList = ref([])
 const loading = ref(false)
 const multiple = ref(true)
@@ -214,11 +248,13 @@ const importDialog = reactive({
 })
 const importing = ref(false)
 const uploadFile = ref(null)
+const deptTreeRef = ref(null)
 
 const queryParams = reactive({
   username: '',
   phone: '',
-  status: null
+  status: null,
+  deptId: null
 })
 
 const pagination = reactive({
@@ -278,6 +314,25 @@ const pwdRules = {
   password: [{ required: true, message: '请输入新密码', trigger: 'blur' }]
 }
 
+// 获取部门树
+const getDeptTree = () => {
+  request.get('/system/dept/list').then(res => {
+    deptTreeData.value = res.data || []
+  })
+}
+
+// 刷新部门树
+const refreshDeptTree = () => {
+  getDeptTree()
+  ElMessage.success('刷新成功')
+}
+
+// 部门树节点点击
+const handleNodeClick = (data) => {
+  queryParams.deptId = data.deptId
+  handleQuery()
+}
+
 // 获取用户列表
 const getUserList = () => {
   loading.value = true
@@ -287,13 +342,6 @@ const getUserList = () => {
     loading.value = false
   }).catch(() => {
     loading.value = false
-  })
-}
-
-// 获取部门列表
-const getDeptList = () => {
-  request.get('/system/dept/list').then(res => {
-    deptList.value = res.data
   })
 }
 
@@ -315,6 +363,10 @@ const resetQuery = () => {
   queryParams.username = ''
   queryParams.phone = ''
   queryParams.status = null
+  queryParams.deptId = null
+  if (deptTreeRef.value) {
+    deptTreeRef.value.setCurrentKey(null)
+  }
   handleQuery()
 }
 
@@ -568,22 +620,68 @@ const resetForm = () => {
 
 onMounted(() => {
   getUserList()
-  getDeptList()
+  getDeptTree()
   getRoleList()
 })
 </script>
 
 <style lang="scss" scoped>
-.user-container {
-  .table-card {
-    margin-top: 20px;
+$primary-color: #1e80ff;
+$text-primary: #333333;
+$text-regular: #666666;
+$border-color: #e3e4e6;
+$bg-color-page: #f5f6f7;
 
+.user-container {
+  padding: 0;
+  height: 100%;
+  
+  .dept-tree-col {
+    height: 100%;
+    
+    .dept-tree-card {
+      height: 100%;
+      
+      .dept-tree-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        span {
+          font-weight: 600;
+          font-size: 14px;
+          color: $text-primary;
+        }
+      }
+      
+      .dept-tree {
+        .dept-tree-node {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          
+          .el-icon {
+            color: $primary-color;
+          }
+        }
+        
+        .is-current > .dept-tree-node {
+          color: $primary-color;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  
+  .table-card {
+    margin-top: 0;
+    
     .header-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
-
+    
     .pagination {
       margin-top: 20px;
       display: flex;
