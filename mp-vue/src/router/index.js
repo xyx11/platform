@@ -128,7 +128,7 @@ const routes = [
     path: '/generator',
     component: () => import('@/layout/index.vue'),
     redirect: '/generator/table',
-    meta: { title: '代码生成', icon: 'Code' },
+    meta: { title: '代码生成', icon: 'Grid' },
     children: [
       {
         path: 'table',

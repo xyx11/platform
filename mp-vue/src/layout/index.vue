@@ -245,9 +245,10 @@ const menuRoutes = [
   },
   {
     path: '/monitor',
-    redirect: '/monitor/online',
+    redirect: '/monitor/overview',
     meta: { title: '系统监控', icon: 'Monitor' },
     children: [
+      { path: '/monitor/overview', name: 'SystemOverview', meta: { title: '监控总览', icon: 'Monitor' } },
       { path: '/monitor/online', name: 'OnlineUser', meta: { title: '在线用户', icon: 'User' } },
       { path: '/monitor/redis', name: 'RedisMonitor', meta: { title: 'Redis 监控', icon: 'Folder' } },
       { path: '/monitor/server', name: 'ServerMonitor', meta: { title: '服务器监控', icon: 'Platform' } },
