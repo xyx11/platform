@@ -107,7 +107,7 @@
                 :closable="item.path !== '/dashboard'"
               >
                 <template #label>
-                  <span 
+                  <span
                     @contextmenu.prevent="handleContextMenu($event, item.path)"
                     @dblclick="handleTabDoubleClick(item.path)"
                     class="tab-label"
@@ -275,7 +275,7 @@
                 :closable="item.path !== '/dashboard'"
               >
                 <template #label>
-                  <span 
+                  <span
                     @contextmenu.prevent="handleContextMenu($event, item.path)"
                     @dblclick="handleTabDoubleClick(item.path)"
                     class="tab-label"
@@ -336,7 +336,7 @@
         <el-menu-item @click="executeMenuCommand('refresh')">
           <el-icon><Refresh /></el-icon> <span>刷新</span>
         </el-menu-item>
-        <el-menu-item 
+        <el-menu-item
           v-if="currentContextMenuPath !== '/dashboard'"
           @click="executeMenuCommand('close')"
         >
@@ -345,13 +345,13 @@
         <el-menu-item @click="executeMenuCommand('closeOther')">
           <el-icon><FolderDelete /></el-icon> <span>关闭其他</span>
         </el-menu-item>
-        <el-menu-item 
+        <el-menu-item
           v-if="currentContextMenuPath !== '/dashboard' && visitedViews.findIndex(i => i.path === currentContextMenuPath) > 1"
           @click="executeMenuCommand('closeLeft')"
         >
           <el-icon><DArrowLeft /></el-icon> <span>关闭左侧</span>
         </el-menu-item>
-        <el-menu-item 
+        <el-menu-item
           v-if="currentContextMenuPath !== '/dashboard' && currentContextMenuPath !== activeTab"
           @click="executeMenuCommand('closeRight')"
         >
@@ -364,7 +364,7 @@
       </el-menu>
     </div>
     <div v-if="contextMenuVisible" class="context-menu-overlay" @click="closeContextMenu"></div>
-    
+
     <!-- 页面加载进度条 -->
     <div v-if="loading" class="page-loading">
       <div class="loading-spinner">
