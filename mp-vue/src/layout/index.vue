@@ -102,7 +102,7 @@
             <el-tab-pane
               v-for="item in visitedViews"
               :key="item.path"
-              :label="item.title"
+              
               :name="item.path"
             >
               <template #label>
