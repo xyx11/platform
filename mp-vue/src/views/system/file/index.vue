@@ -64,7 +64,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Document, Picture, Video, Audio, Grid, Folder } from '@element-plus/icons-vue'
+import { Document, Picture, VideoCamera, Headset, Grid, Folder } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const uploadRef = ref(null)
@@ -90,9 +90,9 @@ const uploadHeaders = computed(() => {
 // 获取文件列表
 const getFileList = () => {
   loading.value = true
-  request.get('/system/file/list', { params: { 
-    pageNum: pagination.current, 
-    pageSize: pagination.size 
+  request.get('/system/file/list', { params: {
+    pageNum: pagination.current,
+    pageSize: pagination.size
   }}).then(res => {
     fileList.value = res.data?.records || []
     pagination.total = res.data?.total || 0
@@ -115,8 +115,8 @@ const formatFileSize = (bytes) => {
 const getFileIcon = (fileName) => {
   const ext = fileName.split('.').pop().toLowerCase()
   if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(ext)) return Picture
-  if (['mp4', 'avi', 'mov'].includes(ext)) return Video
-  if (['mp3', 'wav', 'flac'].includes(ext)) return Audio
+  if (['mp4', 'avi', 'mov'].includes(ext)) return VideoCamera
+  if (['mp3', 'wav', 'flac'].includes(ext)) return Headset
   if (['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'].includes(ext)) return Document
   return Folder
 }

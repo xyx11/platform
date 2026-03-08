@@ -23,7 +23,7 @@
         <el-card class="stat-card">
           <template #header>
             <div class="card-header">
-              <el-icon><Database /></el-icon>
+              <el-icon><Monitor /></el-icon>
               <span>数据库状态</span>
             </div>
           </template>
@@ -75,7 +75,7 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <el-icon><Connection /></el-icon>
+              <el-icon><Cpu /></el-icon>
               <span>线程信息</span>
             </div>
           </template>
@@ -91,7 +91,7 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <el-icon><Server /></el-icon>
+              <el-icon><Platform /></el-icon>
               <span>数据库连接池</span>
             </div>
           </template>
@@ -116,7 +116,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { Monitor, Database, DataLine, Cpu, Connection, Server } from '@element-plus/icons-vue'
+import { Monitor, DataLine, Cpu, Refresh, Platform } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const loading = ref(false)
