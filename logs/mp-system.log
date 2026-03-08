@@ -4728,3 +4728,412 @@ java.sql.SQLSyntaxErrorException: Table 'micro_platform.sys_command_log' doesn't
 [2m2026-03-08T17:03:22.926+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND todo_type = ?)
 [2m2026-03-08T17:03:22.926+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 4(String)
 [2m2026-03-08T17:03:22.926+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:04:22.085+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysMenuMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT menu_id,parent_id,menu_name,path,component,permission,type,icon,sort,is_frame,is_cache,visible,status,remark,create_by,create_time,update_by,update_time,deleted FROM sys_menu WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:04:22.085+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysMenuMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:04:22.087+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-8][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT role_id,role_name,role_code,description,data_scope,status,sort,create_by,create_time,update_by,update_time,deleted FROM sys_role WHERE deleted=0 AND (role_name LIKE ? AND role_code LIKE ?) ORDER BY sort ASC
+[2m2026-03-08T17:04:22.087+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-8][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m ==> Parameters: %%(String), %%(String)
+[2m2026-03-08T17:04:22.087+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-8][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:04:22.087+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-8][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+[2m2026-03-08T17:04:22.087+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-8][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:04:22.087+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-8][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:04:22.088+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysMenuMapper.selectList [0;39m [2m:[0;39m <==      Total: 68
+[2m2026-03-08T17:04:22.633+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-4][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysMenuMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT menu_id,parent_id,menu_name,path,component,permission,type,icon,sort,is_frame,is_cache,visible,status,remark,create_by,create_time,update_by,update_time,deleted FROM sys_menu WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:04:22.633+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-4][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysMenuMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:04:22.637+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-4][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysMenuMapper.selectList [0;39m [2m:[0;39m <==      Total: 68
+[2m2026-03-08T17:04:23.101+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysDictTypeMapper.selectList  [0;39m [2m:[0;39m ==>  Preparing: SELECT dict_id,dict_name,dict_type,status,remark,create_by,create_time,update_by,update_time,deleted FROM sys_dict_type WHERE deleted=0 ORDER BY create_time DESC
+[2m2026-03-08T17:04:23.101+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysDictTypeMapper.selectList  [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:04:23.102+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysDictTypeMapper.selectList  [0;39m [2m:[0;39m <==      Total: 3
+[2m2026-03-08T17:04:33.633+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT dept_id,parent_id,dept_name,sort,leader,phone,email,status,deleted,create_by,create_time,update_by,update_time FROM sys_dept WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:04:33.633+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:04:33.634+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m <==      Total: 6
+[2m2026-03-08T17:07:36.773+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-3][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysPostMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT post_id,post_code,post_name,post_sort,status,remark,create_by,create_by_name,create_time,update_by,update_time,deleted FROM sys_post WHERE deleted=0 ORDER BY post_sort ASC
+[2m2026-03-08T17:07:36.773+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-3][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysPostMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:07:36.774+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-3][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysPostMapper.selectList [0;39m [2m:[0;39m <==      Total: 6
+[2m2026-03-08T17:07:37.873+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.m.SysConfigMapper.selectList    [0;39m [2m:[0;39m ==>  Preparing: SELECT config_id,config_name,config_key,config_value,config_type,status,remark,create_by,create_time,update_by,update_time,deleted FROM sys_config WHERE deleted=0 ORDER BY create_time DESC
+[2m2026-03-08T17:07:37.873+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.m.SysConfigMapper.selectList    [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:07:37.874+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.m.SysConfigMapper.selectList    [0;39m [2m:[0;39m <==      Total: 3
+[2m2026-03-08T17:07:38.889+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectList                  [0;39m [2m:[0;39m ==>  Preparing: SELECT id,title,business_type,method,request_method,operator_type,oper_name,dept_name,oper_url,oper_ip,oper_location,oper_param,json_result,status,error_msg,oper_time,cost_time FROM sys_operation_log ORDER BY oper_time DESC
+[2m2026-03-08T17:07:38.889+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectList                  [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:07:38.890+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectList                  [0;39m [2m:[0;39m <==      Total: 0
+[2m2026-03-08T17:07:40.637+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-8][0;39m [2m[0;39m[36mc.m.p.s.m.SysLoginLogMapper.selectList  [0;39m [2m:[0;39m ==>  Preparing: SELECT log_id,user_id,username,status,ip,location,browser,os,msg,login_time FROM sys_login_log ORDER BY login_time DESC
+[2m2026-03-08T17:07:40.637+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-8][0;39m [2m[0;39m[36mc.m.p.s.m.SysLoginLogMapper.selectList  [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:07:40.639+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-8][0;39m [2m[0;39m[36mc.m.p.s.m.SysLoginLogMapper.selectList  [0;39m [2m:[0;39m <==      Total: 23
+[2m2026-03-08T17:07:44.078+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysLoginLogMapper.clean  [0;39m [2m:[0;39m ==>  Preparing: TRUNCATE TABLE sys_login_log
+[2m2026-03-08T17:07:44.078+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysLoginLogMapper.clean  [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:07:44.088+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysLoginLogMapper.clean  [0;39m [2m:[0;39m <==    Updates: 0
+[2m2026-03-08T17:07:44.103+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-4][0;39m [2m[0;39m[36mc.m.p.s.m.SysLoginLogMapper.selectList  [0;39m [2m:[0;39m ==>  Preparing: SELECT log_id,user_id,username,status,ip,location,browser,os,msg,login_time FROM sys_login_log ORDER BY login_time DESC
+[2m2026-03-08T17:07:44.103+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-4][0;39m [2m[0;39m[36mc.m.p.s.m.SysLoginLogMapper.selectList  [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:07:44.104+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-4][0;39m [2m[0;39m[36mc.m.p.s.m.SysLoginLogMapper.selectList  [0;39m [2m:[0;39m <==      Total: 0
+[2m2026-03-08T17:07:46.946+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeMapper.selectList    [0;39m [2m:[0;39m ==>  Preparing: SELECT notice_id,notice_title,notice_type,notice_content,status,publish_time,timing_publish,create_by,create_by_name,create_time,update_by,update_time,remark,deleted FROM sys_notice WHERE deleted=0 ORDER BY create_time DESC
+[2m2026-03-08T17:07:46.946+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeMapper.selectList    [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:07:46.947+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeMapper.selectList    [0;39m [2m:[0;39m <==      Total: 2
+[2m2026-03-08T17:07:46.948+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 1
+[2m2026-03-08T17:07:46.948+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:07:46.948+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:07:46.949+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 0
+[2m2026-03-08T17:07:46.949+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:07:46.949+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:07:46.949+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 1
+[2m2026-03-08T17:07:46.949+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m ==> Parameters: 2(Long)
+[2m2026-03-08T17:07:46.949+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:07:46.949+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 0
+[2m2026-03-08T17:07:46.949+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m ==> Parameters: 2(Long)
+[2m2026-03-08T17:07:46.950+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:07:46.966+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 1
+[2m2026-03-08T17:07:46.966+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:07:46.966+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 1
+[2m2026-03-08T17:07:46.966+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m ==> Parameters: 2(Long)
+[2m2026-03-08T17:07:46.967+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:07:46.967+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.m.SysNoticeUserMapper.countRead [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:07:46.967+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 0
+[2m2026-03-08T17:07:46.967+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 0
+[2m2026-03-08T17:07:46.967+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m ==> Parameters: 2(Long)
+[2m2026-03-08T17:07:46.967+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:07:46.967+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:07:46.967+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUnread                 [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:07:55.283+08:00[0;39m [31mERROR[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-7][0;39m [2m[0;39m[36mo.a.c.c.C.[.[.[/].[dispatcherServlet]   [0;39m [2m:[0;39m Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "com.micro.platform.system.entity.SysNotice.getTimingPublish()" is null] with root cause
+
+java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "com.micro.platform.system.entity.SysNotice.getTimingPublish()" is null
+	at com.micro.platform.system.controller.SysNoticeController.add(SysNoticeController.java:63) ~[!/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:547) ~[jakarta.servlet-api-6.0.0.jar!/:6.0.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614) ~[jakarta.servlet-api-6.0.0.jar!/:6.0.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:206) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1736) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at java.base/java.lang.Thread.run(Thread.java:1447) ~[na:na]
+
+[2m2026-03-08T17:07:59.078+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-3][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectList                  [0;39m [2m:[0;39m ==>  Preparing: SELECT command_id,command_type,command_content,command_result,execute_time,execute_by,execute_name,execute_time_str,status,error_msg,create_time,deleted FROM sys_command_log WHERE deleted=0 ORDER BY create_time DESC
+[2m2026-03-08T17:07:59.078+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-3][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectList                  [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:07:59.079+08:00[0;39m [31mERROR[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-3][0;39m [2m[0;39m[36mdruid.sql.Statement                     [0;39m [2m:[0;39m {conn-10005, pstmt-20459} execute error. SELECT  command_id,command_type,command_content,command_result,execute_time,execute_by,execute_name,execute_time_str,status,error_msg,create_time,deleted  FROM sys_command_log  WHERE deleted=0       ORDER BY create_time DESC
+
+java.sql.SQLSyntaxErrorException: Table 'micro_platform.sys_command_log' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:354) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_execute(FilterChainImpl.java:3462) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.filter.FilterEventAdapter.preparedStatement_execute(FilterEventAdapter.java:434) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_execute(FilterChainImpl.java:3460) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.wall.WallFilter.preparedStatement_execute(WallFilter.java:686) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_execute(FilterChainImpl.java:3460) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.filter.FilterEventAdapter.preparedStatement_execute(FilterEventAdapter.java:434) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_execute(FilterChainImpl.java:3460) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.proxy.jdbc.PreparedStatementProxyImpl.execute(PreparedStatementProxyImpl.java:158) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.pool.DruidPooledPreparedStatement.execute(DruidPooledPreparedStatement.java:483) ~[druid-1.2.22.jar!/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:58) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at jdk.proxy3/jdk.proxy3.$Proxy143.execute(Unknown Source) ~[na:na]
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.query(PreparedStatementHandler.java:65) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.query(RoutingStatementHandler.java:80) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:65) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:336) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:158) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:137) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:154) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:147) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:142) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:425) ~[mybatis-spring-3.0.3.jar!/:3.0.3]
+	at jdk.proxy2/jdk.proxy2.$Proxy103.selectList(Unknown Source) ~[na:na]
+	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:224) ~[mybatis-spring-3.0.3.jar!/:3.0.3]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.executeForMany(MybatisMapperMethod.java:164) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:77) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:149) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:90) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at jdk.proxy2/jdk.proxy2.$Proxy121.selectList(Unknown Source) ~[na:na]
+	at com.baomidou.mybatisplus.core.mapper.BaseMapper.selectPage(BaseMapper.java:349) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:735) ~[na:na]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$DefaultMethodInvoker.invoke(MybatisMapperProxy.java:163) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:90) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at jdk.proxy2/jdk.proxy2.$Proxy121.selectPage(Unknown Source) ~[na:na]
+	at com.micro.platform.system.service.impl.SysCommandLogServiceImpl.selectCommandLogPage(SysCommandLogServiceImpl.java:36) ~[!/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:354) ~[spring-aop-6.1.6.jar!/:6.1.6]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716) ~[spring-aop-6.1.6.jar!/:6.1.6]
+	at com.micro.platform.system.service.impl.SysCommandLogServiceImpl$$SpringCGLIB$$0.selectCommandLogPage(<generated>) ~[!/:na]
+	at com.micro.platform.system.controller.SysCommandController.list(SysCommandController.java:37) ~[!/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:527) ~[jakarta.servlet-api-6.0.0.jar!/:6.0.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614) ~[jakarta.servlet-api-6.0.0.jar!/:6.0.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:206) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1736) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at java.base/java.lang.Thread.run(Thread.java:1447) ~[na:na]
+
+[2m2026-03-08T17:07:59.080+08:00[0;39m [31mERROR[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-3][0;39m [2m[0;39m[36mo.a.c.c.C.[.[.[/].[dispatcherServlet]   [0;39m [2m:[0;39m Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'micro_platform.sys_command_log' doesn't exist
+### The error may exist in com/micro/platform/system/mapper/SysCommandLogMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  command_id,command_type,command_content,command_result,execute_time,execute_by,execute_name,execute_time_str,status,error_msg,create_time,deleted  FROM sys_command_log  WHERE deleted=0       ORDER BY create_time DESC
+### Cause: java.sql.SQLSyntaxErrorException: Table 'micro_platform.sys_command_log' doesn't exist
+; bad SQL grammar []] with root cause
+
+java.sql.SQLSyntaxErrorException: Table 'micro_platform.sys_command_log' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:354) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_execute(FilterChainImpl.java:3462) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.filter.FilterEventAdapter.preparedStatement_execute(FilterEventAdapter.java:434) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_execute(FilterChainImpl.java:3460) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.wall.WallFilter.preparedStatement_execute(WallFilter.java:686) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_execute(FilterChainImpl.java:3460) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.filter.FilterEventAdapter.preparedStatement_execute(FilterEventAdapter.java:434) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_execute(FilterChainImpl.java:3460) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.proxy.jdbc.PreparedStatementProxyImpl.execute(PreparedStatementProxyImpl.java:158) ~[druid-1.2.22.jar!/:na]
+	at com.alibaba.druid.pool.DruidPooledPreparedStatement.execute(DruidPooledPreparedStatement.java:483) ~[druid-1.2.22.jar!/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:58) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at jdk.proxy3/jdk.proxy3.$Proxy143.execute(Unknown Source) ~[na:na]
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.query(PreparedStatementHandler.java:65) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.query(RoutingStatementHandler.java:80) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:65) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:336) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:158) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:137) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:154) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:147) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:142) ~[mybatis-3.5.16.jar!/:3.5.16]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:425) ~[mybatis-spring-3.0.3.jar!/:3.0.3]
+	at jdk.proxy2/jdk.proxy2.$Proxy103.selectList(Unknown Source) ~[na:na]
+	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:224) ~[mybatis-spring-3.0.3.jar!/:3.0.3]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.executeForMany(MybatisMapperMethod.java:164) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:77) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:149) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:90) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at jdk.proxy2/jdk.proxy2.$Proxy121.selectList(Unknown Source) ~[na:na]
+	at com.baomidou.mybatisplus.core.mapper.BaseMapper.selectPage(BaseMapper.java:349) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:735) ~[na:na]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$DefaultMethodInvoker.invoke(MybatisMapperProxy.java:163) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:90) ~[mybatis-plus-core-3.5.6.jar!/:3.5.6]
+	at jdk.proxy2/jdk.proxy2.$Proxy121.selectPage(Unknown Source) ~[na:na]
+	at com.micro.platform.system.service.impl.SysCommandLogServiceImpl.selectCommandLogPage(SysCommandLogServiceImpl.java:36) ~[!/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:354) ~[spring-aop-6.1.6.jar!/:6.1.6]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716) ~[spring-aop-6.1.6.jar!/:6.1.6]
+	at com.micro.platform.system.service.impl.SysCommandLogServiceImpl$$SpringCGLIB$$0.selectCommandLogPage(<generated>) ~[!/:na]
+	at com.micro.platform.system.controller.SysCommandController.list(SysCommandController.java:37) ~[!/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:527) ~[jakarta.servlet-api-6.0.0.jar!/:6.0.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.6.jar!/:6.1.6]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614) ~[jakarta.servlet-api-6.0.0.jar!/:6.0.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:206) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar!/:6.1.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1736) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar!/:na]
+	at java.base/java.lang.Thread.run(Thread.java:1447) ~[na:na]
+
+[2m2026-03-08T17:08:02.313+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND status <> ?)
+[2m2026-03-08T17:08:02.313+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysTodoMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT todo_id,user_id,todo_title,todo_content,todo_type,priority,status,plan_time,actual_time,create_by,create_by_name,create_time,update_by,update_time,deleted FROM sys_todo WHERE deleted=0 AND (user_id = ?) ORDER BY priority DESC,create_time DESC
+[2m2026-03-08T17:08:02.314+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 2(Integer)
+[2m2026-03-08T17:08:02.314+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysTodoMapper.selectList [0;39m [2m:[0;39m ==> Parameters: null
+[2m2026-03-08T17:08:02.314+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysTodoMapper.selectList [0;39m [2m:[0;39m <==      Total: 0
+[2m2026-03-08T17:08:02.314+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:08:02.315+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND status = ?)
+[2m2026-03-08T17:08:02.315+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 0(Integer)
+[2m2026-03-08T17:08:02.315+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:08:02.315+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND status = ?)
+[2m2026-03-08T17:08:02.316+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 1(Integer)
+[2m2026-03-08T17:08:02.316+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:08:02.316+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND status = ? AND plan_time BETWEEN ? AND ?)
+[2m2026-03-08T17:08:02.316+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 0(Integer), 2026-03-08T00:00(LocalDateTime), 2026-03-09T00:00(LocalDateTime)
+[2m2026-03-08T17:08:02.317+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:08:02.317+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND status = ? AND priority = ?)
+[2m2026-03-08T17:08:02.317+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 0(Integer), 1(Integer)
+[2m2026-03-08T17:08:02.317+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:08:02.318+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND status = ? AND plan_time < ?)
+[2m2026-03-08T17:08:02.318+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 0(Integer), 2026-03-08T17:08:02.317910(LocalDateTime)
+[2m2026-03-08T17:08:02.318+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:08:02.318+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND todo_type = ?)
+[2m2026-03-08T17:08:02.318+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 1(String)
+[2m2026-03-08T17:08:02.318+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:08:02.319+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND todo_type = ?)
+[2m2026-03-08T17:08:02.319+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 2(String)
+[2m2026-03-08T17:08:02.319+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:08:02.319+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND todo_type = ?)
+[2m2026-03-08T17:08:02.319+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 3(String)
+[2m2026-03-08T17:08:02.319+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:08:02.319+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT( * ) AS total FROM sys_todo WHERE deleted=0 AND (user_id = ? AND todo_type = ?)
+[2m2026-03-08T17:08:02.319+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m ==> Parameters: null, 4(String)
+[2m2026-03-08T17:08:02.320+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.SysTodoMapper.selectCount     [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 ORDER BY create_time DESC
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-4][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT dept_id,parent_id,dept_name,sort,leader,phone,email,status,deleted,create_by,create_time,update_by,update_time FROM sys_dept WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-4][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT role_id,role_name,role_code,description,data_scope,status,sort,create_by,create_time,update_by,update_time,deleted FROM sys_role WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-4][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m <==      Total: 6
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:10:10.902+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+[2m2026-03-08T17:10:10.903+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:10:10.903+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-6][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:10.903+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT role_id,role_name,role_code,description,data_scope,status,sort,create_by,create_time,update_by,update_time,deleted FROM sys_role WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-7][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 ORDER BY create_time DESC
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT dept_id,parent_id,dept_name,sort,leader,phone,email,status,deleted,create_by,create_time,update_by,update_time FROM sys_dept WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-7][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-7][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-7][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-7][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:10:32.691+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m <==      Total: 6
+[2m2026-03-08T17:10:32.692+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:32.692+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-7][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:54.411+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-3][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT dept_id,parent_id,dept_name,sort,leader,phone,email,status,deleted,create_by,create_time,update_by,update_time FROM sys_dept WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:10:54.411+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT role_id,role_name,role_code,description,data_scope,status,sort,create_by,create_time,update_by,update_time,deleted FROM sys_role WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:10:54.411+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 ORDER BY create_time DESC
+[2m2026-03-08T17:10:54.412+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-3][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:54.412+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:54.412+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:54.413+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:54.413+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:54.413+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+[2m2026-03-08T17:10:54.413+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-3][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m <==      Total: 6
+[2m2026-03-08T17:10:54.413+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+[2m2026-03-08T17:10:54.413+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:10:54.413+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:10:54.413+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [io-8082-exec-10][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:54.413+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-1][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:57.707+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT role_id,role_name,role_code,description,data_scope,status,sort,create_by,create_time,update_by,update_time,deleted FROM sys_role WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:10:57.707+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT dept_id,parent_id,dept_name,sort,leader,phone,email,status,deleted,create_by,create_time,update_by,update_time FROM sys_dept WHERE deleted=0 ORDER BY sort ASC
+[2m2026-03-08T17:10:57.707+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:57.707+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m ==>  Preparing: SELECT user_id,dept_id,username,password,nickname,avatar,gender,email,phone,status,login_ip,login_date,create_by,create_time,update_by,update_time,deleted FROM sys_user WHERE deleted=0 ORDER BY create_time DESC
+[2m2026-03-08T17:10:57.707+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:57.707+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m ==> Parameters: 
+[2m2026-03-08T17:10:57.708+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysRoleMapper.selectList [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:57.708+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+[2m2026-03-08T17:10:57.708+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-5][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysDeptMapper.selectList [0;39m [2m:[0;39m <==      Total: 6
+[2m2026-03-08T17:10:57.708+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.mapper.SysUserMapper.selectList [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:57.708+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:10:57.708+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+[2m2026-03-08T17:10:57.708+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m ==> Parameters: 1(Long)
+[2m2026-03-08T17:10:57.708+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-2][0;39m [2m[0;39m[36mc.m.p.s.m.S.countUsersByRoleId          [0;39m [2m:[0;39m <==      Total: 1
+[2m2026-03-08T17:10:57.708+08:00[0;39m [32mDEBUG[0;39m [35m54815[0;39m [2m---[0;39m [2m[mp-system] [nio-8082-exec-9][0;39m [2m[0;39m[36mc.m.p.s.m.S.selectRoleIdsByUserId       [0;39m [2m:[0;39m <==      Total: 1

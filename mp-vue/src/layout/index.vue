@@ -65,6 +65,9 @@
             <div class="action-btn" @click="refreshPage" title="刷新">
               <el-icon :size="18"><Refresh /></el-icon>
             </div>
+            <div class="action-btn" @click="toggleFullScreen" :title="isFullScreen ? '退出全屏' : '全屏'">
+              <el-icon :size="18"><FullScreen /></el-icon>
+            </div>
             <div class="action-btn">
               <NoticeIcon />
             </div>
@@ -187,7 +190,7 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import NoticeIcon from '@/components/NoticeIcon.vue'
 import {
   Platform, Expand, Fold, Moon, Sunny, Refresh, Close, FolderDelete, Delete,
-  MoreFilled, ArrowDown, DArrowLeft, DArrowRight
+  MoreFilled, ArrowDown, DArrowLeft, DArrowRight, FullScreen
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
@@ -197,6 +200,7 @@ const isRouterAlive = ref(true)
 
 const isCollapse = ref(false)
 const isDark = ref(false)
+const isFullScreen = ref(false)
 const activeTab = ref(route.path || '/dashboard')
 const visitedViews = ref([])
 const userInfo = ref({})
@@ -382,6 +386,17 @@ const closeAllTabs = () => {
 
 const toggleCollapse = () => { isCollapse.value = !isCollapse.value }
 
+// 全屏切换
+const toggleFullScreen = () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen()
+    isFullScreen.value = true
+  } else {
+    document.exitFullscreen()
+    isFullScreen.value = false
+  }
+}
+
 // 右键菜单相关方法
 const handleContextMenu = (e, path) => {
   e.preventDefault()
@@ -561,6 +576,11 @@ onMounted(() => {
     isDark.value = true
     document.documentElement.classList.add('dark')
   }
+  
+  // 监听全屏状态变化
+  document.addEventListener('fullscreenchange', () => {
+    isFullScreen.value = !!document.fullscreenElement
+  })
 })
 </script>
 
