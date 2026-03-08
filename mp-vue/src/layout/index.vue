@@ -141,40 +141,30 @@
         v-if="contextMenuVisible"
         class="context-menu"
         :style="{ left: contextMenuLeft + 'px', top: contextMenuTop + 'px' }"
-        @click.stop="closeContextMenu"
       >
-        <el-dropdown
-          ref="contextMenuDropdown"
-          v-model:visible="contextMenuDropdownVisible"
-          trigger="click"
-          @command="handleContextMenuCommand"
-        >
-          <div class="context-menu-placeholder"></div>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item :command="{ command: 'refresh', path: currentContextMenuPath }">
-                <el-icon><Refresh /></el-icon> 刷新
-              </el-dropdown-item>
-              <el-dropdown-item :command="{ command: 'close', path: currentContextMenuPath }">
-                <el-icon><Close /></el-icon> 关闭
-              </el-dropdown-item>
-              <el-dropdown-item :command="{ command: 'closeOther', path: currentContextMenuPath }">
-                <el-icon><FolderDelete /></el-icon> 关闭其他
-              </el-dropdown-item>
-              <el-dropdown-item :command="{ command: 'closeLeft', path: currentContextMenuPath }">
-                <el-icon><DArrowLeft /></el-icon> 关闭左侧
-              </el-dropdown-item>
-              <el-dropdown-item :command="{ command: 'closeRight', path: currentContextMenuPath }">
-                <el-icon><DArrowRight /></el-icon> 关闭右侧
-              </el-dropdown-item>
-              <el-dropdown-item divided :command="{ command: 'closeAll', path: currentContextMenuPath }">
-                <el-icon><Delete /></el-icon> 关闭全部
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <el-menu class="context-menu-list">
+          <el-menu-item @click="executeMenuCommand('refresh')">
+            <el-icon><Refresh /></el-icon> <span>刷新</span>
+          </el-menu-item>
+          <el-menu-item @click="executeMenuCommand('close')">
+            <el-icon><Close /></el-icon> <span>关闭</span>
+          </el-menu-item>
+          <el-menu-item @click="executeMenuCommand('closeOther')">
+            <el-icon><FolderDelete /></el-icon> <span>关闭其他</span>
+          </el-menu-item>
+          <el-menu-item @click="executeMenuCommand('closeLeft')">
+            <el-icon><DArrowLeft /></el-icon> <span>关闭左侧</span>
+          </el-menu-item>
+          <el-menu-item @click="executeMenuCommand('closeRight')">
+            <el-icon><DArrowRight /></el-icon> <span>关闭右侧</span>
+          </el-menu-item>
+          <el-divider style="margin: 4px 0;" />
+          <el-menu-item @click="executeMenuCommand('closeAll')">
+            <el-icon><Delete /></el-icon> <span>关闭全部</span>
+          </el-menu-item>
+        </el-menu>
       </div>
-      <div v-if="contextMenuVisible" class="context-menu-overlay" @click.stop="closeContextMenu"></div>
+      <div v-if="contextMenuVisible" class="context-menu-overlay" @click="closeContextMenu"></div>
 
       <!-- 内容区 -->
       <el-main class="main-content">
@@ -217,7 +207,6 @@ const contextMenuDropdownVisible = ref(false)
 const contextMenuLeft = ref(0)
 const contextMenuTop = ref(0)
 const currentContextMenuPath = ref('')
-const contextMenuDropdown = ref(null)
 
 const sidebarWidth = computed(() => {
   return isCollapse.value ? '64px' : '220px'
@@ -399,22 +388,34 @@ const handleContextMenu = (e, path) => {
   e.stopPropagation()
   currentContextMenuPath.value = path
   contextMenuVisible.value = true
-  contextMenuLeft.value = e.clientX
-  contextMenuTop.value = e.clientY
-
-  nextTick(() => {
-    contextMenuDropdownVisible.value = true
-  })
+  
+  // 计算菜单位置，确保不超出屏幕
+  const menuWidth = 160
+  const menuHeight = 220
+  const screenWidth = window.innerWidth
+  const screenHeight = window.innerHeight
+  
+  let left = e.clientX
+  let top = e.clientY
+  
+  if (left + menuWidth > screenWidth) {
+    left = screenWidth - menuWidth - 10
+  }
+  if (top + menuHeight > screenHeight) {
+    top = screenHeight - menuHeight - 10
+  }
+  
+  contextMenuLeft.value = left
+  contextMenuTop.value = top
 }
 
 const closeContextMenu = () => {
   contextMenuVisible.value = false
-  contextMenuDropdownVisible.value = false
 }
 
-const handleContextMenuCommand = ({ command, path }) => {
-  const tabIndex = visitedViews.value.findIndex(item => item.path === path)
-
+const executeMenuCommand = (command) => {
+  const path = currentContextMenuPath.value
+  
   switch (command) {
     case 'refresh':
       if (path === activeTab.value) {
@@ -915,12 +916,39 @@ $tabs-height: 42px;
 .context-menu {
   position: fixed;
   z-index: 9999;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 4px 0;
+  min-width: 140px;
 }
 
-.context-menu-placeholder {
-  width: 1px;
-  height: 1px;
-  opacity: 0;
+.context-menu-list {
+  background: transparent;
+  border: none;
+  
+  .el-menu-item {
+    height: 36px;
+    line-height: 36px;
+    font-size: 13px;
+    color: $text-regular;
+    padding: 0 16px;
+    margin: 0;
+    
+    &:hover {
+      background: $bg-color-gray;
+      color: $primary-color;
+    }
+    
+    .el-icon {
+      margin-right: 8px;
+      font-size: 14px;
+    }
+    
+    span {
+      white-space: nowrap;
+    }
+  }
 }
 
 .context-menu-overlay {
@@ -1107,6 +1135,22 @@ html.dark {
   .el-card {
     background-color: #1d1e1f;
     border-color: #434343;
+  }
+
+  .context-menu {
+    background: #1d1e1f;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+    .context-menu-list {
+      .el-menu-item {
+        color: #94a3b8;
+
+        &:hover {
+          background: #2d2d2d;
+          color: #667eea;
+        }
+      }
+    }
   }
 }
 </style>
