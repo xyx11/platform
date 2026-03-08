@@ -272,13 +272,14 @@
         <el-form-item label="上级部门" prop="parentId">
           <el-tree-select
             v-model="form.parentId"
-            :data="deptTreeData"
+            :data="filteredDeptTree"
             :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
             check-strictly
             placeholder="请选择上级部门"
             :default-expand-all="true"
             :filterable="true"
             :clearable="true"
+            :render-after-expand="false"
           />
         </el-form-item>
         <el-form-item label="部门名称" prop="deptName">
@@ -406,6 +407,47 @@ const form = reactive({
   status: 1
 })
 
+// 当前编辑部门的子部门 ID 集合（用于排除）
+const currentDeptChildrenIds = computed(() => {
+  if (!form.deptId || !deptList.value.length) return new Set()
+  const ids = new Set()
+  ids.add(String(form.deptId))
+
+  const collectChildren = (deptId) => {
+    deptList.value.forEach(item => {
+      if (String(item.parentId) === deptId) {
+        ids.add(String(item.deptId))
+        collectChildren(String(item.deptId))
+      }
+    })
+  }
+  collectChildren(String(form.deptId))
+  return ids
+})
+
+// 过滤后的部门树（排除当前编辑部门及其子部门）
+const filteredDeptTree = computed(() => {
+  if (!deptTreeData.value.length) return []
+  const excludeIds = currentDeptChildrenIds.value
+  if (excludeIds.size === 0) return deptTreeData.value
+
+  // 深度过滤树形数据
+  const filterTree = (nodes) => {
+    const result = []
+    for (const node of nodes) {
+      if (!excludeIds.has(String(node.deptId))) {
+        const newNode = { ...node }
+        if (node.children && node.children.length) {
+          newNode.children = filterTree(node.children)
+        }
+        result.push(newNode)
+      }
+    }
+    return result
+  }
+  return filterTree(deptTreeData.value)
+})
+
 // 表格列配置
 const columns = reactive([
   { prop: 'deptName', label: '部门名称', visible: true, disabled: true },
@@ -480,16 +522,18 @@ const getDeptList = () => {
   })
 }
 
-// 前端构建树形结构
+// 前端构建树形结构（深拷贝，避免修改原数据）
 const buildDeptTree = (data, parentId = '0') => {
   const result = []
   data.forEach(item => {
     if (String(item.parentId) === String(parentId)) {
+      // 深拷贝，避免修改原数据
+      const node = { ...item }
       const children = buildDeptTree(data, String(item.deptId))
       if (children.length > 0) {
-        item.children = children
+        node.children = children
       }
-      result.push(item)
+      result.push(node)
     }
   })
   return result
@@ -753,7 +797,7 @@ const handleAdd = (row) => {
   dialog.type = 'add'
   dialog.title = '新增部门'
   dialog.visible = true
-  form.parentId = row ? row.deptId : '0'
+  form.parentId = row ? String(row.deptId) : '0'
   form.deptId = null
   nextTick(() => {
     deptNameInputRef.value?.focus()
@@ -766,15 +810,16 @@ const handleUpdate = (row) => {
   dialog.title = '修改部门'
   dialog.visible = true
   // 深拷贝，避免直接修改原数据
+  // 确保 parentId 为字符串类型，与 el-tree-select 的值类型一致
   Object.assign(form, {
     deptId: row.deptId,
-    parentId: row.parentId,
+    parentId: String(row.parentId || '0'),
     deptName: row.deptName,
-    sort: row.sort,
-    leader: row.leader,
-    phone: row.phone,
-    email: row.email,
-    status: row.status
+    sort: row.sort ?? 0,
+    leader: row.leader || '',
+    phone: row.phone || '',
+    email: row.email || '',
+    status: row.status ?? 1
   })
 }
 
