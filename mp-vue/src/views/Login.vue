@@ -120,12 +120,20 @@ const handleLogin = async () => {
       }
       try {
         const res = await request.post('/auth/login', loginData)
-        const { accessToken, tokenType } = res.data
+        console.log('登录响应:', res)
+        const { accessToken, username, nickname, avatar, userId } = res.data
         localStorage.setItem('access_token', accessToken)
-        localStorage.setItem('user_info', JSON.stringify(res.data.userInfo || {}))
+        localStorage.setItem('user_info', JSON.stringify({
+          userId,
+          username,
+          nickname,
+          avatar
+        }))
         ElMessage.success('登录成功')
-        router.push({ path: '/', replace: true })
+        // 使用 window.location 确保页面刷新
+        window.location.href = '/'
       } catch (error) {
+        console.error('登录失败:', error)
         getCaptcha()
         loginForm.captchaCode = ''
       } finally {
