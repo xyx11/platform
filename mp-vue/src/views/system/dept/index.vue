@@ -31,10 +31,25 @@
         <div class="header-actions">
           <el-button type="primary" icon="Plus" @click="handleAdd()">新增部门</el-button>
           <el-divider direction="vertical" />
-          <el-button icon="Expand" @click="expandAll">展开</el-button>
-          <el-button icon="Fold" @click="collapseAll">收起</el-button>
+          <el-dropdown trigger="click" @command="handleExpandCommand">
+            <el-button icon="List">展开收起</el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="expand">展开全部</el-dropdown-item>
+                <el-dropdown-item command="collapse">收起全部</el-dropdown-item>
+                <el-dropdown-item command="expand-first">展开一级</el-dropdown-item>
+                <el-dropdown-item command="collapse-first">收起一级</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
           <el-divider direction="vertical" />
           <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
+        </div>
+        <!-- 统计信息 -->
+        <div class="header-stats">
+          <el-statistic title="部门总数" :value="deptCount" />
+          <el-statistic title="正常" :value="normalCount" value-style="color: #67c23a" />
+          <el-statistic title="停用" :value="disabledCount" value-style="color: #f56c6c" />
         </div>
       </template>
 
@@ -48,10 +63,12 @@
         border
         stripe
         :indent="24"
+        @row-click="handleRowClick"
       >
         <el-table-column prop="deptName" label="部门名称" min-width="250" show-overflow-tooltip>
           <template #default="{ row }">
             <span class="dept-name">{{ row.deptName }}</span>
+            <el-tag v-if="row.parentId === 0" size="small" type="info" class="root-tag">根部门</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="sort" label="排序" width="80" align="center" />
@@ -66,11 +83,23 @@
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="180" align="center" />
-        <el-table-column label="操作" width="220" fixed="right" align="center">
+        <el-table-column label="操作" width="260" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
-            <el-button link type="primary" icon="Plus" @click="handleAdd(row)">新增</el-button>
-            <el-button link type="danger" icon="Delete" @click="handleDelete(row)">删除</el-button>
+            <el-button link type="primary" icon="Edit" @click.stop="handleUpdate(row)">修改</el-button>
+            <el-button link type="primary" icon="Plus" @click.stop="handleAdd(row)">新增</el-button>
+            <el-dropdown trigger="click" @command="(cmd) => handleMoreCommand(cmd, row)" class="more-actions">
+              <el-button link type="info" icon="MoreFilled">更多</el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="copy" :disabled="row.parentId === 0">
+                    <el-icon icon="DocumentCopy" /> 复制链接
+                  </el-dropdown-item>
+                  <el-dropdown-item command="delete" :disabled="row.children && row.children.length > 0">
+                    <el-icon icon="Delete" /> 删除
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -84,6 +113,7 @@
       @close="resetForm"
       @open="handleDialogOpen"
       destroy-on-close
+      :close-on-click-modal="false"
     >
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="上级部门" prop="parentId">
@@ -94,23 +124,25 @@
             check-strictly
             placeholder="请选择上级部门"
             :default-expand-all="true"
+            :filterable="true"
+            :clearable="true"
           />
         </el-form-item>
         <el-form-item label="部门名称" prop="deptName">
-          <el-input v-model="form.deptName" placeholder="请输入部门名称" maxlength="50" show-word-limit />
+          <el-input v-model="form.deptName" placeholder="请输入部门名称" maxlength="50" show-word-limit clearable />
         </el-form-item>
         <el-form-item label="显示排序" prop="sort">
-          <el-input-number v-model="form.sort" :min="0" :step="1" style="width: 200px" />
+          <el-input-number v-model="form.sort" :min="0" :step="1" style="width: 200px" controls-position="right" />
           <span class="form-tip">数值越小越靠前</span>
         </el-form-item>
         <el-form-item label="负责人" prop="leader">
-          <el-input v-model="form.leader" placeholder="请输入负责人" maxlength="20" />
+          <el-input v-model="form.leader" placeholder="请输入负责人" maxlength="20" clearable />
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="20" />
+          <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="20" clearable />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
+          <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" clearable />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -127,16 +159,19 @@
       </el-form>
       <template #footer>
         <el-button @click="dialog.visible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm" :loading="submitLoading">确定</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitLoading">
+          <el-icon v-if="submitLoading" class="is-loading"><Loading /></el-icon>
+          确定
+        </el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, nextTick } from 'vue'
+import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { CircleCheck, CircleClose } from '@element-plus/icons-vue'
+import { CircleCheck, CircleClose, Loading, MoreFilled } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const deptList = ref([])
@@ -177,6 +212,23 @@ const rules = {
   ]
 }
 
+// 统计信息
+const deptCount = computed(() => countNodes(deptList.value))
+const normalCount = computed(() => countStatus(deptList.value, 1))
+const disabledCount = computed(() => countStatus(deptList.value, 0))
+
+const countNodes = (data) => {
+  if (!data || data.length === 0) return 0
+  return data.reduce((acc, item) => acc + 1 + countNodes(item.children), 0)
+}
+
+const countStatus = (data, status) => {
+  if (!data || data.length === 0) return 0
+  return data.reduce((acc, item) => {
+    return acc + (item.status === status ? 1 : 0) + countStatus(item.children, status)
+  }, 0)
+}
+
 // 将平铺数据转换为树形结构
 const transformTreeData = (data, parentId = 0) => {
   if (!data || data.length === 0) return []
@@ -194,7 +246,6 @@ const getDeptList = () => {
   loading.value = true
   request.get('/system/dept/list', { params: queryParams }).then(res => {
     const rawData = res.data || []
-    // 转换为树形结构
     deptList.value = transformTreeData(rawData)
     deptTreeData.value = deptList.value
     loading.value = false
@@ -214,6 +265,57 @@ const resetQuery = () => {
   queryParams.deptName = ''
   queryParams.status = null
   getDeptList()
+}
+
+// 展开收起命令
+const handleExpandCommand = (command) => {
+  switch (command) {
+    case 'expand':
+      defaultExpandAll.value = true
+      ElMessage.success('展开全部')
+      break
+    case 'collapse':
+      defaultExpandAll.value = false
+      ElMessage.success('收起全部')
+      break
+    case 'expand-first':
+      defaultExpandAll.value = false
+      nextTick(() => {
+        deptList.value.forEach(item => {
+          deptTableRef.value?.toggleRowExpansion(item, true)
+        })
+        ElMessage.success('展开一级')
+      })
+      break
+    case 'collapse-first':
+      deptList.value.forEach(item => {
+        deptTableRef.value?.toggleRowExpansion(item, false)
+      })
+      ElMessage.success('收起一级')
+      break
+  }
+}
+
+// 更多操作命令
+const handleMoreCommand = (command, row) => {
+  switch (command) {
+    case 'copy':
+      const link = `${window.location.origin}/system/user?deptId=${row.deptId}`
+      navigator.clipboard.writeText(link).then(() => {
+        ElMessage.success('链接已复制到剪贴板')
+      }).catch(() => {
+        ElMessage.error('复制失败')
+      })
+      break
+    case 'delete':
+      handleDelete(row)
+      break
+  }
+}
+
+// 行点击
+const handleRowClick = (row, column) => {
+  if (column.property !== 'deptName') return
 }
 
 // 新增
@@ -251,11 +353,12 @@ const handleDialogOpen = () => {
 
 // 删除
 const handleDelete = (row) => {
-  ElMessageBox.confirm(`确认删除部门 "${row.deptName}" 吗？`, '提示', {
+  ElMessageBox.confirm(`确认删除部门 "${row.deptName}" 吗？`, '警告', {
     type: 'warning',
     distinguishCancelAndClose: true,
     confirmButtonText: '确定',
-    cancelButtonText: '取消'
+    cancelButtonText: '取消',
+    closeOnClickModal: false
   }).then(() => {
     request.delete(`/system/dept/${row.deptId}`).then(() => {
       ElMessage.success('删除成功')
@@ -283,16 +386,6 @@ const submitForm = () => {
       })
     }
   })
-}
-
-// 展开所有
-const expandAll = () => {
-  defaultExpandAll.value = true
-}
-
-// 收起所有
-const collapseAll = () => {
-  defaultExpandAll.value = false
 }
 
 // 重置表单
@@ -330,13 +423,36 @@ const handleExport = () => {
   })
 }
 
+// 快捷键
 onMounted(() => {
   getDeptList()
+  
+  // 添加快捷键监听
+  document.addEventListener('keydown', (e) => {
+    // ESC 关闭对话框
+    if (e.key === 'Escape' && dialog.visible) {
+      dialog.visible = false
+    }
+    // Ctrl+N 新增
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n' && !dialog.visible) {
+      e.preventDefault()
+      handleAdd()
+    }
+    // Ctrl+F 查询
+    if ((e.ctrlKey || e.metaKey) && e.key === 'f' && !dialog.visible) {
+      e.preventDefault()
+      document.querySelector('input[placeholder="请输入部门名称"]')?.focus()
+    }
+  })
 })
 </script>
 
 <style lang="scss" scoped>
 $primary-color: #1e80ff;
+$success-color: #67c23a;
+$warning-color: #e6a23c;
+$danger-color: #f56c6c;
+$info-color: #909399;
 $text-primary: #333333;
 $text-regular: #666666;
 $text-secondary: #999999;
@@ -366,7 +482,7 @@ $bg-color-page: #f5f6f7;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     
     :deep(.el-card__header) {
-      padding: 12px 16px;
+      padding: 16px;
       border-bottom: 1px solid $border-color;
     }
     
@@ -375,6 +491,33 @@ $bg-color-page: #f5f6f7;
       align-items: center;
       flex-wrap: wrap;
       gap: 8px;
+      margin-bottom: 16px;
+      
+      .more-actions {
+        .el-button {
+          padding: 4px 8px;
+        }
+      }
+    }
+    
+    .header-stats {
+      display: flex;
+      gap: 24px;
+      padding-top: 12px;
+      border-top: 1px solid $border-color;
+      
+      :deep(.el-statistic) {
+        .el-statistic__header {
+          font-size: 12px;
+          color: $text-secondary;
+          margin-bottom: 4px;
+        }
+        .el-statistic__content {
+          font-size: 18px;
+          font-weight: 600;
+          color: $text-primary;
+        }
+      }
     }
   }
 }
@@ -388,6 +531,11 @@ $bg-color-page: #f5f6f7;
 .dept-name {
   font-weight: 500;
   color: $text-primary;
+}
+
+.root-tag {
+  margin-left: 8px;
+  transform: scale(0.85);
 }
 
 // 对话框样式优化
@@ -408,6 +556,8 @@ $bg-color-page: #f5f6f7;
   
   .el-dialog__body {
     padding: 24px 20px;
+    max-height: 70vh;
+    overflow-y: auto;
   }
   
   .el-dialog__footer {
@@ -439,10 +589,32 @@ $bg-color-page: #f5f6f7;
   .el-table__expand-icon {
     color: $text-secondary;
     transition: transform 0.2s ease;
+    cursor: pointer;
     
     &.el-table__expand-icon--expanded {
       color: $primary-color;
     }
+    
+    &:hover {
+      color: $primary-color;
+    }
   }
+}
+
+// 表单提示
+:deep(.el-form-item__content) {
+  .el-input-number {
+    width: 200px;
+  }
+}
+
+// 加载动画
+.is-loading {
+  animation: rotating 2s linear infinite;
+}
+
+@keyframes rotating {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 </style>
