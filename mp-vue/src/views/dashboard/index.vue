@@ -57,6 +57,62 @@
           </div>
         </el-card>
       </el-col>
+
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-item">
+            <div class="stat-icon notice">
+              <el-icon><Bell /></el-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value">{{ statistics.noticeCount || 0 }}</div>
+              <div class="stat-label">公告总数</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-item">
+            <div class="stat-icon job">
+              <el-icon><Timer /></el-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value">{{ statistics.jobCount || 0 }}</div>
+              <div class="stat-label">任务总数</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-item">
+            <div class="stat-icon todo-pending">
+              <el-icon><Clock /></el-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value">{{ statistics.todoPendingCount || 0 }}</div>
+              <div class="stat-label">待处理待办</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-item">
+            <div class="stat-icon todo-urgent">
+              <el-icon><Warning /></el-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value">{{ statistics.todoUrgentCount || 0 }}</div>
+              <div class="stat-label">紧急待办</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
     </el-row>
 
     <!-- 图表区域 -->
@@ -109,7 +165,7 @@ import { useRouter } from 'vue-router'
 import * as echarts from 'echarts'
 import request from '@/utils/request'
 // 导入 Element Plus 图标
-import { User, Avatar, Menu, Document, OfficeBuilding, Collection, Timer, Setting, Grid, Monitor } from '@element-plus/icons-vue'
+import { User, Avatar, Menu, Document, OfficeBuilding, Collection, Timer, Setting, Grid, Monitor, Bell, Clock, Warning } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const lineChartRef = ref(null)
@@ -123,7 +179,9 @@ const statistics = reactive({
   deptCount: 0,
   postCount: 0,
   noticeCount: 0,
-  jobCount: 0
+  jobCount: 0,
+  todoPendingCount: 0,
+  todoUrgentCount: 0
 })
 
 const quickLinks = [
@@ -132,16 +190,21 @@ const quickLinks = [
   { name: '菜单管理', path: '/system/menu', icon: Menu },
   { name: '部门管理', path: '/system/dept', icon: OfficeBuilding },
   { name: '字典管理', path: '/system/dict', icon: Collection },
+  { name: '待办事项', path: '/system/todo', icon: Clock },
   { name: '定时任务', path: '/job/list', icon: Timer },
   { name: '代码生成', path: '/generator/table', icon: Grid },
-  { name: '系统监控', path: '/monitor/server', icon: Monitor },
-  { name: '系统设置', path: '/system/config', icon: Setting }
+  { name: '系统监控', path: '/monitor/server', icon: Monitor }
 ]
 
 // 获取统计数据
 const getStatistics = () => {
   request.get('/system/index/statistics').then(res => {
     Object.assign(statistics, res.data)
+    // 获取待办统计
+    request.get('/system/todo/stats').then(todoRes => {
+      statistics.todoPendingCount = todoRes.data.pendingCount || 0
+      statistics.todoUrgentCount = todoRes.data.urgentCount || 0
+    }).catch(() => {})
   }).catch(() => {})
 }
 
@@ -149,7 +212,7 @@ const getStatistics = () => {
 const initLineChart = () => {
   if (!lineChartRef.value) return
   const chart = echarts.init(lineChartRef.value)
-  
+
   // 获取访问趋势数据
   request.get('/system/index/visitTrend').then(res => {
     const { dates, values } = res.data
@@ -219,7 +282,7 @@ const initLineChart = () => {
 const initPieChart = () => {
   if (!pieChartRef.value) return
   const chart = echarts.init(pieChartRef.value)
-  
+
   // 获取用户分布数据
   request.get('/system/index/userDistribution').then(res => {
     const { data } = res.data
@@ -315,6 +378,22 @@ onMounted(() => {
 
     &.log {
       background: linear-gradient(135deg, #43e97b, #38f9d7);
+    }
+
+    &.notice {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+    }
+
+    &.job {
+      background: linear-gradient(135deg, #fa709a, #fee140);
+    }
+
+    &.todo-pending {
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+    }
+
+    &.todo-urgent {
+      background: linear-gradient(135deg, #ff9a9e, #fecfef);
     }
   }
 
