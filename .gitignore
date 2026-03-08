@@ -53,3 +53,7 @@ build/
 mp-vue/src/components.d.ts
 
 target/
+logs/*.log
+mp-common/*/target/
+mp-*/target/
+mp-gateway/src/main/resources/application-local.yml
