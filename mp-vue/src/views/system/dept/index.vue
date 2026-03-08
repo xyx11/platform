@@ -65,8 +65,8 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item command="export-selected"><el-icon icon="Download" /> 导出选中</el-dropdown-item>
-                  <el-dropdown-item command="delete-selected" divided :disabled="true" style="color: #f56c6c">
-                    <el-icon icon="Delete" /> 批量删除（暂未实现）
+                  <el-dropdown-item command="delete-selected" divided style="color: #f56c6c">
+                    <el-icon icon="Delete" /> 批量删除
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -538,6 +538,9 @@ const handleBatchCommand = (command) => {
     case 'export-selected':
       exportSelected()
       break
+    case 'delete-selected':
+      handleBatchDelete()
+      break
   }
 }
 
@@ -548,6 +551,43 @@ const exportSelected = () => {
     return
   }
   ElMessage.success(`导出 ${selectedRows.value.length} 项`)
+}
+
+// 批量删除
+const handleBatchDelete = () => {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning('请先选择要删除的部门')
+    return
+  }
+
+  // 检查是否有子部门的项
+  const hasChildren = selectedRows.value.some(item => item.children && item.children.length > 0)
+  if (hasChildren) {
+    ElMessage.warning('选中的部门中存在子部门，无法批量删除')
+    return
+  }
+
+  const deptNames = selectedRows.value.map(item => item.deptName).join(',')
+  ElMessageBox.confirm(
+    `确认删除选中的 ${selectedRows.value.length} 个部门吗？\n\n${deptNames}`,
+    '警告',
+    {
+      type: 'warning',
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      closeOnClickModal: false
+    }
+  ).then(() => {
+    const deptIds = selectedRows.value.map(item => item.deptId)
+    request.delete('/system/dept/batch', { data: deptIds }).then(() => {
+      ElMessage.success('批量删除成功')
+      clearSelection()
+      getDeptList()
+    }).catch(() => {
+      ElMessage.error('批量删除失败')
+    })
+  }).catch(() => {})
 }
 
 // 切换列显示
