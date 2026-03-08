@@ -145,7 +145,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import NoticeIcon from '@/components/NoticeIcon.vue'
@@ -188,10 +188,8 @@ const tabsRef = ref(null)
 
 const isCollapse = ref(false)
 const isDark = ref(false)
-const activeTab = ref('/dashboard')
-const visitedViews = ref([
-  { path: '/dashboard', title: '首页', name: 'Dashboard' }
-])
+const activeTab = ref(route.path || '/dashboard')
+const visitedViews = ref([])
 const userInfo = ref({})
 
 // 右键菜单相关
@@ -519,6 +517,20 @@ const addView = (routerView) => {
   activeTab.value = routerView.path
 }
 
+// 监听路由变化
+watch(() => route.path, (newPath) => {
+  if (newPath && !visitedViews.value.find(item => item.path === newPath)) {
+    const currentRouteMatched = route.matched[route.matched.length - 1]
+    if (currentRouteMatched && currentRouteMatched.meta) {
+      addView({
+        path: newPath,
+        meta: currentRouteMatched.meta,
+        name: currentRouteMatched.name
+      })
+    }
+  }
+}, { immediate: true })
+
 onMounted(() => {
   getUserInfo()
   // 检查保存的主题
@@ -526,10 +538,6 @@ onMounted(() => {
   if (savedTheme === 'dark') {
     isDark.value = true
     document.documentElement.classList.add('dark')
-  }
-  // 如果当前路由不是首页，添加标签页
-  if (route.path !== '/dashboard') {
-    addView(route)
   }
 })
 </script>

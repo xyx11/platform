@@ -129,9 +129,14 @@ const handleLogin = async () => {
           nickname,
           avatar
         }))
+        console.log('token 已存储:', localStorage.getItem('access_token'))
         ElMessage.success('登录成功')
-        // 使用 window.location 确保页面刷新
-        window.location.href = '/'
+        // 使用 router.push 进行跳转
+        router.push({ path: '/dashboard', replace: true }).then(() => {
+          console.log('路由跳转成功')
+        }).catch(err => {
+          console.error('路由跳转失败:', err)
+        })
       } catch (error) {
         console.error('登录失败:', error)
         getCaptcha()
