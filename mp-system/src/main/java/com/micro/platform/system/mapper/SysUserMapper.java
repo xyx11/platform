@@ -37,4 +37,24 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * 查询用户的权限标识列表
      */
     List<String> selectPermissionsByUserId(@Param("userId") Long userId);
+
+    /**
+     * 根据角色 ID 查询用户列表
+     */
+    List<SysUser> selectUsersByRoleId(@Param("roleId") Long roleId);
+
+    /**
+     * 批量删除用户角色关联
+     */
+    int deleteUserRoleBatch(@Param("roleId") Long roleId);
+
+    /**
+     * 批量插入用户角色关联
+     */
+    int batchInsertUserRole(@Param("roleId") Long roleId, @Param("userIds") List<Long> userIds);
+
+    /**
+     * 批量删除用户角色关联（指定用户）
+     */
+    int batchDeleteUserRole(@Param("roleId") Long roleId, @Param("userIds") List<Long> userIds);
 }

@@ -3,9 +3,12 @@ package com.micro.platform.system.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.common.core.service.impl.ServiceImplX;
 import com.micro.platform.system.entity.SysRole;
+import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.mapper.SysRoleMapper;
+import com.micro.platform.system.mapper.SysUserMapper;
 import com.micro.platform.system.service.SysRoleService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
@@ -13,7 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,9 +30,11 @@ import java.util.stream.Collectors;
 public class SysRoleServiceImpl extends ServiceImplX<SysRoleMapper, SysRole> implements SysRoleService {
 
     private final SysRoleMapper sysRoleMapper;
+    private final SysUserMapper sysUserMapper;
 
-    public SysRoleServiceImpl(SysRoleMapper sysRoleMapper) {
+    public SysRoleServiceImpl(SysRoleMapper sysRoleMapper, SysUserMapper sysUserMapper) {
         this.sysRoleMapper = sysRoleMapper;
+        this.sysUserMapper = sysUserMapper;
     }
 
     @Override
@@ -37,7 +45,14 @@ public class SysRoleServiceImpl extends ServiceImplX<SysRoleMapper, SysRole> imp
                 .like(role.getRoleCode() != null, SysRole::getRoleCode, role.getRoleCode())
                 .eq(role.getStatus() != null, SysRole::getStatus, role.getStatus())
                 .orderByAsc(SysRole::getSort);
-        return baseMapper.selectPage(page, wrapper);
+        Page<SysRole> resultPage = baseMapper.selectPage(page, wrapper);
+
+        // 填充用户数量
+        for (SysRole r : resultPage.getRecords()) {
+            r.setUserCount(getRoleUserCount(r.getRoleId()));
+        }
+
+        return resultPage;
     }
 
     @Override
@@ -105,6 +120,113 @@ public class SysRoleServiceImpl extends ServiceImplX<SysRoleMapper, SysRole> imp
                     .doWrite(list);
         } catch (Exception e) {
             throw new RuntimeException("导出角色数据失败：" + e.getMessage());
+        }
+    }
+
+    @Override
+    public Map<String, Object> getRoleStats(Long roleId) {
+        Map<String, Object> stats = new HashMap<>();
+
+        if (roleId == null) {
+            // 统计所有角色
+            long totalRoleCount = baseMapper.selectCount(null);
+            long activeRoleCount = baseMapper.selectCount(new LambdaQueryWrapper<SysRole>().eq(SysRole::getStatus, 1));
+            stats.put("totalRoleCount", totalRoleCount);
+            stats.put("activeRoleCount", activeRoleCount);
+
+            // 统计每个角色的用户数量
+            List<SysRole> roles = selectRoleList(new SysRole());
+            List<Map<String, Object>> roleStats = new ArrayList<>();
+            for (SysRole r : roles) {
+                Map<String, Object> roleStat = new HashMap<>();
+                roleStat.put("roleId", r.getRoleId());
+                roleStat.put("roleName", r.getRoleName());
+                roleStat.put("roleCode", r.getRoleCode());
+                roleStat.put("userCount", getRoleUserCount(r.getRoleId()));
+                roleStats.add(roleStat);
+            }
+            stats.put("roleStats", roleStats);
+        } else {
+            // 统计指定角色
+            SysRole role = getById(roleId);
+            if (role == null) {
+                throw new BusinessException("角色不存在");
+            }
+
+            stats.put("roleId", roleId);
+            stats.put("roleName", role.getRoleName());
+            stats.put("roleCode", role.getRoleCode());
+            stats.put("description", role.getDescription());
+            stats.put("dataScope", role.getDataScope());
+            stats.put("userCount", getRoleUserCount(roleId));
+            stats.put("status", role.getStatus());
+            stats.put("sort", role.getSort());
+        }
+
+        return stats;
+    }
+
+    @Override
+    public int getRoleUserCount(Long roleId) {
+        if (roleId == null) {
+            return 0;
+        }
+        // 查询拥有该角色的用户数量
+        return sysRoleMapper.countUsersByRoleId(roleId);
+    }
+
+    @Override
+    public List<Map<String, Object>> getRoleUsers(Long roleId) {
+        List<Map<String, Object>> users = new ArrayList<>();
+        if (roleId == null) {
+            return users;
+        }
+
+        // 查询拥有该角色的用户列表
+        List<SysUser> userList = sysUserMapper.selectUsersByRoleId(roleId);
+        for (SysUser user : userList) {
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("userId", user.getUserId());
+            userMap.put("username", user.getUsername());
+            userMap.put("nickname", user.getNickname());
+            userMap.put("phone", user.getPhone());
+            userMap.put("email", user.getEmail());
+            userMap.put("status", user.getStatus());
+            users.add(userMap);
+        }
+        return users;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void assignUsers(Long roleId, List<Long> userIds) {
+        // 检查角色是否存在
+        SysRole role = getById(roleId);
+        if (role == null) {
+            throw new BusinessException("角色不存在");
+        }
+
+        // 先删除原有的用户角色关联
+        sysUserMapper.deleteUserRoleBatch(roleId);
+
+        // 再插入新的关联
+        if (!CollectionUtils.isEmpty(userIds)) {
+            sysUserMapper.batchInsertUserRole(roleId, userIds);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeUsers(Long roleId, List<Long> userIds) {
+        // 检查角色是否存在
+        SysRole role = getById(roleId);
+        if (role == null) {
+            throw new BusinessException("角色不存在");
+        }
+
+        // 从角色移除用户
+        if (!CollectionUtils.isEmpty(userIds)) {
+            sysUserMapper.batchDeleteUserRole(roleId, userIds);
         }
     }
 }

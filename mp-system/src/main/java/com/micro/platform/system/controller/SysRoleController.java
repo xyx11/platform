@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 角色管理控制器
@@ -105,6 +106,38 @@ public class SysRoleController {
     @GetMapping("/export")
     public void export(HttpServletResponse response, SysRole role) {
         sysRoleService.exportRole(response, role);
+    }
+
+    @Operation(summary = "获取角色统计信息")
+    @PreAuthorize("hasAuthority('system:role:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats(@RequestParam(required = false) Long roleId) {
+        return Result.success(sysRoleService.getRoleStats(roleId));
+    }
+
+    @Operation(summary = "获取角色用户列表")
+    @PreAuthorize("hasAuthority('system:role:query')")
+    @GetMapping("/users/{roleId}")
+    public Result<List<Map<String, Object>>> getUsers(@PathVariable Long roleId) {
+        return Result.success(sysRoleService.getRoleUsers(roleId));
+    }
+
+    @Operation(summary = "分配用户到角色")
+    @OperationLog(module = "角色管理", type = OperationType.GRANT, description = "分配用户到角色")
+    @PreAuthorize("hasAuthority('system:role:edit')")
+    @PostMapping("/users/assign")
+    public Result<Void> assignUsers(@RequestParam Long roleId, @RequestBody List<Long> userIds) {
+        sysRoleService.assignUsers(roleId, userIds);
+        return Result.success();
+    }
+
+    @Operation(summary = "从角色移除用户")
+    @OperationLog(module = "角色管理", type = OperationType.OTHER, description = "从角色移除用户")
+    @PreAuthorize("hasAuthority('system:role:edit')")
+    @PostMapping("/users/remove")
+    public Result<Void> removeUsers(@RequestParam Long roleId, @RequestBody List<Long> userIds) {
+        sysRoleService.removeUsers(roleId, userIds);
+        return Result.success();
     }
 
     /**

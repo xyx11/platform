@@ -77,6 +77,12 @@ public class SysRole implements Serializable {
     @TableLogic
     private Integer deleted;
 
+    /**
+     * 用户数量（非数据库字段）
+     */
+    @TableField(exist = false)
+    private Integer userCount;
+
     public Long getRoleId() {
         return roleId;
     }
@@ -171,5 +177,13 @@ public class SysRole implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(Integer userCount) {
+        this.userCount = userCount;
     }
 }

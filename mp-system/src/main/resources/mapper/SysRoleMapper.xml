@@ -30,4 +30,11 @@
         </foreach>
     </insert>
 
+    <!-- 统计角色下的用户数量 -->
+    <select id="countUsersByRoleId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM sys_user_role ur
+        WHERE ur.role_id = #{roleId}
+    </select>
+
 </mapper>

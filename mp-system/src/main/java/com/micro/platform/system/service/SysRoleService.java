@@ -6,6 +6,7 @@ import com.micro.platform.system.entity.SysRole;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -52,4 +53,29 @@ public interface SysRoleService extends IServiceX<SysRole> {
      * 查询角色列表（支持条件查询）
      */
     List<SysRole> selectRoleList(SysRole role);
+
+    /**
+     * 获取角色统计信息
+     */
+    Map<String, Object> getRoleStats(Long roleId);
+
+    /**
+     * 获取角色用户数量
+     */
+    int getRoleUserCount(Long roleId);
+
+    /**
+     * 获取角色用户列表
+     */
+    List<Map<String, Object>> getRoleUsers(Long roleId);
+
+    /**
+     * 分配用户到角色
+     */
+    void assignUsers(Long roleId, List<Long> userIds);
+
+    /**
+     * 从角色移除用户
+     */
+    void removeUsers(Long roleId, List<Long> userIds);
 }
