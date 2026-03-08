@@ -1,150 +1,95 @@
 <template>
   <div class="dept-container">
-    <el-row :gutter="16" style="height: calc(100vh - 120px)">
-      <!-- 左侧部门树 -->
-      <el-col :span="5" class="dept-tree-col">
-        <el-card shadow="never" class="dept-tree-card">
-          <template #header>
-            <div class="dept-tree-header">
-              <span>
-                <el-icon class="header-icon"><OfficeBuilding /></el-icon>
-                组织机构
-              </span>
-              <div class="header-actions">
-                <el-badge :value="deptCount" type="primary" class="dept-count-badge">
-                  <el-button link type="primary" icon="Refresh" @click="refreshTree" />
-                </el-badge>
-              </div>
-            </div>
-          </template>
-          
+    <!-- 搜索栏 -->
+    <el-card class="search-card">
+      <el-form :model="queryParams" inline>
+        <el-form-item label="部门名称">
           <el-input
-            v-model="treeSearchText"
-            placeholder="搜索部门..."
+            v-model="queryParams.deptName"
+            placeholder="请输入部门名称"
             clearable
-            prefix-icon="Search"
-            class="tree-search"
-            @input="handleTreeSearch"
+            @keyup.enter="handleQuery"
+            style="width: 200px"
           />
-          
-          <div class="tree-actions">
-            <el-button link size="small" @click="expandTreeAll">展开全部</el-button>
-            <el-button link size="small" @click="collapseTreeAll">收起全部</el-button>
-          </div>
-          
-          <el-tree
-            ref="deptTreeRef"
-            :data="filteredTreeData"
-            :props="{ id: 'deptId', label: 'deptName', children: 'children' }"
-            node-key="deptId"
-            :expand-on-click-node="false"
-            :filter-node-method="filterNode"
-            highlight-current
-            default-expand-all
-            @node-click="handleNodeClick"
-            class="dept-tree"
-          >
-            <template #default="{ data, node }">
-              <span class="dept-tree-node">
-                <el-icon class="tree-icon" :class="{ 'icon-disabled': data.status === 0 }">
-                  <OfficeBuilding />
-                </el-icon>
-                <span class="node-label">{{ node.label }}</span>
-                <el-tag v-if="data.status === 0" size="small" type="info" class="status-tag">停用</el-tag>
-              </span>
-            </template>
-          </el-tree>
-        </el-card>
-      </el-col>
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="queryParams.status" placeholder="请选择状态" clearable style="width: 120px">
+            <el-option label="正常" :value="1" />
+            <el-option label="停用" :value="0" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="Search" @click="handleQuery">查询</el-button>
+          <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
 
-      <!-- 右侧部门表格 -->
-      <el-col :span="19">
-        <el-card class="search-card">
-          <el-form :model="queryParams" inline>
-            <el-form-item label="部门名称">
-              <el-input
-                v-model="queryParams.deptName"
-                placeholder="请输入部门名称"
-                clearable
-                @keyup.enter="handleQuery"
-                style="width: 200px"
-              />
-            </el-form-item>
-            <el-form-item label="状态">
-              <el-select v-model="queryParams.status" placeholder="请选择状态" clearable style="width: 120px">
-                <el-option label="正常" :value="1" />
-                <el-option label="停用" :value="0" />
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" icon="Search" @click="handleQuery">查询</el-button>
-              <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-            </el-form-item>
-          </el-form>
-        </el-card>
+    <!-- 表格卡片 -->
+    <el-card class="table-card">
+      <template #header>
+        <div class="header-actions">
+          <el-button type="primary" icon="Plus" @click="handleAdd()">新增部门</el-button>
+          <el-divider direction="vertical" />
+          <el-button icon="Expand" @click="expandAll">展开</el-button>
+          <el-button icon="Fold" @click="collapseAll">收起</el-button>
+          <el-divider direction="vertical" />
+          <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
+        </div>
+      </template>
 
-        <el-card class="table-card">
-          <template #header>
-            <div class="header-actions">
-              <el-button type="primary" icon="Plus" @click="handleAdd()">新增部门</el-button>
-              <el-divider direction="vertical" />
-              <el-button icon="Expand" @click="expandTableAll">展开</el-button>
-              <el-button icon="Fold" @click="collapseTableAll">收起</el-button>
-              <el-divider direction="vertical" />
-              <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
-            </div>
+      <el-table
+        ref="deptTableRef"
+        :data="deptList"
+        v-loading="loading"
+        row-key="deptId"
+        :default-expand-all="defaultExpandAll"
+        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        border
+        stripe
+        :indent="24"
+      >
+        <el-table-column prop="deptName" label="部门名称" min-width="250" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span class="dept-name">{{ row.deptName }}</span>
           </template>
-
-          <el-table
-            ref="deptTableRef"
-            :data="tableDeptList"
-            v-loading="loading"
-            row-key="deptId"
-            :default-expand-all="defaultExpandAll"
-            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-            border
-            stripe
-            :highlight-current-row="true"
-          >
-            <el-table-column prop="deptName" label="部门名称" min-width="200" show-overflow-tooltip />
-            <el-table-column prop="sort" label="排序" width="80" align="center" />
-            <el-table-column prop="leader" label="负责人" width="120" align="center" show-overflow-tooltip />
-            <el-table-column prop="phone" label="联系电话" width="150" align="center" />
-            <el-table-column prop="email" label="邮箱" width="180" align="center" show-overflow-tooltip />
-            <el-table-column prop="status" label="状态" width="80" align="center">
-              <template #default="{ row }">
-                <el-tag :type="row.status === 1 ? 'success' : 'danger'" effect="plain">
-                  {{ row.status === 1 ? '正常' : '停用' }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="180" align="center" />
-            <el-table-column label="操作" width="220" fixed="right" align="center">
-              <template #default="{ row }">
-                <el-button 
-                  link 
-                  type="primary" 
-                  icon="Edit" 
-                  @click="handleUpdate(row)"
-                >修改</el-button>
-                <el-button 
-                  link 
-                  type="primary" 
-                  icon="Plus" 
-                  @click="handleAdd(row)"
-                >新增</el-button>
-                <el-button 
-                  link 
-                  type="danger" 
-                  icon="Delete" 
-                  @click="handleDelete(row)"
-                >删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-card>
-      </el-col>
-    </el-row>
+        </el-table-column>
+        <el-table-column prop="sort" label="排序" width="80" align="center" />
+        <el-table-column prop="leader" label="负责人" width="120" align="center" show-overflow-tooltip />
+        <el-table-column prop="phone" label="联系电话" width="150" align="center" />
+        <el-table-column prop="email" label="邮箱" width="180" align="center" show-overflow-tooltip />
+        <el-table-column prop="status" label="状态" width="80" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.status === 1 ? 'success' : 'danger'" effect="plain">
+              {{ row.status === 1 ? '正常' : '停用' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" width="180" align="center" />
+        <el-table-column label="操作" width="220" fixed="right" align="center">
+          <template #default="{ row }">
+            <el-button 
+              link 
+              type="primary" 
+              icon="Edit" 
+              @click="handleUpdate(row)"
+            >修改</el-button>
+            <el-button 
+              link 
+              type="primary" 
+              icon="Plus" 
+              @click="handleAdd(row)"
+            >新增</el-button>
+            <el-button 
+              link 
+              type="danger" 
+              icon="Delete" 
+              @click="handleDelete(row)"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
 
     <!-- 新增/编辑对话框 -->
     <el-dialog
@@ -204,15 +149,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch, computed, nextTick } from 'vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { OfficeBuilding, CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const deptList = ref([])
 const deptTreeData = ref([])
-const filteredTreeData = ref([])
-const tableDeptList = ref([])
 const loading = ref(false)
 const submitLoading = ref(false)
 
@@ -229,9 +172,7 @@ const dialog = reactive({
 
 const formRef = ref(null)
 const deptTableRef = ref(null)
-const deptTreeRef = ref(null)
 const defaultExpandAll = ref(true)
-const treeSearchText = ref('')
 
 const form = reactive({
   deptId: null,
@@ -248,72 +189,18 @@ const rules = {
   deptName: [
     { required: true, message: '请输入部门名称', trigger: 'blur' },
     { min: 2, max: 50, message: '部门名称长度在 2 到 50 个字符', trigger: 'blur' }
-  ],
-  parentId: [
-    { required: false, message: '请选择上级部门', trigger: 'change' }
   ]
 }
 
-// 部门数量统计
-const deptCount = computed(() => {
-  const countNodes = (data) => {
-    if (!data || data.length === 0) return 0
-    return data.reduce((acc, item) => {
-      return acc + 1 + countNodes(item.children)
-    }, 0)
-  }
-  return countNodes(deptTreeData.value)
-})
-
-// 监听搜索输入
-watch(treeSearchText, (val) => {
-  if (deptTreeRef.value) {
-    deptTreeRef.value.filter(val)
-  }
-})
-
-// 树过滤方法
-const filterNode = (value, data) => {
-  if (!value) return true
-  return data.deptName.includes(value)
-}
-
-// 树搜索处理
-const handleTreeSearch = () => {
-  // 搜索时自动展开匹配的节点
-  if (treeSearchText.value && deptTreeRef.value) {
-    expandFilteredNodes()
-  }
-}
-
-// 展开过滤后的节点
-const expandFilteredNodes = () => {
-  nextTick(() => {
-    const expandNode = (data) => {
-      if (!data || !Array.isArray(data)) return
-      data.forEach(item => {
-        if (item.deptName.includes(treeSearchText.value)) {
-          deptTreeRef.value.expandNode(item)
-          // 展开父节点
-          const parent = deptTreeRef.value.getNode(item.deptId)?.parent
-          if (parent && parent.level > 0) {
-            deptTreeRef.value.expandNode(parent.data)
-          }
-        }
-        expandNode(item.children)
-      })
-    }
-    expandNode(deptTreeData.value)
-  })
-}
-
-// 构建树形数据
+// 构建树形数据（用于上级部门选择）
 const buildTreeData = (data) => {
   if (!data) return []
-  return data.map(item => ({
+  // 添加根节点选项
+  const treeData = data.map(item => ({
     ...item,
     children: item.children ? buildTreeData(item.children) : []
   }))
+  return treeData
 }
 
 // 获取部门列表
@@ -322,76 +209,11 @@ const getDeptList = () => {
   request.get('/system/dept/list', { params: queryParams }).then(res => {
     deptList.value = res.data || []
     deptTreeData.value = buildTreeData(deptList.value)
-    filteredTreeData.value = deptTreeData.value
-    filterDeptList()
     loading.value = false
   }).catch(() => {
     loading.value = false
     ElMessage.error('获取部门列表失败')
   })
-}
-
-// 根据左侧树选中状态筛选表格数据
-const filterDeptList = () => {
-  const currentKey = deptTreeRef.value?.getCurrentKey()
-  if (currentKey) {
-    const selectedDept = findDeptById(deptTreeData.value, currentKey)
-    if (selectedDept) {
-      tableDeptList.value = [selectedDept]
-      return
-    }
-  }
-  tableDeptList.value = deptList.value
-}
-
-// 递归查找部门
-const findDeptById = (data, id) => {
-  for (const item of data) {
-    if (item.deptId === id) return item
-    if (item.children) {
-      const found = findDeptById(item.children, id)
-      if (found) return found
-    }
-  }
-  return null
-}
-
-// 刷新树
-const refreshTree = () => {
-  getDeptList()
-  ElMessage.success('刷新成功')
-}
-
-// 部门树节点点击
-const handleNodeClick = (data) => {
-  filterDeptList()
-}
-
-// 展开全部
-const expandTreeAll = () => {
-  const expandAll = (data) => {
-    if (!data || !Array.isArray(data)) return
-    data.forEach(item => {
-      deptTreeRef.value?.expandNode(item)
-      expandAll(item.children)
-    })
-  }
-  expandAll(deptTreeData.value)
-}
-
-// 收起全部
-const collapseTreeAll = () => {
-  const collapseAll = (data) => {
-    if (!data || !Array.isArray(data)) return
-    data.forEach(item => {
-      const node = deptTreeRef.value?.getNode(item.deptId)
-      if (node && node.expanded) {
-        deptTreeRef.value?.collapseNode(item.deptId)
-      }
-      collapseAll(item.children)
-    })
-  }
-  collapseAll(deptTreeData.value)
 }
 
 // 查询
@@ -403,10 +225,6 @@ const handleQuery = () => {
 const resetQuery = () => {
   queryParams.deptName = ''
   queryParams.status = null
-  treeSearchText.value = ''
-  if (deptTreeRef.value) {
-    deptTreeRef.value.setCurrentKey(null)
-  }
   getDeptList()
 }
 
@@ -479,16 +297,13 @@ const submitForm = () => {
   })
 }
 
-// 展开表格所有
-const expandTableAll = () => {
+// 展开所有
+const expandAll = () => {
   defaultExpandAll.value = true
-  nextTick(() => {
-    deptTableRef.value?.toggleAllSelection?.()
-  })
 }
 
-// 收起表格所有
-const collapseTableAll = () => {
+// 收起所有
+const collapseAll = () => {
   defaultExpandAll.value = false
 }
 
@@ -546,137 +361,7 @@ $bg-color-page: #f5f6f7;
 
 .dept-container {
   padding: 0;
-  height: 100%;
   background: $bg-color-page;
-  
-  .dept-tree-col {
-    height: 100%;
-    
-    .dept-tree-card {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      border: none;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-      
-      :deep(.el-card__header) {
-        padding: 12px 16px;
-        border-bottom: 1px solid $border-color;
-      }
-      
-      .dept-tree-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        
-        span {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-weight: 600;
-          font-size: 14px;
-          color: $text-primary;
-          
-          .header-icon {
-            color: $primary-color;
-            font-size: 16px;
-          }
-        }
-        
-        .header-actions {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          
-          .dept-count-badge {
-            .el-button {
-              padding: 4px 6px;
-            }
-          }
-        }
-      }
-      
-      .tree-search {
-        margin: 12px 16px;
-        
-        :deep(.el-input__wrapper) {
-          border-radius: 20px;
-          box-shadow: 0 0 0 1px $border-color inset;
-        }
-      }
-      
-      .tree-actions {
-        display: flex;
-        gap: 8px;
-        padding: 0 16px 12px;
-        border-bottom: 1px solid $border-color;
-        
-        .el-button {
-          font-size: 12px;
-          color: $text-secondary;
-          
-          &:hover {
-            color: $primary-color;
-          }
-        }
-      }
-      
-      .dept-tree {
-        flex: 1;
-        overflow-y: auto;
-        padding: 8px 0;
-        
-        .dept-tree-node {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          flex: 1;
-          
-          .tree-icon {
-            color: $primary-color;
-            font-size: 14px;
-            
-            &.icon-disabled {
-              color: $info-color;
-            }
-          }
-          
-          .node-label {
-            flex: 1;
-          }
-          
-          .status-tag {
-            transform: scale(0.85);
-          }
-        }
-        
-        :deep(.el-tree-node.is-current) > .el-tree-node__content {
-          background: rgba(30, 128, 255, 0.1);
-          border-radius: 4px;
-          margin: 0 8px;
-          
-          .dept-tree-node {
-            color: $primary-color;
-            font-weight: 500;
-            
-            .tree-icon {
-              color: $primary-color;
-            }
-          }
-        }
-        
-        :deep(.el-tree-node__content) {
-          height: 36px;
-          border-radius: 4px;
-          margin: 2px 0;
-          
-          &:hover {
-            background: rgba(0, 0, 0, 0.04);
-          }
-        }
-      }
-    }
-  }
   
   .search-card {
     margin-bottom: 16px;
@@ -705,6 +390,7 @@ $bg-color-page: #f5f6f7;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
+      gap: 8px;
     }
   }
 }
@@ -713,6 +399,11 @@ $bg-color-page: #f5f6f7;
   margin-left: 10px;
   font-size: 12px;
   color: $text-secondary;
+}
+
+.dept-name {
+  font-weight: 500;
+  color: $text-primary;
 }
 
 // 对话框样式优化
@@ -758,6 +449,21 @@ $bg-color-page: #f5f6f7;
   
   .cell {
     padding: 0 10px;
+  }
+  
+  // 树形表格缩进线颜色
+  .el-table__indent {
+    border-right: 1px solid $border-color;
+  }
+  
+  // 展开图标样式
+  .el-table__expand-icon {
+    color: $text-secondary;
+    transition: transform 0.2s ease;
+    
+    &.el-table__expand-icon--expanded {
+      color: $primary-color;
+    }
   }
 }
 </style>
