@@ -7,6 +7,7 @@ import com.micro.platform.system.entity.SysNoticeUser;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 通知公告服务接口
@@ -62,4 +63,9 @@ public interface SysNoticeService extends IServiceX<SysNotice> {
      * 定时发布检查
      */
     void checkTimedPublish();
+
+    /**
+     * 获取通知公告统计信息
+     */
+    Map<String, Object> getNoticeStats();
 }

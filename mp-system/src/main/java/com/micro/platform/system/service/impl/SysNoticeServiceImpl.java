@@ -18,8 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 通知公告服务实现
@@ -220,5 +223,57 @@ public class SysNoticeServiceImpl extends ServiceImplX<SysNoticeMapper, SysNotic
             notice.setStatus(1);
             baseMapper.updateById(notice);
         }
+    }
+
+    @Override
+    public Map<String, Object> getNoticeStats() {
+        Map<String, Object> stats = new HashMap<>();
+
+        // 统计公告总数
+        long totalCount = baseMapper.selectCount(null);
+        stats.put("totalCount", totalCount);
+
+        // 统计今日新增公告数
+        LambdaQueryWrapper<SysNotice> todayWrapper = new LambdaQueryWrapper<>();
+        todayWrapper.ge(SysNotice::getCreateTime, LocalDate.now().atStartOfDay());
+        long todayCount = baseMapper.selectCount(todayWrapper);
+        stats.put("todayCount", todayCount);
+
+        // 统计已发布和未发布的公告数
+        LambdaQueryWrapper<SysNotice> publishedWrapper = new LambdaQueryWrapper<>();
+        publishedWrapper.eq(SysNotice::getStatus, 1);
+        long publishedCount = baseMapper.selectCount(publishedWrapper);
+        stats.put("publishedCount", publishedCount);
+
+        LambdaQueryWrapper<SysNotice> unPublishedWrapper = new LambdaQueryWrapper<>();
+        unPublishedWrapper.eq(SysNotice::getStatus, 0);
+        long unPublishedCount = baseMapper.selectCount(unPublishedWrapper);
+        stats.put("unPublishedCount", unPublishedCount);
+
+        // 统计不同类型公告数量
+        LambdaQueryWrapper<SysNotice> noticeWrapper = new LambdaQueryWrapper<>();
+        noticeWrapper.eq(SysNotice::getNoticeType, "1"); // 通知
+        long noticeCount = baseMapper.selectCount(noticeWrapper);
+        stats.put("noticeCount", noticeCount);
+
+        LambdaQueryWrapper<SysNotice> announcementWrapper = new LambdaQueryWrapper<>();
+        announcementWrapper.eq(SysNotice::getNoticeType, "2"); // 公告
+        long announcementCount = baseMapper.selectCount(announcementWrapper);
+        stats.put("announcementCount", announcementCount);
+
+        // 统计最近 7 天每天的新增公告数
+        Map<String, Integer> trendData = new HashMap<>();
+        for (int i = 6; i >= 0; i--) {
+            LocalDate date = LocalDate.now().minusDays(i);
+            LambdaQueryWrapper<SysNotice> dateWrapper = new LambdaQueryWrapper<>();
+            dateWrapper.between(SysNotice::getCreateTime,
+                    date.atStartOfDay(),
+                    date.atTime(java.time.LocalTime.MAX));
+            long count = baseMapper.selectCount(dateWrapper);
+            trendData.put(date.format(java.time.format.DateTimeFormatter.ofPattern("MM-dd")), (int) count);
+        }
+        stats.put("trendData", trendData);
+
+        return stats;
     }
 }

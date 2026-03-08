@@ -12,7 +12,11 @@ import org.springframework.util.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -112,5 +116,68 @@ public class SysCommandLogServiceImpl extends ServiceImplX<SysCommandLogMapper, 
     @Override
     public void clean() {
         baseMapper.delete(new LambdaQueryWrapper<>());
+    }
+
+    @Override
+    public Map<String, Object> getCommandLogStats() {
+        Map<String, Object> stats = new HashMap<>();
+
+        // 统计记录总数
+        long totalCount = baseMapper.selectCount(null);
+        stats.put("totalCount", totalCount);
+
+        // 统计今日执行次数
+        LambdaQueryWrapper<SysCommandLog> todayWrapper = new LambdaQueryWrapper<>();
+        todayWrapper.ge(SysCommandLog::getCreateTime, LocalDate.now().atStartOfDay());
+        long todayCount = baseMapper.selectCount(todayWrapper);
+        stats.put("todayCount", todayCount);
+
+        // 统计今日成功次数
+        LambdaQueryWrapper<SysCommandLog> todaySuccessWrapper = new LambdaQueryWrapper<>();
+        todaySuccessWrapper.ge(SysCommandLog::getCreateTime, LocalDate.now().atStartOfDay())
+                .eq(SysCommandLog::getStatus, 1);
+        long todaySuccessCount = baseMapper.selectCount(todaySuccessWrapper);
+        stats.put("todaySuccessCount", todaySuccessCount);
+
+        // 统计今日失败次数
+        LambdaQueryWrapper<SysCommandLog> todayFailWrapper = new LambdaQueryWrapper<>();
+        todayFailWrapper.ge(SysCommandLog::getCreateTime, LocalDate.now().atStartOfDay())
+                .eq(SysCommandLog::getStatus, 0);
+        long todayFailCount = baseMapper.selectCount(todayFailWrapper);
+        stats.put("todayFailCount", todayFailCount);
+
+        // 计算今日成功率
+        double successRate = todayCount > 0 ? (double) todaySuccessCount / todayCount * 100 : 0;
+        stats.put("successRate", String.format("%.2f", successRate));
+
+        // 统计最近 7 天每天的执行次数
+        Map<String, Integer> trendData = new HashMap<>();
+        for (int i = 6; i >= 0; i--) {
+            LocalDate date = LocalDate.now().minusDays(i);
+            LambdaQueryWrapper<SysCommandLog> dateWrapper = new LambdaQueryWrapper<>();
+            dateWrapper.between(SysCommandLog::getCreateTime,
+                    date.atStartOfDay(),
+                    date.atTime(java.time.LocalTime.MAX));
+            long count = baseMapper.selectCount(dateWrapper);
+            trendData.put(date.format(java.time.format.DateTimeFormatter.ofPattern("MM-dd")), (int) count);
+        }
+        stats.put("trendData", trendData);
+
+        // 统计平均执行时间
+        LambdaQueryWrapper<SysCommandLog> todayWithTimeWrapper = new LambdaQueryWrapper<>();
+        todayWithTimeWrapper.ge(SysCommandLog::getCreateTime, LocalDate.now().atStartOfDay())
+                .isNotNull(SysCommandLog::getExecuteTime);
+        List<SysCommandLog> todayLogs = list(todayWithTimeWrapper);
+        if (!todayLogs.isEmpty()) {
+            double avgExecuteTime = todayLogs.stream()
+                    .mapToLong(SysCommandLog::getExecuteTime)
+                    .average()
+                    .orElse(0.0);
+            stats.put("avgExecuteTime", Math.round(avgExecuteTime) + "ms");
+        } else {
+            stats.put("avgExecuteTime", "0ms");
+        }
+
+        return stats;
     }
 }

@@ -167,4 +167,11 @@ public class SysNoticeController {
             "unreadCount", status[1]
         ));
     }
+
+    @Operation(summary = "获取通知公告统计信息")
+    @PreAuthorize("hasAuthority('system:notice:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> getNoticeStats() {
+        return Result.success(sysNoticeService.getNoticeStats());
+    }
 }

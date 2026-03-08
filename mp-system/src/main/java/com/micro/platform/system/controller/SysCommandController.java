@@ -86,4 +86,11 @@ public class SysCommandController {
         sysCommandLogService.clean();
         return Result.success();
     }
+
+    @Operation(summary = "获取命令执行统计信息")
+    @PreAuthorize("hasAuthority('system:command:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats() {
+        return Result.success(sysCommandLogService.getCommandLogStats());
+    }
 }

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.service.IServiceX;
 import com.micro.platform.system.entity.SysCommandLog;
 
+import java.util.Map;
+
 /**
  * 命令执行记录服务接口
  */
@@ -23,4 +25,9 @@ public interface SysCommandLogService extends IServiceX<SysCommandLog> {
      * 清空记录
      */
     void clean();
+
+    /**
+     * 获取命令执行统计信息
+     */
+    Map<String, Object> getCommandLogStats();
 }

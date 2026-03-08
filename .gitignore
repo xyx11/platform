@@ -52,3 +52,4 @@ build/
 # Vue auto imports
 mp-vue/src/components.d.ts
 
+target/
