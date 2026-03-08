@@ -450,13 +450,15 @@ const transformTreeData = (data, parentId = 0) => {
   if (!data || data.length === 0) return []
   
   return data
-    .filter(item => item.parentId === parentId)
+    .filter(item => {
+      const itemParentId = item.parentId
+      return itemParentId === parentId || itemParentId === String(parentId) || (parentId === 0 && (itemParentId === null || itemParentId === undefined))
+    })
     .map(item => ({
       ...item,
       children: transformTreeData(data, item.deptId)
     }))
 }
-
 // 获取部门列表
 const getDeptList = () => {
   loading.value = true
