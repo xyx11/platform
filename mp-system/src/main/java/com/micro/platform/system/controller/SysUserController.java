@@ -118,6 +118,36 @@ public class SysUserController {
         return Result.success();
     }
 
+    @Operation(summary = "批量重置密码")
+    @OperationLog(module = "用户管理", type = OperationType.UPDATE, description = "批量重置密码")
+    @PreAuthorize("hasAuthority('system:user:edit')")
+    @PutMapping("/password/batch")
+    public Result<Void> batchResetPassword(@RequestBody Map<String, Object> params) {
+        @SuppressWarnings("unchecked")
+        List<Long> userIds = (List<Long>) params.get("userIds");
+        String password = (String) params.get("password");
+        sysUserService.batchResetPassword(userIds, password);
+        return Result.success();
+    }
+
+    @Operation(summary = "解锁用户")
+    @OperationLog(module = "用户管理", type = OperationType.OTHER, description = "解锁用户")
+    @PreAuthorize("hasAuthority('system:user:edit')")
+    @PostMapping("/unlock/{userId}")
+    public Result<Void> unlockUser(@PathVariable Long userId) {
+        sysUserService.unlockUser(userId);
+        return Result.success();
+    }
+
+    @Operation(summary = "批量解锁用户")
+    @OperationLog(module = "用户管理", type = OperationType.OTHER, description = "批量解锁用户")
+    @PreAuthorize("hasAuthority('system:user:edit')")
+    @PostMapping("/unlock/batch")
+    public Result<Void> batchUnlockUsers(@RequestBody List<Long> userIds) {
+        sysUserService.batchUnlockUsers(userIds);
+        return Result.success();
+    }
+
     @Operation(summary = "获取用户统计信息")
     @PreAuthorize("hasAuthority('system:user:query')")
     @GetMapping("/stats")

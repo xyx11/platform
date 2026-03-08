@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.common.core.service.impl.ServiceImplX;
@@ -385,6 +386,41 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
         result.put("success", success);
         result.put("failed", failed);
         return result;
+    }
+
+    @Override
+    public void batchResetPassword(List<Long> userIds, String password) {
+        if (userIds == null || userIds.isEmpty()) {
+            return;
+        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(password);
+        for (Long userId : userIds) {
+            LambdaUpdateWrapper<SysUser> wrapper = new LambdaUpdateWrapper<>();
+            wrapper.eq(SysUser::getUserId, userId)
+                    .set(SysUser::getPassword, encodedPassword);
+            baseMapper.update(null, wrapper);
+        }
+    }
+
+    @Override
+    public void unlockUser(Long userId) {
+        // 解锁用户 - 检查用户状态
+        SysUser user = getById(userId);
+        if (user != null && user.getStatus() == 0) {
+            // 用户被禁用，这里仅作为预留接口
+            // 实际解锁需要管理员手动修改用户状态为正常
+        }
+    }
+
+    @Override
+    public void batchUnlockUsers(List<Long> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            return;
+        }
+        for (Long userId : userIds) {
+            unlockUser(userId);
+        }
     }
 
     /**

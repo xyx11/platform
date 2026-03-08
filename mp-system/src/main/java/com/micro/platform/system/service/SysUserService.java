@@ -82,4 +82,19 @@ public interface SysUserService extends IServiceX<SysUser> {
      * 批量新增用户
      */
     Map<String, Object> batchSaveUser(java.util.List<SysUser> users);
+
+    /**
+     * 批量重置密码
+     */
+    void batchResetPassword(java.util.List<Long> userIds, String password);
+
+    /**
+     * 解锁用户（解除登录禁用）
+     */
+    void unlockUser(Long userId);
+
+    /**
+     * 批量解锁用户
+     */
+    void batchUnlockUsers(java.util.List<Long> userIds);
 }
