@@ -104,7 +104,11 @@
               :key="item.path"
               :label="item.title"
               :name="item.path"
-            />
+            >
+              <template #label>
+                <span @contextmenu.prevent="handleContextMenu($event, item.path)">{{ item.title }}</span>
+              </template>
+            </el-tab-pane>
           </el-tabs>
         </div>
         <div class="tabs-extra">
@@ -132,6 +136,46 @@
         </div>
       </div>
 
+      <!-- 右键上下文菜单 -->
+      <div
+        v-if="contextMenuVisible"
+        class="context-menu"
+        :style="{ left: contextMenuLeft + 'px', top: contextMenuTop + 'px' }"
+        @click.stop="closeContextMenu"
+      >
+        <el-dropdown
+          ref="contextMenuDropdown"
+          v-model:visible="contextMenuDropdownVisible"
+          trigger="click"
+          @command="handleContextMenuCommand"
+        >
+          <div class="context-menu-placeholder"></div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item :command="{ command: 'refresh', path: currentContextMenuPath }">
+                <el-icon><Refresh /></el-icon> 刷新
+              </el-dropdown-item>
+              <el-dropdown-item :command="{ command: 'close', path: currentContextMenuPath }">
+                <el-icon><Close /></el-icon> 关闭
+              </el-dropdown-item>
+              <el-dropdown-item :command="{ command: 'closeOther', path: currentContextMenuPath }">
+                <el-icon><FolderDelete /></el-icon> 关闭其他
+              </el-dropdown-item>
+              <el-dropdown-item :command="{ command: 'closeLeft', path: currentContextMenuPath }">
+                <el-icon><DArrowLeft /></el-icon> 关闭左侧
+              </el-dropdown-item>
+              <el-dropdown-item :command="{ command: 'closeRight', path: currentContextMenuPath }">
+                <el-icon><DArrowRight /></el-icon> 关闭右侧
+              </el-dropdown-item>
+              <el-dropdown-item divided :command="{ command: 'closeAll', path: currentContextMenuPath }">
+                <el-icon><Delete /></el-icon> 关闭全部
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+      <div v-if="contextMenuVisible" class="context-menu-overlay" @click.stop="closeContextMenu"></div>
+
       <!-- 内容区 -->
       <el-main class="main-content">
         <router-view v-slot="{ Component }">
@@ -153,7 +197,7 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import NoticeIcon from '@/components/NoticeIcon.vue'
 import {
   Platform, Expand, Fold, Moon, Sunny, Refresh, Close, FolderDelete, Delete,
-  MoreFilled, ArrowDown
+  MoreFilled, ArrowDown, DArrowLeft, DArrowRight
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
@@ -166,6 +210,14 @@ const isDark = ref(false)
 const activeTab = ref(route.path || '/dashboard')
 const visitedViews = ref([])
 const userInfo = ref({})
+
+// 右键菜单相关
+const contextMenuVisible = ref(false)
+const contextMenuDropdownVisible = ref(false)
+const contextMenuLeft = ref(0)
+const contextMenuTop = ref(0)
+const currentContextMenuPath = ref('')
+const contextMenuDropdown = ref(null)
 
 const sidebarWidth = computed(() => {
   return isCollapse.value ? '64px' : '220px'
@@ -340,6 +392,111 @@ const closeAllTabs = () => {
 }
 
 const toggleCollapse = () => { isCollapse.value = !isCollapse.value }
+
+// 右键菜单相关方法
+const handleContextMenu = (e, path) => {
+  e.preventDefault()
+  e.stopPropagation()
+  currentContextMenuPath.value = path
+  contextMenuVisible.value = true
+  contextMenuLeft.value = e.clientX
+  contextMenuTop.value = e.clientY
+
+  nextTick(() => {
+    contextMenuDropdownVisible.value = true
+  })
+}
+
+const closeContextMenu = () => {
+  contextMenuVisible.value = false
+  contextMenuDropdownVisible.value = false
+}
+
+const handleContextMenuCommand = ({ command, path }) => {
+  const tabIndex = visitedViews.value.findIndex(item => item.path === path)
+
+  switch (command) {
+    case 'refresh':
+      if (path === activeTab.value) {
+        refreshCurrent()
+      } else {
+        handleTabClick({ props: { name: path } })
+        nextTick(() => {
+          refreshCurrent()
+        })
+      }
+      break
+    case 'close':
+      if (path !== activeTab.value) {
+        handleTabClose(path)
+      } else {
+        closeCurrent()
+      }
+      break
+    case 'closeOther':
+      if (path === activeTab.value) {
+        closeOtherTabs()
+      } else {
+        handleTabClick({ props: { name: path } })
+        nextTick(() => {
+          closeOtherTabs()
+        })
+      }
+      break
+    case 'closeLeft':
+      closeLeftTabs(path)
+      break
+    case 'closeRight':
+      closeRightTabs(path)
+      break
+    case 'closeAll':
+      closeAllTabs()
+      break
+  }
+  closeContextMenu()
+}
+
+const closeLeftTabs = (targetPath) => {
+  const targetIndex = visitedViews.value.findIndex(item => item.path === targetPath)
+  if (targetIndex === -1) return
+
+  const keepPaths = ['/dashboard']
+  visitedViews.value.forEach((item, index) => {
+    if (index >= targetIndex || item.path === '/dashboard') {
+      keepPaths.push(item.path)
+    }
+  })
+
+  visitedViews.value = visitedViews.value.filter(item => keepPaths.includes(item.path))
+
+  if (!keepPaths.includes(activeTab.value)) {
+    activeTab.value = targetPath
+    router.push(activeTab.value)
+  }
+
+  ElMessage.success('已关闭左侧标签页')
+}
+
+const closeRightTabs = (targetPath) => {
+  const targetIndex = visitedViews.value.findIndex(item => item.path === targetPath)
+  if (targetIndex === -1) return
+
+  const keepPaths = ['/dashboard']
+  visitedViews.value.forEach((item, index) => {
+    if (index <= targetIndex || item.path === '/dashboard') {
+      keepPaths.push(item.path)
+    }
+  })
+
+  visitedViews.value = visitedViews.value.filter(item => keepPaths.includes(item.path))
+
+  if (!keepPaths.includes(activeTab.value)) {
+    activeTab.value = targetPath
+    router.push(activeTab.value)
+  }
+
+  ElMessage.success('已关闭右侧标签页')
+}
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
@@ -669,6 +826,7 @@ $tabs-height: 42px;
   align-items: center;
   padding: 4px 12px 0;
   flex-shrink: 0;
+  position: relative;
 
   .tabs-wrapper {
     flex: 1;
@@ -751,6 +909,27 @@ $tabs-height: 42px;
       }
     }
   }
+}
+
+// 右键上下文菜单
+.context-menu {
+  position: fixed;
+  z-index: 9999;
+}
+
+.context-menu-placeholder {
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.context-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9998;
 }
 
 .main-content {
