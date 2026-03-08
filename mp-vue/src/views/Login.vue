@@ -111,28 +111,26 @@ const getCaptcha = () => {
 const handleLogin = async () => {
   if (!loginFormRef.value) return
 
-  await loginFormRef.value.validate(valid => {
+  await loginFormRef.value.validate(async valid => {
     if (valid) {
       loading.value = true
       const loginData = {
         ...loginForm,
         userAgent: navigator.userAgent
       }
-      request
-        .post('/auth/login', loginData)
-        .then(res => {
-          const { accessToken, tokenType } = res.data
-          localStorage.setItem('access_token', `${tokenType} ${accessToken}`)
-          ElMessage.success('登录成功')
-          router.push('/')
-        })
-        .catch(() => {
-          getCaptcha()
-          loginForm.captchaCode = ''
-        })
-        .finally(() => {
-          loading.value = false
-        })
+      try {
+        const res = await request.post('/auth/login', loginData)
+        const { accessToken, tokenType } = res.data
+        localStorage.setItem('access_token', accessToken)
+        localStorage.setItem('user_info', JSON.stringify(res.data.userInfo || {}))
+        ElMessage.success('登录成功')
+        router.push({ path: '/', replace: true })
+      } catch (error) {
+        getCaptcha()
+        loginForm.captchaCode = ''
+      } finally {
+        loading.value = false
+      }
     }
   })
 }
