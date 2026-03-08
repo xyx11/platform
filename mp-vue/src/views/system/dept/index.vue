@@ -68,24 +68,9 @@
         <el-table-column prop="createTime" label="创建时间" width="180" align="center" />
         <el-table-column label="操作" width="220" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button 
-              link 
-              type="primary" 
-              icon="Edit" 
-              @click="handleUpdate(row)"
-            >修改</el-button>
-            <el-button 
-              link 
-              type="primary" 
-              icon="Plus" 
-              @click="handleAdd(row)"
-            >新增</el-button>
-            <el-button 
-              link 
-              type="danger" 
-              icon="Delete" 
-              @click="handleDelete(row)"
-            >删除</el-button>
+            <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
+            <el-button link type="primary" icon="Plus" @click="handleAdd(row)">新增</el-button>
+            <el-button link type="danger" icon="Delete" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -151,7 +136,7 @@
 <script setup>
 import { ref, reactive, onMounted, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { OfficeBuilding, CircleCheck, CircleClose } from '@element-plus/icons-vue'
+import { CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const deptList = ref([])
@@ -192,23 +177,26 @@ const rules = {
   ]
 }
 
-// 构建树形数据（用于上级部门选择）
-const buildTreeData = (data) => {
-  if (!data) return []
-  // 添加根节点选项
-  const treeData = data.map(item => ({
-    ...item,
-    children: item.children ? buildTreeData(item.children) : []
-  }))
-  return treeData
+// 将平铺数据转换为树形结构
+const transformTreeData = (data, parentId = 0) => {
+  if (!data || data.length === 0) return []
+  
+  return data
+    .filter(item => item.parentId === parentId)
+    .map(item => ({
+      ...item,
+      children: transformTreeData(data, item.deptId)
+    }))
 }
 
 // 获取部门列表
 const getDeptList = () => {
   loading.value = true
   request.get('/system/dept/list', { params: queryParams }).then(res => {
-    deptList.value = res.data || []
-    deptTreeData.value = buildTreeData(deptList.value)
+    const rawData = res.data || []
+    // 转换为树形结构
+    deptList.value = transformTreeData(rawData)
+    deptTreeData.value = deptList.value
     loading.value = false
   }).catch(() => {
     loading.value = false
@@ -349,10 +337,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 $primary-color: #1e80ff;
-$success-color: #67c23a;
-$warning-color: #e6a23c;
-$danger-color: #f56c6c;
-$info-color: #909399;
 $text-primary: #333333;
 $text-regular: #666666;
 $text-secondary: #999999;
@@ -449,11 +433,6 @@ $bg-color-page: #f5f6f7;
   
   .cell {
     padding: 0 10px;
-  }
-  
-  // 树形表格缩进线颜色
-  .el-table__indent {
-    border-right: 1px solid $border-color;
   }
   
   // 展开图标样式
