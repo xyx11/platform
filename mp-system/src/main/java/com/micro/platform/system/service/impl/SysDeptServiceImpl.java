@@ -160,4 +160,56 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
                 .peek(dept -> dept.setChildren(buildDeptTree(depts, dept.getDeptId())))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void exportDeptBatch(HttpServletResponse response, List<Long> deptIds) {
+        try {
+            if (deptIds == null || deptIds.isEmpty()) {
+                return;
+            }
+            List<SysDept> list = list(new LambdaQueryWrapper<SysDept>().in(SysDept::getDeptId, deptIds));
+
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setCharacterEncoding("utf-8");
+            String fileName = URLEncoder.encode("部门数据", "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+
+            EasyExcel.write(response.getOutputStream(), SysDept.class)
+                    .sheet("部门数据")
+                    .doWrite(list);
+        } catch (Exception e) {
+            throw new RuntimeException("批量导出部门数据失败：" + e.getMessage());
+        }
+    }
+
+    @Override
+    public void removeBatchByIds(List<Long> deptIds) {
+        if (deptIds == null || deptIds.isEmpty()) {
+            return;
+        }
+        // 检查是否有子部门
+        for (Long deptId : deptIds) {
+            List<SysDept> children = list(new LambdaQueryWrapper<SysDept>()
+                    .eq(SysDept::getParentId, deptId));
+            if (!children.isEmpty()) {
+                SysDept dept = getById(deptId);
+                if (dept != null) {
+                    throw new BusinessException("部门 [" + dept.getDeptName() + "] 下存在子部门，无法删除");
+                }
+            }
+        }
+        removeByIds(deptIds);
+    }
+
+    @Override
+    public void batchUpdateStatus(List<Long> deptIds, Integer status) {
+        if (deptIds == null || deptIds.isEmpty() || status == null) {
+            return;
+        }
+        List<SysDept> depts = listByIds(deptIds);
+        for (SysDept dept : depts) {
+            dept.setStatus(status);
+        }
+        updateBatchById(depts);
+    }
 }

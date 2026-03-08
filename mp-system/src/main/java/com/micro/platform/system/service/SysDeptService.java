@@ -46,4 +46,19 @@ public interface SysDeptService extends IServiceX<SysDept> {
      * 获取部门及子部门用户总数
      */
     int getDeptWithChildrenUserCount(Long deptId);
+
+    /**
+     * 批量导出部门数据
+     */
+    void exportDeptBatch(HttpServletResponse response, List<Long> deptIds);
+
+    /**
+     * 批量删除部门
+     */
+    void removeBatchByIds(List<Long> deptIds);
+
+    /**
+     * 批量修改部门状态
+     */
+    void batchUpdateStatus(List<Long> deptIds, Integer status);
 }

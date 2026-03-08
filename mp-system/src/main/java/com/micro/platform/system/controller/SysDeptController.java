@@ -84,6 +84,23 @@ public class SysDeptController {
         sysDeptService.exportDept(response, dept);
     }
 
+    @Operation(summary = "批量导出部门数据")
+    @OperationLog(module = "部门管理", type = OperationType.EXPORT, description = "批量导出部门数据")
+    @PreAuthorize("hasAuthority('system:dept:query')")
+    @PostMapping("/export/batch")
+    public void exportBatch(HttpServletResponse response, @RequestBody List<Long> deptIds) {
+        sysDeptService.exportDeptBatch(response, deptIds);
+    }
+
+    @Operation(summary = "批量删除部门")
+    @OperationLog(module = "部门管理", type = OperationType.DELETE, description = "批量删除部门")
+    @PreAuthorize("hasAuthority('system:dept:remove')")
+    @DeleteMapping("/batch")
+    public Result<Void> batchRemove(@RequestBody List<Long> deptIds) {
+        sysDeptService.removeBatchByIds(deptIds);
+        return Result.success();
+    }
+
     @Operation(summary = "获取部门统计信息")
     @PreAuthorize("hasAuthority('system:dept:query')")
     @GetMapping("/stats")

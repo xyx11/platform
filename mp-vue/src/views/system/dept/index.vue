@@ -465,14 +465,20 @@ const getDeptList = () => {
     params.startTime = dateRange.value[0]
     params.endTime = dateRange.value[1]
   }
-  
+
   request.get('/system/dept/list', { params }).then(res => {
-    const rawData = res.data || []
-    deptList.value = transformTreeData(rawData)
-    deptTreeData.value = deptList.value
+    const rawData = res.data || res || []
+    if (Array.isArray(rawData) && rawData.length > 0) {
+      deptList.value = transformTreeData(rawData)
+      deptTreeData.value = deptList.value
+    } else {
+      deptList.value = []
+      deptTreeData.value = []
+    }
     loading.value = false
-  }).catch(() => {
+  }).catch(err => {
     loading.value = false
+    console.error('获取部门列表失败:', err)
     ElMessage.error('获取部门列表失败')
   })
 }
@@ -550,7 +556,20 @@ const exportSelected = () => {
     ElMessage.warning('请先选择要导出的部门')
     return
   }
-  ElMessage.success(`导出 ${selectedRows.value.length} 项`)
+
+  const deptIds = selectedRows.value.map(item => item.deptId)
+  request.post('/system/dept/export/batch', deptIds, { responseType: 'blob' }).then(res => {
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = '部门数据_' + new Date().getTime() + '.xlsx'
+    link.click()
+    window.URL.revokeObjectURL(url)
+    ElMessage.success(`导出 ${selectedRows.value.length} 项成功`)
+  }).catch(() => {
+    ElMessage.error('导出失败')
+  })
 }
 
 // 批量删除
