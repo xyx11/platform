@@ -54,6 +54,13 @@ public class SysIndexController {
         return Result.success(((com.micro.platform.system.service.impl.SysIndexServiceImpl)sysIndexService).getHotOperations());
     }
 
+    @Operation(summary = "获取部门用户分布")
+    @PreAuthorize("hasAuthority('system:index:query')")
+    @GetMapping("/deptDistribution")
+    public Result<List<Map<String, Object>>> getDeptDistribution() {
+        return Result.success(((com.micro.platform.system.service.impl.SysIndexServiceImpl)sysIndexService).getDeptUserDistribution());
+    }
+
     @Operation(summary = "获取公告列表")
     @GetMapping("/noticeList")
     public Result<List<Map<String, Object>>> getNoticeList() {

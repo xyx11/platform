@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 首页统计服务实现
@@ -25,19 +26,22 @@ public class SysIndexServiceImpl extends ServiceImplX<SysLoginLogMapper, SysLogi
     private final SysDeptMapper sysDeptMapper;
     private final SysPostMapper sysPostMapper;
     private final SysNoticeMapper sysNoticeMapper;
+    private final SysOperationLogMapper sysOperationLogMapper;
 
     public SysIndexServiceImpl(SysUserMapper sysUserMapper,
                                SysRoleMapper sysRoleMapper,
                                SysMenuMapper sysMenuMapper,
                                SysDeptMapper sysDeptMapper,
                                SysPostMapper sysPostMapper,
-                               SysNoticeMapper sysNoticeMapper) {
+                               SysNoticeMapper sysNoticeMapper,
+                               SysOperationLogMapper sysOperationLogMapper) {
         this.sysUserMapper = sysUserMapper;
         this.sysRoleMapper = sysRoleMapper;
         this.sysMenuMapper = sysMenuMapper;
         this.sysDeptMapper = sysDeptMapper;
         this.sysPostMapper = sysPostMapper;
         this.sysNoticeMapper = sysNoticeMapper;
+        this.sysOperationLogMapper = sysOperationLogMapper;
     }
 
     @Override
@@ -131,12 +135,41 @@ public class SysIndexServiceImpl extends ServiceImplX<SysLoginLogMapper, SysLogi
         statusData.add(createDistributionItem(inactiveCount.intValue(), "禁用"));
         distribution.put("statusData", statusData);
 
-        // 按部门统计用户分布（前 5 大部门）
-        List<Map<String, Object>> deptData = new ArrayList<>();
-        // 这里简化处理，实际应该联表查询统计每个部门的用户数
+        // 按部门统计用户分布
+        List<Map<String, Object>> deptData = getDeptUserDistribution();
         distribution.put("deptData", deptData);
 
         return distribution;
+    }
+
+    /**
+     * 获取部门用户分布（前 10 大部门）
+     */
+    public List<Map<String, Object>> getDeptUserDistribution() {
+        List<Map<String, Object>> deptData = new ArrayList<>();
+
+        // 按部门统计用户数
+        List<SysUser> userList = sysUserMapper.selectList(null);
+        Map<Long, Integer> deptUserCount = new HashMap<>();
+        for (SysUser user : userList) {
+            Long deptId = user.getDeptId();
+            if (deptId != null) {
+                deptUserCount.put(deptId, deptUserCount.getOrDefault(deptId, 0) + 1);
+            }
+        }
+
+        // 取前 10 大部门
+        deptUserCount.entrySet().stream()
+                .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
+                .limit(10)
+                .forEach(entry -> {
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("deptId", entry.getKey());
+                    item.put("value", entry.getValue());
+                    deptData.add(item);
+                });
+
+        return deptData;
     }
 
     /**
@@ -148,12 +181,23 @@ public class SysIndexServiceImpl extends ServiceImplX<SysLoginLogMapper, SysLogi
 
         // 统计最近 7 天的操作类型分布（从操作日志中统计）
         LocalDateTime sevenDaysAgo = LocalDate.now().minusDays(7).atStartOfDay();
-        // 这里简化处理
-        operations.add(createDistributionItem(100, "查询操作"));
-        operations.add(createDistributionItem(80, "新增操作"));
-        operations.add(createDistributionItem(60, "修改操作"));
-        operations.add(createDistributionItem(40, "删除操作"));
-        operations.add(createDistributionItem(20, "导出操作"));
+        LambdaQueryWrapper<SysOperationLog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.ge(SysOperationLog::getOperTime, sevenDaysAgo);
+        List<SysOperationLog> logList = sysOperationLogMapper.selectList(wrapper);
+
+        // 按模块标题分组统计
+        Map<String, Long> moduleCount = logList.stream()
+                .collect(Collectors.groupingBy(SysOperationLog::getTitle, Collectors.counting()));
+
+        moduleCount.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(10)
+                .forEach(entry -> {
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("name", entry.getKey());
+                    item.put("value", entry.getValue().intValue());
+                    operations.add(item);
+                });
 
         result.put("operations", operations);
         return result;
