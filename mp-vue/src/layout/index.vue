@@ -1483,7 +1483,7 @@ $top-nav-height: 60px;
           background: $bg-color-white;
           color: $primary-color;
           border-bottom-color: $bg-color-white;
-          border-right-color: transparent;
+          border-right: none;
           font-weight: 500;
           padding: 0 12px;
           box-shadow: 0 -2px 8px rgba(30, 128, 255, 0.1);
