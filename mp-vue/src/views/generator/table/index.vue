@@ -26,10 +26,10 @@
         </div>
       </template>
 
-      <el-table 
-        :data="tableList" 
-        border 
-        stripe 
+      <el-table
+        :data="tableList"
+        border
+        stripe
         v-loading="loading"
         @selection-change="handleSelectionChange"
       >
@@ -38,10 +38,11 @@
         <el-table-column prop="tableComment" label="表描述" min-width="150" />
         <el-table-column prop="createTime" label="创建时间" width="180" />
         <el-table-column prop="updateTime" label="更新时间" width="180" />
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="250" fixed="right">
           <template #default="{ row }">
             <el-button link type="primary" icon="View" @click="handlePreview(row)">预览</el-button>
             <el-button link type="success" icon="Download" @click="handleGenerate(row)">生成</el-button>
+            <el-button link type="info" icon="Grid" @click="handleViewColumns(row)">列详情</el-button>
             <el-button link type="warning" icon="Setting" @click="handleEditConfig(row)">配置</el-button>
           </template>
         </el-table-column>
@@ -115,6 +116,31 @@
         <el-button type="primary" @click="saveConfig">保存</el-button>
       </template>
     </el-dialog>
+
+    <!-- 列详情对话框 -->
+    <el-dialog title="表列详情" v-model="columnsDialog.visible" width="900px">
+      <el-table :data="columnsDialog.columns" border stripe>
+        <el-table-column prop="columnName" label="列名" width="150" />
+        <el-table-column prop="columnType" label="类型" width="120" />
+        <el-table-column prop="columnComment" label="注释" min-width="200" />
+        <el-table-column prop="isNullable" label="可空" width="80">
+          <template #default="{ row }">
+            <el-tag :type="row.isNullable === 'YES' ? 'warning' : 'success'">
+              {{ row.isNullable === 'YES' ? '是' : '否' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="columnKey" label="键" width="80">
+          <template #default="{ row }">
+            <el-tag v-if="row.columnKey === 'PRI'" type="primary">PRI</el-tag>
+            <el-tag v-else-if="row.columnKey === 'UNI'">UNI</el-tag>
+            <el-tag v-else-if="row.columnKey === 'MUL'">MUL</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="extra" label="额外" width="100" />
+        <el-table-column prop="columnDefault" label="默认值" width="150" />
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -148,6 +174,11 @@ const previewDialog = reactive({
 
 const configDialog = reactive({
   visible: false
+})
+
+const columnsDialog = reactive({
+  visible: false,
+  columns: []
 })
 
 const configFormRef = ref(null)
@@ -205,6 +236,14 @@ const handlePreview = (row) => {
     previewDialog.codes = res.data || {}
     previewDialog.activeTab = Object.keys(previewDialog.codes)[0]
     previewDialog.visible = true
+  })
+}
+
+// 查看列详情
+const handleViewColumns = (row) => {
+  request.get('/generator/column/list', { params: { tableName: row.tableName } }).then(res => {
+    columnsDialog.columns = res.data || []
+    columnsDialog.visible = true
   })
 }
 
