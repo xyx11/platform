@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 定时任务控制器
@@ -108,5 +109,12 @@ public class SysJobController {
     @GetMapping("/export")
     public void export(HttpServletResponse response, SysJob job) {
         sysJobService.exportJob(response, job);
+    }
+
+    @Operation(summary = "获取任务统计信息")
+    @PreAuthorize("hasAuthority('system:job:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats() {
+        return Result.success(sysJobService.getJobStats());
     }
 }

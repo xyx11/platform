@@ -6,6 +6,7 @@ import com.micro.platform.job.entity.SysJob;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 定时任务服务接口
@@ -46,4 +47,9 @@ public interface SysJobService extends IServiceX<SysJob> {
      * 查询任务列表（支持条件查询）
      */
     List<SysJob> selectJobList(SysJob job);
+
+    /**
+     * 获取任务统计信息
+     */
+    Map<String, Object> getJobStats();
 }

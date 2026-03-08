@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * 定时任务日志控制器
  */
@@ -62,5 +64,12 @@ public class SysJobLogController {
     public Result<Void> clear() {
         sysJobLogService.clean();
         return Result.success();
+    }
+
+    @Operation(summary = "获取任务日志统计信息")
+    @PreAuthorize("hasAuthority('system:job:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats() {
+        return Result.success(sysJobLogService.getJobLogStats());
     }
 }
