@@ -131,15 +131,15 @@
         <el-button link type="primary" @click="clearSelection">清空选择</el-button>
       </el-alert>
 
-      <el-table
+      <el-table :key="tableKey"
         ref="deptTableRef"
         :data="deptList"
         v-loading="loading"
         element-loading-text="加载中..."
         element-loading-spinner="el-icon-loading"
         row-key="deptId"
-        :default-expand-all="defaultExpandAll"
-        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        :default-expand-all="true"
+        :tree-props="{ children: 'children' }"
         border
         :stripe="true"
         :indent="24"
@@ -149,15 +149,6 @@
         @row-dblclick="handleRowDblClick"
       >
         <el-table-column type="selection" width="55" align="center" fixed />
-        <el-table-column type="expand" width="55" align="center">
-          <template #default="{ row }">
-            <div class="row-expand-info">
-              <p><span class="info-label">创建人:</span> {{ row.createBy || '-' }}</p>
-              <p><span class="info-label">更新人:</span> {{ row.updateBy || '-' }}</p>
-              <p><span class="info-label">备注:</span> {{ row.remark || '无' }}</p>
-            </div>
-          </template>
-        </el-table-column>
         <el-table-column 
           v-if="columns.find(c => c.prop === 'deptName')?.visible" 
           prop="deptName" 
@@ -172,7 +163,7 @@
               <el-icon v-else class="dept-no-children"><Folder /></el-icon>
               {{ row.deptName }}
             </span>
-            <el-tag v-if="row.parentId === 0" size="small" type="info" class="root-tag">根部门</el-tag>
+            <el-tag v-if="row.parentId === '0'" size="small" type="info" class="root-tag">根部门</el-tag>
           </template>
         </el-table-column>
         <el-table-column 
@@ -375,6 +366,7 @@ import {
 import request from '@/utils/request'
 
 const deptList = ref([])
+const tableKey = ref(0)
 const deptTreeData = ref([])
 const loading = ref(false)
 const refreshing = ref(false)
@@ -445,20 +437,6 @@ const countStatus = (data, status) => {
   }, 0)
 }
 
-// 将平铺数据转换为树形结构
-const transformTreeData = (data, parentId = 0) => {
-  if (!data || data.length === 0) return []
-  
-  return data
-    .filter(item => {
-      const itemParentId = item.parentId
-      return itemParentId === parentId || itemParentId === String(parentId) || (parentId === 0 && (itemParentId === null || itemParentId === undefined))
-    })
-    .map(item => ({
-      ...item,
-      children: transformTreeData(data, item.deptId)
-    }))
-}
 // 获取部门列表
 const getDeptList = () => {
   loading.value = true
@@ -470,19 +448,37 @@ const getDeptList = () => {
 
   request.get('/system/dept/list', { params }).then(res => {
     const rawData = res.data || res || []
-    if (Array.isArray(rawData) && rawData.length > 0) {
-      deptList.value = transformTreeData(rawData)
-      deptTreeData.value = deptList.value
-    } else {
-      deptList.value = []
-      deptTreeData.value = []
-    }
-    loading.value = false
+    console.log('原始数据:', rawData)
+    // 使用 JSON 序列化再反序列化，确保响应式
+    const treeData = JSON.parse(JSON.stringify(rawData))
+    console.log('树形数据:', treeData)
+    tableKey.value++
+    nextTick(() => {
+      deptList.value = treeData
+      window.debugDeptList = treeData
+      deptTreeData.value = treeData
+      loading.value = false
+    })
   }).catch(err => {
     loading.value = false
     console.error('获取部门列表失败:', err)
     ElMessage.error('获取部门列表失败')
   })
+}
+
+// 树形数据转换
+const handleTreeData = (data, parentId = '0') => {
+  const result = []
+  data.forEach(item => {
+    if (String(item.parentId) === String(parentId)) {
+      const children = handleTreeData(data, String(item.deptId))
+      if (children.length > 0) {
+        item.children = children
+      }
+      result.push(item)
+    }
+  })
+  return result
 }
 
 // 刷新

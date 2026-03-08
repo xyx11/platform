@@ -60,6 +60,12 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
     }
 
     @Override
+    public List<SysDept> selectDeptTree(SysDept dept) {
+        List<SysDept> depts = selectDeptList(dept);
+        return buildDeptTree(depts, 0L);
+    }
+
+    @Override
     public void exportDept(HttpServletResponse response, SysDept dept) {
         try {
             List<SysDept> list = selectDeptList(dept);
@@ -155,10 +161,14 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
      * 构建部门树
      */
     private List<SysDept> buildDeptTree(List<SysDept> depts, Long parentId) {
-        return depts.stream()
-                .filter(dept -> parentId.equals(dept.getParentId()))
-                .peek(dept -> dept.setChildren(buildDeptTree(depts, dept.getDeptId())))
-                .collect(Collectors.toList());
+        List<SysDept> tree = new ArrayList<>();
+        for (SysDept dept : depts) {
+            if (parentId.equals(dept.getParentId())) {
+                dept.setChildren(buildDeptTree(depts, dept.getDeptId()));
+                tree.add(dept);
+            }
+        }
+        return tree;
     }
 
     @Override

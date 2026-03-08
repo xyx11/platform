@@ -1,6 +1,8 @@
 package com.micro.platform.system.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,11 +20,13 @@ public class SysDept implements Serializable {
      * 部门 ID
      */
     @TableId(type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long deptId;
 
     /**
      * 父部门 ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     /**
