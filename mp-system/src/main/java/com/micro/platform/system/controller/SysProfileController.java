@@ -1,5 +1,7 @@
 package com.micro.platform.system.controller;
 
+import cn.hutool.core.util.StrUtil;
+import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.common.core.result.Result;
 import com.micro.platform.common.log.annotation.OperationLog;
 import com.micro.platform.common.log.annotation.OperationType;
@@ -12,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -82,5 +85,83 @@ public class SysProfileController {
         } catch (Exception e) {
             return Result.error("上传失败：" + e.getMessage());
         }
+    }
+
+    @Operation(summary = "修改手机号")
+    @OperationLog(module = "个人中心", type = OperationType.UPDATE, description = "修改手机号")
+    @PutMapping("/profile/phone")
+    public Result<Void> updatePhone(@RequestBody Map<String, String> params) {
+        Long userId = SecurityUtil.getUserId();
+        String phone = params.get("phone");
+        String code = params.get("code");
+
+        if (StrUtil.isBlank(phone)) {
+            return Result.error("手机号不能为空");
+        }
+
+        // TODO: 验证短信验证码
+        // if (!validateSmsCode(userId, phone, code)) {
+        //     return Result.error("验证码错误");
+        // }
+
+        SysUser user = new SysUser();
+        user.setUserId(userId);
+        user.setPhone(phone);
+        sysUserService.updateById(user);
+        return Result.success();
+    }
+
+    @Operation(summary = "修改邮箱")
+    @OperationLog(module = "个人中心", type = OperationType.UPDATE, description = "修改邮箱")
+    @PutMapping("/profile/email")
+    public Result<Void> updateEmail(@RequestBody Map<String, String> params) {
+        Long userId = SecurityUtil.getUserId();
+        String email = params.get("email");
+        String code = params.get("code");
+
+        if (StrUtil.isBlank(email)) {
+            return Result.error("邮箱不能为空");
+        }
+
+        // 验证邮箱格式
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            return Result.error("邮箱格式不正确");
+        }
+
+        // TODO: 验证邮箱验证码
+        // if (!validateEmailCode(userId, email, code)) {
+        //     return Result.error("验证码错误");
+        // }
+
+        SysUser user = new SysUser();
+        user.setUserId(userId);
+        user.setEmail(email);
+        sysUserService.updateById(user);
+        return Result.success();
+    }
+
+    @Operation(summary = "发送手机验证码")
+    @PostMapping("/sms/code")
+    public Result<Void> sendSmsCode(@RequestBody Map<String, String> params) {
+        String phone = params.get("phone");
+        String type = params.get("type");
+        if (type == null || type.isEmpty()) {
+            type = "change_phone";
+        }
+
+        if (StrUtil.isBlank(phone)) {
+            return Result.error("手机号不能为空");
+        }
+
+        // 生成 6 位验证码
+        String code = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
+
+        // TODO: 存储验证码到 Redis，5 分钟过期
+        // redisUtil.set("sms:" + type + ":" + phone, code, 300, TimeUnit.SECONDS);
+
+        // TODO: 调用短信服务发送验证码
+        // smsService.send(phone, code);
+
+        return Result.success();
     }
 }
