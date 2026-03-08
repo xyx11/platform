@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 操作日志控制器
@@ -78,5 +79,12 @@ public class SysLogController {
     @GetMapping("/export")
     public void export(HttpServletResponse response, SysOperationLog log) {
         sysOperationLogService.exportOperationLog(response, log);
+    }
+
+    @Operation(summary = "获取操作日志统计信息")
+    @PreAuthorize("hasAuthority('system:log:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats() {
+        return Result.success(sysOperationLogService.getOperationLogStats());
     }
 }
