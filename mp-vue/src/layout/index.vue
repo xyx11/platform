@@ -1,64 +1,50 @@
 <template>
-  <div class="layout-container">
-    <!-- 侧边栏 -->
-    <el-aside :width="sidebarWidth" class="sidebar">
-      <div class="logo">
-        <div class="logo-icon">
-          <el-icon :size="22"><Platform /></el-icon>
-        </div>
-        <span v-show="!isCollapse" class="logo-text">Micro Platform</span>
-      </div>
-
-      <el-menu
-        :default-active="activeMenu"
-        :collapse="isCollapse"
-        :collapse-transition="false"
-        :unique-opened="true"
-        background-color="#fff"
-        text-color="#333"
-        active-text-color="#1e80ff"
-        @select="handleMenuSelect"
-      >
-        <template v-for="route in menuRoutes" :key="route.path">
-          <el-sub-menu v-if="route.children && route.children.length > 1" :index="route.path">
-            <template #title>
-              <el-icon class="menu-icon"><component :is="route.meta.icon" /></el-icon>
-              <span>{{ route.meta.title }}</span>
-            </template>
-            <el-menu-item
-              v-for="child in route.children"
-              :key="child.path"
-              :index="child.path"
-            >
-              <el-icon class="menu-icon"><component :is="child.meta.icon" /></el-icon>
-              <span>{{ child.meta.title }}</span>
-            </el-menu-item>
-          </el-sub-menu>
-          <el-menu-item v-else :index="getChildPath(route)">
-            <el-icon class="menu-icon"><component :is="getIcon(route)" /></el-icon>
-            <span>{{ getTitle(route) }}</span>
-          </el-menu-item>
-        </template>
-      </el-menu>
-    </el-aside>
-
-    <!-- 主内容区 -->
-    <el-container class="main-container">
-      <!-- 顶部导航 -->
-      <el-header class="header">
-        <div class="header-left">
-          <div class="collapse-btn" @click="toggleCollapse">
-            <el-icon :size="18">
-              <component :is="isCollapse ? 'Expand' : 'Fold'" />
-            </el-icon>
+  <div class="layout-container" :class="'layout-' + layoutMode">
+    <!-- 横向顶部菜单 -->
+    <template v-if="layoutMode === 'horizontal'">
+      <div class="top-nav">
+        <div class="top-nav-left">
+          <div class="logo">
+            <div class="logo-icon">
+              <el-icon :size="24"><Platform /></el-icon>
+            </div>
+            <span class="logo-text">Micro Platform</span>
           </div>
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item v-if="currentRoute">{{ currentRoute.meta.title }}</el-breadcrumb-item>
-          </el-breadcrumb>
+          <el-menu
+            :default-active="activeMenu"
+            mode="horizontal"
+            :unique-opened="true"
+            background-color="#fff"
+            text-color="#333"
+            active-text-color="#1e80ff"
+            @select="handleMenuSelect"
+          >
+            <template v-for="route in menuRoutes" :key="route.path">
+              <el-sub-menu v-if="route.children && route.children.length > 1" :index="route.path">
+                <template #title>
+                  <el-icon class="menu-icon"><component :is="route.meta.icon" /></el-icon>
+                  <span>{{ route.meta.title }}</span>
+                </template>
+                <el-menu-item
+                  v-for="child in route.children"
+                  :key="child.path"
+                  :index="child.path"
+                >
+                  <span>{{ child.meta.title }}</span>
+                </el-menu-item>
+              </el-sub-menu>
+              <el-menu-item v-else :index="getChildPath(route)">
+                <el-icon class="menu-icon"><component :is="getIcon(route)" /></el-icon>
+                <span>{{ getTitle(route) }}</span>
+              </el-menu-item>
+            </template>
+          </el-menu>
         </div>
-        <div class="header-right">
+        <div class="top-nav-right">
           <div class="header-actions">
+            <div class="action-btn" @click="toggleLayoutMode" title="切换到侧边栏模式">
+              <el-icon :size="18"><Menu /></el-icon>
+            </div>
             <div class="action-btn" @click="toggleTheme" :title="isDark ? '切换浅色模式' : '切换深色模式'">
               <el-icon :size="18"><component :is="isDark ? 'Sunny' : 'Moon'" /></el-icon>
             </div>
@@ -88,109 +74,254 @@
             </template>
           </el-dropdown>
         </div>
-      </el-header>
+      </div>
 
-      <!-- 标签页 -->
-      <div class="tabs-container">
-        <div class="tabs-wrapper">
-          <el-tabs
-            ref="tabsRef"
-            v-model="activeTab"
-            type="card"
-            closable
-            @tab-click="handleTabClick"
-            @tab-remove="handleTabClose"
-            @edit="handleTabsEdit"
-          >
-            <el-tab-pane
-              v-for="item in visitedViews"
-              :key="item.path"
-              
-              :name="item.path"
+      <el-container class="main-container">
+        <div class="tabs-container">
+          <div class="tabs-wrapper">
+            <el-tabs
+              ref="tabsRef"
+              v-model="activeTab"
+              type="card"
+              closable
+              @tab-click="handleTabClick"
+              @tab-remove="handleTabClose"
+              @edit="handleTabsEdit"
             >
-              <template #label>
-                <span @contextmenu.prevent="handleContextMenu($event, item.path)">{{ item.title }}</span>
+              <el-tab-pane
+                v-for="item in visitedViews"
+                :key="item.path"
+                :name="item.path"
+              >
+                <template #label>
+                  <span @contextmenu.prevent="handleContextMenu($event, item.path)">{{ item.title }}</span>
+                </template>
+              </el-tab-pane>
+            </el-tabs>
+          </div>
+          <div class="tabs-extra">
+            <el-dropdown :hide-on-click="false">
+              <div class="extra-btn">
+                <el-icon :size="16"><MoreFilled /></el-icon>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="refreshCurrent">
+                    <el-icon><Refresh /></el-icon> 刷新
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="closeCurrent">
+                    <el-icon><Close /></el-icon> 关闭
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="closeOtherTabs">
+                    <el-icon><FolderDelete /></el-icon> 关闭其他
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="closeAllTabs">
+                    <el-icon><Delete /></el-icon> 关闭全部
+                  </el-dropdown-item>
+                </el-dropdown-menu>
               </template>
-            </el-tab-pane>
-          </el-tabs>
+            </el-dropdown>
+          </div>
         </div>
-        <div class="tabs-extra">
-          <el-dropdown :hide-on-click="false">
-            <div class="extra-btn">
-              <el-icon :size="16"><MoreFilled /></el-icon>
-            </div>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="refreshCurrent">
-                  <el-icon><Refresh /></el-icon> 刷新
-                </el-dropdown-item>
-                <el-dropdown-item @click="closeCurrent">
-                  <el-icon><Close /></el-icon> 关闭
-                </el-dropdown-item>
-                <el-dropdown-item @click="closeOtherTabs">
-                  <el-icon><FolderDelete /></el-icon> 关闭其他
-                </el-dropdown-item>
-                <el-dropdown-item @click="closeAllTabs">
-                  <el-icon><Delete /></el-icon> 关闭全部
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </div>
-      </div>
+        <el-main class="main-content">
+          <router-view v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+              <keep-alive>
+                <component :is="Component" :key="route.fullPath" v-if="isRouterAlive" />
+              </keep-alive>
+            </transition>
+          </router-view>
+        </el-main>
+      </el-container>
+    </template>
 
-      <!-- 右键上下文菜单 -->
-      <div
-        v-if="contextMenuVisible"
-        class="context-menu"
-        :style="{ left: contextMenuLeft + 'px', top: contextMenuTop + 'px' }"
-      >
-        <el-menu class="context-menu-list">
-          <el-menu-item @click="executeMenuCommand('refresh')">
-            <el-icon><Refresh /></el-icon> <span>刷新</span>
-          </el-menu-item>
-          <el-menu-item @click="executeMenuCommand('close')">
-            <el-icon><Close /></el-icon> <span>关闭</span>
-          </el-menu-item>
-          <el-menu-item @click="executeMenuCommand('closeOther')">
-            <el-icon><FolderDelete /></el-icon> <span>关闭其他</span>
-          </el-menu-item>
-          <el-menu-item @click="executeMenuCommand('closeLeft')">
-            <el-icon><DArrowLeft /></el-icon> <span>关闭左侧</span>
-          </el-menu-item>
-          <el-menu-item @click="executeMenuCommand('closeRight')">
-            <el-icon><DArrowRight /></el-icon> <span>关闭右侧</span>
-          </el-menu-item>
-          <el-divider style="margin: 4px 0;" />
-          <el-menu-item @click="executeMenuCommand('closeAll')">
-            <el-icon><Delete /></el-icon> <span>关闭全部</span>
-          </el-menu-item>
+    <!-- 侧边栏菜单模式 -->
+    <template v-else>
+      <el-aside :width="sidebarWidth" class="sidebar">
+        <div class="logo">
+          <div class="logo-icon">
+            <el-icon :size="22"><Platform /></el-icon>
+          </div>
+          <span v-show="!isCollapse" class="logo-text">Micro Platform</span>
+        </div>
+        <el-menu
+          :default-active="activeMenu"
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          :unique-opened="true"
+          background-color="#fff"
+          text-color="#333"
+          active-text-color="#1e80ff"
+          @select="handleMenuSelect"
+        >
+          <template v-for="route in menuRoutes" :key="route.path">
+            <el-sub-menu v-if="route.children && route.children.length > 1" :index="route.path">
+              <template #title>
+                <el-icon class="menu-icon"><component :is="route.meta.icon" /></el-icon>
+                <span>{{ route.meta.title }}</span>
+              </template>
+              <el-menu-item
+                v-for="child in route.children"
+                :key="child.path"
+                :index="child.path"
+              >
+                <el-icon class="menu-icon"><component :is="child.meta.icon" /></el-icon>
+                <span>{{ child.meta.title }}</span>
+              </el-menu-item>
+            </el-sub-menu>
+            <el-menu-item v-else :index="getChildPath(route)">
+              <el-icon class="menu-icon"><component :is="getIcon(route)" /></el-icon>
+              <span>{{ getTitle(route) }}</span>
+            </el-menu-item>
+          </template>
         </el-menu>
-      </div>
-      <div v-if="contextMenuVisible" class="context-menu-overlay" @click="closeContextMenu"></div>
+      </el-aside>
+      <el-container class="main-container">
+        <el-header class="header">
+          <div class="header-left">
+            <div class="collapse-btn" @click="toggleCollapse">
+              <el-icon :size="18">
+                <component :is="isCollapse ? 'Expand' : 'Fold'" />
+              </el-icon>
+            </div>
+            <div class="action-btn" @click="toggleLayoutMode" title="切换到顶部菜单模式">
+              <el-icon :size="18"><Menu /></el-icon>
+            </div>
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+              <el-breadcrumb-item v-if="currentRoute">{{ currentRoute.meta.title }}</el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
+          <div class="header-right">
+            <div class="header-actions">
+              <div class="action-btn" @click="toggleTheme" :title="isDark ? '切换浅色模式' : '切换深色模式'">
+                <el-icon :size="18"><component :is="isDark ? 'Sunny' : 'Moon'" /></el-icon>
+              </div>
+              <div class="action-btn" @click="refreshPage" title="刷新">
+                <el-icon :size="18"><Refresh /></el-icon>
+              </div>
+              <div class="action-btn" @click="toggleFullScreen" :title="isFullScreen ? '退出全屏' : '全屏'">
+                <el-icon :size="18"><FullScreen /></el-icon>
+              </div>
+              <div class="action-btn">
+                <NoticeIcon />
+              </div>
+            </div>
+            <el-divider direction="vertical" />
+            <el-dropdown @command="handleCommand">
+              <span class="user-info">
+                <el-avatar :size="28" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+                <span class="username">{{ userInfo.nickname || userInfo.username || '管理员' }}</span>
+                <el-icon :size="14"><ArrowDown /></el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+                  <el-dropdown-item command="setting">系统设置</el-dropdown-item>
+                  <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </el-header>
+        <div class="tabs-container">
+          <div class="tabs-wrapper">
+            <el-tabs
+              ref="tabsRef"
+              v-model="activeTab"
+              type="card"
+              closable
+              @tab-click="handleTabClick"
+              @tab-remove="handleTabClose"
+              @edit="handleTabsEdit"
+            >
+              <el-tab-pane
+                v-for="item in visitedViews"
+                :key="item.path"
+                :name="item.path"
+              >
+                <template #label>
+                  <span @contextmenu.prevent="handleContextMenu($event, item.path)">{{ item.title }}</span>
+                </template>
+              </el-tab-pane>
+            </el-tabs>
+          </div>
+          <div class="tabs-extra">
+            <el-dropdown :hide-on-click="false">
+              <div class="extra-btn">
+                <el-icon :size="16"><MoreFilled /></el-icon>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="refreshCurrent">
+                    <el-icon><Refresh /></el-icon> 刷新
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="closeCurrent">
+                    <el-icon><Close /></el-icon> 关闭
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="closeOtherTabs">
+                    <el-icon><FolderDelete /></el-icon> 关闭其他
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="closeAllTabs">
+                    <el-icon><Delete /></el-icon> 关闭全部
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </div>
+        <el-main class="main-content">
+          <router-view v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+              <keep-alive>
+                <component :is="Component" :key="route.fullPath" v-if="isRouterAlive" />
+              </keep-alive>
+            </transition>
+          </router-view>
+        </el-main>
+      </el-container>
+    </template>
 
-      <!-- 内容区 -->
-      <el-main class="main-content">
-        <router-view v-slot="{ Component }">
-          <transition name="fade" mode="out-in">
-            <keep-alive>
-              <component :is="Component" :key="route.fullPath" v-if="isRouterAlive" />
-            </keep-alive>
-          </transition>
-        </router-view>
-      </el-main>
-    </el-container>
+    <!-- 右键上下文菜单 -->
+    <div
+      v-if="contextMenuVisible"
+      class="context-menu"
+      :style="{ left: contextMenuLeft + 'px', top: contextMenuTop + 'px' }"
+    >
+      <el-menu class="context-menu-list">
+        <el-menu-item @click="executeMenuCommand('refresh')">
+          <el-icon><Refresh /></el-icon> <span>刷新</span>
+        </el-menu-item>
+        <el-menu-item @click="executeMenuCommand('close')">
+          <el-icon><Close /></el-icon> <span>关闭</span>
+        </el-menu-item>
+        <el-menu-item @click="executeMenuCommand('closeOther')">
+          <el-icon><FolderDelete /></el-icon> <span>关闭其他</span>
+        </el-menu-item>
+        <el-menu-item @click="executeMenuCommand('closeLeft')">
+          <el-icon><DArrowLeft /></el-icon> <span>关闭左侧</span>
+        </el-menu-item>
+        <el-menu-item @click="executeMenuCommand('closeRight')">
+          <el-icon><DArrowRight /></el-icon> <span>关闭右侧</span>
+        </el-menu-item>
+        <el-divider style="margin: 4px 0;" />
+        <el-menu-item @click="executeMenuCommand('closeAll')">
+          <el-icon><Delete /></el-icon> <span>关闭全部</span>
+        </el-menu-item>
+      </el-menu>
+    </div>
+    <div v-if="contextMenuVisible" class="context-menu-overlay" @click="closeContextMenu"></div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, watch, provide } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import NoticeIcon from '@/components/NoticeIcon.vue'
 import {
   Platform, Expand, Fold, Moon, Sunny, Refresh, Close, FolderDelete, Delete,
-  MoreFilled, ArrowDown, DArrowLeft, DArrowRight, FullScreen
+  MoreFilled, ArrowDown, DArrowLeft, DArrowRight, FullScreen, Menu
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
@@ -198,23 +329,25 @@ const router = useRouter()
 const tabsRef = ref(null)
 const isRouterAlive = ref(true)
 
-const isCollapse = ref(false)
 const isDark = ref(false)
 const isFullScreen = ref(false)
 const activeTab = ref(route.path || '/dashboard')
 const visitedViews = ref([])
 const userInfo = ref({})
 
-// 右键菜单相关
-const contextMenuVisible = ref(false)
-const contextMenuDropdownVisible = ref(false)
-const contextMenuLeft = ref(0)
-const contextMenuTop = ref(0)
-const currentContextMenuPath = ref('')
+// 布局模式：horizontal = 横向菜单，vertical = 侧边栏菜单
+const layoutMode = ref(localStorage.getItem('layoutMode') || 'horizontal')
+const isCollapse = ref(false)
 
 const sidebarWidth = computed(() => {
   return isCollapse.value ? '64px' : '220px'
 })
+
+// 右键菜单相关
+const contextMenuVisible = ref(false)
+const contextMenuLeft = ref(0)
+const contextMenuTop = ref(0)
+const currentContextMenuPath = ref('')
 
 const activeMenu = computed(() => route.path)
 const currentRoute = computed(() => route.matched[route.matched.length - 1])
@@ -384,18 +517,13 @@ const closeAllTabs = () => {
   ElMessage.success('已关闭全部标签页')
 }
 
-const toggleCollapse = () => { isCollapse.value = !isCollapse.value }
-
-// 全屏切换
-const toggleFullScreen = () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen()
-    isFullScreen.value = true
-  } else {
-    document.exitFullscreen()
-    isFullScreen.value = false
-  }
+// 切换布局模式
+const toggleLayoutMode = () => {
+  layoutMode.value = layoutMode.value === 'horizontal' ? 'vertical' : 'horizontal'
+  localStorage.setItem('layoutMode', layoutMode.value)
 }
+
+const toggleCollapse = () => { isCollapse.value = !isCollapse.value }
 
 // 右键菜单相关方法
 const handleContextMenu = (e, path) => {
@@ -403,23 +531,22 @@ const handleContextMenu = (e, path) => {
   e.stopPropagation()
   currentContextMenuPath.value = path
   contextMenuVisible.value = true
-  
-  // 计算菜单位置，确保不超出屏幕
+
   const menuWidth = 160
   const menuHeight = 220
   const screenWidth = window.innerWidth
   const screenHeight = window.innerHeight
-  
+
   let left = e.clientX
   let top = e.clientY
-  
+
   if (left + menuWidth > screenWidth) {
     left = screenWidth - menuWidth - 10
   }
   if (top + menuHeight > screenHeight) {
     top = screenHeight - menuHeight - 10
   }
-  
+
   contextMenuLeft.value = left
   contextMenuTop.value = top
 }
@@ -430,16 +557,14 @@ const closeContextMenu = () => {
 
 const executeMenuCommand = (command) => {
   const path = currentContextMenuPath.value
-  
+
   switch (command) {
     case 'refresh':
       if (path === activeTab.value) {
         refreshCurrent()
       } else {
         handleTabClick({ props: { name: path } })
-        nextTick(() => {
-          refreshCurrent()
-        })
+        nextTick(() => { refreshCurrent() })
       }
       break
     case 'close':
@@ -454,9 +579,7 @@ const executeMenuCommand = (command) => {
         closeOtherTabs()
       } else {
         handleTabClick({ props: { name: path } })
-        nextTick(() => {
-          closeOtherTabs()
-        })
+        nextTick(() => { closeOtherTabs() })
       }
       break
     case 'closeLeft':
@@ -475,43 +598,45 @@ const executeMenuCommand = (command) => {
 const closeLeftTabs = (targetPath) => {
   const targetIndex = visitedViews.value.findIndex(item => item.path === targetPath)
   if (targetIndex === -1) return
-
   const keepPaths = ['/dashboard']
   visitedViews.value.forEach((item, index) => {
     if (index >= targetIndex || item.path === '/dashboard') {
       keepPaths.push(item.path)
     }
   })
-
   visitedViews.value = visitedViews.value.filter(item => keepPaths.includes(item.path))
-
   if (!keepPaths.includes(activeTab.value)) {
     activeTab.value = targetPath
     router.push(activeTab.value)
   }
-
   ElMessage.success('已关闭左侧标签页')
 }
 
 const closeRightTabs = (targetPath) => {
   const targetIndex = visitedViews.value.findIndex(item => item.path === targetPath)
   if (targetIndex === -1) return
-
   const keepPaths = ['/dashboard']
   visitedViews.value.forEach((item, index) => {
     if (index <= targetIndex || item.path === '/dashboard') {
       keepPaths.push(item.path)
     }
   })
-
   visitedViews.value = visitedViews.value.filter(item => keepPaths.includes(item.path))
-
   if (!keepPaths.includes(activeTab.value)) {
     activeTab.value = targetPath
     router.push(activeTab.value)
   }
-
   ElMessage.success('已关闭右侧标签页')
+}
+
+const toggleFullScreen = () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen()
+    isFullScreen.value = true
+  } else {
+    document.exitFullscreen()
+    isFullScreen.value = false
+  }
 }
 
 const toggleTheme = () => {
@@ -576,8 +701,6 @@ onMounted(() => {
     isDark.value = true
     document.documentElement.classList.add('dark')
   }
-  
-  // 监听全屏状态变化
   document.addEventListener('fullscreenchange', () => {
     isFullScreen.value = !!document.fullscreenElement
   })
@@ -598,13 +721,176 @@ $sidebar-width: 220px;
 $sidebar-collapse-width: 64px;
 $header-height: 50px;
 $tabs-height: 42px;
+$top-nav-height: 60px;
 
 .layout-container {
   display: flex;
   height: 100vh;
   background: $bg-color-page;
+
+  &.layout-horizontal {
+    flex-direction: column;
+  }
+
+  &.layout-vertical {
+    flex-direction: row;
+  }
 }
 
+// 顶部导航栏（横向菜单模式）
+.top-nav {
+  height: $top-nav-height;
+  background: $bg-color-white;
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  .top-nav-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    overflow: hidden;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      padding-right: 24px;
+      flex-shrink: 0;
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, $primary-color 0%, #3d8bfd 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        margin-right: 10px;
+      }
+
+      .logo-text {
+        font-size: 16px;
+        font-weight: 600;
+        color: $text-primary;
+        white-space: nowrap;
+      }
+    }
+
+    :deep(.el-menu) {
+      display: flex;
+      flex: 1;
+      border: none;
+      background: transparent;
+      overflow: hidden;
+      overflow-x: auto;
+
+      .el-menu-item {
+        height: $top-nav-height;
+        line-height: $top-nav-height;
+        border: none;
+        font-size: 14px;
+        color: $text-regular;
+
+        &:hover {
+          background: $bg-color-gray;
+          color: $primary-color;
+        }
+
+        &.is-active {
+          background: $primary-light;
+          color: $primary-color;
+          font-weight: 500;
+        }
+
+        .menu-icon {
+          margin-right: 6px;
+          font-size: 16px;
+        }
+      }
+
+      .el-sub-menu {
+        .el-sub-menu__title {
+          height: $top-nav-height;
+          line-height: $top-nav-height;
+          border: none;
+          font-size: 14px;
+          color: $text-regular;
+
+          &:hover {
+            background: $bg-color-gray;
+          }
+
+          .menu-icon {
+            margin-right: 6px;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  .top-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      .action-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: $text-secondary;
+
+        &:hover {
+          background: $bg-color-gray;
+          color: $primary-color;
+        }
+      }
+    }
+
+    :deep(.el-divider) {
+      height: 20px;
+      margin: 0 8px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: $bg-color-gray;
+      }
+
+      .username {
+        font-size: 13px;
+        font-weight: 500;
+        color: $text-primary;
+      }
+    }
+  }
+}
+
+// 侧边栏样式
 .sidebar {
   width: $sidebar-width;
   background: $bg-color-white;
@@ -769,6 +1055,23 @@ $tabs-height: 42px;
       }
     }
 
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: $text-secondary;
+
+      &:hover {
+        background: $bg-color-gray;
+        color: $primary-color;
+      }
+    }
+
     :deep(.el-breadcrumb) {
       .el-breadcrumb__item {
         .el-breadcrumb__inner {
@@ -847,7 +1150,6 @@ $tabs-height: 42px;
   align-items: center;
   padding: 4px 12px 0;
   flex-shrink: 0;
-  position: relative;
 
   .tabs-wrapper {
     flex: 1;
@@ -946,7 +1248,7 @@ $tabs-height: 42px;
 .context-menu-list {
   background: transparent;
   border: none;
-  
+
   .el-menu-item {
     height: 36px;
     line-height: 36px;
@@ -954,17 +1256,17 @@ $tabs-height: 42px;
     color: $text-regular;
     padding: 0 16px;
     margin: 0;
-    
+
     &:hover {
       background: $bg-color-gray;
       color: $primary-color;
     }
-    
+
     .el-icon {
       margin-right: 8px;
       font-size: 14px;
     }
-    
+
     span {
       white-space: nowrap;
     }
@@ -1018,6 +1320,66 @@ $tabs-height: 42px;
 
 /* 暗黑模式 */
 html.dark {
+  .top-nav {
+    background: #1d1e1f;
+    border-color: #434343;
+
+    .logo .logo-text {
+      color: #e2e8f0;
+    }
+
+    :deep(.el-menu) {
+      .el-menu-item {
+        color: #94a3b8;
+
+        &:hover {
+          background: #2d2d2d;
+          color: #667eea;
+        }
+
+        &.is-active {
+          background: rgba(102, 126, 234, 0.15);
+          color: #667eea;
+        }
+      }
+
+      .el-sub-menu__title {
+        color: #94a3b8;
+
+        &:hover {
+          background: #2d2d2d;
+        }
+      }
+    }
+
+    .top-nav-right {
+      .header-actions {
+        .action-btn {
+          color: #94a3b8;
+
+          &:hover {
+            background: #2d2d2d;
+            color: #fff;
+          }
+        }
+      }
+
+      :deep(.el-divider) {
+        border-color: #434343;
+      }
+
+      .user-info {
+        .username {
+          color: #e2e8f0;
+        }
+
+        &:hover {
+          background: #2d2d2d;
+        }
+      }
+    }
+  }
+
   .sidebar {
     background: #1d1e1f;
     box-shadow: 1px 0 0 rgba(255, 255, 255, 0.06);
@@ -1060,7 +1422,7 @@ html.dark {
     border-color: #434343;
 
     .header-left {
-      .collapse-btn {
+      .collapse-btn, .action-btn {
         color: #94a3b8;
 
         &:hover {
@@ -1148,15 +1510,6 @@ html.dark {
     }
   }
 
-  .main-content {
-    background: #141414;
-  }
-
-  .el-card {
-    background-color: #1d1e1f;
-    border-color: #434343;
-  }
-
   .context-menu {
     background: #1d1e1f;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
@@ -1171,6 +1524,15 @@ html.dark {
         }
       }
     }
+  }
+
+  .main-content {
+    background: #141414;
+  }
+
+  .el-card {
+    background-color: #1d1e1f;
+    border-color: #434343;
   }
 }
 </style>
