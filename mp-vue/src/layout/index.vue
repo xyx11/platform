@@ -1,25 +1,28 @@
 <template>
   <div class="layout-container">
     <!-- 侧边栏 -->
-    <el-aside :width="isCollapse ? '64px' : '220px'" class="sidebar">
+    <el-aside :width="sidebarWidth" class="sidebar">
       <div class="logo">
-        <span v-show="!isCollapse">Micro Platform</span>
-        <span v-show="isCollapse">MP</span>
+        <div class="logo-icon">
+          <el-icon :size="22"><Platform /></el-icon>
+        </div>
+        <span v-show="!isCollapse" class="logo-text">Micro Platform</span>
       </div>
+
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
+        :collapse-transition="false"
         :unique-opened="true"
-        background-color="#304156"
-        text-color="#bfcbd9"
-        active-text-color="#409EFF"
+        background-color="#fff"
+        text-color="#333"
+        active-text-color="#1e80ff"
         @select="handleMenuSelect"
       >
         <template v-for="route in menuRoutes" :key="route.path">
-          <!-- 有多个子路由，显示为子菜单 -->
           <el-sub-menu v-if="route.children && route.children.length > 1" :index="route.path">
             <template #title>
-              <el-icon><component :is="route.meta.icon" /></el-icon>
+              <el-icon class="menu-icon"><component :is="route.meta.icon" /></el-icon>
               <span>{{ route.meta.title }}</span>
             </template>
             <el-menu-item
@@ -27,13 +30,12 @@
               :key="child.path"
               :index="child.path"
             >
-              <el-icon><component :is="child.meta.icon" /></el-icon>
+              <el-icon class="menu-icon"><component :is="child.meta.icon" /></el-icon>
               <span>{{ child.meta.title }}</span>
             </el-menu-item>
           </el-sub-menu>
-          <!-- 只有一个子路由或没有子路由，显示为单项菜单 -->
           <el-menu-item v-else :index="getChildPath(route)">
-            <el-icon><component :is="getIcon(route)" /></el-icon>
+            <el-icon class="menu-icon"><component :is="getIcon(route)" /></el-icon>
             <span>{{ getTitle(route) }}</span>
           </el-menu-item>
         </template>
@@ -45,9 +47,11 @@
       <!-- 顶部导航 -->
       <el-header class="header">
         <div class="header-left">
-          <el-icon class="collapse-btn" @click="toggleCollapse">
-            <component :is="isCollapse ? 'Expand' : 'Fold'" />
-          </el-icon>
+          <div class="collapse-btn" @click="toggleCollapse">
+            <el-icon :size="18">
+              <component :is="isCollapse ? 'Expand' : 'Fold'" />
+            </el-icon>
+          </div>
           <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item v-if="currentRoute">{{ currentRoute.meta.title }}</el-breadcrumb-item>
@@ -55,18 +59,22 @@
         </div>
         <div class="header-right">
           <div class="header-actions">
-            <el-button link @click="toggleTheme" :title="isDark ? '切换浅色模式' : '切换深色模式'">
-              <el-icon :size="20"><component :is="isDark ? 'Sunny' : 'Moon'" /></el-icon>
-            </el-button>
-            <el-button link @click="refreshPage" title="刷新">
-              <el-icon :size="20"><Refresh /></el-icon>
-            </el-button>
-            <NoticeIcon />
+            <div class="action-btn" @click="toggleTheme" :title="isDark ? '切换浅色模式' : '切换深色模式'">
+              <el-icon :size="18"><component :is="isDark ? 'Sunny' : 'Moon'" /></el-icon>
+            </div>
+            <div class="action-btn" @click="refreshPage" title="刷新">
+              <el-icon :size="18"><Refresh /></el-icon>
+            </div>
+            <div class="action-btn">
+              <NoticeIcon />
+            </div>
           </div>
+          <el-divider direction="vertical" />
           <el-dropdown @command="handleCommand">
             <span class="user-info">
-              <el-avatar :size="32" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+              <el-avatar :size="28" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
               <span class="username">{{ userInfo.nickname || userInfo.username || '管理员' }}</span>
+              <el-icon :size="14"><ArrowDown /></el-icon>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -80,53 +88,47 @@
       </el-header>
 
       <!-- 标签页 -->
-      <div class="tabs-container" @contextmenu.prevent="handleContainerContextmenu">
-        <el-tabs
-          ref="tabsRef"
-          v-model="activeTab"
-          type="card"
-          closable
-          @tab-click="handleTabClick"
-          @tab-remove="handleTabClose"
-          @edit="handleTabsEdit"
-        >
-          <el-tab-pane
-            v-for="item in visitedViews"
-            :key="item.path"
-            :label="item.title"
-            :name="item.path"
+      <div class="tabs-container">
+        <div class="tabs-wrapper">
+          <el-tabs
+            ref="tabsRef"
+            v-model="activeTab"
+            type="card"
+            closable
+            @tab-click="handleTabClick"
+            @tab-remove="handleTabClose"
+            @edit="handleTabsEdit"
           >
-            <template #label>
-              <span
-                :data-path="item.path"
-                @contextmenu.prevent="handleContextMenu($event, item)"
-              >
-                {{ item.title }}
-              </span>
+            <el-tab-pane
+              v-for="item in visitedViews"
+              :key="item.path"
+              :label="item.title"
+              :name="item.path"
+            />
+          </el-tabs>
+        </div>
+        <div class="tabs-extra">
+          <el-dropdown :hide-on-click="false">
+            <div class="extra-btn">
+              <el-icon :size="16"><MoreFilled /></el-icon>
+            </div>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="refreshCurrent">
+                  <el-icon><Refresh /></el-icon> 刷新
+                </el-dropdown-item>
+                <el-dropdown-item @click="closeCurrent">
+                  <el-icon><Close /></el-icon> 关闭
+                </el-dropdown-item>
+                <el-dropdown-item @click="closeOtherTabs">
+                  <el-icon><FolderDelete /></el-icon> 关闭其他
+                </el-dropdown-item>
+                <el-dropdown-item @click="closeAllTabs">
+                  <el-icon><Delete /></el-icon> 关闭全部
+                </el-dropdown-item>
+              </el-dropdown-menu>
             </template>
-          </el-tab-pane>
-        </el-tabs>
-
-        <!-- 右键菜单 -->
-        <div
-          v-if="contextMenuVisible"
-          class="context-menu"
-          :style="{ left: contextMenuLeft + 'px', top: contextMenuTop + 'px' }"
-        >
-          <el-menu @select="handleContextMenuSelect">
-            <el-menu-item index="refresh">
-              <el-icon><Refresh /></el-icon> 刷新
-            </el-menu-item>
-            <el-menu-item index="close">
-              <el-icon><Close /></el-icon> 关闭
-            </el-menu-item>
-            <el-menu-item index="closeOther">
-              <el-icon><FolderDelete /></el-icon> 关闭其他
-            </el-menu-item>
-            <el-menu-item index="closeAll">
-              <el-icon><Delete /></el-icon> 关闭全部
-            </el-menu-item>
-          </el-menu>
+          </el-dropdown>
         </div>
       </div>
 
@@ -135,7 +137,7 @@
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <keep-alive>
-              <component :is="Component" :key="route.fullPath" />
+              <component :is="Component" :key="route.fullPath" v-if="isRouterAlive" />
             </keep-alive>
           </transition>
         </router-view>
@@ -145,46 +147,19 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, nextTick, watch, provide } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import NoticeIcon from '@/components/NoticeIcon.vue'
-// 导入 Element Plus 图标
 import {
-  HomeFilled,
-  Setting,
-  User,
-  Avatar,
-  Menu,
-  OfficeBuilding,
-  Collection,
-  Postcard,
-  Tools,
-  Document,
-  Timer,
-  List,
-  Grid,
-  Monitor,
-  Folder,
-  Platform,
-  DataLine,
-  EditPen,
-  Expand,
-  Fold,
-  Moon,
-  Sunny,
-  Refresh,
-  Bell,
-  Terminal,
-  Clock,
-  Close,
-  FolderDelete,
-  Delete
+  Platform, Expand, Fold, Moon, Sunny, Refresh, Close, FolderDelete, Delete,
+  MoreFilled, ArrowDown
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
 const tabsRef = ref(null)
+const isRouterAlive = ref(true)
 
 const isCollapse = ref(false)
 const isDark = ref(false)
@@ -192,19 +167,15 @@ const activeTab = ref(route.path || '/dashboard')
 const visitedViews = ref([])
 const userInfo = ref({})
 
-// 右键菜单相关
-const contextMenuVisible = ref(false)
-const contextMenuLeft = ref(0)
-const contextMenuTop = ref(0)
-const selectedTab = ref(null)
+const sidebarWidth = computed(() => {
+  return isCollapse.value ? '64px' : '220px'
+})
 
-// 菜单路由
+const activeMenu = computed(() => route.path)
+const currentRoute = computed(() => route.matched[route.matched.length - 1])
+
 const menuRoutes = [
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    meta: { title: '首页', icon: 'HomeFilled' }
-  },
+  { path: '/dashboard', name: 'Dashboard', meta: { title: '首页', icon: 'HomeFilled' } },
   {
     path: '/system',
     redirect: '/system/user',
@@ -220,7 +191,7 @@ const menuRoutes = [
       { path: '/system/log', name: 'SysLog', meta: { title: '操作日志', icon: 'Document' } },
       { path: '/system/loginlog', name: 'SysLoginLog', meta: { title: '登录日志', icon: 'Document' } },
       { path: '/system/notice', name: 'SysNotice', meta: { title: '通知公告', icon: 'Bell' } },
-      { path: '/system/command', name: 'SysCommand', meta: { title: '命令执行', icon: 'Terminal' } },
+      { path: '/system/command', name: 'SysCommand', meta: { title: '命令执行', icon: 'Tools' } },
       { path: '/system/todo', name: 'SysTodo', meta: { title: '待办事项', icon: 'Clock' } }
     ]
   },
@@ -263,19 +234,8 @@ const menuRoutes = [
   }
 ]
 
-const activeMenu = computed(() => {
-  return route.path
-})
-
-const currentRoute = computed(() => {
-  return route.matched[route.matched.length - 1]
-})
-
-// 获取子路由路径
 const getChildPath = (route) => {
-  if (route.redirect) {
-    return route.redirect
-  }
+  if (route.redirect) return route.redirect
   if (route.children && route.children.length === 1) {
     const childPath = route.children[0].path
     return childPath.startsWith('/') ? childPath : `${route.path}/${childPath}`
@@ -283,37 +243,28 @@ const getChildPath = (route) => {
   return route.path
 }
 
-// 获取标题
 const getTitle = (route) => {
-  if (route.meta && route.meta.title) {
-    return route.meta.title
-  }
+  if (route.meta && route.meta.title) return route.meta.title
   if (route.children && route.children.length === 1 && route.children[0].meta) {
     return route.children[0].meta.title
   }
   return ''
 }
 
-// 获取图标
 const getIcon = (route) => {
-  if (route.meta && route.meta.icon) {
-    return route.meta.icon
-  }
+  if (route.meta && route.meta.icon) return route.meta.icon
   if (route.children && route.children.length === 1 && route.children[0].meta) {
     return route.children[0].meta.icon
   }
   return ''
 }
 
-// 处理菜单点击
 const handleMenuSelect = (index) => {
   const targetRoute = menuRoutes.find(r => r.path === index)
   if (targetRoute && targetRoute.redirect) {
     router.push(targetRoute.redirect)
     return
   }
-
-  // 查找完整路由信息
   let foundRoute = null
   menuRoutes.forEach(r => {
     if (r.children) {
@@ -322,36 +273,25 @@ const handleMenuSelect = (index) => {
     }
     if (r.path === index) foundRoute = r
   })
-
   if (foundRoute) {
     addTab(foundRoute)
     router.push(index)
   }
 }
 
-// 添加标签页
 const addTab = (route) => {
   const exists = visitedViews.value.find(item => item.path === route.path)
   if (!exists) {
-    visitedViews.value.push({
-      path: route.path,
-      title: route.meta.title,
-      name: route.name
-    })
+    visitedViews.value.push({ path: route.path, title: route.meta.title, name: route.name })
   }
   activeTab.value = route.path
 }
 
-// 点击标签页
 const handleTabClick = (tab) => {
   const view = visitedViews.value.find(item => item.path === tab.props.name)
-  if (view) {
-    router.push(view.path)
-  }
-  closeContextMenu()
+  if (view) router.push(view.path)
 }
 
-// 关闭标签页
 const handleTabClose = (path) => {
   const index = visitedViews.value.findIndex(item => item.path === path)
   if (index !== -1) {
@@ -368,91 +308,30 @@ const handleTabClose = (path) => {
 }
 
 const handleTabsEdit = (target, action) => {
-  if (action === 'remove') {
-    handleTabClose(target)
-  }
-  closeContextMenu()
+  if (action === 'remove') handleTabClose(target)
 }
 
-// 右键菜单 - 容器
-const handleContainerContextmenu = (e) => {
-  e.preventDefault()
-  closeContextMenu()
-}
-
-// 右键菜单 - 标签页
-const handleContextMenu = (e, item) => {
-  e.preventDefault()
-  e.stopPropagation()
-  selectedTab.value = item
-  contextMenuVisible.value = true
-  contextMenuLeft.value = e.clientX
-  contextMenuTop.value = e.clientY
-
-  nextTick(() => {
-    document.addEventListener('click', closeContextMenu)
-  })
-}
-
-// 关闭右键菜单
-const closeContextMenu = () => {
-  contextMenuVisible.value = false
-  selectedTab.value = null
-  document.removeEventListener('click', closeContextMenu)
-}
-
-// 处理右键菜单选择
-const handleContextMenuSelect = (index) => {
-  switch (index) {
-    case 'refresh':
-      refreshTab()
-      break
-    case 'close':
-      closeSelectedTab()
-      break
-    case 'closeOther':
-      closeOtherTabs()
-      break
-    case 'closeAll':
-      closeAllTabs()
-      break
-  }
-  closeContextMenu()
-}
-
-// 刷新标签页
-const refreshTab = () => {
-  if (selectedTab.value) {
-    const view = visitedViews.value.find(item => item.path === selectedTab.value.path)
-    if (view) {
-      ElMessage.success('刷新：' + view.title)
-      router.replace({ path: view.path + '?refresh=' + Date.now() })
-    }
+const refreshCurrent = () => {
+  const view = visitedViews.value.find(item => item.path === activeTab.value)
+  if (view) {
+    ElMessage.success('刷新：' + view.title)
+    isRouterAlive.value = false
+    nextTick(() => {
+      isRouterAlive.value = true
+    })
   }
 }
 
-// 关闭选中标签页
-const closeSelectedTab = () => {
-  if (selectedTab.value && selectedTab.value.path !== '/dashboard') {
-    handleTabClose(selectedTab.value.path)
-    ElMessage.success('已关闭：' + selectedTab.value.title)
-  } else if (selectedTab.value && selectedTab.value.path === '/dashboard') {
-    ElMessage.warning('首页不能关闭')
-  }
+const closeCurrent = () => {
+  handleTabClose(activeTab.value)
 }
 
-// 关闭其他标签页
 const closeOtherTabs = () => {
-  if (selectedTab.value) {
-    const keep = ['/dashboard', selectedTab.value.path]
-    visitedViews.value = visitedViews.value.filter(item => keep.includes(item.path))
-    activeTab.value = selectedTab.value.path
-    router.push(selectedTab.value.path)
-    ElMessage.success('已关闭其他标签页')
-  }
+  const keep = ['/dashboard', activeTab.value]
+  visitedViews.value = visitedViews.value.filter(item => keep.includes(item.path))
+  ElMessage.success('已关闭其他标签页')
 }
 
-// 关闭全部标签页
 const closeAllTabs = () => {
   visitedViews.value = visitedViews.value.filter(item => item.path === '/dashboard')
   activeTab.value = '/dashboard'
@@ -460,9 +339,7 @@ const closeAllTabs = () => {
   ElMessage.success('已关闭全部标签页')
 }
 
-const toggleCollapse = () => {
-  isCollapse.value = !isCollapse.value
-}
+const toggleCollapse = () => { isCollapse.value = !isCollapse.value }
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
@@ -470,9 +347,7 @@ const toggleTheme = () => {
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
 }
 
-const refreshPage = () => {
-  location.reload()
-}
+const refreshPage = () => { location.reload() }
 
 const handleCommand = (command) => {
   if (command === 'logout') {
@@ -493,19 +368,14 @@ const handleCommand = (command) => {
   }
 }
 
-// 获取用户信息
 const getUserInfo = () => {
   const info = localStorage.getItem('user_info')
   if (info) {
-    try {
-      userInfo.value = JSON.parse(info)
-    } catch (e) {
-      userInfo.value = {}
-    }
+    try { userInfo.value = JSON.parse(info) }
+    catch (e) { userInfo.value = {} }
   }
 }
 
-// 监听路由变化，自动添加标签页
 const addView = (routerView) => {
   if (!visitedViews.value.find(item => item.path === routerView.path)) {
     visitedViews.value.push({
@@ -517,23 +387,17 @@ const addView = (routerView) => {
   activeTab.value = routerView.path
 }
 
-// 监听路由变化
 watch(() => route.path, (newPath) => {
   if (newPath && !visitedViews.value.find(item => item.path === newPath)) {
     const currentRouteMatched = route.matched[route.matched.length - 1]
     if (currentRouteMatched && currentRouteMatched.meta) {
-      addView({
-        path: newPath,
-        meta: currentRouteMatched.meta,
-        name: currentRouteMatched.name
-      })
+      addView({ path: newPath, meta: currentRouteMatched.meta, name: currentRouteMatched.name })
     }
   }
 }, { immediate: true })
 
 onMounted(() => {
   getUserInfo()
-  // 检查保存的主题
   const savedTheme = localStorage.getItem('theme')
   if (savedTheme === 'dark') {
     isDark.value = true
@@ -543,29 +407,147 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+$primary-color: #1e80ff;
+$primary-light: rgba(30, 128, 255, 0.1);
+$text-primary: #333333;
+$text-regular: #666666;
+$text-secondary: #999999;
+$bg-color-page: #f5f6f7;
+$bg-color-white: #ffffff;
+$bg-color-gray: #fafafa;
+$border-color: #e3e4e6;
+$sidebar-width: 220px;
+$sidebar-collapse-width: 64px;
+$header-height: 50px;
+$tabs-height: 42px;
+
 .layout-container {
   display: flex;
   height: 100vh;
+  background: $bg-color-page;
 }
 
 .sidebar {
-  background-color: #304156;
-  transition: width 0.3s;
-  overflow-x: hidden;
-  flex-shrink: 0;
+  width: $sidebar-width;
+  background: $bg-color-white;
+  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.06);
+  transition: width 0.2s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   .logo {
-    height: 60px;
-    line-height: 60px;
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #2b3a4b;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px;
+    border-bottom: 1px solid $border-color;
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, $primary-color 0%, #3d8bfd 100%);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: $text-primary;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
   }
 
-  .el-menu {
+  :deep(.el-menu) {
     border-right: none;
+    background: transparent;
+    flex: 1;
+    overflow-y: auto;
+
+    .el-menu-item {
+      height: 42px;
+      line-height: 42px;
+      margin: 2px 6px;
+      border-radius: 4px;
+      font-size: 14px;
+      color: $text-regular;
+      padding-left: 16px !important;
+
+      &:hover {
+        background: $bg-color-gray;
+        color: $primary-color;
+      }
+
+      &.is-active {
+        background: $primary-light;
+        color: $primary-color;
+        font-weight: 500;
+      }
+
+      .menu-icon {
+        width: 16px;
+        margin-right: 10px;
+        font-size: 16px;
+      }
+    }
+
+    .el-sub-menu__title {
+      height: 42px;
+      line-height: 42px;
+      margin: 2px 6px;
+      border-radius: 4px;
+      font-size: 14px;
+      color: $text-regular;
+      padding-left: 16px !important;
+
+      &:hover {
+        background: $bg-color-gray;
+      }
+
+      .menu-icon {
+        width: 16px;
+        margin-right: 10px;
+        font-size: 16px;
+      }
+    }
+
+    .el-sub-menu .el-menu-item {
+      padding-left: 44px !important;
+      background: transparent;
+    }
+  }
+
+  &.is-collapse {
+    width: $sidebar-collapse-width;
+
+    .logo-text {
+      display: none;
+    }
+
+    :deep(.el-menu) {
+      .el-menu-item, .el-sub-menu__title {
+        padding-left: 20px !important;
+
+        .menu-icon {
+          margin-right: 0;
+        }
+
+        span {
+          display: none;
+        }
+      }
+
+      .el-sub-menu .el-menu-item {
+        padding-left: 20px !important;
+      }
+    }
   }
 }
 
@@ -574,85 +556,363 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-height: 0;
+  min-width: 0;
 }
 
 .header {
+  height: $header-height;
+  background: $bg-color-white;
+  border-bottom: 1px solid $border-color;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-  padding: 0 20px;
-  height: 50px;
+  padding: 0 16px;
   flex-shrink: 0;
 
   .header-left {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
 
     .collapse-btn {
-      font-size: 20px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
       cursor: pointer;
-      transition: color 0.3s;
+      transition: all 0.2s ease;
+      color: $text-secondary;
 
       &:hover {
-        color: #409EFF;
+        background: $bg-color-gray;
+        color: $primary-color;
+      }
+    }
+
+    :deep(.el-breadcrumb) {
+      .el-breadcrumb__item {
+        .el-breadcrumb__inner {
+          color: $text-secondary;
+          font-size: 13px;
+        }
+
+        &:last-child .el-breadcrumb__inner {
+          color: $text-primary;
+          font-weight: 500;
+        }
       }
     }
   }
 
   .header-right {
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-
-      .username {
-        font-size: 14px;
-      }
-    }
+    display: flex;
+    align-items: center;
+    gap: 8px;
 
     .header-actions {
       display: flex;
-      gap: 10px;
-      margin-right: 15px;
+      align-items: center;
+      gap: 4px;
+
+      .action-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: $text-secondary;
+
+        &:hover {
+          background: $bg-color-gray;
+          color: $primary-color;
+        }
+      }
+    }
+
+    :deep(.el-divider) {
+      height: 20px;
+      margin: 0 8px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: $bg-color-gray;
+      }
+
+      .username {
+        font-size: 13px;
+        font-weight: 500;
+        color: $text-primary;
+      }
     }
   }
 }
 
 .tabs-container {
-  background-color: #fff;
-  border-bottom: 1px solid #e4e7ed;
-  padding: 0 10px;
-  position: relative;
+  height: $tabs-height;
+  background: $bg-color-white;
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  align-items: center;
+  padding: 4px 12px 0;
   flex-shrink: 0;
 
-  :deep(.el-tabs) {
-    .el-tabs__header {
-      margin-bottom: 0;
+  .tabs-wrapper {
+    flex: 1;
+    overflow: hidden;
+
+    :deep(.el-tabs) {
+      .el-tabs__header {
+        margin-bottom: 0;
+        border-bottom: none;
+      }
+
+      .el-tabs__item {
+        height: 34px;
+        line-height: 34px;
+        border: 1px solid $border-color;
+        background: $bg-color-gray;
+        margin-right: 4px;
+        border-radius: 4px 4px 0 0;
+        padding: 0 14px;
+        font-size: 13px;
+        color: $text-regular;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #f0f2f5;
+        }
+
+        &.is-active {
+          background: $bg-color-white;
+          color: $primary-color;
+          border-bottom-color: $bg-color-white;
+          font-weight: 500;
+          padding: 0 12px;
+        }
+
+        .is-icon-close {
+          margin-left: 6px;
+          font-size: 11px;
+          padding: 2px;
+          border-radius: 2px;
+
+          &:hover {
+            background-color: #ff4d4f;
+            color: #fff;
+          }
+        }
+      }
+
+      .el-tabs__nav-next,
+      .el-tabs__nav-prev {
+        font-size: 14px;
+        color: $text-secondary;
+        height: 34px;
+        line-height: 34px;
+
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+  }
+
+  .tabs-extra {
+    flex-shrink: 0;
+    margin-left: 8px;
+
+    .extra-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      cursor: pointer;
+      color: $text-secondary;
+
+      &:hover {
+        background: $bg-color-gray;
+        color: $primary-color;
+      }
+    }
+  }
+}
+
+.main-content {
+  flex: 1;
+  background: $bg-color-page;
+  padding: 16px;
+  overflow-y: auto;
+  min-height: 0;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d9d9d9;
+    border-radius: 3px;
+
+    &:hover {
+      background: #bfbfbf;
+    }
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* 暗黑模式 */
+html.dark {
+  .sidebar {
+    background: #1d1e1f;
+    box-shadow: 1px 0 0 rgba(255, 255, 255, 0.06);
+
+    .logo {
+      border-color: #434343;
+
+      .logo-text {
+        color: #e2e8f0;
+      }
     }
 
-    .el-tabs__item {
-      height: 40px;
-      line-height: 40px;
-      border: 1px solid #e4e7ed;
-      background-color: #f5f7fa;
-      margin-right: 5px;
-      border-radius: 4px 4px 0 0;
-      user-select: none;
+    :deep(.el-menu) {
+      .el-menu-item {
+        color: #94a3b8;
+
+        &:hover {
+          background: #2d2d2d;
+          color: #667eea;
+        }
+
+        &.is-active {
+          background: rgba(102, 126, 234, 0.15);
+          color: #667eea;
+        }
+      }
+
+      .el-sub-menu__title {
+        color: #94a3b8;
+
+        &:hover {
+          background: #2d2d2d;
+        }
+      }
+    }
+  }
+
+  .header {
+    background: #1d1e1f;
+    border-color: #434343;
+
+    .header-left {
+      .collapse-btn {
+        color: #94a3b8;
+
+        &:hover {
+          background: #2d2d2d;
+          color: #fff;
+        }
+      }
+
+      :deep(.el-breadcrumb) {
+        .el-breadcrumb__item {
+          .el-breadcrumb__inner {
+            color: #94a3b8;
+          }
+          &:last-child .el-breadcrumb__inner {
+            color: #e2e8f0;
+          }
+        }
+      }
+    }
+
+    .header-right {
+      .header-actions {
+        .action-btn {
+          color: #94a3b8;
+
+          &:hover {
+            background: #2d2d2d;
+            color: #fff;
+          }
+        }
+      }
+
+      :deep(.el-divider) {
+        border-color: #434343;
+      }
+
+      .user-info {
+        .username {
+          color: #e2e8f0;
+        }
+
+        &:hover {
+          background: #2d2d2d;
+        }
+      }
+    }
+  }
+
+  .tabs-container {
+    background: #1d1e1f;
+    border-color: #434343;
+
+    .tabs-extra {
+      .extra-btn {
+        color: #94a3b8;
+
+        &:hover {
+          background: #2d2d2d;
+          color: #fff;
+        }
+      }
+    }
+
+    :deep(.el-tabs__item) {
+      background: #2d2d3a;
+      border-color: #434343;
+      color: #94a3b8;
+
+      &:hover {
+        background: #3d3d5c;
+      }
 
       &.is-active {
-        background-color: #409EFF;
-        color: #fff;
-        border-color: #409EFF;
+        background: #1d1e1f;
+        color: #667eea;
+        border-bottom-color: #1d1e1f;
       }
 
       .is-icon-close {
-        margin-left: 8px;
-
         &:hover {
           background-color: #f56c6c;
           color: #fff;
@@ -660,98 +920,14 @@ onMounted(() => {
       }
     }
   }
-}
 
-.context-menu {
-  position: fixed;
-  background-color: #fff;
-  border: 1px solid #e4e7ed;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  z-index: 9999;
-  min-width: 120px;
-
-  .el-menu {
-    border: none;
-
-    .el-menu-item {
-      height: 36px;
-      line-height: 36px;
-      font-size: 13px;
-
-      .el-icon {
-        margin-right: 8px;
-      }
-
-      &:hover {
-        background-color: #f5f7fa;
-      }
-    }
+  .main-content {
+    background: #141414;
   }
-}
 
-.main-content {
-  background-color: #f0f2f5;
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* 暗黑模式 */
-html.dark {
   .el-card {
     background-color: #1d1e1f;
     border-color: #434343;
-  }
-
-  .el-main {
-    background-color: #141414;
-  }
-
-  .sidebar {
-    background-color: #141414 !important;
-  }
-
-  .header {
-    background-color: #1d1e1f !important;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  }
-
-  .tabs-container {
-    background-color: #1d1e1f;
-    border-color: #434343;
-
-    :deep(.el-tabs__item) {
-      background-color: #2d2d2d;
-      border-color: #434343;
-      color: #bfcbd9;
-
-      &.is-active {
-        background-color: #409EFF;
-        color: #fff;
-        border-color: #409EFF;
-      }
-    }
-  }
-
-  .context-menu {
-    background-color: #1d1e1f;
-    border-color: #434343;
-
-    .el-menu-item:hover {
-      background-color: #2d2d2d;
-    }
   }
 }
 </style>

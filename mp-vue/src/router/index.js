@@ -147,31 +147,31 @@ const routes = [
       {
         path: 'overview',
         name: 'SystemOverview',
-        component: () => import('@/views/system/monitor/index.vue'),
+        component: () => import('@/views/system/monitor/overview.vue'),
         meta: { title: '监控总览', icon: 'Monitor' }
       },
       {
         path: 'online',
         name: 'OnlineUser',
-        component: () => import('@/views/monitor/online/index.vue'),
+        component: () => import('@/views/system/monitor/online.vue'),
         meta: { title: '在线用户', icon: 'User' }
       },
       {
         path: 'redis',
         name: 'RedisMonitor',
-        component: () => import('@/views/monitor/redis/index.vue'),
+        component: () => import('@/views/system/monitor/redis.vue'),
         meta: { title: 'Redis 监控', icon: 'Folder' }
       },
       {
         path: 'server',
         name: 'ServerMonitor',
-        component: () => import('@/views/monitor/server/index.vue'),
+        component: () => import('@/views/system/monitor/server.vue'),
         meta: { title: '服务器监控', icon: 'Platform' }
       },
       {
         path: 'cache',
         name: 'CacheMonitor',
-        component: () => import('@/views/monitor/cache/index.vue'),
+        component: () => import('@/views/system/monitor/cache.vue'),
         meta: { title: '缓存监控', icon: 'DataLine' }
       }
     ]
@@ -215,25 +215,30 @@ const router = createRouter({
   routes
 })
 
-// 路由守卫 - 简化版本
+// 路由守卫
 router.beforeEach((to, from, next) => {
   // 设置页面标题
   if (to.meta.title) {
     document.title = `${to.meta.title} - Micro Platform`
   }
 
-  // 登录页直接访问
+  const token = localStorage.getItem('access_token')
+
   if (to.path === '/login') {
-    next()
+    // 已登录则跳转到首页
+    if (token) {
+      next({ path: '/dashboard', replace: true })
+    } else {
+      next()
+    }
     return
   }
 
   // 其他路由检查登录状态
-  const token = localStorage.getItem('access_token')
   if (token) {
     next()
   } else {
-    next('/login')
+    next({ path: '/login', replace: true })
   }
 })
 

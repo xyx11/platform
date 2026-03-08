@@ -19,58 +19,63 @@ html, body {
 
 // 滚动条样式
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #c1c1c1;
-  border-radius: 3px;
+  background-color: #d9d9d9;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #bfbfbf;
+  }
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: transparent;
 }
 
 // 通用类
-.text-center {
-  text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.text-left {
-  text-align: left;
-}
-
-.mt-10 {
-  margin-top: 10px;
-}
-
-.mt-20 {
-  margin-top: 20px;
-}
-
-.mb-10 {
-  margin-bottom: 10px;
-}
-
-.mb-20 {
-  margin-bottom: 20px;
-}
-
-.ml-10 {
-  margin-left: 10px;
-}
-
-.mr-10 {
-  margin-right: 10px;
-}
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+.ml-10 { margin-left: 10px; }
+.mr-10 { margin-right: 10px; }
 
 .flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+// 统一卡片样式
+.el-card {
+  border-radius: $border-radius-large;
+  border: 1px solid $border-color-light;
+  background-color: $background-color-white;
+
+  :deep(.el-card__header) {
+    background-color: $background-color-white;
+    border-bottom: 1px solid $border-color-light;
+    padding: 16px 20px;
+  }
+
+  :deep(.el-card__body) {
+    padding: 20px;
+  }
+}
+
+// 统一按钮样式
+.el-button {
+  border-radius: $border-radius-base;
+}
+
+// 统一输入框样式
+.el-input__wrapper {
+  border-radius: $border-radius-base;
 }

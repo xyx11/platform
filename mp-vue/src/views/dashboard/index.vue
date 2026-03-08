@@ -1,175 +1,114 @@
 <template>
   <div class="dashboard-container">
     <!-- 统计卡片 -->
-    <el-row :gutter="20" class="stat-cards">
-      <el-col :span="6">
-        <el-card shadow="hover" class="stat-card">
-          <div class="stat-item">
-            <div class="stat-icon user">
-              <el-icon><User /></el-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value">{{ statistics.userCount || 0 }}</div>
-              <div class="stat-label">用户总数</div>
-            </div>
+    <el-row :gutter="16" class="stat-cards">
+      <el-col :span="3" v-for="(stat, index) in statList" :key="index">
+        <div class="stat-card">
+          <div class="stat-icon" :style="{ background: stat.bgColor }">
+            <el-icon :size="24" color="#fff"><component :is="stat.icon" /></el-icon>
           </div>
-        </el-card>
-      </el-col>
-
-      <el-col :span="6">
-        <el-card shadow="hover" class="stat-card">
-          <div class="stat-item">
-            <div class="stat-icon role">
-              <el-icon><Avatar /></el-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value">{{ statistics.roleCount || 0 }}</div>
-              <div class="stat-label">角色总数</div>
-            </div>
+          <div class="stat-content">
+            <div class="stat-label">{{ stat.label }}</div>
+            <div class="stat-value" :style="{ color: stat.color }">{{ formatNumber(stat.value) }}</div>
           </div>
-        </el-card>
-      </el-col>
-
-      <el-col :span="6">
-        <el-card shadow="hover" class="stat-card">
-          <div class="stat-item">
-            <div class="stat-icon menu">
-              <el-icon><Menu /></el-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value">{{ statistics.menuCount || 0 }}</div>
-              <div class="stat-label">菜单总数</div>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-
-      <el-col :span="6">
-        <el-card shadow="hover" class="stat-card">
-          <div class="stat-item">
-            <div class="stat-icon log">
-              <el-icon><Document /></el-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value">{{ statistics.logCount || 0 }}</div>
-              <div class="stat-label">日志总数</div>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-
-      <el-col :span="6">
-        <el-card shadow="hover" class="stat-card">
-          <div class="stat-item">
-            <div class="stat-icon notice">
-              <el-icon><Bell /></el-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value">{{ statistics.noticeCount || 0 }}</div>
-              <div class="stat-label">公告总数</div>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-
-      <el-col :span="6">
-        <el-card shadow="hover" class="stat-card">
-          <div class="stat-item">
-            <div class="stat-icon job">
-              <el-icon><Timer /></el-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value">{{ statistics.jobCount || 0 }}</div>
-              <div class="stat-label">任务总数</div>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-
-      <el-col :span="6">
-        <el-card shadow="hover" class="stat-card">
-          <div class="stat-item">
-            <div class="stat-icon todo-pending">
-              <el-icon><Clock /></el-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value">{{ statistics.todoPendingCount || 0 }}</div>
-              <div class="stat-label">待处理待办</div>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-
-      <el-col :span="6">
-        <el-card shadow="hover" class="stat-card">
-          <div class="stat-item">
-            <div class="stat-icon todo-urgent">
-              <el-icon><Warning /></el-icon>
-            </div>
-            <div class="stat-info">
-              <div class="stat-value">{{ statistics.todoUrgentCount || 0 }}</div>
-              <div class="stat-label">紧急待办</div>
-            </div>
-          </div>
-        </el-card>
+        </div>
       </el-col>
     </el-row>
 
     <!-- 图表区域 -->
-    <el-row :gutter="20" class="charts">
-      <el-col :span="12">
-        <el-card shadow="hover">
+    <el-row :gutter="16" class="charts">
+      <el-col :span="16">
+        <el-card shadow="never" class="chart-card">
           <template #header>
             <div class="card-header">
-              <span>访问趋势</span>
+              <span class="card-title">访问趋势</span>
+              <el-radio-group size="small" v-model="trendPeriod">
+                <el-radio-button label="7 天">7 天</el-radio-button>
+                <el-radio-button label="30 天">30 天</el-radio-button>
+              </el-radio-group>
             </div>
           </template>
           <div ref="lineChartRef" class="chart"></div>
         </el-card>
       </el-col>
-
-      <el-col :span="12">
-        <el-card shadow="hover">
+      <el-col :span="8">
+        <el-card shadow="never" class="chart-card">
           <template #header>
             <div class="card-header">
-              <span>用户分布</span>
+              <span class="card-title">用户分布</span>
             </div>
           </template>
-          <div ref="pieChartRef" class="chart"></div>
+          <div ref="pieChartRef" class="chart pie-chart"></div>
         </el-card>
       </el-col>
     </el-row>
 
-    <!-- 快捷入口 -->
-    <el-card shadow="hover" class="quick-links">
-      <template #header>
-        <div class="card-header">
-          <span>快捷入口</span>
-        </div>
-      </template>
-      <el-row :gutter="20">
-        <el-col :span="4" v-for="item in quickLinks" :key="item.path" @click="router.push(item.path)">
-          <div class="quick-link">
-            <el-icon :size="32"><component :is="item.icon" /></el-icon>
-            <span>{{ item.name }}</span>
+    <!-- 快捷入口 & 通知公告 -->
+    <el-row :gutter="16">
+      <el-col :span="16">
+        <el-card shadow="never" class="section-card">
+          <template #header>
+            <div class="card-header">
+              <span class="card-title">快捷入口</span>
+            </div>
+          </template>
+          <div class="quick-links">
+            <div
+              v-for="(item, index) in quickLinks"
+              :key="index"
+              class="quick-link"
+              @click="router.push(item.path)"
+            >
+              <div class="quick-link-icon" :style="{ background: item.bgColor }">
+                <el-icon :size="22" color="#fff"><component :is="item.icon" /></el-icon>
+              </div>
+              <span class="quick-link-name">{{ item.name }}</span>
+            </div>
           </div>
-        </el-col>
-      </el-row>
-    </el-card>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card shadow="never" class="section-card">
+          <template #header>
+            <div class="card-header">
+              <span class="card-title">通知公告</span>
+              <el-link type="primary" :underline="false" size="small" @click="router.push('/system/notice')">
+                全部 <el-icon><ArrowRight /></el-icon>
+              </el-link>
+            </div>
+          </template>
+          <div class="notice-list">
+            <div
+              v-for="(notice, index) in noticeList"
+              :key="index"
+              class="notice-item"
+              @click="router.push('/system/notice')"
+            >
+              <span class="notice-tag" :class="'tag-' + notice.type">{{ notice.typeName }}</span>
+              <span class="notice-title">{{ notice.title }}</span>
+              <span class="notice-date">{{ notice.date }}</span>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import * as echarts from 'echarts'
 import request from '@/utils/request'
-// 导入 Element Plus 图标
-import { User, Avatar, Menu, Document, OfficeBuilding, Collection, Timer, Setting, Grid, Monitor, Bell, Clock, Warning } from '@element-plus/icons-vue'
+import {
+  User, Avatar, Menu, Document, Bell, Timer, Clock, Warning,
+  ArrowRight, OfficeBuilding, Collection, Grid, Monitor
+} from '@element-plus/icons-vue'
 
 const router = useRouter()
 const lineChartRef = ref(null)
 const pieChartRef = ref(null)
+const trendPeriod = ref('7 天')
 
 const statistics = reactive({
   userCount: 0,
@@ -184,23 +123,43 @@ const statistics = reactive({
   todoUrgentCount: 0
 })
 
+// 统计卡片数据
+const statList = computed(() => [
+  { label: '用户总数', value: statistics.userCount, icon: User, color: '#1e80ff', bgColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', trend: 12 },
+  { label: '角色总数', value: statistics.roleCount, icon: Avatar, color: '#00b578', bgColor: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', trend: 5 },
+  { label: '菜单总数', value: statistics.menuCount, icon: Menu, color: '#ff7a45', bgColor: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', trend: 8 },
+  { label: '日志总数', value: statistics.logCount, icon: Document, color: '#36cfc9', bgColor: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', trend: 15 },
+  { label: '公告总数', value: statistics.noticeCount, icon: Bell, color: '#722ed1', bgColor: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', trend: 3 },
+  { label: '任务总数', value: statistics.jobCount, icon: Timer, color: '#f04e98', bgColor: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', trend: 20 },
+  { label: '待处理待办', value: statistics.todoPendingCount, icon: Clock, color: '#faad14', bgColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', trend: 7 },
+  { label: '紧急待办', value: statistics.todoUrgentCount, icon: Warning, color: '#ff4d4f', bgColor: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)', trend: 2 }
+])
+
+// 快捷入口
 const quickLinks = [
-  { name: '用户管理', path: '/system/user', icon: User },
-  { name: '角色管理', path: '/system/role', icon: Avatar },
-  { name: '菜单管理', path: '/system/menu', icon: Menu },
-  { name: '部门管理', path: '/system/dept', icon: OfficeBuilding },
-  { name: '字典管理', path: '/system/dict', icon: Collection },
-  { name: '待办事项', path: '/system/todo', icon: Clock },
-  { name: '定时任务', path: '/job/list', icon: Timer },
-  { name: '代码生成', path: '/generator/table', icon: Grid },
-  { name: '系统监控', path: '/monitor/server', icon: Monitor }
+  { name: '用户管理', path: '/system/user', icon: User, bgColor: '#1e80ff' },
+  { name: '角色管理', path: '/system/role', icon: Avatar, bgColor: '#00b578' },
+  { name: '菜单管理', path: '/system/menu', icon: Menu, bgColor: '#ff7a45' },
+  { name: '部门管理', path: '/system/dept', icon: OfficeBuilding, bgColor: '#722ed1' },
+  { name: '字典管理', path: '/system/dict', icon: Collection, bgColor: '#36cfc9' },
+  { name: '待办事项', path: '/system/todo', icon: Clock, bgColor: '#faad14' },
+  { name: '定时任务', path: '/job/list', icon: Timer, bgColor: '#f04e98' },
+  { name: '代码生成', path: '/generator/table', icon: Grid, bgColor: '#1e80ff' },
+  { name: '系统监控', path: '/monitor/server', icon: Monitor, bgColor: '#00b578' }
 ]
+
+// 通知公告数据
+const noticeList = ref([
+  { type: 'notice', typeName: '公告', title: '系统将于本周末进行维护升级', date: '03-05' },
+  { type: 'news', typeName: '资讯', title: '平台新版本功能介绍', date: '03-03' },
+  { type: 'notice', typeName: '公告', title: '关于加强账户安全管理的通知', date: '02-28' },
+  { type: 'news', typeName: '资讯', title: '微服务架构最佳实践分享', date: '02-25' }
+])
 
 // 获取统计数据
 const getStatistics = () => {
   request.get('/system/index/statistics').then(res => {
     Object.assign(statistics, res.data)
-    // 获取待办统计
     request.get('/system/todo/stats').then(todoRes => {
       statistics.todoPendingCount = todoRes.data.pendingCount || 0
       statistics.todoUrgentCount = todoRes.data.urgentCount || 0
@@ -208,73 +167,71 @@ const getStatistics = () => {
   }).catch(() => {})
 }
 
+const formatNumber = (num) => {
+  if (num >= 10000) {
+    return (num / 10000).toFixed(1) + 'w'
+  }
+  return num
+}
+
 // 初始化折线图
 const initLineChart = () => {
   if (!lineChartRef.value) return
   const chart = echarts.init(lineChartRef.value)
 
-  // 获取访问趋势数据
-  request.get('/system/index/visitTrend').then(res => {
-    const { dates, values } = res.data
-    chart.setOption({
-      tooltip: {
-        trigger: 'axis'
+  const option = {
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: '#fff',
+      borderColor: '#e8eaed',
+      textStyle: { color: '#333' },
+      extraCssText: 'box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px;'
+    },
+    grid: {
+      left: '50px',
+      right: '20px',
+      bottom: '30px',
+      top: '10px',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+      axisLine: { lineStyle: { color: '#e8eaed' } },
+      axisLabel: { color: '#666', margin: 8 }
+    },
+    yAxis: {
+      type: 'value',
+      splitLine: { lineStyle: { color: '#f5f6f7', type: 'dashed' } },
+      axisLabel: { color: '#666', margin: 8 }
+    },
+    series: [{
+      name: '访问量',
+      type: 'line',
+      smooth: true,
+      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      symbol: 'circle',
+      symbolSize: 6,
+      itemStyle: {
+        color: '#1e80ff',
+        borderWidth: 2,
+        borderColor: '#fff'
       },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
+      lineStyle: {
+        width: 2,
+        color: '#1e80ff'
       },
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: dates || []
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [
-        {
-          name: '访问量',
-          type: 'line',
-          smooth: true,
-          data: values || [],
-          itemStyle: {
-            color: '#409EFF'
-          },
-          areaStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: 'rgba(64, 158, 255, 0.5)' },
-              { offset: 1, color: 'rgba(64, 158, 255, 0.01)' }
-            ])
-          }
-        }
-      ]
-    })
-  }).catch(() => {
-    // 使用默认数据
-    chart.setOption({
-      tooltip: { trigger: 'axis' },
-      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-      xAxis: { type: 'category', boundaryGap: false, data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'] },
-      yAxis: { type: 'value' },
-      series: [{
-        name: '访问量',
-        type: 'line',
-        smooth: true,
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-        itemStyle: { color: '#409EFF' },
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(64, 158, 255, 0.5)' },
-            { offset: 1, color: 'rgba(64, 158, 255, 0.01)' }
-          ])
-        }
-      }]
-    })
-  })
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: 'rgba(30, 128, 255, 0.25)' },
+          { offset: 1, color: 'rgba(30, 128, 255, 0.02)' }
+        ])
+      }
+    }]
+  }
 
+  chart.setOption(option)
   window.addEventListener('resize', () => { chart.resize() })
 }
 
@@ -283,49 +240,58 @@ const initPieChart = () => {
   if (!pieChartRef.value) return
   const chart = echarts.init(pieChartRef.value)
 
-  // 获取用户分布数据
-  request.get('/system/index/userDistribution').then(res => {
-    const { data } = res.data
-    chart.setOption({
-      tooltip: { trigger: 'item' },
-      legend: { bottom: '5%', left: 'center' },
-      series: [{
-        name: '用户来源',
-        type: 'pie',
-        radius: ['40%', '70%'],
-        avoidLabelOverlap: false,
-        itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
-        label: { show: false, position: 'center' },
-        emphasis: { label: { show: true, fontSize: 20, fontWeight: 'bold' } },
-        labelLine: { show: false },
-        data: data || []
-      }]
-    })
-  }).catch(() => {
-    // 使用默认数据
-    chart.setOption({
-      tooltip: { trigger: 'item' },
-      legend: { bottom: '5%', left: 'center' },
-      series: [{
-        name: '用户来源',
-        type: 'pie',
-        radius: ['40%', '70%'],
-        avoidLabelOverlap: false,
-        itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
-        label: { show: false, position: 'center' },
-        emphasis: { label: { show: true, fontSize: 20, fontWeight: 'bold' } },
-        labelLine: { show: false },
-        data: [
-          { value: 1048, name: '搜索引擎' },
-          { value: 735, name: '直接访问' },
-          { value: 580, name: '邮件营销' },
-          { value: 484, name: '联盟广告' },
-          { value: 300, name: '视频广告' }
-        ]
-      }]
-    })
-  })
+  const option = {
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: '#fff',
+      borderColor: '#e8eaed',
+      textStyle: { color: '#333' },
+      extraCssText: 'box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px;'
+    },
+    legend: {
+      bottom: '0%',
+      left: 'center',
+      itemWidth: 12,
+      itemHeight: 12,
+      textStyle: { color: '#666' }
+    },
+    series: [{
+      name: '用户来源',
+      type: 'pie',
+      radius: ['50%', '70%'],
+      center: ['50%', '42%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 6,
+        borderColor: '#fff',
+        borderWidth: 2
+      },
+      label: {
+        show: false,
+        position: 'center'
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 16,
+          fontWeight: '600',
+          color: '#333'
+        }
+      },
+      labelLine: {
+        show: false
+      },
+      data: [
+        { value: 1048, name: '搜索引擎', itemStyle: { color: '#1e80ff' } },
+        { value: 735, name: '直接访问', itemStyle: { color: '#00b578' } },
+        { value: 580, name: '邮件营销', itemStyle: { color: '#ff7a45' } },
+        { value: 484, name: '联盟广告', itemStyle: { color: '#722ed1' } },
+        { value: 300, name: '视频广告', itemStyle: { color: '#36cfc9' } }
+      ]
+    }]
+  }
 
+  chart.setOption(option)
   window.addEventListener('resize', () => { chart.resize() })
 }
 
@@ -338,114 +304,213 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dashboard-container {
-  padding: 20px;
-  min-height: calc(100vh - 84px);
+  padding: 16px;
+  background: #f5f6f7;
+  min-height: calc(100vh - 104px);
 }
 
 .stat-cards {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .stat-card {
-  .stat-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 10px;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+  height: 80px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   .stat-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
-    color: #fff;
-
-    &.user {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-    }
-
-    &.role {
-      background: linear-gradient(135deg, #f093fb, #f5576c);
-    }
-
-    &.menu {
-      background: linear-gradient(135deg, #4facfe, #00f2fe);
-    }
-
-    &.log {
-      background: linear-gradient(135deg, #43e97b, #38f9d7);
-    }
-
-    &.notice {
-      background: linear-gradient(135deg, #f093fb, #f5576c);
-    }
-
-    &.job {
-      background: linear-gradient(135deg, #fa709a, #fee140);
-    }
-
-    &.todo-pending {
-      background: linear-gradient(135deg, #a8edea, #fed6e3);
-    }
-
-    &.todo-urgent {
-      background: linear-gradient(135deg, #ff9a9e, #fecfef);
-    }
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 
-  .stat-info {
-    .stat-value {
-      font-size: 24px;
-      font-weight: bold;
-      color: #333;
-    }
+  .stat-content {
+    flex: 1;
+    padding-left: 12px;
 
     .stat-label {
-      font-size: 14px;
-      color: #999;
-      margin-top: 5px;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 600;
     }
   }
 }
 
 .charts {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+
+  .chart-card {
+    border-radius: 8px;
+
+    :deep(.el-card__header) {
+      background: #fff;
+      border-bottom: 1px solid #f0f0f0;
+      padding: 14px 16px;
+    }
+
+    :deep(.el-card__body) {
+      padding: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .card-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+    }
+
+    .chart {
+      height: 300px;
+      width: 100%;
+    }
+
+    .pie-chart {
+      height: 280px;
+    }
+  }
+}
+
+.section-card {
+  border-radius: 8px;
+
+  :deep(.el-card__header) {
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 14px 16px;
+  }
+
+  :deep(.el-card__body) {
+    padding: 16px;
+  }
 
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
 
-  .chart {
-    height: 300px;
-    width: 100%;
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
   }
 }
 
 .quick-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+
   .quick-link {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.3s;
+    padding: 16px 12px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
 
     &:hover {
-      background-color: #f5f7fa;
-      transform: translateY(-3px);
+      background: #f0f2f5;
+      transform: translateY(-2px);
     }
 
-    span {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #606266;
+    .quick-link-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .quick-link-name {
+      font-size: 13px;
+      color: #666;
+    }
+  }
+}
+
+.notice-list {
+  .notice-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f5f6f7;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      .notice-title {
+        color: #1e80ff;
+      }
+    }
+
+    .notice-tag {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-right: 10px;
+      flex-shrink: 0;
+
+      &.tag-notice {
+        background: #e6f7ff;
+        color: #1e80ff;
+      }
+
+      &.tag-news {
+        background: #f6ffed;
+        color: #00b578;
+      }
+    }
+
+    .notice-title {
+      flex: 1;
+      font-size: 13px;
+      color: #333;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+
+    .notice-date {
+      font-size: 12px;
+      color: #999;
+      margin-left: 10px;
     }
   }
 }
