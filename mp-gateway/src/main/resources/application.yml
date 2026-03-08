@@ -6,6 +6,8 @@ spring:
     name: mp-gateway
   profiles:
     active: dev
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       discovery:
@@ -38,16 +40,16 @@ spring:
             - Path=/system/**
           filters:
             - StripPrefix=1
-        - id: mp-generator
-          uri: lb://mp-generator
-          predicates:
-            - Path=/generator/**
-          filters:
-            - StripPrefix=1
         - id: mp-job
           uri: lb://mp-job
           predicates:
             - Path=/job/**
+          filters:
+            - StripPrefix=1
+        - id: mp-generator
+          uri: lb://mp-generator
+          predicates:
+            - Path=/generator/**
           filters:
             - StripPrefix=1
         - id: mp-system-monitor

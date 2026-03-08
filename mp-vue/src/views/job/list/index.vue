@@ -199,7 +199,7 @@ const rules = {
 // 获取任务列表
 const getJobList = () => {
   loading.value = true
-  request.get('/system/job/list', { params: queryParams }).then(res => {
+  request.get('/job/list', { params: queryParams }).then(res => {
     jobList.value = res.data?.records || []
     pagination.total = res.data?.total || 0
     loading.value = false
@@ -259,7 +259,7 @@ const handleStart = (row) => {
   ElMessageBox.confirm(`确认要启动任务"${row.jobName}"吗？`, '提示', {
     type: 'warning'
   }).then(() => {
-    request.post(`/system/job/${row.jobId}/start`).then(() => {
+    request.post(`/job/${row.jobId}/start`).then(() => {
       ElMessage.success('任务已启动')
       getJobList()
     })
@@ -271,7 +271,7 @@ const handleStop = (row) => {
   ElMessageBox.confirm(`确认要暂停任务"${row.jobName}"吗？`, '提示', {
     type: 'warning'
   }).then(() => {
-    request.post(`/system/job/${row.jobId}/stop`).then(() => {
+    request.post(`/job/${row.jobId}/stop`).then(() => {
       ElMessage.success('任务已暂停')
       getJobList()
     })
@@ -283,7 +283,7 @@ const handleDelete = (row) => {
   ElMessageBox.confirm(`确认删除任务"${row.jobName}"吗？`, '警告', {
     type: 'warning'
   }).then(() => {
-    request.delete(`/system/job/${row.jobId}`).then(() => {
+    request.delete(`/job/${row.jobId}`).then(() => {
       ElMessage.success('删除成功')
       getJobList()
     })
@@ -295,7 +295,7 @@ const handleBatchDelete = () => {
   ElMessageBox.confirm(`确认删除选中的 ${jobIds.value.length} 个任务吗？`, '警告', {
     type: 'warning'
   }).then(() => {
-    request.delete('/system/job/batch', { data: jobIds.value }).then(() => {
+    request.delete('/job/batch', { data: jobIds.value }).then(() => {
       ElMessage.success('批量删除成功')
       getJobList()
     })
@@ -309,7 +309,7 @@ const handleExport = () => {
     jobGroup: queryParams.jobGroup,
     status: queryParams.status
   }
-  request.get('/system/job/export', { params, responseType: 'blob' }).then(res => {
+  request.get('/job/export', { params, responseType: 'blob' }).then(res => {
     const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')

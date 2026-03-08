@@ -26,7 +26,9 @@
         <div class="header-actions">
           <el-button type="primary" icon="Plus" @click="handleAdd">新增用户</el-button>
           <el-button type="danger" icon="Delete" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
-          <el-button type="warning" icon="Upload" @click="handleImport">导入</el-button>
+          <el-button type="warning" icon="Key" :disabled="multiple" @click="handleBatchResetPwd">批量重置密码</el-button>
+          <el-button type="success" icon="Unlock" :disabled="multiple" @click="handleBatchUnlock">批量解锁</el-button>
+          <el-button type="info" icon="Upload" @click="handleImport">导入</el-button>
           <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
           <el-button type="info" icon="Document" @click="downloadTemplate">下载模板</el-button>
         </div>
@@ -54,11 +56,13 @@
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="180" />
-        <el-table-column label="操作" width="220" fixed="right">
+        <el-table-column label="操作" width="320" fixed="right">
           <template #default="{ row }">
             <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
             <el-button link type="danger" icon="Delete" @click="handleDelete(row)">删除</el-button>
             <el-button link type="warning" icon="Key" @click="handleResetPwd(row)">重置密码</el-button>
+            <el-button link type="success" icon="Unlock" @click="handleUnlock(row)">解锁</el-button>
+            <el-button link type="primary" icon="CircleCheck" @click="handleAssignRole(row)">分配角色</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -147,6 +151,23 @@
       </template>
     </el-dialog>
 
+    <!-- 分配角色对话框 -->
+    <el-dialog title="分配角色" v-model="roleDialog.visible" width="500px">
+      <el-form label-width="100px">
+        <el-form-item label="选择角色">
+          <el-checkbox-group v-model="roleForm.roleIds">
+            <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">
+              {{ role.roleName }}
+            </el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="roleDialog.visible = false">取消</el-button>
+        <el-button type="primary" @click="submitRoleForm">确定</el-button>
+      </template>
+    </el-dialog>
+
     <!-- 导入对话框 -->
     <el-dialog title="导入用户数据" v-model="importDialog.visible" width="500px">
       <el-upload
@@ -215,6 +236,10 @@ const pwdDialog = reactive({
   visible: false
 })
 
+const roleDialog = reactive({
+  visible: false
+})
+
 const formRef = ref(null)
 const pwdFormRef = ref(null)
 const uploadRef = ref(null)
@@ -235,6 +260,11 @@ const form = reactive({
 const pwdForm = reactive({
   userId: null,
   password: ''
+})
+
+const roleForm = reactive({
+  userId: null,
+  roleIds: []
 })
 
 const rules = {
@@ -336,6 +366,68 @@ const handleResetPwd = (row) => {
   pwdDialog.visible = true
   pwdForm.userId = row.userId
   pwdForm.password = ''
+}
+
+// 批量重置密码
+const handleBatchResetPwd = () => {
+  ElMessageBox.confirm(`确认重置选中的 ${userIds.value.length} 个用户的密码吗？`, '警告', {
+    type: 'warning'
+  }).then(() => {
+    ElMessageBox.prompt('请输入新密码', '提示', {
+      inputType: 'password',
+      inputPattern: /.{6,}/,
+      inputErrorMessage: '密码长度至少为 6 位'
+    }).then(({ value }) => {
+      request.put('/system/user/password/batch', {
+        userIds: userIds.value,
+        password: value
+      }).then(() => {
+        ElMessage.success('密码重置成功')
+        getUserList()
+      })
+    })
+  })
+}
+
+// 解锁用户
+const handleUnlock = (row) => {
+  ElMessageBox.confirm(`确认解锁用户 "${row.username}" 吗？`, '提示', {
+    type: 'warning'
+  }).then(() => {
+    request.post('/system/user/unlock/' + row.userId).then(() => {
+      ElMessage.success('解锁成功')
+    })
+  })
+}
+
+// 批量解锁用户
+const handleBatchUnlock = () => {
+  ElMessageBox.confirm(`确认解锁选中的 ${userIds.value.length} 个用户吗？`, '警告', {
+    type: 'warning'
+  }).then(() => {
+    request.post('/system/user/unlock/batch', userIds.value).then(() => {
+      ElMessage.success('批量解锁成功')
+      getUserList()
+    })
+  })
+}
+
+// 分配角色
+const handleAssignRole = (row) => {
+  roleDialog.visible = true
+  roleForm.userId = row.userId
+  roleForm.roleIds = []
+  request.get('/system/user/roles/' + row.userId).then(res => {
+    roleForm.roleIds = res.data?.roleIds || []
+  })
+}
+
+// 提交角色分配
+const submitRoleForm = () => {
+  request.post('/system/user/roles?userId=' + roleForm.userId, roleForm.roleIds).then(() => {
+    ElMessage.success('角色分配成功')
+    roleDialog.visible = false
+  })
 }
 
 // 导出

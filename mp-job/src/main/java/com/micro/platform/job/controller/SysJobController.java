@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Tag(name = "定时任务", description = "定时任务管理")
 @RestController
-@RequestMapping("/system/job")
+@RequestMapping("/job")
 public class SysJobController {
 
     private final SysJobService sysJobService;

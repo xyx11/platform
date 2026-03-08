@@ -39,3 +39,52 @@ export function getCacheStats() {
     method: 'get'
   })
 }
+
+// 清除指定缓存
+export function clearCache(cacheName) {
+  return request({
+    url: '/monitor/cache/' + cacheName,
+    method: 'delete'
+  })
+}
+
+// 清除所有缓存
+export function clearAllCache() {
+  return request({
+    url: '/monitor/cache/all',
+    method: 'delete'
+  })
+}
+
+// 获取缓存键列表
+export function getCacheKeys(params) {
+  return request({
+    url: '/monitor/cache/keys',
+    method: 'get',
+    params
+  })
+}
+
+// 获取健康检查状态
+export function getHealthStatus() {
+  return request({
+    url: '/monitor/health',
+    method: 'get'
+  })
+}
+
+// 获取线程详细信息
+export function getThreads() {
+  return request({
+    url: '/monitor/threads',
+    method: 'get'
+  })
+}
+
+// 获取数据库连接池统计
+export function getDatasource() {
+  return request({
+    url: '/monitor/datasource',
+    method: 'get'
+  })
+}

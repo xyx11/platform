@@ -343,6 +343,12 @@ onMounted(() => {
         font-size: 14px;
       }
     }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      margin-right: 15px;
+    }
   }
 }
 
@@ -360,12 +366,6 @@ onMounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-.header-actions {
-    display: flex;
-    gap: 10px;
-    margin-right: 15px;
-  }
 }
 
 /* 暗黑模式 */

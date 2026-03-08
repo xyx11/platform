@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @Tag(name = "定时任务日志", description = "定时任务日志管理")
 @RestController
-@RequestMapping("/system/job-log")
+@RequestMapping("/job/log")
 public class SysJobLogController {
 
     private final SysJobLogService sysJobLogService;

@@ -1,6 +1,13 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="20">
+    <el-card>
+      <div class="toolbar">
+        <el-button type="danger" icon="Delete" @click="handleClearAll">清除所有缓存</el-button>
+        <el-button type="warning" icon="Refresh" @click="refreshCache">刷新缓存</el-button>
+      </div>
+    </el-card>
+
+    <el-row :gutter="20" style="margin-top: 20px">
       <!-- 缓存统计 -->
       <el-col :span="6">
         <el-card shadow="hover">
@@ -86,9 +93,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { getCacheStats } from '@/api/monitor'
+import { ref, onMounted } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { getCacheStats, clearAllCache } from '@/api/monitor'
 
 const stats = ref({
   totalCommandsProcessed: 0,
@@ -141,6 +148,26 @@ const getCacheStatsData = async () => {
   }
 }
 
+// 清除所有缓存
+const handleClearAll = () => {
+  ElMessageBox.confirm('确定要清除所有缓存吗？此操作不可恢复！', '警告', {
+    type: 'warning'
+  }).then(() => {
+    clearAllCache().then(() => {
+      ElMessage.success('清除缓存成功')
+      getCacheStatsData()
+    }).catch(() => {
+      ElMessage.error('清除缓存失败')
+    })
+  })
+}
+
+// 刷新缓存
+const refreshCache = () => {
+  getCacheStatsData()
+  ElMessage.success('刷新成功')
+}
+
 onMounted(() => {
   getCacheStatsData()
 })
@@ -149,6 +176,11 @@ onMounted(() => {
 <style lang="scss" scoped>
 .app-container {
   padding: 20px;
+
+  .toolbar {
+    display: flex;
+    gap: 10px;
+  }
 }
 
 .stat-card {

@@ -134,7 +134,7 @@ const detailLog = reactive({
 // 获取任务日志列表
 const getJobLogList = () => {
   loading.value = true
-  request.get('/system/job/log/list', { params: queryParams }).then(res => {
+  request.get('/job/log/list', { params: queryParams }).then(res => {
     jobLogList.value = res.data?.records || []
     pagination.total = res.data?.total || 0
     loading.value = false
@@ -166,7 +166,7 @@ const handleBatchDelete = () => {
   ElMessageBox.confirm(`确认删除选中的 ${selectedIds.value.length} 条日志吗？`, '警告', {
     type: 'warning'
   }).then(() => {
-    request.delete('/system/job/log/batch', selectedIds.value.join(',')).then(() => {
+    request.delete('/job/log/batch', selectedIds.value.join(',')).then(() => {
       ElMessage.success('删除成功')
       getJobLogList()
     })
@@ -178,7 +178,7 @@ const handleClear = () => {
   ElMessageBox.confirm('确认清空所有任务日志吗？此操作不可恢复！', '警告', {
     type: 'warning'
   }).then(() => {
-    request.delete('/system/job/log/clear').then(() => {
+    request.delete('/job/log/clear').then(() => {
       ElMessage.success('清空成功')
       getJobLogList()
     })

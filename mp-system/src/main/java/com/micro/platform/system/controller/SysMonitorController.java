@@ -415,7 +415,7 @@ public class SysMonitorController {
             // 获取连接池信息（如果使用 HikariCP）
             stats.put("status", "UP");
             stats.put("message", "数据库连接正常");
-            
+
             // 测试查询
             Integer result = jdbcTemplate.queryForObject("SELECT 1", Integer.class);
             stats.put("connectionTest", result == 1 ? "SUCCESS" : "FAILED");
@@ -424,6 +424,55 @@ public class SysMonitorController {
             stats.put("message", "数据库连接失败：" + e.getMessage());
         }
         return Result.success(stats);
+    }
+
+    @Operation(summary = "清除指定缓存")
+    @OperationLog(module = "缓存管理", type = OperationType.OTHER, description = "清除指定缓存")
+    @PreAuthorize("hasAuthority('monitor:cache:clear')")
+    @DeleteMapping("/cache/{cacheName}")
+    public Result<Void> clearCache(@PathVariable String cacheName) {
+        try {
+            Set<String> keys = redisTemplate.keys(cacheName + "*");
+            if (keys != null && !keys.isEmpty()) {
+                redisTemplate.delete(keys);
+            }
+            return Result.success();
+        } catch (Exception e) {
+            return Result.error("清除缓存失败：" + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "清除所有缓存")
+    @OperationLog(module = "缓存管理", type = OperationType.OTHER, description = "清除所有缓存")
+    @PreAuthorize("hasAuthority('monitor:cache:clear')")
+    @DeleteMapping("/cache/all")
+    public Result<Void> clearAllCache() {
+        try {
+            Set<String> keys = redisTemplate.keys("*");
+            if (keys != null && !keys.isEmpty()) {
+                redisTemplate.delete(keys);
+            }
+            return Result.success();
+        } catch (Exception e) {
+            return Result.error("清除所有缓存失败：" + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "获取缓存键列表")
+    @PreAuthorize("hasAuthority('monitor:cache:query')")
+    @GetMapping("/cache/keys")
+    public Result<List<String>> getCacheKeys(@RequestParam(required = false) String pattern) {
+        try {
+            String searchPattern = pattern != null ? pattern + "*" : "*";
+            Set<String> keys = redisTemplate.keys(searchPattern);
+            List<String> result = new ArrayList<>();
+            if (keys != null) {
+                result.addAll(keys);
+            }
+            return Result.success(result);
+        } catch (Exception e) {
+            return Result.error("获取缓存键列表失败：" + e.getMessage());
+        }
     }
 
     /**
