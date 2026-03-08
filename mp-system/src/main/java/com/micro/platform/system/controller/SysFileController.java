@@ -2,14 +2,19 @@ package com.micro.platform.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.result.Result;
+import com.micro.platform.common.log.annotation.OperationLog;
+import com.micro.platform.common.log.annotation.OperationType;
 import com.micro.platform.system.entity.SysFile;
 import com.micro.platform.system.service.SysFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 文件管理控制器
@@ -41,7 +46,21 @@ public class SysFileController {
         return Result.success(sysFileService.getById(id));
     }
 
+    @Operation(summary = "上传文件")
+    @OperationLog(module = "文件管理", type = OperationType.INSERT, description = "上传文件")
+    @PreAuthorize("hasAuthority('system:file:upload')")
+    @PostMapping("/upload")
+    public Result<SysFile> upload(@RequestParam("file") MultipartFile file) {
+        try {
+            SysFile sysFile = sysFileService.uploadFile(file);
+            return Result.success(sysFile);
+        } catch (Exception e) {
+            return Result.error("上传失败：" + e.getMessage());
+        }
+    }
+
     @Operation(summary = "删除文件")
+    @OperationLog(module = "文件管理", type = OperationType.DELETE, description = "删除文件")
     @PreAuthorize("hasAuthority('system:file:remove')")
     @DeleteMapping("/{id}")
     public Result<Void> remove(@PathVariable Long id) {
@@ -50,10 +69,11 @@ public class SysFileController {
     }
 
     @Operation(summary = "批量删除文件")
+    @OperationLog(module = "文件管理", type = OperationType.DELETE, description = "批量删除文件")
     @PreAuthorize("hasAuthority('system:file:remove')")
-    @DeleteMapping("/batch/{ids}")
-    public Result<Void> batchRemove(@PathVariable String ids) {
-        sysFileService.batchRemove(Arrays.asList(ids.split(",")));
+    @DeleteMapping("/batch")
+    public Result<Void> batchRemove(@RequestBody List<Long> ids) {
+        sysFileService.batchRemove(ids);
         return Result.success();
     }
 }

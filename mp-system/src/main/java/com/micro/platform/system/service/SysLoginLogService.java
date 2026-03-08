@@ -3,6 +3,7 @@ package com.micro.platform.system.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.service.IServiceX;
 import com.micro.platform.system.entity.SysLoginLog;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * 登录日志服务接口
@@ -18,4 +19,9 @@ public interface SysLoginLogService extends IServiceX<SysLoginLog> {
      * 清空登录日志
      */
     void clean();
+
+    /**
+     * 导出登录日志
+     */
+    void exportLoginLog(HttpServletResponse response, SysLoginLog log);
 }

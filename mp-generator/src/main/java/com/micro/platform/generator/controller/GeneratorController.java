@@ -1,5 +1,6 @@
 package com.micro.platform.generator.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.result.Result;
 import com.micro.platform.generator.entity.TableColumnInfo;
 import com.micro.platform.generator.entity.TableInfo;
@@ -29,18 +30,30 @@ public class GeneratorController {
 
     @Operation(summary = "查询数据库表列表")
     @GetMapping("/table/list")
-    public Result<List<TableInfo>> listTables(
+    public Result<Page<TableInfo>> listTables(
             @RequestParam(required = false, defaultValue = "") String tableName,
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        // TODO: 实现分页返回
-        return Result.success(generatorService.listTables(tableName, pageNum, pageSize));
+        List<TableInfo> tables = generatorService.listTables(tableName, pageNum, pageSize);
+        Page<TableInfo> page = new Page<>(pageNum, pageSize);
+        page.setRecords(tables);
+        // 查询总数
+        long total = generatorService.listTables(tableName, 1, 1000).size();
+        page.setTotal(total);
+        return Result.success(page);
     }
 
     @Operation(summary = "获取表的列信息")
     @GetMapping("/column/list")
     public Result<List<TableColumnInfo>> listColumns(@RequestParam(defaultValue = "") String tableName) {
         return Result.success(generatorService.listColumns(tableName));
+    }
+
+    @Operation(summary = "导入表")
+    @PostMapping("/table/import")
+    public Result<Void> importTables(@RequestBody List<String> tableNames) {
+        generatorService.importTables(tableNames);
+        return Result.success();
     }
 
     @Operation(summary = "预览代码")
@@ -53,6 +66,10 @@ public class GeneratorController {
     @GetMapping("/download")
     public void download(@RequestParam(defaultValue = "") String tableName, HttpServletResponse response) throws IOException {
         byte[] data = generatorService.downloadCode(tableName);
+        if (data.length == 0) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "表不存在或无法生成代码");
+            return;
+        }
         response.reset();
         response.setHeader("Content-Disposition", "attachment; filename=\"" + tableName + ".zip\"");
         response.addHeader("Content-Length", String.valueOf(data.length));
@@ -70,7 +87,7 @@ public class GeneratorController {
     @Operation(summary = "删除表")
     @DeleteMapping("/{tableId}")
     public Result<Void> delete(@PathVariable Long tableId) {
-        // TODO: 实现删除
+        generatorService.deleteTable(tableId);
         return Result.success();
     }
 }

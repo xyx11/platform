@@ -34,4 +34,14 @@ public class SysJobLogServiceImpl extends ServiceImplX<SysJobLogMapper, SysJobLo
     public void clean() {
         baseMapper.clean();
     }
+
+    @Override
+    public void batchRemove(String ids) {
+        if (StringUtils.hasText(ids)) {
+            List<Long> idList = Arrays.stream(ids.split(","))
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+            removeByIds(idList);
+        }
+    }
 }

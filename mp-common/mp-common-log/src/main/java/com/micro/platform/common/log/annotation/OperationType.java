@@ -11,6 +11,11 @@ public enum OperationType {
     CREATE("新增"),
 
     /**
+     * 新增（别名）
+     */
+    INSERT("新增"),
+
+    /**
      * 修改
      */
     UPDATE("修改"),
@@ -19,6 +24,11 @@ public enum OperationType {
      * 删除
      */
     DELETE("删除"),
+
+    /**
+     * 清空
+     */
+    CLEAN("清空"),
 
     /**
      * 查询

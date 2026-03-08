@@ -3,6 +3,7 @@ package com.micro.platform.generator.service;
 import com.micro.platform.generator.entity.TableInfo;
 import com.micro.platform.generator.entity.TableColumnInfo;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public interface GeneratorService {
     /**
      * 生成代码并下载到本地
      */
-    byte[] downloadCode(String tableName);
+    byte[] downloadCode(String tableName) throws IOException;
 
     /**
      * 同步数据库

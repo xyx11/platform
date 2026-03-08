@@ -2,7 +2,6 @@ package com.micro.platform.auth.service;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -16,10 +15,13 @@ import com.micro.platform.common.redis.util.RedisUtil;
 import com.micro.platform.system.entity.SysLoginLog;
 import com.micro.platform.system.service.SysLoginLogService;
 import com.wf.captcha.SpecCaptcha;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -68,7 +70,7 @@ public class AuthService {
      * 登录
      */
     public LoginResponse login(LoginRequest request) {
-        String ip = HttpUtil.getClientIP();
+        String ip = getIpAddr();
         SysLoginLog loginLog = new SysLoginLog();
         loginLog.setIp(ip);
         loginLog.setUsername(request.getUsername());
@@ -156,6 +158,44 @@ public class AuthService {
     }
 
     /**
+     * 获取 IP 地址
+     */
+    private String getIpAddr() {
+        try {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (attributes == null) {
+                return "127.0.0.1";
+            }
+            HttpServletRequest request = attributes.getRequest();
+
+            String ip = request.getHeader("x-forwarded-for");
+            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("Proxy-Client-IP");
+            }
+            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("WL-Proxy-Client-IP");
+            }
+            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("HTTP_CLIENT_IP");
+            }
+            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+            }
+            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getRemoteAddr();
+            }
+            // 多个代理的情况，取第一个 IP
+            if (ip != null && ip.contains(",")) {
+                ip = ip.split(",")[0].trim();
+            }
+            return ip;
+        } catch (Exception e) {
+            log.error("获取 IP 地址失败", e);
+            return "127.0.0.1";
+        }
+    }
+
+    /**
      * 保存登录日志
      */
     private void saveLoginLog(SysLoginLog loginLog) {
@@ -186,7 +226,7 @@ public class AuthService {
      */
     private String getRegionByIp(String ip) {
         try {
-            String result = HttpUtil.get("https://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip);
+            String result = cn.hutool.http.HttpUtil.get("https://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip);
             if (result != null && !result.isEmpty()) {
                 // 简单解析，返回格式如：{"ip":"...","addr":"..."}
                 int idx = result.indexOf("\"addr\":\"");

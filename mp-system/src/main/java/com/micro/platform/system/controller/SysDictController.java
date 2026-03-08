@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字典管理控制器
@@ -67,6 +68,8 @@ public class SysDictController {
     public Result<Void> updateType(@RequestBody SysDictType dictType) {
         dictType.setUpdateBy(SecurityUtil.getUserId());
         dictTypeService.updateById(dictType);
+        // 刷新缓存
+        dictTypeService.clearCache(dictType.getDictType());
         return Result.success();
     }
 
@@ -75,6 +78,10 @@ public class SysDictController {
     @PreAuthorize("hasAuthority('system:dict:remove')")
     @DeleteMapping("/type/{dictId}")
     public Result<Void> removeType(@PathVariable Long dictId) {
+        SysDictType dictType = dictTypeService.getById(dictId);
+        if (dictType != null) {
+            dictTypeService.clearCache(dictType.getDictType());
+        }
         dictTypeService.removeById(dictId);
         return Result.success();
     }
@@ -84,6 +91,12 @@ public class SysDictController {
     @PreAuthorize("hasAuthority('system:dict:remove')")
     @DeleteMapping("/type/batch")
     public Result<Void> batchRemoveType(@RequestBody List<Long> dictIds) {
+        for (Long id : dictIds) {
+            SysDictType dictType = dictTypeService.getById(id);
+            if (dictType != null) {
+                dictTypeService.clearCache(dictType.getDictType());
+            }
+        }
         dictTypeService.removeByIds(dictIds);
         return Result.success();
     }
@@ -126,6 +139,8 @@ public class SysDictController {
     public Result<Void> addData(@RequestBody SysDictData dictData) {
         dictData.setCreateBy(SecurityUtil.getUserId());
         dictDataService.save(dictData);
+        // 刷新缓存
+        dictDataService.refreshCache(dictData.getDictType());
         return Result.success();
     }
 
@@ -136,6 +151,8 @@ public class SysDictController {
     public Result<Void> updateData(@RequestBody SysDictData dictData) {
         dictData.setUpdateBy(SecurityUtil.getUserId());
         dictDataService.updateById(dictData);
+        // 刷新缓存
+        dictDataService.refreshCache(dictData.getDictType());
         return Result.success();
     }
 
@@ -144,6 +161,10 @@ public class SysDictController {
     @PreAuthorize("hasAuthority('system:dict:remove')")
     @DeleteMapping("/data/{dictCode}")
     public Result<Void> removeData(@PathVariable Long dictCode) {
+        SysDictData dictData = dictDataService.getById(dictCode);
+        if (dictData != null) {
+            dictDataService.refreshCache(dictData.getDictType());
+        }
         dictDataService.removeById(dictCode);
         return Result.success();
     }
@@ -153,7 +174,36 @@ public class SysDictController {
     @PreAuthorize("hasAuthority('system:dict:remove')")
     @DeleteMapping("/data/batch")
     public Result<Void> batchRemoveData(@RequestBody List<Long> dictCodes) {
+        for (Long id : dictCodes) {
+            SysDictData dictData = dictDataService.getById(id);
+            if (dictData != null) {
+                dictDataService.refreshCache(dictData.getDictType());
+            }
+        }
         dictDataService.removeByIds(dictCodes);
         return Result.success();
+    }
+
+    @Operation(summary = "刷新字典缓存")
+    @OperationLog(module = "字典管理", type = OperationType.OTHER, description = "刷新字典缓存")
+    @PreAuthorize("hasAuthority('system:dict:edit')")
+    @DeleteMapping("/cache/refresh")
+    public Result<Void> refreshCache() {
+        dictTypeService.refreshCache();
+        return Result.success();
+    }
+
+    @Operation(summary = "获取字典树形结构")
+    @PreAuthorize("hasAuthority('system:dict:query')")
+    @GetMapping("/tree")
+    public Result<List<Map<String, Object>>> getDictTree() {
+        return Result.success(dictTypeService.getDictTree());
+    }
+
+    @Operation(summary = "获取字典统计信息")
+    @PreAuthorize("hasAuthority('system:dict:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Long>> getDictStats() {
+        return Result.success(dictTypeService.getDictStats());
     }
 }

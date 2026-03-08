@@ -52,4 +52,14 @@ public interface SysUserService extends IServiceX<SysUser> {
      * 导入用户数据
      */
     Map<String, Object> importUser(MultipartFile file);
+
+    /**
+     * 上传头像
+     */
+    String uploadAvatar(MultipartFile file, Long userId);
+
+    /**
+     * 获取用户详情（包含部门等信息）
+     */
+    Map<String, Object> getUserDetail(Long userId);
 }

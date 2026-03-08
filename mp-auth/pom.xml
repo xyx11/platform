@@ -41,6 +41,13 @@
             <artifactId>mp-common-swagger</artifactId>
         </dependency>
 
+        <!-- System -->
+        <dependency>
+            <groupId>com.micro.platform</groupId>
+            <artifactId>mp-system</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

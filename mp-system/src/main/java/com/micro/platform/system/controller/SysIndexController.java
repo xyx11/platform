@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,5 +45,18 @@ public class SysIndexController {
     @GetMapping("/userDistribution")
     public Result<Map<String, Object>> getUserDistribution() {
         return Result.success(sysIndexService.getUserDistribution());
+    }
+
+    @Operation(summary = "获取热门操作统计")
+    @PreAuthorize("hasAuthority('system:index:query')")
+    @GetMapping("/hotOperations")
+    public Result<Map<String, Object>> getHotOperations() {
+        return Result.success(((com.micro.platform.system.service.impl.SysIndexServiceImpl)sysIndexService).getHotOperations());
+    }
+
+    @Operation(summary = "获取公告列表")
+    @GetMapping("/noticeList")
+    public Result<List<Map<String, Object>>> getNoticeList() {
+        return Result.success(((com.micro.platform.system.service.impl.SysIndexServiceImpl)sysIndexService).getNoticeList());
     }
 }

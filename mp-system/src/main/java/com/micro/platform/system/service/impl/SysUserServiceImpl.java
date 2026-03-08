@@ -1,21 +1,29 @@
 package com.micro.platform.system.service.impl;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.common.core.service.impl.ServiceImplX;
+import com.micro.platform.system.entity.SysDept;
 import com.micro.platform.system.entity.SysUser;
+import com.micro.platform.system.mapper.SysDeptMapper;
 import com.micro.platform.system.mapper.SysUserMapper;
 import com.micro.platform.system.service.SysUserService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -25,9 +33,14 @@ import java.util.*;
 public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> implements SysUserService {
 
     private final SysUserMapper sysUserMapper;
+    private final SysDeptMapper sysDeptMapper;
 
-    public SysUserServiceImpl(SysUserMapper sysUserMapper) {
+    @Value("${file.upload.path:./uploads}")
+    private String uploadPath;
+
+    public SysUserServiceImpl(SysUserMapper sysUserMapper, SysDeptMapper sysDeptMapper) {
         this.sysUserMapper = sysUserMapper;
+        this.sysDeptMapper = sysDeptMapper;
     }
 
     @Override
@@ -160,7 +173,7 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
                         password = "admin123"; // 默认密码
                     }
                     user.setPassword(encoder.encode(password));
-                    user.setCreateTime(new Date());
+                    user.setCreateTime(LocalDateTime.now());
                     user.setDeleted(0);
 
                     baseMapper.insert(user);
@@ -175,6 +188,77 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
         } catch (Exception e) {
             throw new BusinessException("导入用户数据失败：" + e.getMessage());
         }
+        return result;
+    }
+
+    @Override
+    public String uploadAvatar(MultipartFile file, Long userId) {
+        if (file.isEmpty()) {
+            throw new BusinessException("上传文件不能为空");
+        }
+
+        // 检查文件大小（不超过 2MB）
+        if (file.getSize() > 2 * 1024 * 1024) {
+            throw new BusinessException("头像大小不能超过 2MB");
+        }
+
+        // 检查文件类型
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new BusinessException("只能上传图片文件");
+        }
+
+        // 生成文件名
+        String originalFilename = file.getOriginalFilename();
+        String extension = originalFilename != null && originalFilename.contains(".")
+            ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+        String fileName = "avatar/" + userId + "/" + IdUtil.fastSimpleUUID() + extension;
+
+        // 创建上传目录
+        File destDir = new File(uploadPath);
+        if (!destDir.exists()) {
+            destDir.mkdirs();
+        }
+
+        // 保存文件
+        File destFile = new File(uploadPath + "/" + fileName);
+        if (!destFile.getParentFile().exists()) {
+            destFile.getParentFile().mkdirs();
+        }
+        try {
+            file.transferTo(destFile);
+        } catch (IOException e) {
+            throw new BusinessException("上传失败：" + e.getMessage());
+        }
+
+        // 更新用户头像
+        SysUser user = getById(userId);
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+        String avatarUrl = "/uploads/" + fileName;
+        user.setAvatar(avatarUrl);
+        updateById(user);
+
+        return avatarUrl;
+    }
+
+    @Override
+    public Map<String, Object> getUserDetail(Long userId) {
+        Map<String, Object> result = new HashMap<>();
+        SysUser user = getById(userId);
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+
+        result.put("user", user);
+
+        // 获取部门信息
+        if (user.getDeptId() != null) {
+            SysDept dept = sysDeptMapper.selectById(user.getDeptId());
+            result.put("dept", dept);
+        }
+
         return result;
     }
 

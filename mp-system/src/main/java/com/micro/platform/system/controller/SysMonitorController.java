@@ -5,9 +5,14 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.micro.platform.common.core.result.Result;
-import com.micro.platform.system.domain.ServerInfo;
-import com.micro.platform.system.domain.RedisInfo;
+import com.micro.platform.common.log.annotation.OperationLog;
+import com.micro.platform.common.log.annotation.OperationType;
 import com.micro.platform.system.domain.OnlineUser;
+import com.micro.platform.system.domain.RedisInfo;
+import com.micro.platform.system.domain.ServerInfo;
+import com.micro.platform.system.entity.SysLoginLog;
+import com.micro.platform.system.service.SysLoginLogService;
+import com.micro.platform.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,9 +32,15 @@ import java.util.concurrent.TimeUnit;
 public class SysMonitorController {
 
     private final RedisTemplate<String, Object> redisTemplate;
+    private final SysLoginLogService sysLoginLogService;
+    private final SysUserService sysUserService;
 
-    public SysMonitorController(RedisTemplate<String, Object> redisTemplate) {
+    public SysMonitorController(RedisTemplate<String, Object> redisTemplate,
+                                SysLoginLogService sysLoginLogService,
+                                SysUserService sysUserService) {
         this.redisTemplate = redisTemplate;
+        this.sysLoginLogService = sysLoginLogService;
+        this.sysUserService = sysUserService;
     }
 
     @Operation(summary = "获取在线用户列表")
@@ -40,6 +51,8 @@ public class SysMonitorController {
 
         // 获取所有登录的 token
         Collection<String> tokenKeys = redisTemplate.keys("satoken:*");
+        long currentTime = System.currentTimeMillis();
+
         if (tokenKeys != null && !tokenKeys.isEmpty()) {
             for (String tokenKey : tokenKeys) {
                 Object tokenObj = redisTemplate.opsForValue().get(tokenKey);
@@ -53,9 +66,19 @@ public class SysMonitorController {
                         onlineUser.setUserName(ObjectUtil.toString(session.get("userName")));
                         onlineUser.setNickName(ObjectUtil.toString(session.get("nickName")));
                         onlineUser.setIpaddr(ObjectUtil.toString(session.get("loginIp")));
+                        onlineUser.setLoginLocation(ObjectUtil.toString(session.get("loginLocation")));
+                        onlineUser.setBrowser(ObjectUtil.toString(session.get("browser")));
+                        onlineUser.setOs(ObjectUtil.toString(session.get("os")));
+                        onlineUser.setRoleKey(ObjectUtil.toString(session.get("roleKey")));
+                        onlineUser.setRoleName(ObjectUtil.toString(session.get("roleName")));
+
                         Object loginTime = session.get("loginTime");
                         if (loginTime != null) {
-                            onlineUser.setLoginTime(DateUtil.formatDateTime(new Date(Long.parseLong(loginTime.toString()))));
+                            long loginTimeMillis = Long.parseLong(loginTime.toString());
+                            onlineUser.setLoginTime(DateUtil.formatDateTime(new Date(loginTimeMillis)));
+                            // 计算在线时长（分钟）
+                            long duration = (currentTime - loginTimeMillis) / 1000 / 60;
+                            onlineUser.setOnlineDuration(duration);
                         }
                         onlineUsers.add(onlineUser);
                     }
@@ -63,18 +86,90 @@ public class SysMonitorController {
             }
         }
 
+        // 按在线时长排序
+        onlineUsers.sort((a, b) -> Long.compare(b.getOnlineDuration(), a.getOnlineDuration()));
+
         return Result.success(onlineUsers);
     }
 
+    @Operation(summary = "获取在线用户详情")
+    @PreAuthorize("hasAuthority('monitor:online:query')")
+    @GetMapping("/online/{token}")
+    public Result<OnlineUser> getOnlineUser(@PathVariable String token) {
+        try {
+            SaSession session = StpUtil.getSessionByLoginId(token);
+            if (session == null) {
+                return Result.error("用户不在线");
+            }
+
+            OnlineUser onlineUser = new OnlineUser();
+            onlineUser.setToken(token);
+            onlineUser.setDeptName(ObjectUtil.toString(session.get("deptName")));
+            onlineUser.setUserName(ObjectUtil.toString(session.get("userName")));
+            onlineUser.setNickName(ObjectUtil.toString(session.get("nickName")));
+            onlineUser.setIpaddr(ObjectUtil.toString(session.get("loginIp")));
+            onlineUser.setLoginLocation(ObjectUtil.toString(session.get("loginLocation")));
+            onlineUser.setBrowser(ObjectUtil.toString(session.get("browser")));
+            onlineUser.setOs(ObjectUtil.toString(session.get("os")));
+            onlineUser.setRoleKey(ObjectUtil.toString(session.get("roleKey")));
+            onlineUser.setRoleName(ObjectUtil.toString(session.get("roleName")));
+
+            Object loginTime = session.get("loginTime");
+            if (loginTime != null) {
+                long loginTimeMillis = Long.parseLong(loginTime.toString());
+                onlineUser.setLoginTime(DateUtil.formatDateTime(new Date(loginTimeMillis)));
+                long duration = (System.currentTimeMillis() - loginTimeMillis) / 1000 / 60;
+                onlineUser.setOnlineDuration(duration);
+            }
+
+            return Result.success(onlineUser);
+        } catch (Exception e) {
+            return Result.error("获取失败：" + e.getMessage());
+        }
+    }
+
     @Operation(summary = "强制下线")
+    @OperationLog(module = "在线用户", type = OperationType.OTHER, description = "强制用户下线")
     @PreAuthorize("hasAuthority('monitor:online:forceLogout')")
     @DeleteMapping("/online/{token}")
     public Result<Void> forceLogout(@PathVariable String token) {
         try {
+            // 获取用户信息记录日志
+            SaSession session = StpUtil.getSessionByLoginId(token);
+            String userName = ObjectUtil.toString(session.get("userName"));
+
+            // 执行下线
             StpUtil.logout(token);
+
+            // 记录日志
+            SysLoginLog loginLog = new SysLoginLog();
+            loginLog.setUsername(userName);
+            loginLog.setStatus(0);
+            loginLog.setMsg("被管理员强制下线");
+            sysLoginLogService.save(loginLog);
+
             return Result.success();
         } catch (Exception e) {
-            throw new RuntimeException("强制下线失败：" + e.getMessage());
+            return Result.error("强制下线失败：" + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "批量强制下线")
+    @OperationLog(module = "在线用户", type = OperationType.OTHER, description = "批量强制用户下线")
+    @PreAuthorize("hasAuthority('monitor:online:forceLogout')")
+    @DeleteMapping("/online/batch")
+    public Result<Void> batchForceLogout(@RequestBody List<String> tokens) {
+        try {
+            for (String token : tokens) {
+                try {
+                    StpUtil.logout(token);
+                } catch (Exception e) {
+                    // 忽略单个失败
+                }
+            }
+            return Result.success();
+        } catch (Exception e) {
+            return Result.error("批量下线失败：" + e.getMessage());
         }
     }
 
@@ -209,7 +304,7 @@ public class SysMonitorController {
         long hours = TimeUnit.MILLISECONDS.toHours(millis) % 24;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % 60;
         long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % 60;
-        return String.format("%d天 %02d:%02d:%02d", days, hours, minutes, seconds);
+        return String.format("%d 天 %02d:%02d:%02d", days, hours, minutes, seconds);
     }
 
     /**

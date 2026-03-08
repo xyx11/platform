@@ -642,3 +642,89 @@ ON DUPLICATE KEY UPDATE menu_name=menu_name;
 -- 重新关联超级管理员角色和所有菜单
 INSERT INTO sys_role_menu (role_id, menu_id)
 SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
+
+-- ============================================
+-- 通知公告增强 - 阅读记录表
+-- ============================================
+CREATE TABLE IF NOT EXISTS `sys_notice_user` (
+  `id` bigint NOT NULL COMMENT '主键 ID',
+  `notice_id` bigint NOT NULL COMMENT '公告 ID',
+  `user_id` bigint NOT NULL COMMENT '用户 ID',
+  `read_status` int DEFAULT '0' COMMENT '阅读状态 (0:未读 1:已读)',
+  `read_time` datetime DEFAULT NULL COMMENT '阅读时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_notice_user` (`notice_id`, `user_id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_notice_id` (`notice_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='通知公告阅读记录表';
+
+-- 修改 sys_notice 表，添加定时发布字段
+ALTER TABLE `sys_notice`
+ADD COLUMN `publish_time` datetime DEFAULT NULL COMMENT '发布时间' AFTER `status`,
+ADD COLUMN `timing_publish` int DEFAULT '0' COMMENT '是否定时发布 (0:否 1:是)' AFTER `remark`,
+ADD COLUMN `create_by_name` varchar(50) DEFAULT NULL COMMENT '创建者名称' AFTER `create_by`;
+
+-- 命令执行记录表
+CREATE TABLE IF NOT EXISTS `sys_command_log` (
+  `command_id` bigint NOT NULL COMMENT '命令 ID',
+  `command_type` varchar(50) DEFAULT NULL COMMENT '命令类型',
+  `command_content` text DEFAULT NULL COMMENT '命令内容',
+  `command_result` text DEFAULT NULL COMMENT '命令结果',
+  `execute_time` bigint DEFAULT NULL COMMENT '执行时长（毫秒）',
+  `execute_by` bigint DEFAULT NULL COMMENT '执行者 ID',
+  `execute_name` varchar(50) DEFAULT NULL COMMENT '执行者名称',
+  `execute_time_str` datetime DEFAULT NULL COMMENT '执行时间',
+  `status` int DEFAULT NULL COMMENT '状态：0-失败 1-成功',
+  `error_msg` text DEFAULT NULL COMMENT '错误消息',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `deleted` int DEFAULT '0' COMMENT '删除标志 (0:正常 1:删除)',
+  PRIMARY KEY (`command_id`),
+  KEY `idx_execute_time` (`execute_time_str`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='命令执行记录表';
+
+-- 通知公告菜单权限增强
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+(22, 1, '命令执行', '/system/command', 'system/command/index', 'system:command:list', 2, 'Terminal', 12, 1),
+(2201, 22, '命令执行查询', '', '', 'system:command:query', 3, '', 1, 1, NOW()),
+(2202, 22, '执行命令', '', '', 'system:command:execute', 3, '', 2, 1, NOW()),
+(2203, 22, '删除记录', '', '', 'system:command:remove', 3, '', 3, 1, NOW()),
+(2204, 22, '清空记录', '', '', 'system:command:clear', 3, '', 4, 1, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 重新关联超级管理员角色和所有菜单
+INSERT INTO sys_role_menu (role_id, menu_id)
+SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
+
+-- ============================================
+-- 字典管理增强 - 缓存刷新、树形结构菜单
+-- ============================================
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+(607, 7, '刷新缓存', '', '', 'system:dict:refreshCache', 3, '', 7, 1, NOW()),
+(608, 7, '字典树', '', '', 'system:dict:tree', 3, '', 8, 1, NOW()),
+(609, 7, '字典统计', '', '', 'system:dict:stats', 3, '', 9, 1, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 部门管理增强 - 统计菜单
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+(405, 5, '部门树', '', '', 'system:dept:tree', 3, '', 5, 1, NOW()),
+(406, 5, '部门统计', '', '', 'system:dept:stats', 3, '', 6, 1, NOW()),
+(407, 5, '部门用户统计', '', '', 'system:dept:userCount', 3, '', 7, 1, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 重新关联超级管理员角色和所有菜单
+INSERT INTO sys_role_menu (role_id, menu_id)
+SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;
+
+-- ============================================
+-- 岗位管理增强 - 统计菜单
+-- ============================================
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `status`) VALUES
+(505, 6, '岗位统计', '', '', 'system:post:stats', 3, '', 5, 1, NOW()),
+(506, 6, '岗位用户分配', '', '', 'system:post:assign', 3, '', 6, 1, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- 重新关联超级管理员角色和所有菜单
+INSERT INTO sys_role_menu (role_id, menu_id)
+SELECT 1, menu_id FROM sys_menu ON DUPLICATE KEY UPDATE role_id=role_id;

@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 部门管理控制器
@@ -32,6 +33,12 @@ public class SysDeptController {
     @GetMapping("/list")
     public Result<List<SysDept>> list(SysDept dept) {
         return Result.success(sysDeptService.selectDeptList(dept));
+    }
+
+    @Operation(summary = "获取部门树")
+    @GetMapping("/tree")
+    public Result<List<SysDept>> tree() {
+        return Result.success(sysDeptService.getDeptTree());
     }
 
     @Operation(summary = "获取部门详情")
@@ -70,9 +77,38 @@ public class SysDeptController {
     }
 
     @Operation(summary = "导出部门数据")
+    @OperationLog(module = "部门管理", type = OperationType.EXPORT, description = "导出部门数据")
     @PreAuthorize("hasAuthority('system:dept:query')")
     @GetMapping("/export")
     public void export(HttpServletResponse response, SysDept dept) {
         sysDeptService.exportDept(response, dept);
+    }
+
+    @Operation(summary = "获取部门统计信息")
+    @PreAuthorize("hasAuthority('system:dept:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats(@RequestParam(required = false) Long deptId) {
+        return Result.success(sysDeptService.getDeptStats(deptId));
+    }
+
+    @Operation(summary = "获取部门用户数量")
+    @PreAuthorize("hasAuthority('system:dept:query')")
+    @GetMapping("/user/count")
+    public Result<Integer> userCount(@RequestParam Long deptId) {
+        return Result.success(sysDeptService.getDeptUserCount(deptId));
+    }
+
+    @Operation(summary = "获取部门及子部门用户总数")
+    @PreAuthorize("hasAuthority('system:dept:query')")
+    @GetMapping("/user/count/with-children")
+    public Result<Integer> userCountWithChildren(@RequestParam Long deptId) {
+        return Result.success(sysDeptService.getDeptWithChildrenUserCount(deptId));
+    }
+
+    @Operation(summary = "获取子部门 ID 列表")
+    @PreAuthorize("hasAuthority('system:dept:query')")
+    @GetMapping("/children/ids")
+    public Result<List<Long>> childrenIds(@RequestParam Long deptId) {
+        return Result.success(sysDeptService.getDeptChildIds(deptId));
     }
 }

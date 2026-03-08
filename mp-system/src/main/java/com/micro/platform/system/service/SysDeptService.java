@@ -5,6 +5,7 @@ import com.micro.platform.system.entity.SysDept;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 部门服务接口
@@ -30,4 +31,19 @@ public interface SysDeptService extends IServiceX<SysDept> {
      * 查询部门列表（支持条件查询）
      */
     List<SysDept> selectDeptList(SysDept dept);
+
+    /**
+     * 获取部门统计信息
+     */
+    Map<String, Object> getDeptStats(Long deptId);
+
+    /**
+     * 获取部门用户数量
+     */
+    int getDeptUserCount(Long deptId);
+
+    /**
+     * 获取部门及子部门用户总数
+     */
+    int getDeptWithChildrenUserCount(Long deptId);
 }

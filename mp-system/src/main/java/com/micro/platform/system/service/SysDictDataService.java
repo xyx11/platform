@@ -20,4 +20,14 @@ public interface SysDictDataService extends IServiceX<SysDictData> {
      * 根据字典类型查询字典数据列表
      */
     List<SysDictData> selectDictDataByType(String dictType);
+
+    /**
+     * 刷新字典缓存
+     */
+    void refreshCache(String dictType);
+
+    /**
+     * 清空所有字典缓存
+     */
+    void clearAllCache();
 }

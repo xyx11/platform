@@ -55,6 +55,17 @@ public class RedisUtil {
     }
 
     /**
+     * 根据 pattern 删除 key
+     */
+    public Long deleteByPattern(String pattern) {
+        Set<String> keys = redisTemplate.keys(pattern);
+        if (keys != null && !keys.isEmpty()) {
+            return redisTemplate.delete(keys);
+        }
+        return 0L;
+    }
+
+    /**
      * 判断 key 是否存在
      */
     public Boolean hasKey(String key) {

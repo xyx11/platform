@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 岗位管理控制器
@@ -96,5 +97,37 @@ public class SysPostController {
     @GetMapping("/export")
     public void export(HttpServletResponse response, SysPost post) {
         sysPostService.exportPost(response, post);
+    }
+
+    @Operation(summary = "获取岗位统计信息")
+    @PreAuthorize("hasAuthority('system:post:query')")
+    @GetMapping("/stats")
+    public Result<Map<String, Object>> stats(@RequestParam(required = false) Long postId) {
+        return Result.success(sysPostService.getPostStats(postId));
+    }
+
+    @Operation(summary = "获取岗位用户列表")
+    @PreAuthorize("hasAuthority('system:post:query')")
+    @GetMapping("/users/{postId}")
+    public Result<List<Map<String, Object>>> getUsers(@PathVariable Long postId) {
+        return Result.success(sysPostService.getPostUsers(postId));
+    }
+
+    @Operation(summary = "分配用户到岗位")
+    @OperationLog(module = "岗位管理", type = OperationType.GRANT, description = "分配用户到岗位")
+    @PreAuthorize("hasAuthority('system:post:edit')")
+    @PostMapping("/users/assign")
+    public Result<Void> assignUsers(@RequestParam Long postId, @RequestBody List<Long> userIds) {
+        sysPostService.assignUsers(postId, userIds);
+        return Result.success();
+    }
+
+    @Operation(summary = "从岗位移除用户")
+    @OperationLog(module = "岗位管理", type = OperationType.OTHER, description = "从岗位移除用户")
+    @PreAuthorize("hasAuthority('system:post:edit')")
+    @PostMapping("/users/remove")
+    public Result<Void> removeUsers(@RequestParam Long postId, @RequestBody List<Long> userIds) {
+        sysPostService.removeUsers(postId, userIds);
+        return Result.success();
     }
 }

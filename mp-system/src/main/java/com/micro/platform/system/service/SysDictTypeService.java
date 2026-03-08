@@ -6,6 +6,7 @@ import com.micro.platform.system.entity.SysDictType;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字典类型服务接口
@@ -26,4 +27,24 @@ public interface SysDictTypeService extends IServiceX<SysDictType> {
      * 导出字典类型数据
      */
     void exportDictType(HttpServletResponse response, SysDictType dictType);
+
+    /**
+     * 刷新字典缓存
+     */
+    void refreshCache();
+
+    /**
+     * 删除字典类型缓存
+     */
+    void clearCache(String dictType);
+
+    /**
+     * 获取字典类型及其数据（树形结构）
+     */
+    List<Map<String, Object>> getDictTree();
+
+    /**
+     * 统计字典类型使用数量
+     */
+    Map<String, Long> getDictStats();
 }

@@ -2,17 +2,19 @@ package com.micro.platform.system.service.impl;
 
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.common.core.service.impl.ServiceImplX;
 import com.micro.platform.system.entity.SysDept;
+import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.mapper.SysDeptMapper;
+import com.micro.platform.system.mapper.SysUserMapper;
 import com.micro.platform.system.service.SysDeptService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +22,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> implements SysDeptService {
+
+    private final SysUserMapper sysUserMapper;
+
+    public SysDeptServiceImpl(SysUserMapper sysUserMapper) {
+        this.sysUserMapper = sysUserMapper;
+    }
 
     @Override
     public List<SysDept> getDeptTree() {
@@ -67,6 +75,80 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
         } catch (Exception e) {
             throw new RuntimeException("导出部门数据失败：" + e.getMessage());
         }
+    }
+
+    @Override
+    public Map<String, Object> getDeptStats(Long deptId) {
+        Map<String, Object> stats = new HashMap<>();
+
+        if (deptId == null) {
+            // 统计所有部门
+            long totalDeptCount = baseMapper.selectCount(null);
+            long activeDeptCount = baseMapper.selectCount(new LambdaQueryWrapper<SysDept>().eq(SysDept::getStatus, 1));
+            stats.put("totalDeptCount", totalDeptCount);
+            stats.put("activeDeptCount", activeDeptCount);
+
+            // 统计总用户数
+            long totalUserCount = sysUserMapper.selectCount(null);
+            stats.put("totalUserCount", totalUserCount);
+
+            // 统计顶级部门
+            List<SysDept> topDepts = list(new LambdaQueryWrapper<SysDept>()
+                    .eq(SysDept::getParentId, 0L)
+                    .eq(SysDept::getStatus, 1));
+
+            List<Map<String, Object>> deptStats = new ArrayList<>();
+            for (SysDept dept : topDepts) {
+                Map<String, Object> deptStat = new HashMap<>();
+                deptStat.put("deptId", dept.getDeptId());
+                deptStat.put("deptName", dept.getDeptName());
+                deptStat.put("userCount", getDeptWithChildrenUserCount(dept.getDeptId()));
+                deptStat.put("childrenCount", getDeptChildIds(dept.getDeptId()).size() - 1);
+                deptStats.add(deptStat);
+            }
+            stats.put("deptStats", deptStats);
+        } else {
+            // 统计指定部门
+            SysDept dept = getById(deptId);
+            if (dept == null) {
+                throw new BusinessException("部门不存在");
+            }
+
+            stats.put("deptId", deptId);
+            stats.put("deptName", dept.getDeptName());
+            stats.put("userCount", getDeptUserCount(deptId));
+            stats.put("userCountWithChildren", getDeptWithChildrenUserCount(deptId));
+            stats.put("childrenCount", getDeptChildIds(deptId).size() - 1);
+            stats.put("leader", dept.getLeader());
+            stats.put("phone", dept.getPhone());
+            stats.put("email", dept.getEmail());
+        }
+
+        return stats;
+    }
+
+    @Override
+    public int getDeptUserCount(Long deptId) {
+        if (deptId == null) {
+            return 0;
+        }
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysUser::getDeptId, deptId);
+        return sysUserMapper.selectCount(wrapper).intValue();
+    }
+
+    @Override
+    public int getDeptWithChildrenUserCount(Long deptId) {
+        if (deptId == null) {
+            return 0;
+        }
+        List<Long> deptIds = getDeptChildIds(deptId);
+        if (deptIds.isEmpty()) {
+            return 0;
+        }
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(SysUser::getDeptId, deptIds);
+        return sysUserMapper.selectCount(wrapper).intValue();
     }
 
     /**

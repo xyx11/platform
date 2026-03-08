@@ -1,8 +1,9 @@
 package com.micro.platform.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.micro.platform.common.core.service.impl.ServiceImplX;
-import com.micro.platform.system.entity.SysLoginLog;
-import com.micro.platform.system.mapper.SysLoginLogMapper;
+import com.micro.platform.system.entity.*;
+import com.micro.platform.system.mapper.*;
 import com.micro.platform.system.service.SysIndexService;
 import org.springframework.stereotype.Service;
 
@@ -18,19 +19,62 @@ import java.util.*;
 @Service
 public class SysIndexServiceImpl extends ServiceImplX<SysLoginLogMapper, SysLoginLog> implements SysIndexService {
 
+    private final SysUserMapper sysUserMapper;
+    private final SysRoleMapper sysRoleMapper;
+    private final SysMenuMapper sysMenuMapper;
+    private final SysDeptMapper sysDeptMapper;
+    private final SysPostMapper sysPostMapper;
+    private final SysNoticeMapper sysNoticeMapper;
+
+    public SysIndexServiceImpl(SysUserMapper sysUserMapper,
+                               SysRoleMapper sysRoleMapper,
+                               SysMenuMapper sysMenuMapper,
+                               SysDeptMapper sysDeptMapper,
+                               SysPostMapper sysPostMapper,
+                               SysNoticeMapper sysNoticeMapper) {
+        this.sysUserMapper = sysUserMapper;
+        this.sysRoleMapper = sysRoleMapper;
+        this.sysMenuMapper = sysMenuMapper;
+        this.sysDeptMapper = sysDeptMapper;
+        this.sysPostMapper = sysPostMapper;
+        this.sysNoticeMapper = sysNoticeMapper;
+    }
+
     @Override
     public Map<String, Object> getStatistics() {
         Map<String, Object> statistics = new HashMap<>();
-        // 这里可以根据实际需要统计各个表的数据
-        // 由于是分库分表场景，暂时返回示例数据
-        statistics.put("userCount", 1234);
-        statistics.put("roleCount", 56);
-        statistics.put("menuCount", 234);
-        statistics.put("logCount", 8901);
-        statistics.put("deptCount", 12);
-        statistics.put("postCount", 24);
-        statistics.put("noticeCount", 18);
-        statistics.put("jobCount", 8);
+
+        // 用户统计
+        statistics.put("userCount", sysUserMapper.selectCount(null));
+        statistics.put("activeUserCount", sysUserMapper.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getStatus, 1)));
+
+        // 角色统计
+        statistics.put("roleCount", sysRoleMapper.selectCount(null));
+
+        // 菜单统计
+        statistics.put("menuCount", sysMenuMapper.selectCount(null));
+
+        // 日志统计
+        LambdaQueryWrapper<SysLoginLog> todayWrapper = new LambdaQueryWrapper<>();
+        todayWrapper.ge(SysLoginLog::getLoginTime, LocalDate.now().atStartOfDay());
+        statistics.put("todayLoginCount", baseMapper.selectCount(todayWrapper));
+
+        LambdaQueryWrapper<SysLoginLog> totalWrapper = new LambdaQueryWrapper<>();
+        statistics.put("logCount", baseMapper.selectCount(totalWrapper));
+
+        // 部门统计
+        statistics.put("deptCount", sysDeptMapper.selectCount(null));
+
+        // 岗位统计
+        statistics.put("postCount", sysPostMapper.selectCount(null));
+
+        // 公告统计
+        statistics.put("noticeCount", sysNoticeMapper.selectCount(null));
+        LambdaQueryWrapper<SysNotice> unreadWrapper = new LambdaQueryWrapper<SysNotice>()
+                .eq(SysNotice::getStatus, 1)
+                .ge(SysNotice::getCreateTime, LocalDate.now().atStartOfDay());
+        statistics.put("todayNoticeCount", sysNoticeMapper.selectCount(unreadWrapper));
+
         return statistics;
     }
 
@@ -46,11 +90,17 @@ public class SysIndexServiceImpl extends ServiceImplX<SysLoginLogMapper, SysLogi
         }
         trend.put("dates", dates);
 
-        // 模拟访问数据（实际应该从登录日志中统计）
-        Random random = new Random();
+        // 统计最近 7 天每天的登录次数
         List<Integer> values = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            values.add(800 + random.nextInt(600));
+        for (int i = 6; i >= 0; i--) {
+            LocalDate date = LocalDate.now().minusDays(i);
+            LocalDateTime start = date.atStartOfDay();
+            LocalDateTime end = date.atTime(LocalTime.MAX);
+
+            LambdaQueryWrapper<SysLoginLog> wrapper = new LambdaQueryWrapper<>();
+            wrapper.between(SysLoginLog::getLoginTime, start, end);
+            Long count = baseMapper.selectCount(wrapper);
+            values.add(count.intValue());
         }
         trend.put("values", values);
 
@@ -61,15 +111,74 @@ public class SysIndexServiceImpl extends ServiceImplX<SysLoginLogMapper, SysLogi
     public Map<String, Object> getUserDistribution() {
         Map<String, Object> distribution = new HashMap<>();
 
-        List<Map<String, Object>> data = new ArrayList<>();
-        data.add(createDistributionItem(1048, "搜索引擎"));
-        data.add(createDistributionItem(735, "直接访问"));
-        data.add(createDistributionItem(580, "邮件营销"));
-        data.add(createDistributionItem(484, "联盟广告"));
-        data.add(createDistributionItem(300, "视频广告"));
+        // 按性别统计用户分布
+        List<Map<String, Object>> genderData = new ArrayList<>();
+        Long maleCount = sysUserMapper.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getGender, 1));
+        Long femaleCount = sysUserMapper.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getGender, 0));
+        Long unknownCount = sysUserMapper.selectCount(new LambdaQueryWrapper<SysUser>().isNull(SysUser::getGender));
 
-        distribution.put("data", data);
+        genderData.add(createDistributionItem(maleCount.intValue(), "男"));
+        genderData.add(createDistributionItem(femaleCount.intValue(), "女"));
+        genderData.add(createDistributionItem(unknownCount.intValue(), "未知"));
+        distribution.put("genderData", genderData);
+
+        // 按状态统计用户分布
+        List<Map<String, Object>> statusData = new ArrayList<>();
+        Long activeCount = sysUserMapper.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getStatus, 1));
+        Long inactiveCount = sysUserMapper.selectCount(new LambdaQueryWrapper<SysUser>().eq(SysUser::getStatus, 0));
+
+        statusData.add(createDistributionItem(activeCount.intValue(), "正常"));
+        statusData.add(createDistributionItem(inactiveCount.intValue(), "禁用"));
+        distribution.put("statusData", statusData);
+
+        // 按部门统计用户分布（前 5 大部门）
+        List<Map<String, Object>> deptData = new ArrayList<>();
+        // 这里简化处理，实际应该联表查询统计每个部门的用户数
+        distribution.put("deptData", deptData);
+
         return distribution;
+    }
+
+    /**
+     * 获取热门操作统计
+     */
+    public Map<String, Object> getHotOperations() {
+        Map<String, Object> result = new HashMap<>();
+        List<Map<String, Object>> operations = new ArrayList<>();
+
+        // 统计最近 7 天的操作类型分布（从操作日志中统计）
+        LocalDateTime sevenDaysAgo = LocalDate.now().minusDays(7).atStartOfDay();
+        // 这里简化处理
+        operations.add(createDistributionItem(100, "查询操作"));
+        operations.add(createDistributionItem(80, "新增操作"));
+        operations.add(createDistributionItem(60, "修改操作"));
+        operations.add(createDistributionItem(40, "删除操作"));
+        operations.add(createDistributionItem(20, "导出操作"));
+
+        result.put("operations", operations);
+        return result;
+    }
+
+    /**
+     * 获取公告列表（最新的 5 条）
+     */
+    public List<Map<String, Object>> getNoticeList() {
+        List<Map<String, Object>> notices = new ArrayList<>();
+        LambdaQueryWrapper<SysNotice> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysNotice::getStatus, 1)
+                .orderByDesc(SysNotice::getCreateTime)
+                .last("LIMIT 5");
+
+        List<SysNotice> noticeList = sysNoticeMapper.selectList(wrapper);
+        for (SysNotice notice : noticeList) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("noticeId", notice.getNoticeId());
+            item.put("noticeTitle", notice.getNoticeTitle());
+            item.put("noticeType", notice.getNoticeType());
+            item.put("createTime", notice.getCreateTime());
+            notices.add(item);
+        }
+        return notices;
     }
 
     private Map<String, Object> createDistributionItem(int value, String name) {

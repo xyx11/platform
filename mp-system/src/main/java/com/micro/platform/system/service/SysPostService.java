@@ -6,6 +6,7 @@ import com.micro.platform.system.entity.SysPost;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 岗位服务接口
@@ -26,4 +27,29 @@ public interface SysPostService extends IService<SysPost> {
      * 导出岗位数据
      */
     void exportPost(HttpServletResponse response, SysPost post);
+
+    /**
+     * 获取岗位统计信息
+     */
+    Map<String, Object> getPostStats(Long postId);
+
+    /**
+     * 获取岗位用户数量
+     */
+    int getPostUserCount(Long postId);
+
+    /**
+     * 获取岗位用户列表
+     */
+    List<Map<String, Object>> getPostUsers(Long postId);
+
+    /**
+     * 分配用户到岗位
+     */
+    void assignUsers(Long postId, List<Long> userIds);
+
+    /**
+     * 从岗位移除用户
+     */
+    void removeUsers(Long postId, List<Long> userIds);
 }
