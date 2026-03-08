@@ -160,7 +160,7 @@
 
     <!-- 侧边栏菜单模式 -->
     <template v-else>
-      <el-aside :width="sidebarWidth" class="sidebar">
+      <el-aside :width="sidebarWidth" :class="{ 'is-collapse': isCollapse }" class="sidebar">
         <div class="logo">
           <div class="logo-icon">
             <el-icon :size="22"><Platform /></el-icon>
@@ -1239,20 +1239,40 @@ $top-nav-height: 60px;
   &.is-collapse {
     width: $sidebar-collapse-width;
 
+    .logo {
+      justify-content: center;
+      padding: 0;
+
+      .logo-icon {
+        margin-right: 0;
+      }
+    }
+
     .logo-text {
       display: none;
+      opacity: 0;
     }
 
     :deep(.el-menu) {
       .el-menu-item, .el-sub-menu__title {
         padding-left: 20px !important;
+        margin: 2px 4px;
+
+        &::before {
+          display: none !important;
+        }
 
         .menu-icon {
           margin-right: 0;
+          width: 20px;
+          display: flex;
+          justify-content: center;
         }
 
         span {
           display: none;
+          opacity: 0;
+          visibility: hidden;
         }
       }
 
