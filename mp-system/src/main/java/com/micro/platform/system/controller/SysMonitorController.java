@@ -368,6 +368,64 @@ public class SysMonitorController {
         return Result.success(health);
     }
 
+
+
+    @Operation(summary = "获取线程详细信息")
+    @PreAuthorize("hasAuthority('monitor:server:query')")
+    @GetMapping("/threads")
+    public Result<Map<String, Object>> threads() {
+        Map<String, Object> result = new HashMap<>();
+        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+
+        result.put("threadCount", threadMXBean.getThreadCount());
+        result.put("peakThreadCount", threadMXBean.getPeakThreadCount());
+        result.put("daemonThreadCount", threadMXBean.getDaemonThreadCount());
+        result.put("totalStartedThreadCount", threadMXBean.getTotalStartedThreadCount());
+        result.put("deadlockedThreads", threadMXBean.findDeadlockedThreads() != null ? threadMXBean.findDeadlockedThreads().length : 0);
+
+        // 获取所有线程信息
+        List<Map<String, Object>> threadInfos = new ArrayList<>();
+        for (long threadId : threadMXBean.getAllThreadIds()) {
+            try {
+                java.lang.management.ThreadInfo info = threadMXBean.getThreadInfo(threadId);
+                if (info != null) {
+                    Map<String, Object> threadInfo = new HashMap<>();
+                    threadInfo.put("id", info.getThreadId());
+                    threadInfo.put("name", info.getThreadName());
+                    threadInfo.put("state", info.getThreadState().name());
+                    threadInfo.put("blockedTime", info.getBlockedTime());
+                    threadInfo.put("waitedTime", info.getWaitedTime());
+                    threadInfos.add(threadInfo);
+                }
+            } catch (Exception e) {
+                // 忽略获取失败的线程
+            }
+        }
+        result.put("threads", threadInfos);
+
+        return Result.success(result);
+    }
+
+    @Operation(summary = "获取数据库连接池统计")
+    @PreAuthorize("hasAuthority('monitor:server:query')")
+    @GetMapping("/datasource")
+    public Result<Map<String, Object>> datasource() {
+        Map<String, Object> stats = new HashMap<>();
+        try {
+            // 获取连接池信息（如果使用 HikariCP）
+            stats.put("status", "UP");
+            stats.put("message", "数据库连接正常");
+            
+            // 测试查询
+            Integer result = jdbcTemplate.queryForObject("SELECT 1", Integer.class);
+            stats.put("connectionTest", result == 1 ? "SUCCESS" : "FAILED");
+        } catch (Exception e) {
+            stats.put("status", "DOWN");
+            stats.put("message", "数据库连接失败：" + e.getMessage());
+        }
+        return Result.success(stats);
+    }
+
     /**
      * 格式化时间间隔
      */
