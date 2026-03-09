@@ -33,6 +33,7 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
     public List<SysDept> getDeptTree() {
         List<SysDept> depts = list(new LambdaQueryWrapper<SysDept>()
                 .eq(SysDept::getStatus, 1)
+                .eq(SysDept::getDeleted, 0)
                 .orderByAsc(SysDept::getSort));
         return buildDeptTree(depts, 0L);
     }
@@ -43,7 +44,8 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
         ids.add(deptId);
         List<SysDept> children = list(new LambdaQueryWrapper<SysDept>()
                 .eq(SysDept::getParentId, deptId)
-                .eq(SysDept::getStatus, 1));
+                .eq(SysDept::getStatus, 1)
+                .eq(SysDept::getDeleted, 0));
         for (SysDept child : children) {
             ids.addAll(getDeptChildIds(child.getDeptId()));
         }
@@ -55,14 +57,16 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
         LambdaQueryWrapper<SysDept> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.hasText(dept.getDeptName()), SysDept::getDeptName, dept.getDeptName())
                 .eq(dept.getStatus() != null, SysDept::getStatus, dept.getStatus())
+                .eq(SysDept::getDeleted, 0)
                 .orderByAsc(SysDept::getSort);
-        return baseMapper.selectList(wrapper);
+        List<SysDept> deptList = baseMapper.selectList(wrapper);
+        // 构建树形结构
+        return buildDeptTree(deptList, 0L);
     }
 
     @Override
     public List<SysDept> selectDeptTree(SysDept dept) {
-        List<SysDept> depts = selectDeptList(dept);
-        return buildDeptTree(depts, 0L);
+        return selectDeptList(dept);
     }
 
     @Override
@@ -197,17 +201,56 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
         if (deptIds == null || deptIds.isEmpty()) {
             return;
         }
-        // 检查是否有子部门
-        for (Long deptId : deptIds) {
-            List<SysDept> children = list(new LambdaQueryWrapper<SysDept>()
-                    .eq(SysDept::getParentId, deptId));
-            if (!children.isEmpty()) {
-                SysDept dept = getById(deptId);
-                if (dept != null) {
-                    throw new BusinessException("部门 [" + dept.getDeptName() + "] 下存在子部门，无法删除");
-                }
+
+        // 一次性获取所有待删除部门信息
+        List<SysDept> depts = listByIds(deptIds);
+        if (depts.isEmpty()) {
+            return;
+        }
+
+        // 批量检查子部门
+        List<Long> childDeptIds = baseMapper.selectList(new LambdaQueryWrapper<SysDept>()
+                .in(SysDept::getParentId, deptIds)
+                .eq(SysDept::getDeleted, 0))
+                .stream()
+                .map(SysDept::getDeptId)
+                .toList();
+
+        if (!childDeptIds.isEmpty()) {
+            // 获取有子部门的父部门名称
+            List<SysDept> parentDepts = depts.stream()
+                .filter(d -> childDeptIds.contains(d.getParentId()))
+                .collect(Collectors.toList());
+
+            if (!parentDepts.isEmpty()) {
+                String names = parentDepts.stream()
+                    .map(SysDept::getDeptName)
+                    .collect(Collectors.joining(", "));
+                throw new BusinessException("以下部门存在子部门，无法删除：" + names);
             }
         }
+
+        // 批量检查用户
+        List<SysUser> users = sysUserMapper.selectList(new LambdaQueryWrapper<SysUser>()
+                .in(SysUser::getDeptId, deptIds));
+
+        if (!users.isEmpty()) {
+            // 按部门分组统计
+            Map<Long, Long> userCountByDept = users.stream()
+                .collect(Collectors.groupingBy(SysUser::getDeptId, Collectors.counting()));
+
+            StringBuilder errorMsg = new StringBuilder("以下部门存在用户，无法删除：");
+            List<String> deptUserInfos = new ArrayList<>();
+            for (SysDept dept : depts) {
+                Long count = userCountByDept.get(dept.getDeptId());
+                if (count != null && count > 0) {
+                    deptUserInfos.add("部门 [" + dept.getDeptName() + "] 下存在 " + count + " 名用户");
+                }
+            }
+            throw new BusinessException(errorMsg + String.join("; ", deptUserInfos));
+        }
+
+        // 执行批量删除
         removeByIds(deptIds);
     }
 
@@ -221,6 +264,19 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
             dept.setStatus(status);
         }
         updateBatchById(depts);
+    }
+
+    @Override
+    public void updateStatus(Long deptId, Integer status) {
+        if (deptId == null || status == null) {
+            throw new BusinessException("参数错误");
+        }
+        SysDept dept = getById(deptId);
+        if (dept == null) {
+            throw new BusinessException("部门不存在");
+        }
+        dept.setStatus(status);
+        updateById(dept);
     }
 
     /**

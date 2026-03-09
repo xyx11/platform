@@ -1,5 +1,6 @@
 package com.micro.platform.common.core.exception;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import com.micro.platform.common.core.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler {
      * 参数校验异常
      */
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     public Result<?> handleValidationException(Exception e) {
         String message = "参数校验失败";
         if (e instanceof MethodArgumentNotValidException ex) {
@@ -48,7 +49,7 @@ public class GlobalExceptionHandler {
                     .map(FieldError::getDefaultMessage)
                     .collect(Collectors.joining("; "));
         }
-        log.error("参数校验异常：{}", message);
+        log.warn("参数校验失败：{}", message);
         return Result.error(400, message);
     }
 
@@ -60,6 +61,16 @@ public class GlobalExceptionHandler {
     public Result<?> handleAccessDeniedException(AccessDeniedException e) {
         log.error("权限异常：{}", e.getMessage());
         return Result.forbidden("没有权限执行此操作");
+    }
+
+    /**
+     * Sa-Token 未登录异常
+     */
+    @ExceptionHandler(NotLoginException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public Result<?> handleNotLoginException(NotLoginException e) {
+        log.warn("登录状态异常：{}", e.getMessage());
+        return Result.error(401, "登录状态失效，请重新登录");
     }
 
     /**

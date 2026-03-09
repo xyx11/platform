@@ -4,11 +4,14 @@ import com.micro.platform.common.core.result.Result;
 import com.micro.platform.common.log.annotation.OperationLog;
 import com.micro.platform.common.log.annotation.OperationType;
 import com.micro.platform.common.security.util.SecurityUtil;
+import com.micro.platform.system.dto.DeptDTO;
 import com.micro.platform.system.entity.SysDept;
 import com.micro.platform.system.service.SysDeptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +46,7 @@ public class SysDeptController {
 
     @Operation(summary = "获取部门详情")
     @GetMapping("/{deptId}")
-    public Result<SysDept> get(@PathVariable Long deptId) {
+    public Result<SysDept> get(@PathVariable @Min(value = 1, message = "部门 ID 格式错误") Long deptId) {
         return Result.success(sysDeptService.getById(deptId));
     }
 
@@ -51,7 +54,15 @@ public class SysDeptController {
     @OperationLog(module = "部门管理", type = OperationType.CREATE, description = "新增部门")
     @PreAuthorize("hasAuthority('system:dept:add')")
     @PostMapping
-    public Result<Void> add(@RequestBody SysDept dept) {
+    public Result<Void> add(@Valid @RequestBody DeptDTO dto) {
+        SysDept dept = new SysDept();
+        dept.setParentId(dto.getParentId() != null ? dto.getParentId() : 0L);
+        dept.setDeptName(dto.getDeptName());
+        dept.setSort(dto.getSort() != null ? dto.getSort() : 0);
+        dept.setLeader(dto.getLeader());
+        dept.setPhone(dto.getPhone());
+        dept.setEmail(dto.getEmail());
+        dept.setStatus(dto.getStatus() != null ? dto.getStatus() : 1);
         dept.setCreateBy(SecurityUtil.getUserId());
         sysDeptService.save(dept);
         return Result.success();
@@ -61,7 +72,16 @@ public class SysDeptController {
     @OperationLog(module = "部门管理", type = OperationType.UPDATE, description = "修改部门")
     @PreAuthorize("hasAuthority('system:dept:edit')")
     @PutMapping
-    public Result<Void> update(@RequestBody SysDept dept) {
+    public Result<Void> update(@Valid @RequestBody DeptDTO dto) {
+        SysDept dept = new SysDept();
+        dept.setDeptId(dto.getDeptId());
+        dept.setParentId(dto.getParentId() != null ? dto.getParentId() : 0L);
+        dept.setDeptName(dto.getDeptName());
+        dept.setSort(dto.getSort() != null ? dto.getSort() : 0);
+        dept.setLeader(dto.getLeader());
+        dept.setPhone(dto.getPhone());
+        dept.setEmail(dto.getEmail());
+        dept.setStatus(dto.getStatus() != null ? dto.getStatus() : 1);
         dept.setUpdateBy(SecurityUtil.getUserId());
         sysDeptService.updateById(dept);
         return Result.success();
@@ -127,5 +147,27 @@ public class SysDeptController {
     @GetMapping("/children/ids")
     public Result<List<Long>> childrenIds(@RequestParam Long deptId) {
         return Result.success(sysDeptService.getDeptChildIds(deptId));
+    }
+
+    @Operation(summary = "修改部门状态")
+    @OperationLog(module = "部门管理", type = OperationType.UPDATE, description = "修改部门状态")
+    @PreAuthorize("hasAuthority('system:dept:edit')")
+    @PutMapping("/status")
+    public Result<Void> updateStatus(@RequestBody Map<String, Object> params) {
+        Long deptId = Long.valueOf(params.get("deptId").toString());
+        Integer status = (Integer) params.get("status");
+        sysDeptService.updateStatus(deptId, status);
+        return Result.success();
+    }
+
+    @Operation(summary = "批量修改部门状态")
+    @OperationLog(module = "部门管理", type = OperationType.UPDATE, description = "批量修改部门状态")
+    @PreAuthorize("hasAuthority('system:dept:edit')")
+    @PutMapping("/status/batch")
+    public Result<Void> batchUpdateStatus(@RequestBody Map<String, Object> params) {
+        List<Long> deptIds = (List<Long>) params.get("deptIds");
+        Integer status = (Integer) params.get("status");
+        sysDeptService.batchUpdateStatus(deptIds, status);
+        return Result.success();
     }
 }

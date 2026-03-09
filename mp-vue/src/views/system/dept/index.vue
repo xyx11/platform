@@ -398,7 +398,7 @@ const defaultExpandAll = ref(true)
 
 const form = reactive({
   deptId: null,
-  parentId: null,
+  parentId: '0',
   deptName: '',
   sort: 0,
   leader: '',
@@ -459,15 +459,50 @@ const columns = reactive([
   { prop: 'createTime', label: '创建时间', visible: true, disabled: false }
 ])
 
-const rules = {
+// 自定义验证器
+const validatePhone = (rule, value, callback) => {
+  if (!value) {
+    callback() // 可选字段，为空直接通过
+  } else {
+    // 匹配手机号或座机号
+    const phoneReg = /^1[3-9]\d{9}$|^0\d{2,3}-?\d{7,8}$/
+    if (phoneReg.test(value)) {
+      callback()
+    } else {
+      callback(new Error('请输入正确的手机号码或座机号码'))
+    }
+  }
+}
+
+const validateEmail = (rule, value, callback) => {
+  if (!value) {
+    callback() // 可选字段，为空直接通过
+  } else {
+    // 邮箱正则
+    const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    if (emailReg.test(value)) {
+      callback()
+    } else {
+      callback(new Error('请输入正确的邮箱地址'))
+    }
+  }
+}
+
+const rules = computed(() => ({
   deptName: [
     { required: true, message: '请输入部门名称', trigger: 'blur' },
     { min: 2, max: 50, message: '部门名称长度在 2 到 50 个字符', trigger: 'blur' }
   ],
   parentId: [
-    { required: true, message: '请选择上级部门', trigger: 'change' }
+    { required: dialog.type === 'edit', message: '请选择上级部门', trigger: 'change' }
+  ],
+  phone: [
+    { validator: validatePhone, trigger: 'blur' }
+  ],
+  email: [
+    { validator: validateEmail, trigger: 'blur' }
   ]
-}
+}))
 
 // 统计信息
 const deptCount = computed(() => countNodes(deptList.value))
@@ -504,7 +539,8 @@ const getDeptList = () => {
       parentId: String(item.parentId)
     }))
     deptList.value = safeData
-    deptTreeData.value = buildDeptTree(safeData, '0')
+    // 后端已经返回树形结构，直接使用
+    deptTreeData.value = safeData.length > 0 && safeData[0].children ? safeData : buildDeptTree(safeData, '0')
     window.debugDeptList = safeData
     loading.value = false
     // 手动展开所有行
@@ -701,27 +737,54 @@ const handleBatchDelete = () => {
     return
   }
 
-  const deptNames = selectedRows.value.map(item => item.deptName).join(',')
-  ElMessageBox.confirm(
-    `确认删除选中的 ${selectedRows.value.length} 个部门吗？\n\n${deptNames}`,
-    '警告',
-    {
-      type: 'warning',
-      distinguishCancelAndClose: true,
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      closeOnClickModal: false
-    }
-  ).then(() => {
-    const deptIds = selectedRows.value.map(item => item.deptId)
-    request.delete('/system/dept/batch', { data: deptIds }).then(() => {
-      ElMessage.success('批量删除成功')
-      clearSelection()
-      getDeptList()
-    }).catch(() => {
-      ElMessage.error('批量删除失败')
+  // 获取所有选中的部门 ID
+  const deptIds = selectedRows.value.map(item => item.deptId)
+
+  // 逐个检查是否有用户
+  const checkPromises = deptIds.map(id =>
+    request.get('/system/dept/user/count', { params: { deptId: id } })
+  )
+
+  Promise.all(checkPromises).then(results => {
+    // 找出有用户的部门
+    const hasUserDepts = []
+    results.forEach((res, index) => {
+      const userCount = res.data || 0
+      if (userCount > 0) {
+        hasUserDepts.push({ name: selectedRows.value[index].deptName, count: userCount })
+      }
     })
-  }).catch(() => {})
+
+    if (hasUserDepts.length > 0) {
+      const msg = hasUserDepts.map(d => `部门 [${d.name}] 下存在 ${d.count} 名用户`).join('; ')
+      ElMessage.warning(msg)
+      return
+    }
+
+    // 确认删除
+    const deptNames = selectedRows.value.map(item => item.deptName).join(',')
+    ElMessageBox.confirm(
+      `确认删除选中的 ${selectedRows.value.length} 个部门吗？\n\n${deptNames}`,
+      '警告',
+      {
+        type: 'warning',
+        distinguishCancelAndClose: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        closeOnClickModal: false
+      }
+    ).then(() => {
+      request.delete('/system/dept/batch', { data: deptIds }).then(() => {
+        ElMessage.success('批量删除成功')
+        clearSelection()
+        getDeptList()
+      }).catch(() => {
+        ElMessage.error('批量删除失败')
+      })
+    }).catch(() => {})
+  }).catch(() => {
+    ElMessage.error('检查用户失败')
+  })
 }
 
 // 切换列显示
@@ -815,7 +878,7 @@ const handleUpdate = (row) => {
     deptId: row.deptId,
     parentId: String(row.parentId || '0'),
     deptName: row.deptName,
-    sort: row.sort ?? 0,
+    sort: row.sort !== null && row.sort !== undefined ? row.sort : 0,
     leader: row.leader || '',
     phone: row.phone || '',
     email: row.email || '',
@@ -850,21 +913,33 @@ const handleDelete = (row) => {
     ElMessage.warning('该部门下存在子部门，无法删除')
     return
   }
-  
-  ElMessageBox.confirm(`确认删除部门 "${row.deptName}" 吗？`, '警告', {
-    type: 'warning',
-    distinguishCancelAndClose: true,
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    closeOnClickModal: false
-  }).then(() => {
-    request.delete(`/system/dept/${row.deptId}`).then(() => {
-      ElMessage.success('删除成功')
-      getDeptList()
-    }).catch(() => {
-      ElMessage.error('删除失败')
-    })
-  }).catch(() => {})
+
+  // 先检查是否有用户
+  request.get('/system/dept/user/count', { params: { deptId: row.deptId } }).then(res => {
+    const userCount = res.data || 0
+    if (userCount > 0) {
+      ElMessage.warning(`该部门下存在 ${userCount} 名用户，无法删除`)
+      return
+    }
+
+    // 确认删除
+    ElMessageBox.confirm(`确认删除部门 "${row.deptName}" 吗？`, '警告', {
+      type: 'warning',
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      closeOnClickModal: false
+    }).then(() => {
+      request.delete(`/system/dept/${row.deptId}`).then(() => {
+        ElMessage.success('删除成功')
+        getDeptList()
+      }).catch(() => {
+        ElMessage.error('删除失败')
+      })
+    }).catch(() => {})
+  }).catch(() => {
+    ElMessage.error('检查用户失败')
+  })
 }
 
 // 提交表单
@@ -872,11 +947,9 @@ const submitForm = () => {
   formRef.value.validate(valid => {
     if (valid) {
       submitLoading.value = true
-      // 转换 ID 为字符串类型
       const submitData = {
         ...form,
-        deptId: form.deptId ? String(form.deptId) : null,
-        parentId: form.parentId ? String(form.parentId) : '0'
+        parentId: form.parentId || '0'
       }
       const api = form.deptId ? request.put : request.post
       api('/system/dept', submitData).then(() => {
@@ -897,7 +970,7 @@ const resetForm = () => {
   formRef.value?.resetFields()
   Object.assign(form, {
     deptId: null,
-    parentId: null,
+    parentId: '0',
     deptName: '',
     sort: 0,
     leader: '',

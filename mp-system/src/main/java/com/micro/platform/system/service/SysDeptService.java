@@ -68,6 +68,11 @@ public interface SysDeptService extends IServiceX<SysDept> {
     void batchUpdateStatus(List<Long> deptIds, Integer status);
 
     /**
+     * 修改部门状态
+     */
+    void updateStatus(Long deptId, Integer status);
+
+    /**
      * 导出部门数据（包含树形结构）
      */
     void exportDeptWithTree(HttpServletResponse response, SysDept dept);
