@@ -26,10 +26,17 @@ export default defineConfig({
   server: {
     port: 3001,
     proxy: {
+      // 认证服务
       '/api': {
         target: 'http://localhost:8081',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      // 系统管理服务
+      '/system': {
+        target: 'http://localhost:8082',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/system/, '/system')
       }
     }
   },
