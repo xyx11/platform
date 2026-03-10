@@ -14,6 +14,11 @@ spring:
         group: DEFAULT_GROUP
       config:
         enabled: false
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    timeout: 5000ms
   datasource:
     dynamic:
       primary: master
@@ -39,12 +44,6 @@ spring:
           url: jdbc:mysql://127.0.0.1:3306/micro_platform?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
           username: root
           password: Hpi12345
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      database: 0
-      timeout: 5000ms
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
@@ -67,8 +66,9 @@ sa-token:
   is-concurrent: true
   is-share: true
   token-style: uuid
-  is-log: false
+  is-log: true
   is-print: false
+  token-prefix: Bearer
 
 springdoc:
   api-docs:
@@ -88,3 +88,4 @@ logging:
     root: INFO
     com.micro.platform: DEBUG
     com.micro.platform.**.mapper: DEBUG
+    cn.dev33.satoken: DEBUG

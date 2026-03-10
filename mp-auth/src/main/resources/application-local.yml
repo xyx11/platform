@@ -14,11 +14,11 @@ spring:
         group: DEFAULT_GROUP
       config:
         enabled: false
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      database: 0
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    timeout: 5000ms
   datasource:
     druid:
       stat-view-sql-patterns: true
@@ -68,8 +68,9 @@ sa-token:
   is-concurrent: true
   is-share: true
   token-style: uuid
-  is-log: false
+  is-log: true
   is-print: false
+  token-prefix: Bearer
 
 springdoc:
   api-docs:

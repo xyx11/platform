@@ -17,6 +17,11 @@
             <name>Aliyun Maven</name>
             <url>https://maven.aliyun.com/repository/public</url>
         </repository>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -24,6 +29,11 @@
             <id>aliyun-plugins</id>
             <name>Aliyun Maven Plugins</name>
             <url>https://maven.aliyun.com/repository/public</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>central-plugins</id>
+            <name>Maven Central Plugins</name>
+            <url>https://repo1.maven.org/maven2</url>
         </pluginRepository>
     </pluginRepositories>
 
