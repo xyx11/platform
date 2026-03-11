@@ -73,6 +73,7 @@
         <xxl-job.version>2.4.1</xxl-job.version>
         <easyexcel.version>3.3.4</easyexcel.version>
         <velocity.version>2.3</velocity.version>
+        <flowable.version>7.0.0</flowable.version>
 
         <!-- Validation -->
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
@@ -217,6 +218,13 @@
                 <groupId>com.github.whvcse</groupId>
                 <artifactId>easy-captcha</artifactId>
                 <version>${captcha.version}</version>
+            </dependency>
+
+            <!-- Flowable BPMN -->
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-spring-boot-starter</artifactId>
+                <version>${flowable.version}</version>
             </dependency>
 
             <!-- Project Modules -->

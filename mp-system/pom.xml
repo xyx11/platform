@@ -101,6 +101,12 @@
             <artifactId>easyexcel</artifactId>
         </dependency>
 
+        <!-- Flowable BPMN -->
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter</artifactId>
+        </dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
