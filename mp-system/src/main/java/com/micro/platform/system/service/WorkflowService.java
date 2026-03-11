@@ -50,4 +50,53 @@ public interface WorkflowService {
      * 激活流程
      */
     void activateProcess(String processInstanceId);
+
+    /**
+     * 部署流程定义
+     *
+     * @param name 流程名称
+     * @param bpmnXml BPMN XML 内容
+     * @return 部署结果
+     */
+    Map<String, Object> deployProcessDefinition(String name, String bpmnXml);
+
+    /**
+     * 保存流程定义
+     *
+     * @param name 流程名称
+     * @param bpmnXml BPMN XML 内容
+     * @param category 流程分类
+     */
+    void saveProcessDefinition(String name, String bpmnXml, String category);
+
+    /**
+     * 获取流程定义列表
+     *
+     * @param category 流程分类
+     * @return 流程定义列表
+     */
+    List<Map<String, Object>> getProcessDefinitions(String category);
+
+    /**
+     * 获取流程定义详情
+     *
+     * @param processDefinitionId 流程定义 ID
+     * @return 流程定义详情
+     */
+    Map<String, Object> getProcessDefinition(String processDefinitionId);
+
+    /**
+     * 删除流程定义
+     *
+     * @param deploymentId 部署 ID
+     */
+    void deleteProcessDefinition(String deploymentId);
+
+    /**
+     * 获取流程定义 BPMN XML
+     *
+     * @param processDefinitionId 流程定义 ID
+     * @return BPMN XML 内容
+     */
+    String getProcessDefinitionBpmn(String processDefinitionId);
 }

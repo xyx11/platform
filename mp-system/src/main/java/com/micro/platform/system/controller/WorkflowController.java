@@ -12,6 +12,7 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -111,5 +112,65 @@ public class WorkflowController {
     public Result<Void> activateProcess(@PathVariable String processInstanceId) {
         workflowService.activateProcess(processInstanceId);
         return Result.success();
+    }
+
+    @PostMapping("/deploy")
+    @Operation(summary = "部署流程定义")
+    @PreAuthorize("@ss.hasPermission('system:workflow:deploy')")
+    @OperationLog(module = "工作流", type = OperationType.OTHER)
+    public Result<Map<String, Object>> deploy(@RequestParam String name,
+                                               @RequestParam String bpmnXml) {
+        Map<String, Object> result = workflowService.deployProcessDefinition(name, bpmnXml);
+        return Result.success(result);
+    }
+
+    @PostMapping("/save")
+    @Operation(summary = "保存流程定义")
+    @PreAuthorize("@ss.hasPermission('system:workflow:save')")
+    @OperationLog(module = "工作流", type = OperationType.INSERT)
+    public Result<Void> saveDefinition(@RequestBody Map<String, String> params) {
+        String name = params.get("name");
+        String bpmnXml = params.get("bpmnXml");
+        String category = params.get("category");
+        workflowService.saveProcessDefinition(name, bpmnXml, category);
+        return Result.success();
+    }
+
+    @GetMapping("/definition/list")
+    @Operation(summary = "获取流程定义列表")
+    @PreAuthorize("@ss.hasPermission('system:workflow:query')")
+    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    public Result<List<Map<String, Object>>> getProcessDefinitions(@RequestParam(required = false) String category) {
+        List<Map<String, Object>> result = workflowService.getProcessDefinitions(category);
+        return Result.success(result);
+    }
+
+    @GetMapping("/definition/{processDefinitionId}")
+    @Operation(summary = "获取流程定义详情")
+    @PreAuthorize("@ss.hasPermission('system:workflow:query')")
+    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    public Result<Map<String, Object>> getProcessDefinition(@PathVariable String processDefinitionId) {
+        Map<String, Object> result = workflowService.getProcessDefinition(processDefinitionId);
+        return Result.success(result);
+    }
+
+    @DeleteMapping("/definition/{deploymentId}")
+    @Operation(summary = "删除流程定义")
+    @PreAuthorize("@ss.hasPermission('system:workflow:delete')")
+    @OperationLog(module = "工作流", type = OperationType.DELETE)
+    public Result<Void> deleteProcessDefinition(@PathVariable String deploymentId) {
+        workflowService.deleteProcessDefinition(deploymentId);
+        return Result.success();
+    }
+
+    @GetMapping("/definition/bpmn/{processDefinitionId}")
+    @Operation(summary = "获取 BPMN 流程定义 XML")
+    @PreAuthorize("@ss.hasPermission('system:workflow:query')")
+    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    public Result<Map<String, String>> getProcessDefinitionBpmn(@PathVariable String processDefinitionId) {
+        String bpmnXml = workflowService.getProcessDefinitionBpmn(processDefinitionId);
+        Map<String, String> result = new HashMap<>();
+        result.put("bpmnXml", bpmnXml);
+        return Result.success(result);
     }
 }

@@ -140,3 +140,13 @@ INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`
 (3204, 32, '完成任务', '', '', 'system:workflow-form:complete', 3, '', 4, 0, 0, 1, 1, NULL, NOW()),
 (3205, 32, '草稿管理', '', '', 'system:workflow-form:draft', 3, '', 5, 0, 0, 1, 1, NULL, NOW())
 ON DUPLICATE KEY UPDATE menu_name=menu_name;
+
+-- ============================================
+-- 工作流流程定义管理菜单权限
+-- ============================================
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `is_frame`, `is_cache`, `visible`, `status`, `remark`, `create_time`) VALUES
+(33, 21, '流程定义', '/system/workflow-definition', 'system/workflow-definition/index', 'system:workflow-definition:list', 2, 'Flowchart', 23, 0, 0, 1, 1, NULL, NOW()),
+(3301, 33, '流程查询', '', '', 'system:workflow-definition:query', 3, '', 1, 0, 0, 1, 1, NULL, NOW()),
+(3302, 33, '流程部署', '', '', 'system:workflow-definition:deploy', 3, '', 2, 0, 0, 1, 1, NULL, NOW()),
+(3303, 33, '流程删除', '', '', 'system:workflow-definition:delete', 3, '', 3, 0, 0, 1, 1, NULL, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;
