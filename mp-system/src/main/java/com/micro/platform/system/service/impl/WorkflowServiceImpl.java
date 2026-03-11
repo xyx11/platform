@@ -1,5 +1,6 @@
 package com.micro.platform.system.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
@@ -10,6 +11,7 @@ import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
+import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.system.service.WorkflowService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 /**
  * 工作流服务实现
  */
+@Slf4j
 @Service
 public class WorkflowServiceImpl implements WorkflowService {
 
@@ -49,6 +52,7 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ProcessInstance startProcess(String processDefinitionKey, String businessKey, Map<String, Object> variables) {
+        log.info("启动流程：{}, businessKey: {}", processDefinitionKey, businessKey);
         return runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, variables);
     }
 
@@ -64,6 +68,7 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void completeTask(String taskId, Map<String, Object> variables) {
+        log.info("完成任务：{}", taskId);
         taskService.complete(taskId, variables);
     }
 
@@ -81,18 +86,21 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteProcess(String processInstanceId, String deleteReason) {
+        log.info("删除流程实例：{}, 原因：{}", processInstanceId, deleteReason);
         runtimeService.deleteProcessInstance(processInstanceId, deleteReason);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void suspendProcess(String processInstanceId) {
+        log.info("挂起流程实例：{}", processInstanceId);
         runtimeService.suspendProcessInstanceById(processInstanceId);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void activateProcess(String processInstanceId) {
+        log.info("激活流程实例：{}", processInstanceId);
         runtimeService.activateProcessInstanceById(processInstanceId);
     }
 
@@ -100,13 +108,12 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = "processDefinitions", allEntries = true)
     public Map<String, Object> deployProcessDefinition(String name, String bpmnXml) {
-        // 部署流程
+        log.info("部署流程定义：{}", name);
         Deployment deployment = repositoryService.createDeployment()
                 .addStringInputStream(name + ".bpmn20.xml", new ByteArrayInputStream(bpmnXml.getBytes()))
                 .name(name)
                 .deploy();
 
-        // 获取部署后的流程定义
         ProcessDefinition definition = repositoryService.createProcessDefinitionQuery()
                 .deploymentId(deployment.getId())
                 .singleResult();
@@ -118,6 +125,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         result.put("key", definition.getKey());
         result.put("version", definition.getVersion());
 
+        log.info("流程定义部署成功：{} (v{})", definition.getName(), definition.getVersion());
         return result;
     }
 
@@ -125,27 +133,27 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = "processDefinitions", allEntries = true)
     public void saveProcessDefinition(String name, String bpmnXml, String category) {
-        // 保存流程定义（带分类）
+        log.info("保存流程定义：{}, 分类：{}", name, category);
         Deployment deployment = repositoryService.createDeployment()
                 .addStringInputStream(name + ".bpmn20.xml", new ByteArrayInputStream(bpmnXml.getBytes()))
                 .name(name)
                 .category(category)
                 .deploy();
 
-        // 获取流程定义并设置分类
         ProcessDefinition definition = repositoryService.createProcessDefinitionQuery()
                 .deploymentId(deployment.getId())
                 .singleResult();
 
-        // 更新流程定义分类
         if (definition != null && category != null) {
             repositoryService.setProcessDefinitionCategory(definition.getId(), category);
         }
+        log.info("流程定义保存成功：{}", name);
     }
 
     @Override
     @Cacheable(value = "processDefinitions", key = "#category ?: 'all'", unless = "#result == null")
     public List<Map<String, Object>> getProcessDefinitions(String category) {
+        log.debug("获取流程定义列表，分类：{}", category);
         ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
 
         if (category != null && !category.isEmpty()) {
@@ -172,6 +180,7 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Override
     @Cacheable(value = "processDefinitions", key = "#processDefinitionId", unless = "#result == null")
     public Map<String, Object> getProcessDefinition(String processDefinitionId) {
+        log.debug("获取流程定义详情：{}", processDefinitionId);
         ProcessDefinition definition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionId(processDefinitionId)
                 .singleResult();
@@ -198,8 +207,9 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = "processDefinitions", allEntries = true)
     public void deleteProcessDefinition(String deploymentId) {
-        // true 表示级联删除
+        log.info("删除流程定义，部署 ID: {}", deploymentId);
         repositoryService.deleteDeployment(deploymentId, true);
+        log.info("流程定义删除成功：{}", deploymentId);
     }
 
     @Override
@@ -209,10 +219,9 @@ public class WorkflowServiceImpl implements WorkflowService {
                 .singleResult();
 
         if (definition == null) {
-            return null;
+            throw new BusinessException("流程定义不存在");
         }
 
-        // 获取 BPMN 资源流并读取为字符串
         String resourceName = definition.getResourceName();
         try (InputStream inputStream = repositoryService.getResourceAsStream(definition.getDeploymentId(), resourceName)) {
             if (inputStream != null) {
@@ -220,6 +229,7 @@ public class WorkflowServiceImpl implements WorkflowService {
                 return new String(bytes, StandardCharsets.UTF_8);
             }
         } catch (Exception e) {
+            log.error("读取 BPMN 失败：{}", e.getMessage());
             throw new RuntimeException("读取 BPMN 失败：" + e.getMessage(), e);
         }
         return null;
@@ -227,6 +237,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     public List<Map<String, Object>> getRunningProcessInstances(String processDefinitionKey, String businessKey) {
+        log.debug("获取运行中流程实例列表");
         var query = runtimeService.createProcessInstanceQuery();
 
         if (processDefinitionKey != null && !processDefinitionKey.isEmpty()) {
@@ -238,37 +249,21 @@ public class WorkflowServiceImpl implements WorkflowService {
 
         List<ProcessInstance> instances = query.orderByProcessInstanceId().desc().list();
 
-        return instances.stream().map(instance -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("processInstanceId", instance.getProcessInstanceId());
-            map.put("processDefinitionId", instance.getProcessDefinitionId());
-            map.put("processDefinitionKey", instance.getProcessDefinitionKey());
-            map.put("businessKey", instance.getBusinessKey());
-            map.put("isSuspended", instance.isSuspended());
-            map.put("startTime", instance.getStartTime());
-            map.put("startUserId", instance.getStartUserId());
-            return map;
-        }).collect(Collectors.toList());
+        return instances.stream().map(this::convertProcessInstanceToMap).collect(Collectors.toList());
     }
 
     @Override
     public Map<String, Object> getProcessInstance(String processInstanceId) {
+        log.debug("获取流程实例详情：{}", processInstanceId);
         ProcessInstance instance = runtimeService.createProcessInstanceQuery()
                 .processInstanceId(processInstanceId)
                 .singleResult();
 
         if (instance == null) {
-            return null;
+            throw new BusinessException("流程实例不存在");
         }
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("processInstanceId", instance.getProcessInstanceId());
-        result.put("processDefinitionId", instance.getProcessDefinitionId());
-        result.put("processDefinitionKey", instance.getProcessDefinitionKey());
-        result.put("businessKey", instance.getBusinessKey());
-        result.put("isSuspended", instance.isSuspended());
-        result.put("startTime", instance.getStartTime());
-        result.put("startUserId", instance.getStartUserId());
+        Map<String, Object> result = convertProcessInstanceToMap(instance);
 
         // 获取当前活动
         var activities = runtimeService.getActiveActivityIds(processInstanceId);
@@ -279,6 +274,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     public List<Map<String, Object>> getProcessInstanceHistory(String processInstanceId) {
+        log.debug("获取流程历史轨迹：{}", processInstanceId);
         List<HistoricActivityInstance> history = historyService.createHistoricActivityInstanceQuery()
                 .processInstanceId(processInstanceId)
                 .orderByHistoricActivityInstanceStartTime()
@@ -300,6 +296,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     public Map<String, Object> getProcessInstanceStats() {
+        log.debug("获取流程实例统计信息");
         Map<String, Object> stats = new HashMap<>();
 
         // 运行中的流程实例统计
@@ -332,5 +329,20 @@ public class WorkflowServiceImpl implements WorkflowService {
         stats.put("historicCount", historicCount);
 
         return stats;
+    }
+
+    /**
+     * 转换流程实例为 Map
+     */
+    private Map<String, Object> convertProcessInstanceToMap(ProcessInstance instance) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("processInstanceId", instance.getProcessInstanceId());
+        map.put("processDefinitionId", instance.getProcessDefinitionId());
+        map.put("processDefinitionKey", instance.getProcessDefinitionKey());
+        map.put("businessKey", instance.getBusinessKey());
+        map.put("isSuspended", instance.isSuspended());
+        map.put("startTime", instance.getStartTime());
+        map.put("startUserId", instance.getStartUserId());
+        return map;
     }
 }

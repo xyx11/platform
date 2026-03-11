@@ -139,6 +139,12 @@ const routes = [
         meta: { title: '流程实例监控', icon: 'Monitor' }
       },
       {
+        path: 'task',
+        name: 'TaskManagement',
+        component: () => import('@/views/system/task/index.vue'),
+        meta: { title: '任务管理', icon: 'List' }
+      },
+      {
         path: 'tenant-package',
         name: 'TenantPackage',
         component: () => import('@/views/system/tenant-package/index.vue'),
