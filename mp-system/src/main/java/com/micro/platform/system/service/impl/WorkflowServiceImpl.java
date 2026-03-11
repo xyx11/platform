@@ -1,6 +1,5 @@
 package com.micro.platform.system.service.impl;
 
-import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
@@ -13,6 +12,8 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.system.service.WorkflowService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -30,9 +31,10 @@ import java.util.stream.Collectors;
 /**
  * 工作流服务实现
  */
-@Slf4j
 @Service
 public class WorkflowServiceImpl implements WorkflowService {
+
+    private static final Logger log = LoggerFactory.getLogger(WorkflowServiceImpl.class);
 
     private final RuntimeService runtimeService;
     private final TaskService taskService;
@@ -109,8 +111,9 @@ public class WorkflowServiceImpl implements WorkflowService {
     @CacheEvict(value = "processDefinitions", allEntries = true)
     public Map<String, Object> deployProcessDefinition(String name, String bpmnXml) {
         log.info("部署流程定义：{}", name);
+        ByteArrayInputStream bais = new ByteArrayInputStream(bpmnXml.getBytes(StandardCharsets.UTF_8));
         Deployment deployment = repositoryService.createDeployment()
-                .addStringInputStream(name + ".bpmn20.xml", new ByteArrayInputStream(bpmnXml.getBytes()))
+                .addInputStream(name + ".bpmn20.xml", bais)
                 .name(name)
                 .deploy();
 
@@ -134,8 +137,9 @@ public class WorkflowServiceImpl implements WorkflowService {
     @CacheEvict(value = "processDefinitions", allEntries = true)
     public void saveProcessDefinition(String name, String bpmnXml, String category) {
         log.info("保存流程定义：{}, 分类：{}", name, category);
+        ByteArrayInputStream bais = new ByteArrayInputStream(bpmnXml.getBytes(StandardCharsets.UTF_8));
         Deployment deployment = repositoryService.createDeployment()
-                .addStringInputStream(name + ".bpmn20.xml", new ByteArrayInputStream(bpmnXml.getBytes()))
+                .addInputStream(name + ".bpmn20.xml", bais)
                 .name(name)
                 .category(category)
                 .deploy();
