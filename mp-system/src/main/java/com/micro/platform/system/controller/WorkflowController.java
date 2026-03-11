@@ -173,4 +173,42 @@ public class WorkflowController {
         result.put("bpmnXml", bpmnXml);
         return Result.success(result);
     }
+
+    @GetMapping("/instance/list")
+    @Operation(summary = "获取运行中的流程实例列表")
+    @PreAuthorize("@ss.hasPermission('system:workflow:query')")
+    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    public Result<List<Map<String, Object>>> getRunningProcessInstances(
+            @RequestParam(required = false) String processDefinitionKey,
+            @RequestParam(required = false) String businessKey) {
+        List<Map<String, Object>> result = workflowService.getRunningProcessInstances(processDefinitionKey, businessKey);
+        return Result.success(result);
+    }
+
+    @GetMapping("/instance/{processInstanceId}")
+    @Operation(summary = "获取流程实例详情")
+    @PreAuthorize("@ss.hasPermission('system:workflow:query')")
+    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    public Result<Map<String, Object>> getProcessInstance(@PathVariable String processInstanceId) {
+        Map<String, Object> result = workflowService.getProcessInstance(processInstanceId);
+        return Result.success(result);
+    }
+
+    @GetMapping("/instance/{processInstanceId}/history")
+    @Operation(summary = "获取流程历史活动轨迹")
+    @PreAuthorize("@ss.hasPermission('system:workflow:query')")
+    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    public Result<List<Map<String, Object>>> getProcessInstanceHistory(@PathVariable String processInstanceId) {
+        List<Map<String, Object>> result = workflowService.getProcessInstanceHistory(processInstanceId);
+        return Result.success(result);
+    }
+
+    @GetMapping("/stats")
+    @Operation(summary = "获取流程实例统计信息")
+    @PreAuthorize("@ss.hasPermission('system:workflow:query')")
+    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    public Result<Map<String, Object>> getProcessInstanceStats() {
+        Map<String, Object> result = workflowService.getProcessInstanceStats();
+        return Result.success(result);
+    }
 }

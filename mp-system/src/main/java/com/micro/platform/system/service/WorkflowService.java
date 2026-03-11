@@ -99,4 +99,36 @@ public interface WorkflowService {
      * @return BPMN XML 内容
      */
     String getProcessDefinitionBpmn(String processDefinitionId);
+
+    /**
+     * 获取运行中的流程实例列表
+     *
+     * @param processDefinitionKey 流程定义 key（可选）
+     * @param businessKey 业务 key（可选）
+     * @return 流程实例列表
+     */
+    List<Map<String, Object>> getRunningProcessInstances(String processDefinitionKey, String businessKey);
+
+    /**
+     * 获取流程实例详情
+     *
+     * @param processInstanceId 流程实例 ID
+     * @return 流程实例详情
+     */
+    Map<String, Object> getProcessInstance(String processInstanceId);
+
+    /**
+     * 获取流程历史活动（轨迹）
+     *
+     * @param processInstanceId 流程实例 ID
+     * @return 历史活动列表
+     */
+    List<Map<String, Object>> getProcessInstanceHistory(String processInstanceId);
+
+    /**
+     * 获取流程实例统计信息
+     *
+     * @return 统计信息
+     */
+    Map<String, Object> getProcessInstanceStats();
 }

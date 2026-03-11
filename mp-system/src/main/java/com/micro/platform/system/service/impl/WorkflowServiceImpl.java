@@ -4,6 +4,7 @@ import org.flowable.engine.HistoryService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
+import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -221,5 +223,114 @@ public class WorkflowServiceImpl implements WorkflowService {
             throw new RuntimeException("读取 BPMN 失败：" + e.getMessage(), e);
         }
         return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> getRunningProcessInstances(String processDefinitionKey, String businessKey) {
+        var query = runtimeService.createProcessInstanceQuery();
+
+        if (processDefinitionKey != null && !processDefinitionKey.isEmpty()) {
+            query.processDefinitionKey(processDefinitionKey);
+        }
+        if (businessKey != null && !businessKey.isEmpty()) {
+            query.processInstanceBusinessKey(businessKey);
+        }
+
+        List<ProcessInstance> instances = query.orderByProcessInstanceId().desc().list();
+
+        return instances.stream().map(instance -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("processInstanceId", instance.getProcessInstanceId());
+            map.put("processDefinitionId", instance.getProcessDefinitionId());
+            map.put("processDefinitionKey", instance.getProcessDefinitionKey());
+            map.put("businessKey", instance.getBusinessKey());
+            map.put("isSuspended", instance.isSuspended());
+            map.put("startTime", instance.getStartTime());
+            map.put("startUserId", instance.getStartUserId());
+            return map;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Object> getProcessInstance(String processInstanceId) {
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .singleResult();
+
+        if (instance == null) {
+            return null;
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("processInstanceId", instance.getProcessInstanceId());
+        result.put("processDefinitionId", instance.getProcessDefinitionId());
+        result.put("processDefinitionKey", instance.getProcessDefinitionKey());
+        result.put("businessKey", instance.getBusinessKey());
+        result.put("isSuspended", instance.isSuspended());
+        result.put("startTime", instance.getStartTime());
+        result.put("startUserId", instance.getStartUserId());
+
+        // 获取当前活动
+        var activities = runtimeService.getActiveActivityIds(processInstanceId);
+        result.put("activeActivities", activities);
+
+        return result;
+    }
+
+    @Override
+    public List<Map<String, Object>> getProcessInstanceHistory(String processInstanceId) {
+        List<HistoricActivityInstance> history = historyService.createHistoricActivityInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .orderByHistoricActivityInstanceStartTime()
+                .asc()
+                .list();
+
+        return history.stream().map(activity -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("activityId", activity.getActivityId());
+            map.put("activityName", activity.getActivityName());
+            map.put("activityType", activity.getActivityType());
+            map.put("startTime", activity.getStartTime());
+            map.put("endTime", activity.getEndTime());
+            map.put("duration", activity.getDurationInMillis());
+            map.put("assignee", activity.getAssignee());
+            return map;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Object> getProcessInstanceStats() {
+        Map<String, Object> stats = new HashMap<>();
+
+        // 运行中的流程实例统计
+        long runningCount = runtimeService.createProcessInstanceQuery().count();
+        long suspendedCount = runtimeService.createProcessInstanceQuery().suspended().count();
+
+        stats.put("runningCount", runningCount);
+        stats.put("suspendedCount", suspendedCount);
+
+        // 按流程定义分组统计
+        var definitions = repositoryService.createProcessDefinitionQuery().list();
+        List<Map<String, Object>> definitionStats = new ArrayList<>();
+
+        for (var definition : definitions) {
+            long count = runtimeService.createProcessInstanceQuery()
+                    .processDefinitionKey(definition.getKey())
+                    .count();
+
+            Map<String, Object> defStat = new HashMap<>();
+            defStat.put("processDefinitionKey", definition.getKey());
+            defStat.put("processDefinitionName", definition.getName());
+            defStat.put("count", count);
+            definitionStats.add(defStat);
+        }
+
+        stats.put("definitionStats", definitionStats);
+
+        // 历史流程实例统计
+        long historicCount = historyService.createHistoricProcessInstanceQuery().count();
+        stats.put("historicCount", historicCount);
+
+        return stats;
     }
 }
