@@ -107,6 +107,18 @@ const routes = [
         name: 'SysOnlineUser',
         component: () => import('@/views/system/online-user/index.vue'),
         meta: { title: '在线用户', icon: 'Connection' }
+      },
+      {
+        path: 'workflow-designer',
+        name: 'WorkflowDesigner',
+        component: () => import('@/views/system/workflow/designer/index.vue'),
+        meta: { title: '流程设计器', icon: 'EditPen' }
+      },
+      {
+        path: 'workflow-form',
+        name: 'WorkflowForm',
+        component: () => import('@/views/system/workflow-form/index.vue'),
+        meta: { title: '流程表单', icon: 'FileText' }
       }
     ]
   },

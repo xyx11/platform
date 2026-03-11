@@ -103,3 +103,40 @@ INSERT INTO `sys_tenant_package` (`id`, `name`, `code`, `description`, `package_
 (3, '专业版', 'professional', '适合中小企业，完整的功能套件', 3, 299.00, 100, 50, 10000, '{"all":true}', 1, 3),
 (4, '企业版', 'enterprise', '适合大型企业，支持定制开发', 4, 999.00, 9999, 9999, 102400, '{"all":true,"custom":true}', 1, 4)
 ON DUPLICATE KEY UPDATE `name`=`name`;
+
+-- ============================================
+-- 工作流表单绑定关系表
+-- ============================================
+CREATE TABLE IF NOT EXISTS `wf_form_binding` (
+  `id` bigint NOT NULL COMMENT '绑定 ID',
+  `process_definition_key` varchar(100) DEFAULT NULL COMMENT '流程定义 Key',
+  `process_definition_id` varchar(64) DEFAULT NULL COMMENT '流程定义 ID',
+  `task_definition_key` varchar(100) DEFAULT NULL COMMENT '任务节点 Key',
+  `form_code` varchar(50) DEFAULT NULL COMMENT '表单编码',
+  `form_name` varchar(200) DEFAULT NULL COMMENT '表单名称',
+  `form_type` int DEFAULT NULL COMMENT '表单类型 (1:启动表单 2:办理表单)',
+  `binding_key` varchar(255) DEFAULT NULL COMMENT '绑定关系唯一标识',
+  `status` int DEFAULT '1' COMMENT '状态 (0:停用 1:启用)',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `create_by` bigint DEFAULT NULL COMMENT '创建者 ID',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新者 ID',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted` int DEFAULT '0' COMMENT '删除标志 (0:正常 1:删除)',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_binding_key` (`binding_key`),
+  KEY `idx_process_key` (`process_definition_key`),
+  KEY `idx_task_key` (`task_definition_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='工作流表单绑定关系表';
+
+-- ============================================
+-- 工作流表单绑定菜单权限
+-- ============================================
+INSERT INTO `sys_menu` (`menu_id`, `parent_id`, `menu_name`, `path`, `component`, `permission`, `type`, `icon`, `sort`, `is_frame`, `is_cache`, `visible`, `status`, `remark`, `create_time`) VALUES
+(32, 21, '流程表单', '/system/workflow-form', 'system/workflow-form/index', 'system:workflow-form:list', 2, 'FileText', 22, 0, 0, 1, 1, NULL, NOW()),
+(3201, 32, '表单绑定', '', '', 'system:workflow-form:bind', 3, '', 1, 0, 0, 1, 1, NULL, NOW()),
+(3202, 32, '表单查询', '', '', 'system:workflow-form:query', 3, '', 2, 0, 0, 1, 1, NULL, NOW()),
+(3203, 32, '启动流程', '', '', 'system:workflow-form:start', 3, '', 3, 0, 0, 1, 1, NULL, NOW()),
+(3204, 32, '完成任务', '', '', 'system:workflow-form:complete', 3, '', 4, 0, 0, 1, 1, NULL, NOW()),
+(3205, 32, '草稿管理', '', '', 'system:workflow-form:draft', 3, '', 5, 0, 0, 1, 1, NULL, NOW())
+ON DUPLICATE KEY UPDATE menu_name=menu_name;

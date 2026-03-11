@@ -57,6 +57,11 @@ public class FormData implements Serializable {
     private Integer status;
 
     /**
+     * 提交类型 (1:启动表单 2:办理表单)
+     */
+    private Integer submitType;
+
+    /**
      * 流程实例 ID（流程表单使用）
      */
     private Long processInstanceId;
@@ -151,6 +156,14 @@ public class FormData implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getSubmitType() {
+        return submitType;
+    }
+
+    public void setSubmitType(Integer submitType) {
+        this.submitType = submitType;
     }
 
     public Long getProcessInstanceId() {
