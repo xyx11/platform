@@ -119,6 +119,12 @@ const routes = [
         name: 'WorkflowForm',
         component: () => import('@/views/system/workflow-form/index.vue'),
         meta: { title: '流程表单', icon: 'FileText' }
+      },
+      {
+        path: 'workflow-definition',
+        name: 'WorkflowDefinition',
+        component: () => import('@/views/system/workflow-definition/index.vue'),
+        meta: { title: '流程定义', icon: 'Flowchart' }
       }
     ]
   },
