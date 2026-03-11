@@ -125,6 +125,24 @@ const routes = [
         name: 'WorkflowDefinition',
         component: () => import('@/views/system/workflow-definition/index.vue'),
         meta: { title: '流程定义', icon: 'Flowchart' }
+      },
+      {
+        path: 'tenant-package',
+        name: 'TenantPackage',
+        component: () => import('@/views/system/tenant-package/index.vue'),
+        meta: { title: '套餐管理', icon: 'Package' }
+      },
+      {
+        path: 'data-permission',
+        name: 'DataPermission',
+        component: () => import('@/views/system/data-permission/index.vue'),
+        meta: { title: '数据权限规则', icon: 'Lock' }
+      },
+      {
+        path: 'form-definition',
+        name: 'FormDefinition',
+        component: () => import('@/views/system/form-definition/index.vue'),
+        meta: { title: '表单定义', icon: 'Document' }
       }
     ]
   },
