@@ -101,6 +101,12 @@ const routes = [
         name: 'SysTodo',
         component: () => import('@/views/system/todo/index.vue'),
         meta: { title: '待办事项', icon: 'List' }
+      },
+      {
+        path: 'online-user',
+        name: 'SysOnlineUser',
+        component: () => import('@/views/system/online-user/index.vue'),
+        meta: { title: '在线用户', icon: 'Connection' }
       }
     ]
   },
