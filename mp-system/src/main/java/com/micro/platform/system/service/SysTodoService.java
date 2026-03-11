@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.service.IServiceX;
 import com.micro.platform.system.entity.SysTodo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,4 +36,24 @@ public interface SysTodoService extends IServiceX<SysTodo> {
      * 获取待办统计信息
      */
     Map<String, Object> getTodoStats();
+
+    /**
+     * 获取即将到期的待办（3 天内）
+     */
+    List<SysTodo> getExpiringTodos(Integer days);
+
+    /**
+     * 获取逾期待办列表
+     */
+    List<SysTodo> getOverdueTodos();
+
+    /**
+     * 批量完成待办
+     */
+    void batchComplete(List<Long> todoIds);
+
+    /**
+     * 按优先级获取待办
+     */
+    List<SysTodo> getByPriority(Integer priority, Integer limit);
 }
