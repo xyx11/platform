@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@stomp/stompjs": "^7.0.0",
     "axios": "^1.6.8",
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
@@ -19,6 +20,7 @@
     "lodash-es": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
+    "sockjs-client": "^1.6.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
     "vue3-count-to": "^1.1.0",

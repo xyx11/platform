@@ -10,6 +10,8 @@ import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import com.micro.platform.system.service.WorkflowService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,6 +96,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "processDefinitions", allEntries = true)
     public Map<String, Object> deployProcessDefinition(String name, String bpmnXml) {
         // 部署流程
         Deployment deployment = repositoryService.createDeployment()
@@ -118,6 +121,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "processDefinitions", allEntries = true)
     public void saveProcessDefinition(String name, String bpmnXml, String category) {
         // 保存流程定义（带分类）
         Deployment deployment = repositoryService.createDeployment()
@@ -138,6 +142,7 @@ public class WorkflowServiceImpl implements WorkflowService {
     }
 
     @Override
+    @Cacheable(value = "processDefinitions", key = "#category ?: 'all'", unless = "#result == null")
     public List<Map<String, Object>> getProcessDefinitions(String category) {
         ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
 
@@ -163,6 +168,7 @@ public class WorkflowServiceImpl implements WorkflowService {
     }
 
     @Override
+    @Cacheable(value = "processDefinitions", key = "#processDefinitionId", unless = "#result == null")
     public Map<String, Object> getProcessDefinition(String processDefinitionId) {
         ProcessDefinition definition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionId(processDefinitionId)
@@ -188,6 +194,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "processDefinitions", allEntries = true)
     public void deleteProcessDefinition(String deploymentId) {
         // true 表示级联删除
         repositoryService.deleteDeployment(deploymentId, true);

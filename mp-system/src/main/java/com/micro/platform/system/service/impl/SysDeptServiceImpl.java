@@ -10,6 +10,8 @@ import com.micro.platform.system.mapper.SysDeptMapper;
 import com.micro.platform.system.mapper.SysUserMapper;
 import com.micro.platform.system.service.SysDeptService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,6 +32,7 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
     }
 
     @Override
+    @Cacheable(value = "deptList", key = "'tree'", unless = "#result == null")
     public List<SysDept> getDeptTree() {
         List<SysDept> depts = list(new LambdaQueryWrapper<SysDept>()
                 .eq(SysDept::getStatus, 1)
@@ -53,6 +56,7 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
     }
 
     @Override
+    @Cacheable(value = "deptList", key = "'list:' + (#dept.dictType ?: 'all')", unless = "#result == null")
     public List<SysDept> selectDeptList(SysDept dept) {
         LambdaQueryWrapper<SysDept> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.hasText(dept.getDeptName()), SysDept::getDeptName, dept.getDeptName())
@@ -108,12 +112,12 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
                     .eq(SysDept::getStatus, 1));
 
             List<Map<String, Object>> deptStats = new ArrayList<>();
-            for (SysDept dept : topDepts) {
+            for (SysDept d : topDepts) {
                 Map<String, Object> deptStat = new HashMap<>();
-                deptStat.put("deptId", dept.getDeptId());
-                deptStat.put("deptName", dept.getDeptName());
-                deptStat.put("userCount", getDeptWithChildrenUserCount(dept.getDeptId()));
-                deptStat.put("childrenCount", getDeptChildIds(dept.getDeptId()).size() - 1);
+                deptStat.put("deptId", d.getDeptId());
+                deptStat.put("deptName", d.getDeptName());
+                deptStat.put("userCount", getDeptWithChildrenUserCount(d.getDeptId()));
+                deptStat.put("childrenCount", getDeptChildIds(d.getDeptId()).size() - 1);
                 deptStats.add(deptStat);
             }
             stats.put("deptStats", deptStats);
@@ -181,7 +185,7 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
             if (deptIds == null || deptIds.isEmpty()) {
                 return;
             }
-            List<SysDept> list = list(new LambdaQueryWrapper<SysDept>().in(SysDept::getDeptId, deptIds));
+            List<SysDept> list = listByIds(deptIds);
 
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             response.setCharacterEncoding("utf-8");
@@ -197,6 +201,7 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
     }
 
     @Override
+    @CacheEvict(value = "deptList", allEntries = true)
     public void removeBatchByIds(List<Long> deptIds) {
         if (deptIds == null || deptIds.isEmpty()) {
             return;
@@ -255,6 +260,7 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
     }
 
     @Override
+    @CacheEvict(value = "deptList", allEntries = true)
     public void batchUpdateStatus(List<Long> deptIds, Integer status) {
         if (deptIds == null || deptIds.isEmpty() || status == null) {
             return;
@@ -267,6 +273,7 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
     }
 
     @Override
+    @CacheEvict(value = "deptList", key = "'tree'")
     public void updateStatus(Long deptId, Integer status) {
         if (deptId == null || status == null) {
             throw new BusinessException("参数错误");

@@ -121,6 +121,7 @@ const routes = [
         meta: { title: '流程表单', icon: 'FileText' }
       },
       {
+      {n        path: 'websocket',n        name: 'WebSocket',n        component: () => import('@/views/system/websocket/index.vue'),n        meta: { title: '消息推送', icon: 'Connection' }n      },n
         path: 'workflow-definition',
         name: 'WorkflowDefinition',
         component: () => import('@/views/system/workflow-definition/index.vue'),

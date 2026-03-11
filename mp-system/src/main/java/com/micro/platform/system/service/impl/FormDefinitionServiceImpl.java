@@ -8,6 +8,8 @@ import com.micro.platform.common.security.util.SecurityUtil;
 import com.micro.platform.system.entity.FormDefinition;
 import com.micro.platform.system.mapper.FormDefinitionMapper;
 import com.micro.platform.system.service.FormDefinitionService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,7 @@ public class FormDefinitionServiceImpl extends ServiceImplX<FormDefinitionMapper
     }
 
     @Override
+    @Cacheable(value = "formDefinitions", key = "#formCode", unless = "#result == null")
     public FormDefinition selectByCode(String formCode) {
         LambdaQueryWrapper<FormDefinition> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(FormDefinition::getFormCode, formCode);
@@ -44,6 +47,7 @@ public class FormDefinitionServiceImpl extends ServiceImplX<FormDefinitionMapper
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "formDefinitions", key = "#formDefinition.formCode")
     public void createFormDefinition(FormDefinition formDefinition) {
         // 检查编码是否已存在
         FormDefinition existForm = selectByCode(formDefinition.getFormCode());
@@ -65,6 +69,7 @@ public class FormDefinitionServiceImpl extends ServiceImplX<FormDefinitionMapper
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "formDefinitions", key = "#formDefinition.formCode")
     public void updateFormDefinition(FormDefinition formDefinition) {
         FormDefinition existForm = getById(formDefinition.getId());
         if (existForm == null) {
@@ -91,6 +96,7 @@ public class FormDefinitionServiceImpl extends ServiceImplX<FormDefinitionMapper
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "formDefinitions", key = "#id")
     public void publishForm(Long id) {
         FormDefinition form = getById(id);
         if (form == null) {
@@ -104,6 +110,7 @@ public class FormDefinitionServiceImpl extends ServiceImplX<FormDefinitionMapper
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "formDefinitions", key = "#id")
     public void disableForm(Long id) {
         FormDefinition form = getById(id);
         if (form == null) {
