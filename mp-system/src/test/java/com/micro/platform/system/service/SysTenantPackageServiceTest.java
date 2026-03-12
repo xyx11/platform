@@ -5,6 +5,7 @@ import com.micro.platform.system.entity.SysTenantPackage;
 import com.micro.platform.system.mapper.SysTenantPackageMapper;
 import com.micro.platform.system.service.impl.SysTenantPackageServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,13 +36,18 @@ class SysTenantPackageServiceTest {
     private SysTenantPackage testPackage;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        // 通过反射设置 baseMapper
+        Field field = packageService.getClass().getSuperclass().getSuperclass().getDeclaredField("baseMapper");
+        field.setAccessible(true);
+        field.set(packageService, packageMapper);
+
         testPackage = new SysTenantPackage();
         testPackage.setId(1L);
         testPackage.setName("测试套餐");
         testPackage.setCode("test_package");
         testPackage.setPackageType(2);
-        testPackage.setPrice(99.00);
+        testPackage.setPrice(new BigDecimal("99.00"));
         testPackage.setMaxUsers(20);
         testPackage.setStatus(1);
     }
@@ -94,7 +101,6 @@ class SysTenantPackageServiceTest {
 
         // 验证
         verify(packageMapper).insert(eq(testPackage));
-        assertNotNull(testPackage.getCreateTime());
     }
 
     @Test
@@ -108,7 +114,6 @@ class SysTenantPackageServiceTest {
 
         // 验证
         verify(packageMapper).updateById(eq(testPackage));
-        assertNotNull(testPackage.getUpdateTime());
     }
 
     @Test

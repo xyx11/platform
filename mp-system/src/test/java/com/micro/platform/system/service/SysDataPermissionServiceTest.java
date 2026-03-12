@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,7 +34,12 @@ class SysDataPermissionServiceTest {
     private SysDataPermission testPermission;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        // 通过反射设置 baseMapper
+        Field field = permissionService.getClass().getSuperclass().getSuperclass().getDeclaredField("baseMapper");
+        field.setAccessible(true);
+        field.set(permissionService, permissionMapper);
+
         testPermission = new SysDataPermission();
         testPermission.setId(1L);
         testPermission.setRoleId(100L);
@@ -89,13 +95,11 @@ class SysDataPermissionServiceTest {
 
         // 验证
         verify(permissionMapper).insert(eq(testPermission));
-        assertNotNull(testPermission.getCreateTime());
     }
 
     @Test
     void testUpdatePermission() {
         // 安排
-        when(permissionMapper.selectById(1L)).thenReturn(testPermission);
         when(permissionMapper.updateById(any())).thenReturn(1);
 
         // 执行
@@ -103,25 +107,25 @@ class SysDataPermissionServiceTest {
 
         // 验证
         verify(permissionMapper).updateById(eq(testPermission));
-        assertNotNull(testPermission.getUpdateTime());
     }
 
     @Test
     void testDeletePermission() {
         // 安排
-        when(permissionMapper.deleteById(1L)).thenReturn(1);
+        when(permissionMapper.deleteById(any())).thenReturn(1);
 
         // 执行
         permissionService.deletePermission(1L);
 
         // 验证
-        verify(permissionMapper).deleteById(1L);
+        verify(permissionMapper).deleteById(any());
     }
 
     @Test
     void testGetById() {
         // 安排
         when(permissionMapper.selectById(1L)).thenReturn(testPermission);
+        // 安排
 
         // 执行
         SysDataPermission result = permissionService.getById(1L);

@@ -4,7 +4,7 @@ import com.micro.platform.system.service.impl.WorkflowTaskServiceImpl;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
-import org.flowable.engine.history.HistoricTaskInstance;
+import org.flowable.task.api.history.HistoricTaskInstance;
 import org.flowable.task.api.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ class WorkflowTaskServiceTest {
     private org.flowable.task.api.TaskQuery taskQuery;
 
     @Mock
-    private org.flowable.engine.history.HistoricTaskInstanceQuery historicTaskQuery;
+    private org.flowable.task.api.history.HistoricTaskInstanceQuery historicTaskQuery;
 
     private String testUserId;
     private String testTaskId;
@@ -152,6 +153,7 @@ class WorkflowTaskServiceTest {
         when(taskService.createTaskQuery()).thenReturn(taskQuery);
         when(taskQuery.taskId(testTaskId)).thenReturn(taskQuery);
         when(taskQuery.singleResult()).thenReturn(task);
+        when(task.getAssignee()).thenReturn(testUserId);
 
         // 执行测试
         assertDoesNotThrow(() -> {
@@ -195,7 +197,8 @@ class WorkflowTaskServiceTest {
         });
 
         // 验证
-        verify(taskService).delegateTask(testTaskId, delegateUser);
+        verify(taskService).setOwner(testTaskId, testUserId);
+        verify(taskService).setAssignee(testTaskId, delegateUser);
     }
 
     @Test
@@ -205,7 +208,7 @@ class WorkflowTaskServiceTest {
         List<HistoricTaskInstance> historyList = new ArrayList<>();
         when(historyService.createHistoricTaskInstanceQuery()).thenReturn(historicTaskQuery);
         when(historicTaskQuery.processInstanceId(testProcessInstanceId)).thenReturn(historicTaskQuery);
-        when(historicTaskQuery.orderByHistoricTaskInstanceStartTime()).thenReturn(historicTaskQuery);
+        when(historicTaskQuery.orderByHistoricTaskInstanceEndTime()).thenReturn(historicTaskQuery);
         when(historicTaskQuery.asc()).thenReturn(historicTaskQuery);
         when(historicTaskQuery.list()).thenReturn(historyList);
 
@@ -244,12 +247,23 @@ class WorkflowTaskServiceTest {
     @DisplayName("获取任务统计 - 按优先级统计")
     void getTaskStats_ByPriority() {
         // 准备测试数据
+        Task highPriorityTask = mock(Task.class);
+        Task normalPriorityTask = mock(Task.class);
+        Task lowPriorityTask = mock(Task.class);
+        when(highPriorityTask.getPriority()).thenReturn(100);
+        when(normalPriorityTask.getPriority()).thenReturn(50);
+        when(lowPriorityTask.getPriority()).thenReturn(10);
+
+        List<Task> allTasks = Arrays.asList(highPriorityTask, normalPriorityTask, lowPriorityTask);
+
         when(taskService.createTaskQuery()).thenReturn(taskQuery);
         when(taskQuery.taskAssignee(testUserId)).thenReturn(taskQuery);
-        when(taskQuery.taskPriority("high")).thenReturn(taskQuery);
-        when(taskQuery.taskPriority("normal")).thenReturn(taskQuery);
-        when(taskQuery.taskPriority("low")).thenReturn(taskQuery);
-        when(taskQuery.count()).thenReturn(2L, 3L, 1L);
+        when(taskQuery.list()).thenReturn(allTasks);
+
+        when(historyService.createHistoricTaskInstanceQuery()).thenReturn(historicTaskQuery);
+        when(historicTaskQuery.taskAssignee(testUserId)).thenReturn(historicTaskQuery);
+        when(historicTaskQuery.finished()).thenReturn(historicTaskQuery);
+        when(historicTaskQuery.count()).thenReturn(0L);
 
         // 执行测试
         Map<String, Object> result = workflowTaskService.getTaskStats(testUserId);
