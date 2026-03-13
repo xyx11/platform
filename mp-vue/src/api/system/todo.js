@@ -12,7 +12,16 @@ export function listTodo(query) {
 // 获取我的待办列表
 export function listMyTodo(query) {
   return request({
-    url: '/system/todo/my/list',
+    url: '/system/todo/my-list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 获取已办事项列表
+export function listDoneTodo(query) {
+  return request({
+    url: '/system/todo/done',
     method: 'get',
     params: query
   })
@@ -63,7 +72,7 @@ export function cancelTodo(id) {
 // 删除待办事项（移动到回收站）
 export function delTodo(id) {
   return request({
-    url: '/system/todo/' + id,
+    url: '/system/todo/delete/' + id,
     method: 'delete'
   })
 }

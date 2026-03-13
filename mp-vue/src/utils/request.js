@@ -11,12 +11,35 @@ const service = axios.create({
   }
 })
 
+// 添加请求方法别名
+service.get = function(url, params) {
+  return this({ url, params, method: 'get' })
+}
+service.post = function(url, data) {
+  return this({ url, data, method: 'post' })
+}
+service.put = function(url, data) {
+  return this({ url, data, method: 'put' })
+}
+service.delete = function(url, params) {
+  // 支持 { data: ... } 参数格式
+  if (params && params.data) {
+    return this({ url, data: params.data, method: 'delete' })
+  }
+  return this({ url, params, method: 'delete' })
+}
+
 // 请求拦截器
 service.interceptors.request.use(
   config => {
     const token = localStorage.getItem('access_token')
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`
+      // 确保 token 以 Bearer 开头
+      if (!token.startsWith('Bearer ')) {
+        config.headers['Authorization'] = 'Bearer ' + token
+      } else {
+        config.headers['Authorization'] = token
+      }
     }
     // 开发环境日志
     if (import.meta.env.DEV) {

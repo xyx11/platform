@@ -1,1 +1,2 @@
-cn.dev33.satoken.dao.SaTokenDaoRedisJackson
+# Sa-Token Redis 自动配置已禁用，使用各服务自定义的 SaTokenRedisConfig
+# Sa-Token 拦截器配置已移除，由各服务自行配置 SecurityConfig

@@ -23,6 +23,11 @@ public interface SysTodoService extends IServiceX<SysTodo> {
     Page<SysTodo> getMyTodos(Integer pageNum, Integer pageSize);
 
     /**
+     * 获取已办事项列表
+     */
+    Page<SysTodo> getDoneTodos(Integer pageNum, Integer pageSize);
+
+    /**
      * 完成待办
      */
     void completeTodo(Long todoId);

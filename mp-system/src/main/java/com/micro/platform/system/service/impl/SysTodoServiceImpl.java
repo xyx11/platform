@@ -7,7 +7,8 @@ import com.micro.platform.common.security.util.SecurityUtil;
 import com.micro.platform.system.entity.SysTodo;
 import com.micro.platform.system.mapper.SysTodoMapper;
 import com.micro.platform.system.service.SysTodoService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -19,9 +20,10 @@ import java.util.Map;
 /**
  * 待办事项服务实现类
  */
-@Slf4j
 @Service
 public class SysTodoServiceImpl extends ServiceImplX<SysTodoMapper, SysTodo> implements SysTodoService {
+
+    private static final Logger log = LoggerFactory.getLogger(SysTodoServiceImpl.class);
 
     @Override
     public Page<SysTodo> selectTodoPage(SysTodo todo, Integer pageNum, Integer pageSize) {
@@ -44,6 +46,16 @@ public class SysTodoServiceImpl extends ServiceImplX<SysTodoMapper, SysTodo> imp
         wrapper.eq(SysTodo::getUserId, SecurityUtil.getUserId())
                 .ne(SysTodo::getStatus, 2)
                 .orderByAsc(SysTodo::getPlanTime);
+        return baseMapper.selectPage(page, wrapper);
+    }
+
+    @Override
+    public Page<SysTodo> getDoneTodos(Integer pageNum, Integer pageSize) {
+        Page<SysTodo> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<SysTodo> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysTodo::getUserId, SecurityUtil.getUserId())
+                .eq(SysTodo::getStatus, 1)
+                .orderByDesc(SysTodo::getActualTime);
         return baseMapper.selectPage(page, wrapper);
     }
 
@@ -133,25 +145,21 @@ public class SysTodoServiceImpl extends ServiceImplX<SysTodoMapper, SysTodo> imp
         Long userId = SecurityUtil.getUserId();
         Map<String, Object> stats = new HashMap<>();
 
-        // 统计总数
         long totalCount = count(new LambdaQueryWrapper<SysTodo>()
                 .eq(SysTodo::getUserId, userId)
                 .ne(SysTodo::getStatus, 2));
         stats.put("totalCount", totalCount);
 
-        // 统计待处理
         long pendingCount = count(new LambdaQueryWrapper<SysTodo>()
                 .eq(SysTodo::getUserId, userId)
                 .eq(SysTodo::getStatus, 0));
         stats.put("pendingCount", pendingCount);
 
-        // 统计已完成
         long completedCount = count(new LambdaQueryWrapper<SysTodo>()
                 .eq(SysTodo::getUserId, userId)
                 .eq(SysTodo::getStatus, 1));
         stats.put("completedCount", completedCount);
 
-        // 统计今日待办
         LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
         LocalDateTime endOfDay = startOfDay.plusDays(1);
         long todayCount = count(new LambdaQueryWrapper<SysTodo>()
@@ -160,38 +168,29 @@ public class SysTodoServiceImpl extends ServiceImplX<SysTodoMapper, SysTodo> imp
                 .between(SysTodo::getPlanTime, startOfDay, endOfDay));
         stats.put("todayCount", todayCount);
 
-        // 统计紧急待办（优先级为 1 且未完成）
         long urgentCount = count(new LambdaQueryWrapper<SysTodo>()
                 .eq(SysTodo::getUserId, userId)
                 .eq(SysTodo::getStatus, 0)
                 .eq(SysTodo::getPriority, 1));
         stats.put("urgentCount", urgentCount);
 
-        // 统计逾期待办
         long overdueCount = count(new LambdaQueryWrapper<SysTodo>()
                 .eq(SysTodo::getUserId, userId)
                 .eq(SysTodo::getStatus, 0)
                 .lt(SysTodo::getPlanTime, LocalDateTime.now()));
         stats.put("overdueCount", overdueCount);
 
-        // 按类型统计
         Map<String, Long> typeStats = new HashMap<>();
-        LambdaQueryWrapper<SysTodo> workQuery = new LambdaQueryWrapper<SysTodo>()
-                .eq(SysTodo::getUserId, userId).eq(SysTodo::getTodoType, "1");
-        LambdaQueryWrapper<SysTodo> meetingQuery = new LambdaQueryWrapper<SysTodo>()
-                .eq(SysTodo::getUserId, userId).eq(SysTodo::getTodoType, "2");
-        LambdaQueryWrapper<SysTodo> reminderQuery = new LambdaQueryWrapper<SysTodo>()
-                .eq(SysTodo::getUserId, userId).eq(SysTodo::getTodoType, "3");
-        LambdaQueryWrapper<SysTodo> otherQuery = new LambdaQueryWrapper<SysTodo>()
-                .eq(SysTodo::getUserId, userId).eq(SysTodo::getTodoType, "4");
-
-        typeStats.put("work", count(workQuery));
-        typeStats.put("meeting", count(meetingQuery));
-        typeStats.put("reminder", count(reminderQuery));
-        typeStats.put("other", count(otherQuery));
+        typeStats.put("work", count(new LambdaQueryWrapper<SysTodo>()
+                .eq(SysTodo::getUserId, userId).eq(SysTodo::getTodoType, "1")));
+        typeStats.put("meeting", count(new LambdaQueryWrapper<SysTodo>()
+                .eq(SysTodo::getUserId, userId).eq(SysTodo::getTodoType, "2")));
+        typeStats.put("reminder", count(new LambdaQueryWrapper<SysTodo>()
+                .eq(SysTodo::getUserId, userId).eq(SysTodo::getTodoType, "3")));
+        typeStats.put("other", count(new LambdaQueryWrapper<SysTodo>()
+                .eq(SysTodo::getUserId, userId).eq(SysTodo::getTodoType, "4")));
         stats.put("typeStats", typeStats);
 
-        // 获取即将到期数量
         int expiringCount = getExpiringTodos(3).size();
         stats.put("expiringCount", expiringCount);
 

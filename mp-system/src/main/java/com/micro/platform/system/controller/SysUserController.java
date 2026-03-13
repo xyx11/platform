@@ -49,7 +49,7 @@ public class SysUserController {
     }
 
     @Operation(summary = "新增用户")
-    @OperationLog(module = "用户管理", type = OperationType.CREATE, description = "新增用户")
+    @OperationLog(module = "用户管理", type = OperationType.INSERT, description = "新增用户")
     @PreAuthorize("hasAuthority('system:user:add')")
     @PostMapping
     public Result<Void> add(@RequestBody SysUser user) {
@@ -177,6 +177,17 @@ public class SysUserController {
     @GetMapping("/detail/{userId}")
     public Result<Map<String, Object>> getDetail(@PathVariable Long userId) {
         return Result.success(sysUserService.getUserDetail(userId));
+    }
+
+    @Operation(summary = "修改用户状态")
+    @OperationLog(module = "用户管理", type = OperationType.UPDATE, description = "修改用户状态")
+    @PreAuthorize("hasAuthority('system:user:edit')")
+    @PutMapping("/status")
+    public Result<Void> updateStatus(
+        @RequestParam Long userId,
+        @RequestParam Integer status) {
+        sysUserService.updateStatus(userId, status);
+        return Result.success();
     }
 
     /**

@@ -10,6 +10,7 @@ import com.micro.platform.auth.dto.LoginRequest;
 import com.micro.platform.auth.dto.LoginResponse;
 import com.micro.platform.auth.entity.SysUser;
 import com.micro.platform.auth.mapper.SysUserMapper;
+import com.micro.platform.common.core.entity.LoginUser;
 import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.common.redis.util.RedisUtil;
 import com.micro.platform.auth.entity.SysLoginLog;
@@ -75,6 +76,7 @@ public class AuthService {
         loginLog.setIp(ip);
         loginLog.setUsername(request.getUsername());
         loginLog.setLoginTime(LocalDateTime.now());
+        boolean logSaved = false;
 
         try {
             // 1. 验证验证码
@@ -90,6 +92,7 @@ public class AuthService {
                 loginLog.setStatus(0);
                 loginLog.setMsg("用户名或密码错误");
                 saveLoginLog(loginLog);
+                logSaved = true;
                 throw new BusinessException("用户名或密码错误");
             }
 
@@ -98,6 +101,7 @@ public class AuthService {
                 loginLog.setStatus(0);
                 loginLog.setMsg("用户名或密码错误");
                 saveLoginLog(loginLog);
+                logSaved = true;
                 throw new BusinessException("用户名或密码错误");
             }
 
@@ -106,6 +110,7 @@ public class AuthService {
                 loginLog.setStatus(0);
                 loginLog.setMsg("用户已被禁用，请联系管理员");
                 saveLoginLog(loginLog);
+                logSaved = true;
                 throw new BusinessException("用户已被禁用，请联系管理员");
             }
 
@@ -126,13 +131,22 @@ public class AuthService {
 
             // 8. 保存登录日志
             saveLoginLog(loginLog);
+            logSaved = true;
 
             // 9. 更新用户登录信息
             updateUserLoginInfo(user.getUserId(), ip);
 
             // 10. 生成 Token
             StpUtil.login(user.getUserId());
-            StpUtil.getSession().set("user", user);
+
+            // 11. 存储登录用户信息到 Session（使用 LoginUser 类型）
+            LoginUser loginUser = new LoginUser();
+            loginUser.setUserId(user.getUserId());
+            loginUser.setUsername(user.getUsername());
+            loginUser.setNickname(user.getNickname());
+            loginUser.setAvatar(user.getAvatar());
+            loginUser.setDeptId(user.getDeptId());
+            StpUtil.getSession().set("loginUser", loginUser);
 
             log.info("用户登录成功：{}", user.getUsername());
 
@@ -146,14 +160,18 @@ public class AuthService {
                     .avatar(user.getAvatar() != null ? user.getAvatar() : "")
                     .build();
         } catch (BusinessException e) {
-            loginLog.setStatus(0);
-            loginLog.setMsg(e.getMessage());
-            saveLoginLog(loginLog);
+            if (!logSaved) {
+                loginLog.setStatus(0);
+                loginLog.setMsg(e.getMessage());
+                saveLoginLog(loginLog);
+            }
             throw e;
         } catch (Exception e) {
-            loginLog.setStatus(0);
-            loginLog.setMsg("登录异常：" + e.getMessage());
-            saveLoginLog(loginLog);
+            if (!logSaved) {
+                loginLog.setStatus(0);
+                loginLog.setMsg("登录异常：" + e.getMessage());
+                saveLoginLog(loginLog);
+            }
             throw new BusinessException("登录失败：" + e.getMessage());
         }
     }

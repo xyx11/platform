@@ -1,11 +1,13 @@
 package com.micro.platform.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.micro.platform.common.core.result.PageResult;
 import com.micro.platform.common.core.result.Result;
 import com.micro.platform.common.log.annotation.OperationLog;
 import com.micro.platform.common.log.annotation.OperationType;
 import com.micro.platform.system.entity.SysTodo;
 import com.micro.platform.system.service.SysTodoService;
+import com.micro.platform.system.service.SysTodoRecycleBinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,32 +25,42 @@ import java.util.Map;
 public class SysTodoController {
 
     private final SysTodoService sysTodoService;
+    private final SysTodoRecycleBinService sysTodoRecycleBinService;
 
-    public SysTodoController(SysTodoService sysTodoService) {
+    public SysTodoController(SysTodoService sysTodoService, SysTodoRecycleBinService sysTodoRecycleBinService) {
         this.sysTodoService = sysTodoService;
+        this.sysTodoRecycleBinService = sysTodoRecycleBinService;
     }
 
     @Operation(summary = "获取待办事项列表")
     @PreAuthorize("hasAuthority('system:todo:query')")
     @GetMapping("/list")
-    public Result<Page<SysTodo>> list(SysTodo todo,
+    public Result<PageResult<SysTodo>> list(SysTodo todo,
                                       @RequestParam(defaultValue = "1") Integer pageNum,
                                       @RequestParam(defaultValue = "10") Integer pageSize) {
         Page<SysTodo> page = sysTodoService.selectTodoPage(todo, pageNum, pageSize);
-        return Result.success(page);
+        return Result.success(PageResult.<SysTodo>build(page));
     }
 
     @Operation(summary = "获取我的待办列表")
-    @GetMapping("/my/list")
-    public Result<Page<SysTodo>> myList(@RequestParam(defaultValue = "1") Integer pageNum,
+    @GetMapping("/my-list")
+    public Result<PageResult<SysTodo>> myList(@RequestParam(defaultValue = "1") Integer pageNum,
                                         @RequestParam(defaultValue = "10") Integer pageSize) {
         Page<SysTodo> page = sysTodoService.getMyTodos(pageNum, pageSize);
-        return Result.success(page);
+        return Result.success(PageResult.<SysTodo>build(page));
+    }
+
+    @Operation(summary = "获取已办事项列表")
+    @GetMapping("/done")
+    public Result<PageResult<SysTodo>> doneList(@RequestParam(defaultValue = "1") Integer pageNum,
+                                        @RequestParam(defaultValue = "10") Integer pageSize) {
+        Page<SysTodo> page = sysTodoService.getDoneTodos(pageNum, pageSize);
+        return Result.success(PageResult.<SysTodo>build(page));
     }
 
     @Operation(summary = "获取待办详情")
     @PreAuthorize("hasAuthority('system:todo:query')")
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public Result<SysTodo> get(@PathVariable Long id) {
         return Result.success(sysTodoService.getById(id));
     }
@@ -98,9 +110,9 @@ public class SysTodoController {
     @Operation(summary = "删除待办事项")
     @OperationLog(module = "待办事项", type = OperationType.DELETE, description = "删除待办事项")
     @PreAuthorize("hasAuthority('system:todo:remove')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public Result<Void> remove(@PathVariable Long id) {
-        sysTodoService.removeById(id);
+        sysTodoRecycleBinService.moveToRecycleBin(id);
         return Result.success();
     }
 
@@ -109,7 +121,9 @@ public class SysTodoController {
     @PreAuthorize("hasAuthority('system:todo:remove')")
     @DeleteMapping("/batch")
     public Result<Void> batchRemove(@RequestBody List<Long> ids) {
-        sysTodoService.removeByIds(ids);
+        for (Long id : ids) {
+            sysTodoRecycleBinService.moveToRecycleBin(id);
+        }
         return Result.success();
     }
 
