@@ -30,7 +30,7 @@ export function listDoneTodo(query) {
 // 查询待办事项详细
 export function getTodo(id) {
   return request({
-    url: '/system/todo/' + id,
+    url: '/system/todo/detail/' + id,
     method: 'get'
   })
 }

@@ -29,3 +29,82 @@ INSERT INTO `sys_todo` (`todo_id`, `user_id`, `todo_title`, `todo_content`, `tod
 (2, 1, '参加项目周会', '每周一下午 3 点项目组例会', '2', 3, 0, '2024-01-20 15:00:00', NOW(), '管理员'),
 (3, 1, '代码审查', '审查团队成员提交的代码', '1', 3, 0, '2024-01-22 12:00:00', NOW(), '管理员')
 ON DUPLICATE KEY UPDATE `todo_title`=`todo_title`;
+
+-- 待办事项标签表
+CREATE TABLE IF NOT EXISTS `sys_todo_tag` (
+  `tag_id` bigint NOT NULL COMMENT '标签 ID',
+  `user_id` bigint NOT NULL COMMENT '用户 ID',
+  `tag_name` varchar(50) DEFAULT NULL COMMENT '标签名称',
+  `tag_color` varchar(20) DEFAULT NULL COMMENT '标签颜色',
+  `sort` int DEFAULT '0' COMMENT '排序',
+  `create_by` bigint DEFAULT NULL COMMENT '创建者 ID',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新者 ID',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted` int DEFAULT '0' COMMENT '删除标志',
+  PRIMARY KEY (`tag_id`),
+  KEY `idx_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='待办事项标签表';
+
+-- 待办事项与标签关联表
+CREATE TABLE IF NOT EXISTS `sys_todo_tag_relation` (
+  `relation_id` bigint NOT NULL COMMENT '关联 ID',
+  `todo_id` bigint NOT NULL COMMENT '待办 ID',
+  `tag_id` bigint NOT NULL COMMENT '标签 ID',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`relation_id`),
+  KEY `idx_todo_id` (`todo_id`),
+  KEY `idx_tag_id` (`tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='待办事项与标签关联表';
+
+-- 待办事项回收站表
+CREATE TABLE IF NOT EXISTS `sys_todo_recycle_bin` (
+  `recycle_id` bigint NOT NULL COMMENT '回收站 ID',
+  `todo_id` bigint NOT NULL COMMENT '待办 ID',
+  `user_id` bigint NOT NULL COMMENT '用户 ID',
+  `todo_title` varchar(200) DEFAULT NULL COMMENT '待办标题',
+  `todo_content` text DEFAULT NULL COMMENT '待办内容',
+  `delete_by` bigint DEFAULT NULL COMMENT '删除人 ID',
+  `delete_by_name` varchar(50) DEFAULT NULL COMMENT '删除人名称',
+  `delete_time` datetime DEFAULT NULL COMMENT '删除时间',
+  `recover_time` datetime DEFAULT NULL COMMENT '恢复时间',
+  `is_recover` int DEFAULT '0' COMMENT '是否已恢复 (0=未恢复 1=已恢复)',
+  PRIMARY KEY (`recycle_id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_todo_id` (`todo_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='待办事项回收站表';
+
+-- 待办事项评论表
+CREATE TABLE IF NOT EXISTS `sys_task_comment` (
+  `comment_id` bigint NOT NULL COMMENT '评论 ID',
+  `todo_id` bigint NOT NULL COMMENT '待办 ID',
+  `user_id` bigint NOT NULL COMMENT '用户 ID',
+  `content` text DEFAULT NULL COMMENT '评论内容',
+  `parent_id` bigint DEFAULT NULL COMMENT '父评论 ID',
+  `create_by` bigint DEFAULT NULL COMMENT '创建者 ID',
+  `create_by_name` varchar(50) DEFAULT NULL COMMENT '创建者名称',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新者 ID',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted` int DEFAULT '0' COMMENT '删除标志',
+  PRIMARY KEY (`comment_id`),
+  KEY `idx_todo_id` (`todo_id`),
+  KEY `idx_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='待办事项评论表';
+
+-- 待办事项附件表
+CREATE TABLE IF NOT EXISTS `sys_task_attachment` (
+  `attachment_id` bigint NOT NULL COMMENT '附件 ID',
+  `todo_id` bigint NOT NULL COMMENT '待办 ID',
+  `attachment_name` varchar(255) DEFAULT NULL COMMENT '附件名称',
+  `attachment_path` varchar(500) DEFAULT NULL COMMENT '附件路径',
+  `attachment_type` varchar(100) DEFAULT NULL COMMENT '附件类型',
+  `file_size` bigint DEFAULT NULL COMMENT '文件大小 (字节)',
+  `upload_user_id` bigint DEFAULT NULL COMMENT '上传人 ID',
+  `upload_user_name` varchar(50) DEFAULT NULL COMMENT '上传人名称',
+  `download_count` int DEFAULT '0' COMMENT '下载次数',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `deleted` int DEFAULT '0' COMMENT '删除标志',
+  PRIMARY KEY (`attachment_id`),
+  KEY `idx_todo_id` (`todo_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='待办事项附件表';
