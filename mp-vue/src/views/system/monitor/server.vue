@@ -263,43 +263,65 @@ const loadServerInfo = () => {
   loading.value = true
   request.get('/monitor/server').then(res => {
     const data = res.data
-    if (data.cpu) {
-      cpuUsage.value = data.cpu.usagePercent || 0
-      cpuInfo.model = data.cpu.model || '-'
-      cpuInfo.cores = data.cpu.cores
-      cpuInfo.logicalProcessors = data.cpu.logicalProcessors
-      cpuInfo.mhz = data.cpu.mhz
+    // 后端返回的是扁平结构，不是嵌套对象
+    // CPU 信息
+    if (data.cpuProcessors) {
+      cpuInfo.cores = data.cpuProcessors
+      cpuInfo.logicalProcessors = data.cpuProcessors
     }
-    if (data.memory) {
-      memoryInfo.total = data.memory.total || 0
-      memoryInfo.used = data.memory.used || 0
-      memoryInfo.free = data.memory.free || 0
-      memoryUsage.value = data.memory.usagePercent || 0
+    // 内存信息 - 解析字符串如 "8192 MB"
+    if (data.totalMemory) {
+      memoryInfo.total = parseInt(data.totalMemory) * 1024 * 1024 || 0
     }
-    if (data.disk) {
-      diskInfo.total = data.disk.total || 0
-      diskInfo.used = data.disk.used || 0
-      diskInfo.free = data.disk.free || 0
-      diskUsage.value = data.disk.usagePercent || 0
+    if (data.freeMemory) {
+      memoryInfo.free = parseInt(data.freeMemory) * 1024 * 1024 || 0
     }
-    if (data.systemLoad) {
-      systemLoad.oneMinute = data.systemLoad.oneMinute
-      systemLoad.fiveMinute = data.systemLoad.fiveMinute
-      systemLoad.fifteenMinute = data.systemLoad.fifteenMinute
+    if (data.usableMemory) {
+      memoryInfo.used = parseInt(data.usableMemory) * 1024 * 1024 || 0
     }
-    if (data.system) {
-      systemInfo.osName = data.system.osName
-      systemInfo.osArch = data.system.osArch
-      systemInfo.osVersion = data.system.osVersion
-      systemInfo.hostName = data.system.hostName
-      systemInfo.uptime = data.system.uptime
-      systemInfo.timezone = data.system.timezone
+    // 计算内存使用率
+    if (memoryInfo.total > 0) {
+      memoryUsage.value = Math.round((memoryInfo.used / memoryInfo.total) * 100)
+    }
+    // 磁盘信息
+    if (data.diskInfo && data.diskInfo.length > 0) {
+      const disk = data.diskInfo[0] || {}
+      diskInfo.total = parseSizeToBytes(disk.total) || 0
+      diskInfo.used = parseSizeToBytes(disk.used) || 0
+      diskInfo.free = parseSizeToBytes(disk.free) || 0
+      if (diskInfo.total > 0) {
+        diskUsage.value = Math.round((diskInfo.used / diskInfo.total) * 100)
+      }
+    }
+    // 系统信息
+    if (data.osName) {
+      systemInfo.osName = data.osName
+    }
+    if (data.osArch) {
+      systemInfo.osArch = data.osArch
+    }
+    if (data.osVersion) {
+      systemInfo.osVersion = data.osVersion
+    }
+    if (data.jvmRunTime) {
+      systemInfo.uptime = data.jvmRunTime
     }
   }).catch(err => {
     console.error('加载服务器信息失败:', err)
   }).finally(() => {
     loading.value = false
   })
+}
+
+// 解析文件大小字符串如 "100 GB" 为字节
+const parseSizeToBytes = (sizeStr) => {
+  if (!sizeStr) return 0
+  const match = sizeStr.match(/(\d+(?:\.\d+)?)\s*(B|KB|MB|GB|TB)?/i)
+  if (!match) return 0
+  const value = parseFloat(match[1])
+  const unit = (match[2] || 'B').toUpperCase()
+  const sizes = { B: 1, KB: 1024, MB: 1024 * 1024, GB: 1024 * 1024 * 1024, TB: 1024 * 1024 * 1024 * 1024 }
+  return value * (sizes[unit] || 1)
 }
 
 onMounted(() => {

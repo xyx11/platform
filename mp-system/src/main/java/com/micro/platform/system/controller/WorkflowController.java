@@ -86,18 +86,18 @@ public class WorkflowController {
         return Result.success(variables);
     }
 
-    @DeleteMapping("/{processInstanceId}")
-    @Operation(summary = "删除流程")
+    @DeleteMapping("/instance/{processInstanceId}")
+    @Operation(summary = "删除流程实例")
     @PreAuthorize("@ss.hasPermission('system:workflow:delete')")
     @OperationLog(module = "工作流", type = OperationType.DELETE)
-    public Result<Void> deleteProcess(@PathVariable String processInstanceId,
-                                       @RequestParam(required = false) String deleteReason) {
+    public Result<Void> deleteProcessInstance(@PathVariable String processInstanceId,
+                                               @RequestParam(required = false) String deleteReason) {
         workflowService.deleteProcess(processInstanceId, deleteReason != null ? deleteReason : "正常删除");
         return Result.success();
     }
 
-    @PostMapping("/suspend/{processInstanceId}")
-    @Operation(summary = "挂起流程")
+    @PostMapping("/instance/suspend/{processInstanceId}")
+    @Operation(summary = "挂起流程实例")
     @PreAuthorize("@ss.hasPermission('system:workflow:suspend')")
     @OperationLog(module = "工作流", type = OperationType.OTHER)
     public Result<Void> suspendProcess(@PathVariable String processInstanceId) {
@@ -105,8 +105,8 @@ public class WorkflowController {
         return Result.success();
     }
 
-    @PostMapping("/activate/{processInstanceId}")
-    @Operation(summary = "激活流程")
+    @PostMapping("/instance/activate/{processInstanceId}")
+    @Operation(summary = "激活流程实例")
     @PreAuthorize("@ss.hasPermission('system:workflow:activate')")
     @OperationLog(module = "工作流", type = OperationType.OTHER)
     public Result<Void> activateProcess(@PathVariable String processInstanceId) {

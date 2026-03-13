@@ -230,36 +230,35 @@ const loadRedisInfo = () => {
   loading.value = true
   request.get('/monitor/redis').then(res => {
     const data = res.data
-    if (data.status) {
-      redisStatus.status = data.status
-    }
-    if (data.details) {
-      const info = data.details
-      redisInfo.redisVersion = info.redis_version || '-'
-      redisInfo.redisMode = info.redis_mode || '-'
-      redisInfo.tcpPort = info.tcp_port || '-'
-      redisInfo.uptimeInDays = info.uptime_in_days || '-'
-      redisInfo.redisHost = info.redis_host || '-'
-      redisInfo.usedMemory = info.used_memory || 0
-      redisInfo.usedMemoryPeak = info.used_memory_peak || 0
-      redisInfo.maxmemory = info.maxmemory || 0
-      redisInfo.connectedClients = info.connected_clients || 0
-      redisInfo.maxclients = info.maxclients || '-'
-      redisInfo.memFragmentRatio = info.mem_fragmentation_ratio || '-'
-      redisInfo.dbsize = info.dbsize || 0
-      redisInfo.keyspaceHits = info.keyspace_hits || 0
-      redisInfo.keyspaceMisses = info.keyspace_misses || 0
-      redisInfo.totalCommandsProcessed = info.total_commands_processed || 0
-      redisInfo.instantaneousOpsPerSec = info.instantaneous_ops_per_sec || 0
-      redisInfo.totalNetInputBytes = info.total_net_input_bytes || 0
-      redisInfo.totalNetOutputBytes = info.total_net_output_bytes || 0
-      redisInfo.rdbLastSaveTime = info.rdb_last_save_time || 0
-      redisInfo.rdbLastBgsaveStatus = info.rdb_last_bgsave_status || '-'
-      redisInfo.aofEnabled = info.aof_enabled === '1' || info.aof_enabled === true
-      redisInfo.aofLastBgsaveStatus = info.aof_last_bgsave_status || '-'
-    }
+    // 后端返回的是扁平对象，字段名是小驼峰格式
+    redisStatus.status = 'UP' // 能成功返回数据就说明 Redis 正常
+
+    // 映射后端字段到前端
+    redisInfo.redisVersion = data.version || '-'
+    redisInfo.redisMode = '-' // 后端未提供
+    redisInfo.tcpPort = '-' // 后端未提供
+    redisInfo.uptimeInDays = data.uptime ? data.uptime.replace(' 天', '') : '-'
+    redisInfo.redisHost = '127.0.0.1' // 后端未提供
+    redisInfo.usedMemory = parseInt(data.usedMemory) || 0
+    redisInfo.usedMemoryPeak = parseInt(data.usedMemoryPeak) || 0
+    redisInfo.maxmemory = 0 // 后端未提供
+    redisInfo.connectedClients = parseInt(data.connectedClients) || 0
+    redisInfo.maxclients = '-' // 后端未提供
+    redisInfo.memFragmentRatio = data.memFragmentationRatio || '-'
+    redisInfo.dbsize = data.dbInfo?.[0]?.keysCount || 0
+    redisInfo.keyspaceHits = parseInt(data.keyspaceHits) || 0
+    redisInfo.keyspaceMisses = parseInt(data.keyspaceMisses) || 0
+    redisInfo.totalCommandsProcessed = parseInt(data.totalCommandsProcessed) || 0
+    redisInfo.instantaneousOpsPerSec = parseInt(data.instantaneousOpsPerSec) || 0
+    redisInfo.totalNetInputBytes = 0 // 后端未提供
+    redisInfo.totalNetOutputBytes = 0 // 后端未提供
+    redisInfo.rdbLastSaveTime = 0 // 后端未提供
+    redisInfo.rdbLastBgsaveStatus = '-' // 后端未提供
+    redisInfo.aofEnabled = false // 后端未提供
+    redisInfo.aofLastBgsaveStatus = '-' // 后端未提供
   }).catch(err => {
     console.error('加载 Redis 信息失败:', err)
+    redisStatus.status = 'DOWN'
   }).finally(() => {
     loading.value = false
   })

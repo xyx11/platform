@@ -255,9 +255,16 @@ const loadCacheStats = () => {
   loading.value = true
   request.get('/monitor/cache').then(res => {
     const data = res.data
-    if (data.stats) {
-      Object.assign(cacheStats, data.stats)
-    }
+    // 后端直接返回统计对象，不是嵌套的 stats 属性
+    cacheStats.keyspaceHits = parseInt(data.keyspaceHits) || 0
+    cacheStats.keyspaceMisses = parseInt(data.keyspaceMisses) || 0
+    cacheStats.totalCommandsProcessed = parseInt(data.totalCommandsProcessed) || 0
+    cacheStats.instantaneousOpsPerSec = parseInt(data.instantaneousOpsPerSec) || 0
+    cacheStats.usedMemory = parseInt(data.usedMemory) || 0
+    cacheStats.usedMemoryPeak = parseInt(data.usedMemoryPeak) || 0
+    cacheStats.connectedClients = parseInt(data.connectedClients) || 0
+    // 计算 keys 数量（从 hitRate 推断或直接使用 dbSize）
+    cacheStats.keysCount = parseInt(data.dbSize) || 0
   }).catch(err => {
     console.error('加载缓存统计失败:', err)
   }).finally(() => {
@@ -267,14 +274,18 @@ const loadCacheStats = () => {
 
 const loadCacheKeys = () => {
   keysLoading.value = true
-  request.get('/monitor/cache/keys', {
-    params: {
-      page: keyPage.value,
-      pageSize: keyPageSize.value
-    }
-  }).then(res => {
-    cacheKeys.value = res.data.list || []
-    keyTotal.value = res.data.total || 0
+  request.get('/monitor/cache/keys').then(res => {
+    // 后端直接返回键名列表数组
+    const keys = res.data || []
+    // 前端需要转换为带 type/ttl/length 的对象
+    cacheKeys.value = keys.map((key, index) => ({
+      key,
+      type: 'string', // 默认类型，后端未提供详细信息
+      ttl: -1,
+      length: 1,
+      value: ''
+    }))
+    keyTotal.value = keys.length
   }).catch(err => {
     console.error('加载缓存键失败:', err)
   }).finally(() => {

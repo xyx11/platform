@@ -119,7 +119,7 @@ const handleCurrentChange = () => {
 
 const handleKickout = (row) => {
   ElMessageBox.confirm(
-    `确定要强制退出用户 "${row.username}" 吗？`,
+    `确定要强制退出用户 "${row.userName}" 吗？`,
     '提示',
     {
       confirmButtonText: '确定',
@@ -127,7 +127,8 @@ const handleKickout = (row) => {
       type: 'warning'
     }
   ).then(() => {
-    request.delete(`/monitor/online/${row.tokenId}`).then(() => {
+    // 后端返回的字段是 token，不是 tokenId
+    request.delete(`/monitor/online/${row.token}`).then(() => {
       ElMessage.success('强退成功')
       loadOnlineUsers()
     }).catch(err => {
