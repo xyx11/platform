@@ -192,6 +192,7 @@
 </template>
 
 <script setup name="Command">
+import { ref, reactive, getCurrentInstance } from 'vue'
 import { listCommand, getCommand, executeCommand, delCommand, batchDelCommand, clearCommand } from '@/api/system/command'
 import { parseTime } from '@/utils/mp'
 

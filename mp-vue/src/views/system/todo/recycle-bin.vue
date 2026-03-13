@@ -61,7 +61,7 @@
 </template>
 
 <script setup name="TodoRecycleBin">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, getCurrentInstance } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete, RefreshLeft } from '@element-plus/icons-vue'
 import { listRecycleBin, recoverTodo, deletePermanently, clearRecycleBin } from '@/api/system/todo'

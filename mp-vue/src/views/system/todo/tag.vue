@@ -49,7 +49,7 @@
 </template>
 
 <script setup name="TodoTag">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, getCurrentInstance } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { listTodoTags, addTodoTag, updateTodoTag, delTodoTag } from '@/api/system/todo'

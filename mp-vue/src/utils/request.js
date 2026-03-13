@@ -11,22 +11,16 @@ const service = axios.create({
   }
 })
 
-// 添加请求方法别名
-service.get = function(url, params) {
-  return this({ url, params, method: 'get' })
-}
-service.post = function(url, data) {
-  return this({ url, data, method: 'post' })
-}
-service.put = function(url, data) {
-  return this({ url, data, method: 'put' })
-}
-service.delete = function(url, params) {
+// 添加请求方法别名 - 使用箭头函数绑定 this
+service.get = (url, params) => service({ url, params, method: 'get' })
+service.post = (url, data) => service({ url, data, method: 'post' })
+service.put = (url, data) => service({ url, data, method: 'put' })
+service.delete = (url, params) => {
   // 支持 { data: ... } 参数格式
   if (params && params.data) {
-    return this({ url, data: params.data, method: 'delete' })
+    return service({ url, data: params.data, method: 'delete' })
   }
-  return this({ url, params, method: 'delete' })
+  return service({ url, params, method: 'delete' })
 }
 
 // 请求拦截器
