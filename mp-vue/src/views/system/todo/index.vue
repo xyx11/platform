@@ -21,6 +21,14 @@
             <el-option label="已取消" :value="2" />
           </el-select>
         </el-form-item>
+        <el-form-item label="优先级">
+          <el-select v-model="queryParams.priority" placeholder="请选择优先级" clearable>
+            <el-option label="紧急重要" :value="1" />
+            <el-option label="重要" :value="2" />
+            <el-option label="一般" :value="3" />
+            <el-option label="次要" :value="4" />
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">
             <el-icon><Search /></el-icon> 搜索
@@ -41,6 +49,16 @@
         <el-col :span="1.5">
           <el-button type="danger" plain :disabled="multiple" @click="handleDelete">
             <el-icon><Delete /></el-icon> 删除
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="warning" plain @click="showRecycleBin">
+            <el-icon><Delete /></el-icon> 回收站
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="info" plain @click="showTagManager">
+            <el-icon><PriceTag /></el-icon> 标签管理
           </el-button>
         </el-col>
         <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" />
@@ -103,6 +121,18 @@
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="序号" type="index" width="80" align="center" />
         <el-table-column label="待办标题" prop="todoTitle" :show-overflow-tooltip="true" min-width="200" />
+        <el-table-column label="标签" width="150">
+          <template #default="{ row }">
+            <el-tag
+              v-for="tag in row.tags"
+              :key="tag.tagId"
+              size="small"
+              :style="{ backgroundColor: tag.tagColor, color: '#fff', marginRight: '4px' }"
+            >
+              {{ tag.tagName }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="类型" prop="todoType" width="100">
           <template #default="{ row }">
             <el-tag :type="getTypeTagColor(row.todoType)">
@@ -124,12 +154,26 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="评论" width="80" align="center">
+          <template #default="{ row }">
+            <el-badge :value="row.commentCount || 0" :hidden="!row.commentCount" type="info">
+              <el-button link type="info" icon="ChatDotRound" @click="showComments(row)" />
+            </el-badge>
+          </template>
+        </el-table-column>
+        <el-table-column label="附件" width="80" align="center">
+          <template #default="{ row }">
+            <el-badge :value="row.attachmentCount || 0" :hidden="!row.attachmentCount" type="warning">
+              <el-button link type="warning" icon="Paperclip" @click="showAttachments(row)" />
+            </el-badge>
+          </template>
+        </el-table-column>
         <el-table-column label="计划完成时间" prop="planTime" width="180">
           <template #default="{ row }">
             {{ row.planTime ? parseTime(row.planTime) : '-' }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="220" align="center" fixed="right">
+        <el-table-column label="操作" width="280" align="center" fixed="right">
           <template #default="{ row }">
             <el-button
               v-if="row.status === 0"
@@ -199,6 +243,18 @@
             <el-radio :value="4">次要</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="标签" prop="tags">
+          <el-select v-model="selectedTagIds" multiple placeholder="请选择标签" style="width: 100%">
+            <el-option
+              v-for="tag in allTags"
+              :key="tag.tagId"
+              :label="tag.tagName"
+              :value="tag.tagId"
+            >
+              <span :style="{ color: tag.tagColor }">●</span> {{ tag.tagName }}
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="计划完成时间" prop="planTime">
           <el-date-picker
             v-model="form.planTime"
@@ -208,13 +264,6 @@
             style="width: 100%"
           />
         </el-form-item>
-        <el-form-item label="状态" prop="status" v-if="form.todoId">
-          <el-radio-group v-model="form.status">
-            <el-radio :value="0">待处理</el-radio>
-            <el-radio :value="1">已完成</el-radio>
-            <el-radio :value="2">已取消</el-radio>
-          </el-radio-group>
-        </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -223,17 +272,88 @@
         </div>
       </template>
     </el-dialog>
+
+    <!-- 评论对话框 -->
+    <el-dialog title="评论" v-model="commentDialogVisible" width="600px">
+      <div class="comment-list">
+        <div v-for="comment in commentList" :key="comment.commentId" class="comment-item">
+          <div class="comment-header">
+            <span class="comment-user">{{ comment.userName }}</span>
+            <span class="comment-time">{{ parseTime(comment.createTime) }}</span>
+          </div>
+          <div class="comment-content">{{ comment.commentContent }}</div>
+        </div>
+        <el-empty v-if="commentList.length === 0" description="暂无评论" />
+      </div>
+      <el-input
+        v-model="newComment"
+        type="textarea"
+        :rows="3"
+        placeholder="写下你的评论..."
+        style="margin-top: 15px"
+      />
+      <template #footer>
+        <el-button @click="commentDialogVisible = false">关 闭</el-button>
+        <el-button type="primary" @click="submitComment">发 表</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 附件对话框 -->
+    <el-dialog title="附件" v-model="attachmentDialogVisible" width="600px">
+      <el-upload
+        ref="uploadRef"
+        :action="uploadUrl"
+        :headers="uploadHeaders"
+        :data="{ todoId: currentTodoId }"
+        :on-success="handleUploadSuccess"
+        :on-error="handleUploadError"
+      >
+        <el-button type="primary" plain>
+          <el-icon><Upload /></el-icon> 上传附件
+        </el-button>
+      </el-upload>
+      <el-table :data="attachmentList" style="margin-top: 15px">
+        <el-table-column label="文件名" prop="attachmentName" :show-overflow-tooltip="true" />
+        <el-table-column label="大小" prop="fileSize" width="100">
+          <template #default="{ row }">
+            {{ formatFileSize(row.fileSize) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="150" align="center">
+          <template #default="{ row }">
+            <el-button link type="primary" icon="Download" @click="downloadAttachment(row)" />
+            <el-button link type="danger" icon="Delete" @click="deleteAttachment(row)" />
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <!-- 标签管理对话框 -->
+    <el-dialog title="标签管理" v-model="tagDialogVisible" width="800px">
+      <TodoTag />
+    </el-dialog>
   </div>
 </template>
 
 <script setup name="Todo">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Document, Clock, Select, Warning } from '@element-plus/icons-vue'
-import { listTodo, getTodo, addTodo, updateTodo, completeTodo, cancelTodo, delTodo, batchDelTodo, getTodoStats } from '@/api/system/todo'
+import {
+  Document, Clock, Select, Warning, Search, Refresh, Plus, Delete,
+  PriceTag, ChatDotRound, Paperclip, Upload, Download
+} from '@element-plus/icons-vue'
+import {
+  listTodo, getTodo, addTodo, updateTodo, completeTodo, cancelTodo,
+  delTodo, batchDelTodo, getTodoStats, listTodoTags, addTagsToTodo,
+  listComments, addComment, listAttachments, delAttachment, downloadAttachment as downloadAttachmentApi
+} from '@/api/system/todo'
 import { parseTime } from '@/utils/mp'
+import { getToken } from '@/utils/auth'
+import { connectWebSocket, disconnectWebSocket } from '@/utils/websocket'
+import TodoTag from './tag.vue'
 
 const { proxy } = getCurrentInstance()
+const userId = ref(null)
 
 const todoList = ref([])
 const loading = ref(true)
@@ -244,6 +364,23 @@ const total = ref(0)
 const open = ref(false)
 const title = ref('')
 const stats = ref({})
+const allTags = ref([])
+const selectedTagIds = ref([])
+
+// 评论相关
+const commentDialogVisible = ref(false)
+const commentList = ref([])
+const newComment = ref('')
+const currentTodoId = ref(null)
+
+// 附件相关
+const attachmentDialogVisible = ref(false)
+const attachmentList = ref([])
+const uploadUrl = import.meta.env.VITE_APP_BASE_API + '/system/todo/attachment/upload'
+const uploadHeaders = { Authorization: 'Bearer ' + getToken() }
+
+// 标签管理
+const tagDialogVisible = ref(false)
 
 const form = ref({})
 const queryParams = ref({
@@ -263,7 +400,6 @@ const rules = {
 
 const formRef = ref(null)
 
-// 获取类型标签
 function getTypeLabel(type) {
   const labels = { '1': '工作', '2': '会议', '3': '提醒', '4': '其他' }
   return labels[type] || '其他'
@@ -274,7 +410,6 @@ function getTypeTagColor(type) {
   return colors[type] || ''
 }
 
-// 获取优先级标签
 function getPriorityLabel(priority) {
   const labels = { 1: '紧急重要', 2: '重要', 3: '一般', 4: '次要' }
   return labels[priority] || '一般'
@@ -285,7 +420,6 @@ function getPriorityTagColor(priority) {
   return colors[priority] || ''
 }
 
-// 获取状态标签
 function getStatusLabel(status) {
   const labels = { 0: '待处理', 1: '已完成', 2: '已取消' }
   return labels[status] || '待处理'
@@ -296,14 +430,12 @@ function getStatusTagColor(status) {
   return colors[status] || ''
 }
 
-// 获取统计信息
 function getStats() {
   getTodoStats().then(res => {
     stats.value = res.data
   })
 }
 
-/** 查询待办列表 */
 function getList() {
   loading.value = true
   listTodo(queryParams.value).then(res => {
@@ -315,13 +447,11 @@ function getList() {
   })
 }
 
-/** 取消按钮 */
 function cancel() {
   open.value = false
   reset()
 }
 
-/** 表单重置 */
 function reset() {
   form.value = {
     todoId: undefined,
@@ -329,48 +459,47 @@ function reset() {
     todoContent: undefined,
     todoType: '1',
     priority: 3,
-    status: 0,
     planTime: undefined
   }
+  selectedTagIds.value = []
   formRef.value?.resetFields()
 }
 
-/** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1
   getList()
 }
 
-/** 重置按钮操作 */
 function resetQuery() {
   proxy.resetForm('queryParams')
   handleQuery()
 }
 
-/** 多选框选中数据 */
 function handleSelectionChange(selection) {
   ids.value = selection.map(item => item.todoId)
   multiple.value = !selection.length
 }
 
-/** 新增按钮操作 */
 function handleAdd() {
   reset()
   open.value = true
   title.value = '添加待办'
+  getAllTags()
 }
 
-/** 修改按钮操作 */
 function handleUpdate(row) {
   reset()
   getTodo(row.todoId).then(res => {
     form.value = res.data
+    if (res.data.tags) {
+      selectedTagIds.value = res.data.tags.map(t => t.tagId)
+    }
     open.value = true
     title.value = '编辑待办'
   })
+  getAllTags()
 }
 
-/** 完成待办 */
 function handleComplete(row) {
   ElMessageBox.confirm('确认完成待办 "' + row.todoTitle + '" 吗？', '警告', {
     confirmButtonText: '确定',
@@ -385,7 +514,6 @@ function handleComplete(row) {
   })
 }
 
-/** 取消待办 */
 function handleCancel(row) {
   ElMessageBox.confirm('确认取消待办 "' + row.todoTitle + '" 吗？', '警告', {
     confirmButtonText: '确定',
@@ -400,19 +528,22 @@ function handleCancel(row) {
   })
 }
 
-/** 提交按钮 */
 function submitForm() {
   formRef.value.validate(valid => {
     if (valid) {
+      const data = { ...form.value }
       if (form.value.todoId) {
-        updateTodo(form.value).then(() => {
+        updateTodo(data).then(() => {
+          if (selectedTagIds.value.length) {
+            addTagsToTodo(form.value.todoId, selectedTagIds.value)
+          }
           ElMessage.success('修改成功')
           open.value = false
           getList()
           getStats()
         })
       } else {
-        addTodo(form.value).then(() => {
+        addTodo(data).then(() => {
           ElMessage.success('新增成功')
           open.value = false
           getList()
@@ -423,7 +554,6 @@ function submitForm() {
   })
 }
 
-/** 删除按钮操作 */
 function handleDelete(row) {
   const todoIds = row.todoId ? [row.todoId] : ids.value
   const message = row.todoId
@@ -447,16 +577,134 @@ function handleDelete(row) {
         getStats()
       })
     }
-  }).catch(() => {
-    if (!row.todoId) {
-      ids.value = []
-    }
   })
+}
+
+// 标签管理
+function getAllTags() {
+  listTodoTags().then(res => {
+    allTags.value = res.data || []
+  })
+}
+
+function showTagManager() {
+  tagDialogVisible.value = true
+}
+
+// 评论
+function showComments(row) {
+  currentTodoId.value = row.todoId
+  commentDialogVisible.value = true
+  listComments(row.todoId).then(res => {
+    commentList.value = res.data || []
+  })
+}
+
+function submitComment() {
+  if (!newComment.value.trim()) {
+    ElMessage.warning('请输入评论内容')
+    return
+  }
+  addComment({ todoId: currentTodoId.value, commentContent: newComment.value }).then(() => {
+    ElMessage.success('评论成功')
+    newComment.value = ''
+    listComments(currentTodoId.value).then(res => {
+      commentList.value = res.data || []
+    })
+  })
+}
+
+// 附件
+function showAttachments(row) {
+  currentTodoId.value = row.todoId
+  attachmentDialogVisible.value = true
+  listAttachments(row.todoId).then(res => {
+    attachmentList.value = res.data || []
+  })
+}
+
+function handleUploadSuccess(res) {
+  if (res.code === 200) {
+    ElMessage.success('上传成功')
+    listAttachments(currentTodoId.value).then(res => {
+      attachmentList.value = res.data || []
+    })
+  }
+}
+
+function handleUploadError() {
+  ElMessage.error('上传失败')
+}
+
+function downloadAttachment(row) {
+  downloadAttachmentApi(row.attachmentId).then(res => {
+    const blob = new Blob([res])
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = row.attachmentName
+    link.click()
+    window.URL.revokeObjectURL(url)
+  })
+}
+
+function deleteAttachment(row) {
+  ElMessageBox.confirm('确认删除附件 "' + row.attachmentName + '" 吗？', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    delAttachment(row.attachmentId).then(() => {
+      ElMessage.success('删除成功')
+      listAttachments(currentTodoId.value).then(res => {
+        attachmentList.value = res.data || []
+      })
+    })
+  })
+}
+
+function formatFileSize(bytes) {
+  if (!bytes) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return (bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i]
+}
+
+function showRecycleBin() {
+  proxy.$router.push('/system/todo/recycle-bin')
 }
 
 onMounted(() => {
   getList()
   getStats()
+  getAllTags()
+  // 初始化 WebSocket 连接
+  initWebSocket()
+})
+
+// 初始化 WebSocket
+function initWebSocket() {
+  // 从 localStorage 获取用户 ID（需要根据实际存储方式调整）
+  const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}')
+  userId.value = userInfo.userId || userInfo.id
+
+  if (userId.value) {
+    connectWebSocket(userId.value, handleNotification)
+  }
+}
+
+// 处理 WebSocket 通知
+function handleNotification(notification) {
+  console.log('收到 WebSocket 通知:', notification)
+  // 刷新列表和统计
+  getList()
+  getStats()
+}
+
+// 组件卸载时断开 WebSocket
+onUnmounted(() => {
+  disconnectWebSocket()
 })
 </script>
 
@@ -500,6 +748,37 @@ onMounted(() => {
           color: #999;
           margin-top: 5px;
         }
+      }
+    }
+  }
+
+  .comment-list {
+    max-height: 400px;
+    overflow-y: auto;
+
+    .comment-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+
+      .comment-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+
+        .comment-user {
+          font-weight: bold;
+          color: #333;
+        }
+
+        .comment-time {
+          font-size: 12px;
+          color: #999;
+        }
+      }
+
+      .comment-content {
+        font-size: 14px;
+        color: #666;
       }
     }
   }

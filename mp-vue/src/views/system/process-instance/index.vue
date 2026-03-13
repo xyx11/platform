@@ -52,13 +52,21 @@
     <el-card shadow="never" class="mt-4">
       <template #header>
         <div class="card-header">
-          <span>运行中流程实例</span>
+          <span>流程实例列表</span>
           <div>
+            <el-input
+              v-model="searchForm.processDefinitionName"
+              placeholder="流程名称"
+              clearable
+              style="width: 150px"
+              class="mr-2"
+              @change="search"
+            />
             <el-input
               v-model="searchForm.processDefinitionKey"
               placeholder="流程定义 Key"
               clearable
-              style="width: 200px"
+              style="width: 150px"
               class="mr-2"
               @change="search"
             />
@@ -66,11 +74,23 @@
               v-model="searchForm.businessKey"
               placeholder="业务 Key"
               clearable
-              style="width: 200px"
+              style="width: 150px"
               class="mr-2"
               @change="search"
             />
+            <el-select
+              v-model="searchForm.isSuspended"
+              placeholder="状态"
+              clearable
+              style="width: 100px"
+              class="mr-2"
+              @change="search"
+            >
+              <el-option label="运行中" :value="false" />
+              <el-option label="已挂起" :value="true" />
+            </el-select>
             <el-button type="primary" @click="search">搜索</el-button>
+            <el-button @click="resetSearch">重置</el-button>
           </div>
         </div>
       </template>
@@ -89,7 +109,7 @@
         </el-table-column>
         <el-table-column prop="startTime" label="开始时间" width="180" />
         <el-table-column prop="startUserId" label="启动人" width="100" />
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="250" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link size="small" @click="viewDetail(row)">
               详情
@@ -103,9 +123,26 @@
             <el-button type="success" link size="small" @click="suspendOrActivate(row)" v-else>
               激活
             </el-button>
+            <el-button type="danger" link size="small" @click="deleteInstance(row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
+
+      <!-- 分页 -->
+      <div class="pagination-container">
+        <el-pagination
+          v-show="total > 0"
+          v-model:current-page="pageNum"
+          v-model:page-size="pageSize"
+          :total="total"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="fetchInstanceList"
+          @current-change="fetchInstanceList"
+        />
+      </div>
     </el-card>
 
     <!-- 详情对话框 -->
@@ -128,6 +165,12 @@
           </el-tag>
         </el-descriptions-item>
       </el-descriptions>
+      <el-divider>流程变量</el-divider>
+      <el-table :data="variableList" border size="small" v-if="variableList.length > 0">
+        <el-table-column prop="key" label="变量名" width="200" />
+        <el-table-column prop="value" label="变量值" show-overflow-tooltip />
+      </el-table>
+      <el-empty v-else description="暂无流程变量" />
       <template #footer>
         <el-button @click="detailVisible = false">关闭</el-button>
       </template>
@@ -172,10 +215,17 @@ const stats = ref({})
 const instanceList = ref([])
 const loading = ref(false)
 
+// 分页
+const pageNum = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+
 // 搜索条件
 const searchForm = reactive({
+  processDefinitionName: '',
   processDefinitionKey: '',
-  businessKey: ''
+  businessKey: '',
+  isSuspended: undefined
 })
 
 // 对话框
@@ -183,6 +233,7 @@ const detailVisible = ref(false)
 const historyVisible = ref(false)
 const currentInstance = ref(null)
 const historyList = ref([])
+const variableList = ref([])
 
 // 获取统计数据
 const fetchStats = async () => {
@@ -199,9 +250,14 @@ const fetchInstanceList = async () => {
   loading.value = true
   try {
     const { data } = await request.get('/system/workflow/instance/list', {
-      params: searchForm
+      params: {
+        pageNum: pageNum.value,
+        pageSize: pageSize.value,
+        ...searchForm
+      }
     })
-    instanceList.value = data || []
+    instanceList.value = data?.records || []
+    total.value = data?.total || 0
   } catch (error) {
     console.error('获取实例列表失败:', error)
     ElMessage.error('获取流程实例列表失败')
@@ -212,7 +268,17 @@ const fetchInstanceList = async () => {
 
 // 搜索
 const search = () => {
+  pageNum.value = 1
   fetchInstanceList()
+}
+
+// 重置搜索
+const resetSearch = () => {
+  searchForm.processDefinitionName = ''
+  searchForm.processDefinitionKey = ''
+  searchForm.businessKey = ''
+  searchForm.isSuspended = undefined
+  search()
 }
 
 // 刷新统计
@@ -232,6 +298,7 @@ const viewDetail = async (row) => {
   try {
     const { data } = await request.get(`/system/workflow/instance/${row.processInstanceId}`)
     currentInstance.value = data
+    variableList.value = data.variables ? Object.entries(data.variables).map(([key, value]) => ({ key, value })) : []
     detailVisible.value = true
   } catch (error) {
     console.error('获取实例详情失败:', error)
@@ -269,6 +336,27 @@ const suspendOrActivate = async (row) => {
     if (error !== 'cancel') {
       console.error(`${action}失败:`, error)
       ElMessage.error(`${action}失败`)
+    }
+  }
+}
+
+// 删除实例
+const deleteInstance = async (row) => {
+  try {
+    await ElMessageBox.confirm(`确定要删除该流程实例吗？删除后无法恢复！`, '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+
+    await request.delete(`/system/workflow/instance/${row.processInstanceId}`)
+    ElMessage.success('删除成功')
+    fetchInstanceList()
+    fetchStats()
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('删除失败:', error)
+      ElMessage.error('删除失败')
     }
   }
 }
@@ -383,6 +471,12 @@ onMounted(() => {
 
   .mr-2 {
     margin-right: 10px;
+  }
+
+  .pagination-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

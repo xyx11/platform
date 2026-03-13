@@ -5,6 +5,30 @@
         <div class="card-header">
           <span>流程定义管理</span>
           <div>
+            <el-input
+              v-model="searchForm.name"
+              placeholder="流程名称"
+              clearable
+              style="width: 150px"
+              class="mr-2"
+              @change="search"
+            />
+            <el-select
+              v-model="searchForm.category"
+              placeholder="分类"
+              clearable
+              style="width: 120px"
+              class="mr-2"
+              @change="search"
+            >
+              <el-option label="人事管理" value="hr" />
+              <el-option label="财务管理" value="finance" />
+              <el-option label="行政管理" value="admin" />
+              <el-option label="采购管理" value="purchase" />
+              <el-option label="其他" value="other" />
+            </el-select>
+            <el-button type="primary" @click="search">搜索</el-button>
+            <el-button @click="resetSearch">重置</el-button>
             <el-button type="primary" @click="handleDeploy">部署流程</el-button>
             <el-button @click="refresh">刷新</el-button>
           </div>
@@ -12,11 +36,19 @@
       </template>
 
       <el-table :data="definitionList" v-loading="loading" style="width: 100%">
-        <el-table-column prop="id" label="流程 ID" show-overflow-tooltip />
-        <el-table-column prop="name" label="流程名称" show-overflow-tooltip />
-        <el-table-column prop="key" label="流程 Key" show-overflow-tooltip />
+        <el-table-column prop="id" label="流程 ID" min-width="150" show-overflow-tooltip />
+        <el-table-column prop="name" label="流程名称" min-width="150" show-overflow-tooltip />
+        <el-table-column prop="key" label="流程 Key" width="150" show-overflow-tooltip />
         <el-table-column prop="version" label="版本" width="80" />
-        <el-table-column prop="category" label="分类" width="120" />
+        <el-table-column prop="category" label="分类" width="100">
+          <template #default="{ row }">
+            <el-tag v-if="row.category === 'hr'">人事</el-tag>
+            <el-tag v-else-if="row.category === 'finance'" type="success">财务</el-tag>
+            <el-tag v-else-if="row.category === 'admin'" type="warning">行政</el-tag>
+            <el-tag v-else-if="row.category === 'purchase'" type="danger">采购</el-tag>
+            <el-tag v-else>其他</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="状态" width="80">
           <template #default="{ row }">
             <el-tag :type="row.suspended ? 'danger' : 'success'">
@@ -24,11 +56,15 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="resourceName" label="资源名称" width="200" />
-        <el-table-column label="操作" width="350" fixed="right">
+        <el-table-column prop="deploymentTime" label="部署时间" width="180" />
+        <el-table-column prop="resourceName" label="资源名称" width="150" show-overflow-tooltip />
+        <el-table-column label="操作" width="400" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="handleViewBpmn(row)">
               查看 BPMN
+            </el-button>
+            <el-button type="info" size="small" @click="handleViewDetail(row)">
+              详情
             </el-button>
             <el-button type="warning" size="small" @click="handleSuspendOrActivate(row)">
               {{ row.suspended ? '激活' : '挂起' }}
@@ -39,6 +75,20 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <!-- 分页 -->
+      <div class="pagination-container">
+        <el-pagination
+          v-show="total > 0"
+          v-model:current-page="pageNum"
+          v-model:page-size="pageSize"
+          :total="total"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="getProcessDefinitions"
+          @current-change="getProcessDefinitions"
+        />
+      </div>
     </el-card>
 
     <!-- 部署流程对话框 -->
@@ -109,6 +159,39 @@
         readonly
       />
     </el-dialog>
+
+    <!-- 流程详情对话框 -->
+    <el-dialog
+      v-model="detailDialogVisible"
+      title="流程定义详情"
+      width="700px"
+    >
+      <el-descriptions :column="2" border v-if="currentDefinition">
+        <el-descriptions-item label="流程 ID">{{ currentDefinition.id }}</el-descriptions-item>
+        <el-descriptions-item label="流程名称">{{ currentDefinition.name }}</el-descriptions-item>
+        <el-descriptions-item label="流程 Key">{{ currentDefinition.key }}</el-descriptions-item>
+        <el-descriptions-item label="版本">{{ currentDefinition.version }}</el-descriptions-item>
+        <el-descriptions-item label="分类">
+          <el-tag v-if="currentDefinition.category === 'hr'">人事</el-tag>
+          <el-tag v-else-if="currentDefinition.category === 'finance'" type="success">财务</el-tag>
+          <el-tag v-else-if="currentDefinition.category === 'admin'" type="warning">行政</el-tag>
+          <el-tag v-else-if="currentDefinition.category === 'purchase'" type="danger">采购</el-tag>
+          <el-tag v-else>其他</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="状态">
+          <el-tag :type="currentDefinition.suspended ? 'danger' : 'success'">
+            {{ currentDefinition.suspended ? '挂起' : '激活' }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="部署 ID">{{ currentDefinition.deploymentId }}</el-descriptions-item>
+        <el-descriptions-item label="部署时间">{{ currentDefinition.deploymentTime }}</el-descriptions-item>
+        <el-descriptions-item label="资源名称" :span="2">{{ currentDefinition.resourceName }}</el-descriptions-item>
+        <el-descriptions-item label="描述" :span="2">{{ currentDefinition.description || '-' }}</el-descriptions-item>
+      </el-descriptions>
+      <template #footer>
+        <el-button @click="detailDialogVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -122,9 +205,21 @@ const loading = ref(false)
 const deploying = ref(false)
 const deployDialogVisible = ref(false)
 const bpmnDialogVisible = ref(false)
+const detailDialogVisible = ref(false)
 const definitionList = ref([])
 const currentBpmnXml = ref('')
 const currentDefinition = ref(null)
+
+// 分页
+const pageNum = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+
+// 搜索条件
+const searchForm = reactive({
+  name: '',
+  category: ''
+})
 
 const deployFormRef = ref(null)
 const uploadRef = ref(null)
@@ -146,14 +241,33 @@ const getProcessDefinitions = async () => {
   try {
     const res = await request({
       url: '/system/workflow/definition/list',
-      method: 'get'
+      method: 'get',
+      params: {
+        pageNum: pageNum.value,
+        pageSize: pageSize.value,
+        ...searchForm
+      }
     })
-    definitionList.value = res.data || []
+    definitionList.value = res.data?.records || []
+    total.value = res.data?.total || 0
   } catch (error) {
     ElMessage.error('获取流程定义列表失败：' + error.message)
   } finally {
     loading.value = false
   }
+}
+
+// 搜索
+const search = () => {
+  pageNum.value = 1
+  getProcessDefinitions()
+}
+
+// 重置搜索
+const resetSearch = () => {
+  searchForm.name = ''
+  searchForm.category = ''
+  search()
 }
 
 // 打开部署对话框
@@ -191,6 +305,9 @@ const submitDeploy = async () => {
         const formData = new FormData()
         formData.append('name', deployForm.name)
         formData.append('bpmnXml', deployForm.bpmnXml)
+        if (deployForm.category) {
+          formData.append('category', deployForm.category)
+        }
 
         await request({
           url: '/system/workflow/deploy',
@@ -222,6 +339,20 @@ const handleViewBpmn = async (row) => {
     bpmnDialogVisible.value = true
   } catch (error) {
     ElMessage.error('获取 BPMN 失败：' + error.message)
+  }
+}
+
+// 查看详情
+const handleViewDetail = async (row) => {
+  try {
+    const res = await request({
+      url: `/system/workflow/definition/${row.id}`,
+      method: 'get'
+    })
+    currentDefinition.value = res.data
+    detailDialogVisible.value = true
+  } catch (error) {
+    ElMessage.error('获取流程详情失败：' + error.message)
   }
 }
 
@@ -297,5 +428,15 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.mr-2 {
+  margin-right: 10px;
+}
+
+.pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

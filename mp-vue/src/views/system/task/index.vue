@@ -11,6 +11,28 @@
         </div>
       </template>
 
+      <!-- 搜索表单 -->
+      <el-form :inline="true" label-width="80px" class="mb-4">
+        <el-form-item label="任务名称">
+          <el-input v-model="queryParams.taskName" placeholder="请输入任务名称" clearable style="width: 200px" />
+        </el-form-item>
+        <el-form-item label="优先级">
+          <el-select v-model="queryParams.priority" placeholder="请选择优先级" clearable style="width: 120px">
+            <el-option label="高" value="high" />
+            <el-option label="普通" value="normal" />
+            <el-option label="低" value="low" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleSearch">
+            <el-icon><Search /></el-icon> 搜索
+          </el-button>
+          <el-button @click="resetSearch">
+            <el-icon><Refresh /></el-icon> 重置
+          </el-button>
+        </el-form-item>
+      </el-form>
+
       <!-- 统计卡片 -->
       <el-row :gutter="16" class="mb-4">
         <el-col :span="6">
@@ -223,7 +245,7 @@
 <script setup name="TaskManagement">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Document, Select, Warning, Clock, Switch, User, Delete, Plus } from '@element-plus/icons-vue'
+import { Document, Select, Warning, Clock, Switch, User, Delete, Plus, Search, Refresh } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const activeTab = ref('todo')
@@ -258,6 +280,12 @@ const transferForm = reactive({
   targetUser: ''
 })
 
+// 搜索表单
+const queryParams = reactive({
+  taskName: undefined,
+  priority: undefined
+})
+
 // 获取统计信息
 const getStats = () => {
   request.get('/system/workflow/task/stats').then(res => {
@@ -269,19 +297,39 @@ const getStats = () => {
 const getList = () => {
   loading.value = true
   const url = activeTab.value === 'todo' ? '/system/workflow/task/todo' : '/system/workflow/task/done'
-  request.get(url, { params: { pageNum: pageNum.value, pageSize: pageSize.value } })
+  request.get(url, {
+    params: {
+      pageNum: pageNum.value,
+      pageSize: pageSize.value,
+      ...queryParams
+    }
+  })
     .then(res => {
       if (activeTab.value === 'todo') {
-        todoList.value = res.data || []
+        todoList.value = res.data?.records || []
+        total.value = res.data?.total || 0
       } else {
-        doneList.value = res.data || []
+        doneList.value = res.data?.records || []
+        total.value = res.data?.total || 0
       }
-      total.value = res.data?.length || 0
     })
     .catch(() => {})
     .finally(() => {
       loading.value = false
     })
+}
+
+// 搜索
+const handleSearch = () => {
+  pageNum.value = 1
+  getList()
+}
+
+// 重置搜索
+const resetSearch = () => {
+  queryParams.taskName = undefined
+  queryParams.priority = undefined
+  handleSearch()
 }
 
 // 切换标签
