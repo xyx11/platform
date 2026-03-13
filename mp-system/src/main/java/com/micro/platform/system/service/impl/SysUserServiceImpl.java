@@ -423,6 +423,17 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
         }
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateStatus(Long userId, Integer status) {
+        SysUser user = getById(userId);
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+        user.setStatus(status);
+        updateById(user);
+    }
+
     /**
      * 查询用户列表
      */

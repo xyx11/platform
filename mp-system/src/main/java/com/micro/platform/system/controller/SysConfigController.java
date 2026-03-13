@@ -48,7 +48,7 @@ public class SysConfigController {
     }
 
     @Operation(summary = "新增参数配置")
-    @OperationLog(module = "参数配置", type = OperationType.CREATE, description = "新增参数配置")
+    @OperationLog(module = "参数配置", type = OperationType.INSERT, description = "新增参数配置")
     @PreAuthorize("hasAuthority('system:config:add')")
     @PostMapping
     public Result<Void> add(@RequestBody SysConfig config) {

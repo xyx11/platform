@@ -51,7 +51,7 @@ public class SysDeptController {
     }
 
     @Operation(summary = "新增部门")
-    @OperationLog(module = "部门管理", type = OperationType.CREATE, description = "新增部门")
+    @OperationLog(module = "部门管理", type = OperationType.INSERT, description = "新增部门")
     @PreAuthorize("hasAuthority('system:dept:add')")
     @PostMapping
     public Result<Void> add(@Valid @RequestBody DeptDTO dto) {

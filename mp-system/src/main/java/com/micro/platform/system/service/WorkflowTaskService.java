@@ -11,12 +11,12 @@ public interface WorkflowTaskService {
     /**
      * 获取待办任务列表
      */
-    List<Map<String, Object>> getTodoTasks(String userId, int pageNum, int pageSize);
+    List<Map<String, Object>> getTodoTasks(String userId, int pageNum, int pageSize, Map<String, Object> params);
 
     /**
      * 获取已办任务列表
      */
-    List<Map<String, Object>> getDoneTasks(String userId, int pageNum, int pageSize);
+    List<Map<String, Object>> getDoneTasks(String userId, int pageNum, int pageSize, Map<String, Object> params);
 
     /**
      * 获取任务详情

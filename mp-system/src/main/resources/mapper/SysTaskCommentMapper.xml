@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.micro.platform.system.mapper.SysTaskCommentMapper">
+
+    <!-- 根据任务 ID 获取评论列表 -->
+    <select id="selectCommentsByTodoId" resultType="com.micro.platform.system.entity.SysTaskComment">
+        SELECT c.*,
+               (SELECT COUNT(*) FROM sys_task_comment r WHERE r.parent_id = c.comment_id AND r.deleted = 0) as reply_count
+        FROM sys_task_comment c
+        WHERE c.todo_id = #{todoId}
+        AND c.deleted = 0
+        AND c.parent_id IS NULL
+        ORDER BY c.create_time DESC
+    </select>
+
+    <!-- 获取评论总数 -->
+    <select id="selectCountByTodoId" resultType="int">
+        SELECT COUNT(*) FROM sys_task_comment
+        WHERE todo_id = #{todoId} AND deleted = 0
+    </select>
+
+</mapper>

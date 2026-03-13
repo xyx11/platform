@@ -57,7 +57,7 @@ public class SysMenuController {
     }
 
     @Operation(summary = "新增菜单")
-    @OperationLog(module = "菜单管理", type = OperationType.CREATE, description = "新增菜单")
+    @OperationLog(module = "菜单管理", type = OperationType.INSERT, description = "新增菜单")
     @PreAuthorize("hasAuthority('system:menu:add')")
     @PostMapping
     public Result<Void> add(@RequestBody SysMenu menu) {

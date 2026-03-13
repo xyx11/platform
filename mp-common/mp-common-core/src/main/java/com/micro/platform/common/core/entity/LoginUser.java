@@ -1,4 +1,4 @@
-package com.micro.platform.common.security.entity;
+package com.micro.platform.common.core.entity;
 
 import java.io.Serializable;
 import java.util.List;

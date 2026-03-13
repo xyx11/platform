@@ -50,7 +50,7 @@ public class WorkflowController {
 
     @GetMapping("/todo")
     @Operation(summary = "获取待办任务")
-    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    @OperationLog(module = "工作流", type = OperationType.QUERY)
     public Result<List<Map<String, Object>>> getTodoTasks() {
         String userId = SecurityUtil.getUserId().toString();
         List<Task> tasks = workflowService.getTodoTasks(userId);
@@ -80,7 +80,7 @@ public class WorkflowController {
     @GetMapping("/variables/{processInstanceId}")
     @Operation(summary = "获取流程变量")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
-    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    @OperationLog(module = "工作流", type = OperationType.QUERY)
     public Result<Map<String, Object>> getVariables(@PathVariable String processInstanceId) {
         Map<String, Object> variables = workflowService.getProcessVariables(processInstanceId);
         return Result.success(variables);
@@ -139,7 +139,7 @@ public class WorkflowController {
     @GetMapping("/definition/list")
     @Operation(summary = "获取流程定义列表")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
-    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    @OperationLog(module = "工作流", type = OperationType.QUERY)
     public Result<List<Map<String, Object>>> getProcessDefinitions(@RequestParam(required = false) String category) {
         List<Map<String, Object>> result = workflowService.getProcessDefinitions(category);
         return Result.success(result);
@@ -148,7 +148,7 @@ public class WorkflowController {
     @GetMapping("/definition/{processDefinitionId}")
     @Operation(summary = "获取流程定义详情")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
-    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    @OperationLog(module = "工作流", type = OperationType.QUERY)
     public Result<Map<String, Object>> getProcessDefinition(@PathVariable String processDefinitionId) {
         Map<String, Object> result = workflowService.getProcessDefinition(processDefinitionId);
         return Result.success(result);
@@ -166,7 +166,7 @@ public class WorkflowController {
     @GetMapping("/definition/bpmn/{processDefinitionId}")
     @Operation(summary = "获取 BPMN 流程定义 XML")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
-    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    @OperationLog(module = "工作流", type = OperationType.QUERY)
     public Result<Map<String, String>> getProcessDefinitionBpmn(@PathVariable String processDefinitionId) {
         String bpmnXml = workflowService.getProcessDefinitionBpmn(processDefinitionId);
         Map<String, String> result = new HashMap<>();
@@ -177,7 +177,7 @@ public class WorkflowController {
     @GetMapping("/instance/list")
     @Operation(summary = "获取运行中的流程实例列表")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
-    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    @OperationLog(module = "工作流", type = OperationType.QUERY)
     public Result<List<Map<String, Object>>> getRunningProcessInstances(
             @RequestParam(required = false) String processDefinitionKey,
             @RequestParam(required = false) String businessKey) {
@@ -188,7 +188,7 @@ public class WorkflowController {
     @GetMapping("/instance/{processInstanceId}")
     @Operation(summary = "获取流程实例详情")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
-    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    @OperationLog(module = "工作流", type = OperationType.QUERY)
     public Result<Map<String, Object>> getProcessInstance(@PathVariable String processInstanceId) {
         Map<String, Object> result = workflowService.getProcessInstance(processInstanceId);
         return Result.success(result);
@@ -197,7 +197,7 @@ public class WorkflowController {
     @GetMapping("/instance/{processInstanceId}/history")
     @Operation(summary = "获取流程历史活动轨迹")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
-    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    @OperationLog(module = "工作流", type = OperationType.QUERY)
     public Result<List<Map<String, Object>>> getProcessInstanceHistory(@PathVariable String processInstanceId) {
         List<Map<String, Object>> result = workflowService.getProcessInstanceHistory(processInstanceId);
         return Result.success(result);
@@ -206,7 +206,7 @@ public class WorkflowController {
     @GetMapping("/stats")
     @Operation(summary = "获取流程实例统计信息")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
-    @OperationLog(module = "工作流", type = OperationType.SELECT)
+    @OperationLog(module = "工作流", type = OperationType.QUERY)
     public Result<Map<String, Object>> getProcessInstanceStats() {
         Map<String, Object> result = workflowService.getProcessInstanceStats();
         return Result.success(result);

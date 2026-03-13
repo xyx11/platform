@@ -79,7 +79,7 @@ class WorkflowTaskServiceTest {
         when(taskQuery.listPage(0, 10)).thenReturn(taskList);
 
         // 执行测试
-        List<Map<String, Object>> result = workflowTaskService.getTodoTasks(testUserId, 1, 10);
+        List<Map<String, Object>> result = workflowTaskService.getTodoTasks(testUserId, 1, 10, java.util.Map.of());
 
         // 验证结果
         assertNotNull(result);
@@ -100,7 +100,7 @@ class WorkflowTaskServiceTest {
         when(historicTaskQuery.listPage(0, 10)).thenReturn(taskList);
 
         // 执行测试
-        List<Map<String, Object>> result = workflowTaskService.getDoneTasks(testUserId, 1, 10);
+        List<Map<String, Object>> result = workflowTaskService.getDoneTasks(testUserId, 1, 10, java.util.Map.of());
 
         // 验证结果
         assertNotNull(result);

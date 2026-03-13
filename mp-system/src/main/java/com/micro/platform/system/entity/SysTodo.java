@@ -95,6 +95,24 @@ public class SysTodo implements Serializable {
     @TableLogic
     private Integer deleted;
 
+    /**
+     * 标签列表（非数据库字段）
+     */
+    @TableField(exist = false)
+    private java.util.List<SysTodoTag> tags;
+
+    /**
+     * 评论数（非数据库字段）
+     */
+    @TableField(exist = false)
+    private Integer commentCount;
+
+    /**
+     * 附件数（非数据库字段）
+     */
+    @TableField(exist = false)
+    private Integer attachmentCount;
+
     public Long getTodoId() { return todoId; }
     public void setTodoId(Long todoId) { this.todoId = todoId; }
     public Long getUserId() { return userId; }
@@ -125,4 +143,10 @@ public class SysTodo implements Serializable {
     public void setUpdateTime(LocalDateTime updateTime) { this.updateTime = updateTime; }
     public Integer getDeleted() { return deleted; }
     public void setDeleted(Integer deleted) { this.deleted = deleted; }
+    public java.util.List<SysTodoTag> getTags() { return tags; }
+    public void setTags(java.util.List<SysTodoTag> tags) { this.tags = tags; }
+    public Integer getCommentCount() { return commentCount; }
+    public void setCommentCount(Integer commentCount) { this.commentCount = commentCount; }
+    public Integer getAttachmentCount() { return attachmentCount; }
+    public void setAttachmentCount(Integer attachmentCount) { this.attachmentCount = attachmentCount; }
 }

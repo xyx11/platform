@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   {
@@ -101,6 +101,24 @@ const routes = [
         name: 'SysTodo',
         component: () => import('@/views/system/todo/index.vue'),
         meta: { title: '待办事项', icon: 'List' }
+      },
+      {
+        path: 'todo/recycle-bin',
+        name: 'TodoRecycleBin',
+        component: () => import('@/views/system/todo/recycle-bin.vue'),
+        meta: { title: '待办回收站', icon: 'Delete' }
+      },
+      {
+        path: 'todo/tag-manager',
+        name: 'TodoTagManager',
+        component: () => import('@/views/system/todo/tag.vue'),
+        meta: { title: '标签管理', icon: 'PriceTag' }
+      },
+      {
+        path: 'workflow/stats',
+        name: 'WorkflowStats',
+        component: () => import('@/views/system/workflow/stats.vue'),
+        meta: { title: '工作流统计', icon: 'TrendCharts' }
       },
       {
         path: 'online-user',
@@ -271,7 +289,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 

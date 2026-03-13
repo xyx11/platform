@@ -1,6 +1,6 @@
 package com.micro.platform.common.core.aspect;
 
-import com.micro.platform.common.security.entity.LoginUser;
+import com.micro.platform.common.core.entity.LoginUser;
 
 /**
  * 数据权限上下文

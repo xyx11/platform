@@ -27,7 +27,6 @@ public class SysIndexController {
     }
 
     @Operation(summary = "获取统计数据")
-    @PreAuthorize("hasAuthority('system:index:query')")
     @GetMapping("/statistics")
     public Result<Map<String, Object>> getStatistics() {
         return Result.success(sysIndexService.getStatistics());

@@ -38,8 +38,12 @@ public class TenantInterceptor implements TenantLineHandler {
      * 是否忽略某张表的租户过滤
      */
     @Override
-    public boolean ignoreTable(Table table) {
-        String tableName = table.getName().toLowerCase();
+    public boolean ignoreTable(String tableName) {
+        if (tableName == null) {
+            return false;
+        }
+        
+        String lowerTableName = tableName.toLowerCase();
 
         // 系统表不需要租户过滤
         String[] ignoreTables = {
@@ -50,7 +54,7 @@ public class TenantInterceptor implements TenantLineHandler {
         };
 
         for (String ignoreTable : ignoreTables) {
-            if (tableName.equals(ignoreTable)) {
+            if (lowerTableName.equals(ignoreTable)) {
                 return true;
             }
         }

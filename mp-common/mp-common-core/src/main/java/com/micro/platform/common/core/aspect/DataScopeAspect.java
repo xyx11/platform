@@ -2,8 +2,8 @@ package com.micro.platform.common.core.aspect;
 
 import com.micro.platform.common.core.annotation.DataScope;
 import com.micro.platform.common.core.enums.DataScopeType;
-import com.micro.platform.common.security.entity.LoginUser;
-import com.micro.platform.common.security.util.SecurityUtil;
+import com.micro.platform.common.core.entity.LoginUser;
+import com.micro.platform.common.core.util.SecurityUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -45,7 +45,7 @@ public class DataScopeAspect {
         }
 
         // 获取登录用户信息
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = SecurityUtil.getLoginUser();
         if (loginUser == null) {
             return;
         }

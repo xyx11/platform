@@ -32,7 +32,7 @@ public class SysTenantController {
     @GetMapping("/list")
     @Operation(summary = "查询租户列表")
     @PreAuthorize("@ss.hasPermission('system:tenant:list')")
-    @OperationLog(module = "租户管理", type = OperationType.SELECT)
+    @OperationLog(module = "租户管理", type = OperationType.QUERY)
     public Result<PageResult<SysTenant>> list(SysTenant tenant,
                                                @RequestParam(defaultValue = "1") Integer pageNum,
                                                @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -44,7 +44,7 @@ public class SysTenantController {
     @GetMapping("/{id}")
     @Operation(summary = "获取租户详情")
     @PreAuthorize("@ss.hasPermission('system:tenant:query')")
-    @OperationLog(module = "租户管理", type = OperationType.SELECT)
+    @OperationLog(module = "租户管理", type = OperationType.QUERY)
     public Result<SysTenant> get(@PathVariable Long id) {
         SysTenant tenant = tenantService.getById(id);
         return Result.success(tenant);

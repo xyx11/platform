@@ -54,7 +54,7 @@ public class SysPostController {
     }
 
     @Operation(summary = "新增岗位")
-    @OperationLog(module = "岗位管理", type = OperationType.CREATE, description = "新增岗位")
+    @OperationLog(module = "岗位管理", type = OperationType.INSERT, description = "新增岗位")
     @PreAuthorize("hasAuthority('system:post:add')")
     @PostMapping
     public Result<Void> add(@RequestBody SysPost post) {

@@ -60,4 +60,11 @@ public class PageResult<T> implements Serializable {
     public static <T> PageResult<T> of(List<T> records, long total, long current, long size) {
         return new PageResult<>(records, total, current, size);
     }
+
+    /**
+     * 从 MyBatis-Plus Page 构建 PageResult
+     */
+    public static <T> PageResult<T> build(com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> page) {
+        return new PageResult<>(page.getRecords(), page.getTotal(), page.getCurrent(), page.getSize());
+    }
 }

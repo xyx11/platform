@@ -32,7 +32,7 @@ public class SysAuditLogController {
     @GetMapping("/list")
     @Operation(summary = "查询审计日志列表")
     @PreAuthorize("@ss.hasPermission('system:audit-log:list')")
-    @OperationLog(module = "审计日志", type = OperationType.SELECT)
+    @OperationLog(module = "审计日志", type = OperationType.QUERY)
     public Result<PageResult<SysAuditLog>> list(SysAuditLog auditLog,
                                                  @RequestParam(defaultValue = "1") Integer pageNum,
                                                  @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -44,7 +44,7 @@ public class SysAuditLogController {
     @GetMapping("/{id}")
     @Operation(summary = "获取审计日志详情")
     @PreAuthorize("@ss.hasPermission('system:audit-log:query')")
-    @OperationLog(module = "审计日志", type = OperationType.SELECT)
+    @OperationLog(module = "审计日志", type = OperationType.QUERY)
     public Result<SysAuditLog> get(@PathVariable Long id) {
         SysAuditLog auditLog = auditLogService.getById(id);
         return Result.success(auditLog);
@@ -53,7 +53,7 @@ public class SysAuditLogController {
     @GetMapping("/table/{tableName}/record/{recordId}")
     @Operation(summary = "查询指定记录的操作历史")
     @PreAuthorize("@ss.hasPermission('system:audit-log:query')")
-    @OperationLog(module = "审计日志", type = OperationType.SELECT)
+    @OperationLog(module = "审计日志", type = OperationType.QUERY)
     public Result<List<SysAuditLog>> getByTableAndRecord(@PathVariable String tableName,
                                                           @PathVariable Long recordId) {
         List<SysAuditLog> logs = auditLogService.selectAuditLogByTable(tableName, recordId);
@@ -63,7 +63,7 @@ public class SysAuditLogController {
     @GetMapping("/user/{userId}")
     @Operation(summary = "查询用户的操作日志")
     @PreAuthorize("@ss.hasPermission('system:audit-log:query')")
-    @OperationLog(module = "审计日志", type = OperationType.SELECT)
+    @OperationLog(module = "审计日志", type = OperationType.QUERY)
     public Result<List<SysAuditLog>> getByUser(@PathVariable Long userId,
                                                 @RequestParam(required = false) Integer limit) {
         List<SysAuditLog> logs = auditLogService.selectAuditLogByUser(userId, limit);
@@ -73,7 +73,7 @@ public class SysAuditLogController {
     @GetMapping("/stats")
     @Operation(summary = "获取审计统计信息")
     @PreAuthorize("@ss.hasPermission('system:audit-log:query')")
-    @OperationLog(module = "审计日志", type = OperationType.SELECT)
+    @OperationLog(module = "审计日志", type = OperationType.QUERY)
     public Result<Map<String, Object>> stats() {
         Map<String, Object> stats = auditLogService.getAuditStats();
         return Result.success(stats);
@@ -91,7 +91,7 @@ public class SysAuditLogController {
     @DeleteMapping("/clear")
     @Operation(summary = "清空审计日志")
     @PreAuthorize("@ss.hasPermission('system:audit-log:clear')")
-    @OperationLog(module = "审计日志", type = OperationType.CLEAR)
+    @OperationLog(module = "审计日志", type = OperationType.CLEAN)
     public Result<Void> clear() {
         auditLogService.clear();
         return Result.success();

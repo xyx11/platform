@@ -48,7 +48,7 @@ public class SysRoleController {
     }
 
     @Operation(summary = "新增角色")
-    @OperationLog(module = "角色管理", type = OperationType.CREATE, description = "新增角色")
+    @OperationLog(module = "角色管理", type = OperationType.INSERT, description = "新增角色")
     @PreAuthorize("hasAuthority('system:role:add')")
     @PostMapping
     public Result<Void> add(@RequestBody SysRole role) {

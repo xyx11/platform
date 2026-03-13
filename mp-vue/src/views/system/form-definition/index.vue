@@ -130,7 +130,7 @@
 <script setup name="FormDefinition">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { request } from '@/utils/request'
+import request from '@/utils/request'
 
 const loading = ref(false)
 const submitting = ref(false)

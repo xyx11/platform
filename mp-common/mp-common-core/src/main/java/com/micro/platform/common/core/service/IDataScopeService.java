@@ -1,7 +1,7 @@
 package com.micro.platform.common.core.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.micro.platform.common.security.entity.LoginUser;
+import com.micro.platform.common.core.entity.LoginUser;
 
 /**
  * 数据权限服务接口

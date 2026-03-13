@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.micro.platform.system.mapper.SysTaskAttachmentMapper">
+
+    <!-- 根据任务 ID 获取附件列表 -->
+    <select id="selectAttachmentsByTodoId" resultType="com.micro.platform.system.entity.SysTaskAttachment">
+        SELECT * FROM sys_task_attachment
+        WHERE todo_id = #{todoId}
+        AND deleted = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 获取附件总数 -->
+    <select id="selectCountByTodoId" resultType="int">
+        SELECT COUNT(*) FROM sys_task_attachment
+        WHERE todo_id = #{todoId} AND deleted = 0
+    </select>
+
+</mapper>

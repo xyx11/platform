@@ -1,7 +1,7 @@
 package com.micro.platform.common.core.util;
 
 import com.micro.platform.common.core.enums.DataScopeType;
-import com.micro.platform.common.security.entity.LoginUser;
+import com.micro.platform.common.core.entity.LoginUser;
 import org.springframework.util.StringUtils;
 
 /**

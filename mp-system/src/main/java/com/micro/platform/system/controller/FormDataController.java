@@ -32,7 +32,7 @@ public class FormDataController {
     @GetMapping("/list")
     @Operation(summary = "查询表单数据列表")
     @PreAuthorize("@ss.hasPermission('system:form-data:list')")
-    @OperationLog(module = "动态表单数据", type = OperationType.SELECT)
+    @OperationLog(module = "动态表单数据", type = OperationType.QUERY)
     public Result<PageResult<FormData>> list(@RequestParam(required = false) Long formId,
                                               @RequestParam(defaultValue = "1") Integer pageNum,
                                               @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -44,7 +44,7 @@ public class FormDataController {
     @GetMapping("/{id}")
     @Operation(summary = "获取表单数据详情")
     @PreAuthorize("@ss.hasPermission('system:form-data:query')")
-    @OperationLog(module = "动态表单数据", type = OperationType.SELECT)
+    @OperationLog(module = "动态表单数据", type = OperationType.QUERY)
     public Result<FormData> get(@PathVariable Long id) {
         FormData formData = formDataService.getFormDataDetail(id);
         return Result.success(formData);

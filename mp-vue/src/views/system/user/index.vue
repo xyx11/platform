@@ -1,13 +1,13 @@
 <template>
   <div class="user-container">
-    <el-row :gutter="16" style="height: calc(100vh - 120px)">
+    <el-row :gutter="16" style="height: calc(100vh - 100px)">
       <!-- 左侧部门树 -->
       <el-col :span="4" class="dept-tree-col">
         <el-card shadow="never" class="dept-tree-card">
           <template #header>
             <div class="dept-tree-header">
-              <span>组织机构</span>
-              <el-button link type="primary" icon="Refresh" @click="refreshDeptTree" />
+              <span class="card-title"><el-icon><OfficeBuilding /></el-icon> 组织机构</span>
+              <el-button link type="primary" icon="Refresh" @click="refreshDeptTree" circle size="small" />
             </div>
           </template>
           <el-tree
@@ -22,7 +22,7 @@
           >
             <template #default="{ data }">
               <span class="dept-tree-node">
-                <el-icon><OfficeBuilding /></el-icon>
+                <el-icon class="dept-icon"><OfficeBuilding /></el-icon>
                 <span>{{ data.deptName }}</span>
               </span>
             </template>
@@ -32,75 +32,122 @@
 
       <!-- 右侧用户列表 -->
       <el-col :span="20">
-        <el-card>
-          <el-form :model="queryParams" inline>
+        <el-card shadow="never" class="search-card">
+          <el-form :model="queryParams" inline label-width="70px">
             <el-form-item label="用户名">
-              <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable />
+              <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable style="width: 160px">
+                <template #prefix><el-icon><User /></el-icon></template>
+              </el-input>
             </el-form-item>
             <el-form-item label="手机号">
-              <el-input v-model="queryParams.phone" placeholder="请输入手机号" clearable />
+              <el-input v-model="queryParams.phone" placeholder="请输入手机号" clearable style="width: 150px">
+                <template #prefix><el-icon><Cellphone /></el-icon></template>
+              </el-input>
             </el-form-item>
             <el-form-item label="状态">
-              <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
+              <el-select v-model="queryParams.status" placeholder="请选择状态" clearable style="width: 120px">
                 <el-option label="正常" :value="1" />
                 <el-option label="禁用" :value="0" />
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" icon="Search" @click="handleQuery">查询</el-button>
-              <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+              <el-button type="primary" @click="handleQuery">
+                <el-icon><Search /></el-icon> 查询
+              </el-button>
+              <el-button @click="resetQuery">
+                <el-icon><Refresh /></el-icon> 重置
+              </el-button>
             </el-form-item>
           </el-form>
         </el-card>
 
-        <el-card class="table-card">
+        <el-card shadow="never" class="table-card">
           <template #header>
             <div class="header-actions">
-              <el-button type="primary" icon="Plus" @click="handleAdd">新增用户</el-button>
-              <el-button type="danger" icon="Delete" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
-              <el-button type="warning" icon="Key" :disabled="multiple" @click="handleBatchResetPwd">批量重置密码</el-button>
-              <el-button type="success" icon="Unlock" :disabled="multiple" @click="handleBatchUnlock">批量解锁</el-button>
-              <el-button type="info" icon="Upload" @click="handleImport">导入</el-button>
-              <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
-              <el-button type="info" icon="Document" @click="downloadTemplate">下载模板</el-button>
+              <el-button type="primary" @click="handleAdd">
+                <el-icon><Plus /></el-icon> 新增
+              </el-button>
+              <el-button type="danger" :disabled="multiple" @click="handleBatchDelete">
+                <el-icon><Delete /></el-icon> 批量删除
+              </el-button>
+              <el-button type="warning" :disabled="multiple" @click="handleBatchResetPwd">
+                <el-icon><Key /></el-icon> 批量重置密码
+              </el-button>
+              <el-button type="success" :disabled="multiple" @click="handleBatchUnlock">
+                <el-icon><Unlock /></el-icon> 批量解锁
+              </el-button>
+              <el-dropdown @command="handleCommand">
+                <el-button type="info">
+                  <el-icon><Download /></el-icon> 导入导出 <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item command="import"><el-icon><Upload /></el-icon> 导入数据</el-dropdown-item>
+                    <el-dropdown-item command="export"><el-icon><Download /></el-icon> 导出数据</el-dropdown-item>
+                    <el-dropdown-item command="template"><el-icon><Document /></el-icon> 下载模板</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </div>
           </template>
 
           <el-table
             :data="userList"
-            border
-            stripe
             v-loading="loading"
             @selection-change="handleSelectionChange"
+            :header-cell-style="{ background: '#f5f7fa', color: '#606266' }"
+            class="user-table"
           >
-            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column type="selection" width="45" align="center" />
             <el-table-column prop="userId" label="用户 ID" width="100" />
-            <el-table-column prop="username" label="用户名" width="120" />
-            <el-table-column prop="nickname" label="昵称" width="120" />
-            <el-table-column prop="deptName" label="部门" width="150" />
-            <el-table-column prop="phone" label="手机号" width="130" />
-            <el-table-column prop="email" label="邮箱" width="180" />
-            <el-table-column prop="status" label="状态" width="80">
+            <el-table-column label="用户信息" min-width="200">
               <template #default="{ row }">
-                <el-tag :type="row.status === 1 ? 'success' : 'danger'">
-                  {{ row.status === 1 ? '正常' : '禁用' }}
+                <div class="user-info">
+                  <el-avatar :size="40" :src="row.avatar || getAvatarUrl(row.gender)">
+                    {{ row.username?.charAt(0)?.toUpperCase() }}
+                  </el-avatar>
+                  <div class="user-detail">
+                    <div class="user-name">{{ row.username }}</div>
+                    <div class="user-nickname">{{ row.nickname }}</div>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="deptName" label="部门" width="140" show-overflow-tooltip />
+            <el-table-column prop="phone" label="手机号" width="130">
+              <template #default="{ row }">
+                <el-tag type="info" size="small" v-if="row.phone">
+                  <el-icon><Cellphone /></el-icon> {{ row.phone }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="180" />
-            <el-table-column label="操作" width="320" fixed="right">
+            <el-table-column prop="email" label="邮箱" width="180" show-overflow-tooltip />
+            <el-table-column prop="status" label="状态" width="80" align="center">
               <template #default="{ row }">
-                <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
+                <el-switch
+                  v-model="row.status"
+                  :active-value="1"
+                  :inactive-value="0"
+                  @change="handleStatusChange(row)"
+                  :active-color="'#13ce66'"
+                  :inactive-color="'#ff4949'"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column prop="createTime" label="创建时间" width="170" />
+            <el-table-column label="操作" width="280" fixed="right" align="center">
+              <template #default="{ row }">
+                <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">编辑</el-button>
                 <el-button link type="danger" icon="Delete" @click="handleDelete(row)">删除</el-button>
-                <el-button link type="warning" icon="Key" @click="handleResetPwd(row)">重置密码</el-button>
-                <el-button link type="success" icon="Unlock" @click="handleUnlock(row)">解锁</el-button>
-                <el-button link type="primary" icon="CircleCheck" @click="handleAssignRole(row)">分配角色</el-button>
+                <el-button link type="warning" icon="Key" @click="handleResetPwd(row)">密码</el-button>
+                <el-button link type="success" icon="UserFilled" @click="handleAssignRole(row)">角色</el-button>
               </template>
             </el-table-column>
           </el-table>
 
           <div class="pagination">
             <el-pagination
+              v-show="pagination.total > 0"
               v-model:current-page="pagination.current"
               v-model:page-size="pagination.size"
               :total="pagination.total"
@@ -118,53 +165,83 @@
     <el-dialog
       :title="dialog.title"
       v-model="dialog.visible"
-      width="600px"
+      width="700px"
       @close="resetForm"
+      :close-on-click-modal="false"
     >
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username" placeholder="请输入用户名" :disabled="!!form.userId" />
-        </el-form-item>
-        <el-form-item label="密码" prop="password" v-if="!form.userId">
-          <el-input v-model="form.password" type="password" placeholder="请输入密码" show-password />
-        </el-form-item>
-        <el-form-item label="昵称" prop="nickname">
-          <el-input v-model="form.nickname" placeholder="请输入昵称" />
-        </el-form-item>
-        <el-form-item label="部门" prop="deptId">
-          <el-tree-select
-            v-model="form.deptId"
-            :data="deptTreeData"
-            :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
-            check-strictly
-            placeholder="请选择部门"
-          />
-        </el-form-item>
-        <el-form-item label="性别" prop="gender">
-          <el-radio-group v-model="form.gender">
-            <el-radio :label="1">男</el-radio>
-            <el-radio :label="0">女</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号" maxlength="11" />
-        </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="form.email" placeholder="请输入邮箱" />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio :label="1">正常</el-radio>
-            <el-radio :label="0">禁用</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="角色" prop="roleIds">
-          <el-checkbox-group v-model="form.roleIds">
-            <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">
-              {{ role.roleName }}
-            </el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="90px">
+        <el-row :gutter="16">
+          <el-col :span="12">
+            <el-form-item label="用户名" prop="username">
+              <el-input v-model="form.username" placeholder="请输入用户名" :disabled="!!form.userId" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="密码" prop="password" v-if="!form.userId">
+              <el-input v-model="form.password" type="password" placeholder="请输入密码" show-password />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col :span="12">
+            <el-form-item label="昵称" prop="nickname">
+              <el-input v-model="form.nickname" placeholder="请输入昵称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别" prop="gender">
+              <el-radio-group v-model="form.gender">
+                <el-radio-button :label="1">男</el-radio-button>
+                <el-radio-button :label="0">女</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col :span="12">
+            <el-form-item label="部门" prop="deptId">
+              <el-tree-select
+                v-model="form.deptId"
+                :data="deptTreeData"
+                :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
+                check-strictly
+                placeholder="请选择部门"
+                style="width: 100%"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status">
+              <el-radio-group v-model="form.status">
+                <el-radio-button :label="1">正常</el-radio-button>
+                <el-radio-button :label="0">禁用</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col :span="12">
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入手机号" maxlength="11" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="form.email" placeholder="请输入邮箱" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="角色" prop="roleIds">
+              <el-checkbox-group v-model="form.roleIds">
+                <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">
+                  {{ role.roleName }}
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <template #footer>
         <el-button @click="dialog.visible = false">取消</el-button>
@@ -173,10 +250,17 @@
     </el-dialog>
 
     <!-- 重置密码对话框 -->
-    <el-dialog title="重置密码" v-model="pwdDialog.visible" width="500px">
+    <el-dialog title="重置密码" v-model="pwdDialog.visible" width="500px" @close="resetPwdForm">
       <el-form ref="pwdFormRef" :model="pwdForm" :rules="pwdRules" label-width="100px">
+        <el-alert
+          title="提示"
+          description="重置密码后，用户需要使用新密码重新登录"
+          type="info"
+          :closable="false"
+          style="margin-bottom: 20px"
+        />
         <el-form-item label="新密码" prop="password">
-          <el-input v-model="pwdForm.password" type="password" placeholder="请输入新密码" show-password />
+          <el-input v-model="pwdForm.password" type="password" placeholder="请输入新密码，至少 6 位" show-password maxlength="20" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -186,11 +270,14 @@
     </el-dialog>
 
     <!-- 分配角色对话框 -->
-    <el-dialog title="分配角色" v-model="roleDialog.visible" width="500px">
+    <el-dialog title="分配角色" v-model="roleDialog.visible" width="500px" @close="roleForm.roleIds = []">
       <el-form label-width="100px">
+        <el-form-item label="当前用户">
+          <span>{{ roleForm.username }}</span>
+        </el-form-item>
         <el-form-item label="选择角色">
           <el-checkbox-group v-model="roleForm.roleIds">
-            <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">
+            <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId" border>
               {{ role.roleName }}
             </el-checkbox>
           </el-checkbox-group>
@@ -203,7 +290,15 @@
     </el-dialog>
 
     <!-- 导入对话框 -->
-    <el-dialog title="导入用户数据" v-model="importDialog.visible" width="500px">
+    <el-dialog title="导入用户数据" v-model="importDialog.visible" width="550px" @close="handleImportClose">
+      <el-alert
+        title="导入说明"
+        description="请先下载模板，按照模板格式填写用户数据后上传"
+        type="info"
+        :closable="false"
+        show-icon
+        style="margin-bottom: 20px"
+      />
       <el-upload
         ref="uploadRef"
         drag
@@ -234,7 +329,10 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { UploadFilled, OfficeBuilding } from '@element-plus/icons-vue'
+import {
+  UploadFilled, OfficeBuilding, User, Cellphone, Search, Refresh, Plus, Delete,
+  Key, Unlock, Download, Upload, Document, ArrowDown
+} from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const userList = ref([])
@@ -300,24 +398,42 @@ const pwdForm = reactive({
 
 const roleForm = reactive({
   userId: null,
+  username: '',
   roleIds: []
 })
 
 const rules = {
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+  username: [{ required: true, message: '请输入用户名', trigger: 'blur', min: 2, max: 20 }],
+  password: [{ required: true, message: '请输入密码', trigger: 'blur', min: 6, max: 20 }],
   nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
-  deptId: [{ required: true, message: '请选择部门', trigger: 'change' }]
+  deptId: [{ required: true, message: '请选择部门', trigger: 'change' }],
+  phone: [
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }
+  ],
+  email: [
+    { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
+  ]
 }
 
 const pwdRules = {
-  password: [{ required: true, message: '请输入新密码', trigger: 'blur' }]
+  password: [
+    { required: true, message: '请输入新密码', trigger: 'blur', min: 6, max: 20 },
+    { pattern: /^\S{6,}$/, message: '密码长度至少为 6 位', trigger: 'blur' }
+  ]
+}
+
+// 获取默认头像
+const getAvatarUrl = (gender) => {
+  const baseUrl = 'https://api.dicebear.com/7.x/avataaars/svg?seed='
+  return gender === 0 ? baseUrl + 'female' : baseUrl + 'male'
 }
 
 // 获取部门树
 const getDeptTree = () => {
   request.get('/system/dept/list').then(res => {
     deptTreeData.value = res.data || []
+  }).catch(err => {
+    console.error('获取部门树失败:', err)
   })
 }
 
@@ -339,8 +455,9 @@ const getUserList = () => {
   request.get('/system/user/list', { params: queryParams }).then(res => {
     userList.value = res.data?.records || []
     pagination.total = res.data?.total || 0
-    loading.value = false
-  }).catch(() => {
+  }).catch(err => {
+    console.error('获取用户列表失败:', err)
+  }).finally(() => {
     loading.value = false
   })
 }
@@ -348,7 +465,9 @@ const getUserList = () => {
 // 获取角色列表
 const getRoleList = () => {
   request.get('/system/role/list').then(res => {
-    roleList.value = res.data
+    roleList.value = res.data || []
+  }).catch(err => {
+    console.error('获取角色列表失败:', err)
   })
 }
 
@@ -376,6 +495,21 @@ const handleSelectionChange = (selection) => {
   multiple.value = !selection.length
 }
 
+// 下拉菜单命令
+const handleCommand = (command) => {
+  switch (command) {
+    case 'import':
+      handleImport()
+      break
+    case 'export':
+      handleExport()
+      break
+    case 'template':
+      downloadTemplate()
+      break
+  }
+}
+
 // 新增
 const handleAdd = () => {
   dialog.title = '新增用户'
@@ -391,25 +525,45 @@ const handleUpdate = (row) => {
 
 // 删除
 const handleDelete = (row) => {
-  ElMessageBox.confirm(`确认删除用户 "${row.username}" 吗？`, '提示', {
-    type: 'warning'
+  ElMessageBox.confirm(`确认删除用户 "${row.username}" 吗？删除后无法恢复！`, '警告', {
+    type: 'warning',
+    confirmButtonText: '确定',
+    cancelButtonText: '取消'
   }).then(() => {
     request.delete(`/system/user/${row.userId}`).then(() => {
       ElMessage.success('删除成功')
       getUserList()
     })
-  })
+  }).catch(() => {})
 }
 
 // 批量删除
 const handleBatchDelete = () => {
-  ElMessageBox.confirm(`确认删除选中的 ${userIds.value.length} 个用户吗？`, '警告', {
-    type: 'warning'
+  ElMessageBox.confirm(`确认删除选中的 ${userIds.value.length} 个用户吗？删除后无法恢复！`, '警告', {
+    type: 'warning',
+    confirmButtonText: '确定',
+    cancelButtonText: '取消'
   }).then(() => {
     request.delete('/system/user/batch', { data: userIds.value }).then(() => {
       ElMessage.success('批量删除成功')
       getUserList()
     })
+  }).catch(() => {})
+}
+
+// 状态改变
+const handleStatusChange = (row) => {
+  const statusText = row.status === 1 ? '启用' : '禁用'
+  ElMessageBox.confirm(`确认${statusText}用户 "${row.username}" 吗？`, '提示', {
+    type: 'warning'
+  }).then(() => {
+    request.put('/system/user/status', { userId: row.userId, status: row.status }).then(() => {
+      ElMessage.success(`${statusText}成功`)
+    }).catch(() => {
+      row.status = row.status === 1 ? 0 : 1
+    })
+  }).catch(() => {
+    row.status = row.status === 1 ? 0 : 1
   })
 }
 
@@ -428,7 +582,8 @@ const handleBatchResetPwd = () => {
     ElMessageBox.prompt('请输入新密码', '提示', {
       inputType: 'password',
       inputPattern: /.{6,}/,
-      inputErrorMessage: '密码长度至少为 6 位'
+      inputErrorMessage: '密码长度至少为 6 位',
+      inputValue: ''
     }).then(({ value }) => {
       request.put('/system/user/password/batch', {
         userIds: userIds.value,
@@ -438,7 +593,7 @@ const handleBatchResetPwd = () => {
         getUserList()
       })
     })
-  })
+  }).catch(() => {})
 }
 
 // 解锁用户
@@ -449,7 +604,7 @@ const handleUnlock = (row) => {
     request.post('/system/user/unlock/' + row.userId).then(() => {
       ElMessage.success('解锁成功')
     })
-  })
+  }).catch(() => {})
 }
 
 // 批量解锁用户
@@ -461,13 +616,14 @@ const handleBatchUnlock = () => {
       ElMessage.success('批量解锁成功')
       getUserList()
     })
-  })
+  }).catch(() => {})
 }
 
 // 分配角色
 const handleAssignRole = (row) => {
   roleDialog.visible = true
   roleForm.userId = row.userId
+  roleForm.username = row.username
   roleForm.roleIds = []
   request.get('/system/user/roles/' + row.userId).then(res => {
     roleForm.roleIds = res.data?.roleIds || []
@@ -498,6 +654,8 @@ const handleExport = () => {
     link.click()
     window.URL.revokeObjectURL(url)
     ElMessage.success('导出成功')
+  }).catch(() => {
+    ElMessage.error('导出失败')
   })
 }
 
@@ -512,6 +670,8 @@ const downloadTemplate = () => {
     link.click()
     window.URL.revokeObjectURL(url)
     ElMessage.success('模板下载成功')
+  }).catch(() => {
+    ElMessage.error('模板下载失败')
   })
 }
 
@@ -520,6 +680,12 @@ const handleImport = () => {
   importDialog.visible = true
   uploadFile.value = null
   uploadRef.value?.clearFiles()
+}
+
+// 关闭导入对话框
+const handleImportClose = () => {
+  uploadRef.value?.clearFiles()
+  uploadFile.value = null
 }
 
 // 上传前校验
@@ -601,6 +767,13 @@ const submitPwdForm = () => {
   })
 }
 
+// 重置密码表单
+const resetPwdForm = () => {
+  pwdFormRef.value?.resetFields()
+  pwdForm.userId = null
+  pwdForm.password = ''
+}
+
 // 重置表单
 const resetForm = () => {
   formRef.value?.resetFields()
@@ -627,61 +800,132 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 $primary-color: #1e80ff;
+$success-color: #13ce66;
+$warning-color: #e6a23c;
+$danger-color: #ff4949;
 $text-primary: #333333;
-$text-regular: #666666;
+$text-regular: #606266;
+$text-secondary: #909399;
 $border-color: #e3e4e6;
 $bg-color-page: #f5f6f7;
 
 .user-container {
-  padding: 0;
+  padding: 16px;
   height: 100%;
-  
+  background-color: $bg-color-page;
+
   .dept-tree-col {
     height: 100%;
-    
+
     .dept-tree-card {
       height: 100%;
-      
+      border-radius: 8px;
+
       .dept-tree-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        
-        span {
-          font-weight: 600;
-          font-size: 14px;
-          color: $text-primary;
-        }
-      }
-      
-      .dept-tree {
-        .dept-tree-node {
+
+        .card-title {
           display: flex;
           align-items: center;
-          gap: 6px;
-          
+          gap: 8px;
+          font-weight: 600;
+          font-size: 15px;
+          color: $text-primary;
+
           .el-icon {
             color: $primary-color;
           }
         }
-        
+      }
+
+      .dept-tree {
+        padding: 8px 0;
+
+        .dept-tree-node {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 12px;
+          border-radius: 6px;
+          transition: all 0.2s;
+
+          .dept-icon {
+            color: $primary-color;
+            font-size: 16px;
+          }
+
+          &:hover {
+            background-color: #f0f9ff;
+          }
+        }
+
         .is-current > .dept-tree-node {
+          background-color: #e6f4ff;
           color: $primary-color;
           font-weight: 500;
+        }
+
+        .el-tree-node__content {
+          height: auto;
+          padding: 4px 0;
         }
       }
     }
   }
-  
+
+  .search-card {
+    margin-bottom: 16px;
+    border-radius: 8px;
+
+    .el-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+
   .table-card {
-    margin-top: 0;
-    
+    border-radius: 8px;
+
     .header-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      align-items: center;
     }
-    
+
+    .user-table {
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .user-detail {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          .user-name {
+            font-weight: 500;
+            color: $text-primary;
+          }
+
+          .user-nickname {
+            font-size: 12px;
+            color: $text-secondary;
+          }
+        }
+      }
+
+      .el-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+
     .pagination {
       margin-top: 20px;
       display: flex;
@@ -693,6 +937,36 @@ $bg-color-page: #f5f6f7;
     font-size: 67px;
     color: #8c939d;
     margin: 40px 0 16px;
+  }
+
+  // 对话框样式优化
+  :deep(.el-dialog) {
+    border-radius: 12px;
+
+    .el-dialog__header {
+      padding: 16px 24px;
+      border-bottom: 1px solid $border-color;
+    }
+
+    .el-dialog__title {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .el-dialog__body {
+      padding: 24px;
+    }
+
+    .el-dialog__footer {
+      padding: 12px 24px;
+      border-top: 1px solid $border-color;
+    }
+  }
+
+  // 复选框样式
+  :deep(.el-checkbox) {
+    margin-right: 16px;
+    margin-bottom: 12px;
   }
 }
 </style>

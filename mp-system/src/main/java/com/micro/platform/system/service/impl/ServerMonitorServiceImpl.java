@@ -108,7 +108,7 @@ public class ServerMonitorServiceImpl implements ServerMonitorService {
     @Override
     public double getCpuUsage() {
         OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-        double cpuLoad = osBean.getSystemCpuLoad();
+        double cpuLoad = getSystemCpuLoad(osBean);
         return cpuLoad < 0 ? 0 : Double.parseDouble(df.format(cpuLoad * 100));
     }
 
@@ -171,5 +171,19 @@ public class ServerMonitorServiceImpl implements ServerMonitorService {
     private String formatDate(long timestamp) {
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new java.util.Date(timestamp));
+    }
+    /**
+     * 获取系统 CPU 负载（兼容方法）
+     */
+    private double getSystemCpuLoad(OperatingSystemMXBean osBean) {
+        try {
+            // 尝试调用 getProcessCpuLoad 方法（如果存在）
+            if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
+                return ((com.sun.management.OperatingSystemMXBean) osBean).getCpuLoad();
+            }
+        } catch (Exception e) {
+            // 忽略异常
+        }
+        return -1.0;
     }
 }

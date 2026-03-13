@@ -27,7 +27,7 @@ public class FormRenderController {
 
     @GetMapping("/{formCode}")
     @Operation(summary = "渲染表单")
-    @OperationLog(module = "表单渲染", type = OperationType.SELECT)
+    @OperationLog(module = "表单渲染", type = OperationType.QUERY)
     public Result<Map<String, Object>> render(@PathVariable String formCode) {
         Map<String, Object> form = formRenderService.renderForm(formCode);
         return Result.success(form);
@@ -35,7 +35,7 @@ public class FormRenderController {
 
     @GetMapping("/{formCode}/fields")
     @Operation(summary = "渲染表单字段")
-    @OperationLog(module = "表单渲染", type = OperationType.SELECT)
+    @OperationLog(module = "表单渲染", type = OperationType.QUERY)
     public Result<Map<String, Object>> fields(@PathVariable String formCode) {
         Map<String, Object> fields = formRenderService.renderFormFields(formCode);
         return Result.success(fields);
@@ -43,7 +43,7 @@ public class FormRenderController {
 
     @GetMapping("/{formCode}/schema")
     @Operation(summary = "获取表单 schema")
-    @OperationLog(module = "表单渲染", type = OperationType.SELECT)
+    @OperationLog(module = "表单渲染", type = OperationType.QUERY)
     public Result<String> schema(@PathVariable String formCode) {
         String schema = formRenderService.getFormSchema(formCode);
         return Result.success(schema);

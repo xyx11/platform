@@ -31,7 +31,7 @@ public class SysDataPermissionController {
     @GetMapping("/list")
     @Operation(summary = "查询数据权限规则列表")
     @PreAuthorize("@ss.hasPermission('system:data-permission:list')")
-    @OperationLog(module = "细粒度数据权限", type = OperationType.SELECT)
+    @OperationLog(module = "细粒度数据权限", type = OperationType.QUERY)
     public Result<PageResult<SysDataPermission>> list(SysDataPermission permission,
                                                        @RequestParam(defaultValue = "1") Integer pageNum,
                                                        @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -43,7 +43,7 @@ public class SysDataPermissionController {
     @GetMapping("/{id}")
     @Operation(summary = "获取数据权限规则详情")
     @PreAuthorize("@ss.hasPermission('system:data-permission:query')")
-    @OperationLog(module = "细粒度数据权限", type = OperationType.SELECT)
+    @OperationLog(module = "细粒度数据权限", type = OperationType.QUERY)
     public Result<SysDataPermission> get(@PathVariable Long id) {
         SysDataPermission permission = permissionService.getById(id);
         return Result.success(permission);
@@ -52,7 +52,7 @@ public class SysDataPermissionController {
     @GetMapping("/role/{roleId}")
     @Operation(summary = "获取角色的数据权限规则")
     @PreAuthorize("@ss.hasPermission('system:data-permission:query')")
-    @OperationLog(module = "细粒度数据权限", type = OperationType.SELECT)
+    @OperationLog(module = "细粒度数据权限", type = OperationType.QUERY)
     public Result<List<SysDataPermission>> getByRole(@PathVariable Long roleId) {
         List<SysDataPermission> permissions = permissionService.selectByRoleId(roleId);
         return Result.success(permissions);

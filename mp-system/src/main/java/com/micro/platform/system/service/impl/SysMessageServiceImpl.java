@@ -3,7 +3,7 @@ package com.micro.platform.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.service.impl.ServiceImplX;
-import com.micro.platform.common.security.entity.LoginUser;
+import com.micro.platform.common.core.entity.LoginUser;
 import com.micro.platform.common.security.util.SecurityUtil;
 import com.micro.platform.system.entity.SysMessage;
 import com.micro.platform.system.entity.SysMessageReceiver;

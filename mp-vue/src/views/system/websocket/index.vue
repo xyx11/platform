@@ -101,7 +101,7 @@ import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Client } from '@stomp/stompjs'
 import SockJS from 'sockjs-client'
-import { request } from '@/utils/request'
+import request from '@/utils/request'
 
 const connected = ref(false)
 const connectTime = ref('')

@@ -33,7 +33,7 @@ public class SysMessageController {
     @GetMapping("/list")
     @Operation(summary = "查询消息列表")
     @PreAuthorize("@ss.hasPermission('system:message:list')")
-    @OperationLog(module = "消息中心", type = OperationType.SELECT)
+    @OperationLog(module = "消息中心", type = OperationType.QUERY)
     public Result<PageResult<SysMessage>> list(SysMessage message,
                                                 @RequestParam(defaultValue = "1") Integer pageNum,
                                                 @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -44,7 +44,7 @@ public class SysMessageController {
 
     @GetMapping("/my-messages")
     @Operation(summary = "获取我的消息")
-    @OperationLog(module = "消息中心", type = OperationType.SELECT)
+    @OperationLog(module = "消息中心", type = OperationType.QUERY)
     public Result<PageResult<SysMessage>> myMessages(@RequestParam(defaultValue = "1") Integer pageNum,
                                                       @RequestParam(defaultValue = "10") Integer pageSize) {
         Long userId = SecurityUtil.getUserId();
@@ -64,7 +64,7 @@ public class SysMessageController {
     @GetMapping("/{id}")
     @Operation(summary = "获取消息详情")
     @PreAuthorize("@ss.hasPermission('system:message:query')")
-    @OperationLog(module = "消息中心", type = OperationType.SELECT)
+    @OperationLog(module = "消息中心", type = OperationType.QUERY)
     public Result<SysMessage> get(@PathVariable Long id) {
         SysMessage message = messageService.getById(id);
         return Result.success(message);
@@ -130,7 +130,7 @@ public class SysMessageController {
 
     @GetMapping("/stats")
     @Operation(summary = "获取消息统计")
-    @OperationLog(module = "消息中心", type = OperationType.SELECT)
+    @OperationLog(module = "消息中心", type = OperationType.QUERY)
     public Result<Map<String, Object>> stats() {
         Map<String, Object> stats = messageService.getMessageStats();
         return Result.success(stats);

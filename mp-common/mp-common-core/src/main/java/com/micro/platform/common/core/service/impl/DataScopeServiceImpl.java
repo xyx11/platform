@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.micro.platform.common.core.aspect.DataScopeContext;
 import com.micro.platform.common.core.enums.DataScopeType;
 import com.micro.platform.common.core.service.IDataScopeService;
-import com.micro.platform.common.security.entity.LoginUser;
-import com.micro.platform.common.security.util.SecurityUtil;
+import com.micro.platform.common.core.entity.LoginUser;
+import com.micro.platform.common.core.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class DataScopeServiceImpl implements IDataScopeService {
 
     @Override
     public Wrapper getDataScopeWrapper(LoginUser loginUser, String deptAlias, String userAlias) {
-        QueryWrapper wrapper = new QueryWrapper();
+        QueryWrapper<Object> wrapper = new QueryWrapper<>();
 
         if (loginUser == null) {
             return wrapper;

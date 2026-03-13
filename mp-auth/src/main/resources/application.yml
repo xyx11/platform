@@ -14,11 +14,15 @@ spring:
         server-addr: 127.0.0.1:8848
         namespace: public
         group: DEFAULT_GROUP
+      config:
+        enabled: false
   data:
     redis:
       host: localhost
       port: 6379
       database: 0
+  jackson:
+    type-id-handling: disabled
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
@@ -42,6 +46,8 @@ sa-token:
   token-style: uuid
   is-log: false
   is-print: false
+  interceptor:
+    enabled: false
 
 springdoc:
   api-docs:

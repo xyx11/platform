@@ -164,6 +164,7 @@ const handleLogin = async () => {
     if (valid) {
       loading.value = true
       const loginData = {
+        '@class': 'com.micro.platform.auth.dto.LoginRequest',
         ...loginForm,
         userAgent: navigator.userAgent
       }
@@ -178,10 +179,20 @@ const handleLogin = async () => {
           avatar
         }))
         ElMessage.success('登录成功')
-        router.replace({ path: '/dashboard' })
+        // 延迟跳转，确保消息显示完成
+        setTimeout(() => {
+          router.replace({ path: '/dashboard' })
+        }, 300)
       } catch (error) {
         console.error('登录失败:', error)
-        getCaptcha()
+        // 静默刷新验证码，不显示错误提示
+        request.get('/auth/captcha').then(res => {
+          loginForm.captchaKey = res.data.captchaKey
+          captchaImg.value = res.data.captchaImg
+        }).catch(() => {
+          // 静默失败，使用占位图
+          captchaImg.value = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmNWY3ZmEiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzkwOTM5OSIgZm9udC1zaXplPSIxMyI+点击刷新</text></svg>'
+        })
         loginForm.captchaCode = ''
       } finally {
         loading.value = false

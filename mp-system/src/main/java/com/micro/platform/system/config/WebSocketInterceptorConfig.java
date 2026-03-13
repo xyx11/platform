@@ -16,6 +16,6 @@ public class WebSocketInterceptorConfig implements WebSocketMessageBrokerConfigu
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.taskExecutor();
+        // 空实现，用于扩展
     }
 }

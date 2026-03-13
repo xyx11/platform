@@ -43,7 +43,7 @@ export default defineConfig({
       },
       // 其他 API 默认路由到认证服务
       '/api': {
-        target: 'http://localhost:8081',
+        target: 'http://localhost:8082',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
@@ -53,7 +53,7 @@ export default defineConfig({
     }
   },
   build: {
-    rollupOptions: {
+    rollupOptions: { external: ['bpmn-js/lib/Modeler', 'bpmn-js/dist/assets/diagram-js.css', 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css', 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css'],
       output: {
         manualChunks: {
           'vendor-vue': ['vue', 'vue-router', 'pinia'],

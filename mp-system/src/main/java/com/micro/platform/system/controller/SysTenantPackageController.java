@@ -31,7 +31,7 @@ public class SysTenantPackageController {
     @GetMapping("/list")
     @Operation(summary = "查询套餐列表")
     @PreAuthorize("@ss.hasPermission('system:tenant-package:list')")
-    @OperationLog(module = "租户套餐", type = OperationType.SELECT)
+    @OperationLog(module = "租户套餐", type = OperationType.QUERY)
     public Result<PageResult<SysTenantPackage>> list(SysTenantPackage pkg,
                                                       @RequestParam(defaultValue = "1") Integer pageNum,
                                                       @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -50,7 +50,7 @@ public class SysTenantPackageController {
     @GetMapping("/{id}")
     @Operation(summary = "获取套餐详情")
     @PreAuthorize("@ss.hasPermission('system:tenant-package:query')")
-    @OperationLog(module = "租户套餐", type = OperationType.SELECT)
+    @OperationLog(module = "租户套餐", type = OperationType.QUERY)
     public Result<SysTenantPackage> get(@PathVariable Long id) {
         SysTenantPackage pkg = packageService.getById(id);
         return Result.success(pkg);

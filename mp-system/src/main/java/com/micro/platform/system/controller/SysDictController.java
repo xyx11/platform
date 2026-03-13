@@ -52,7 +52,7 @@ public class SysDictController {
     }
 
     @Operation(summary = "新增字典类型")
-    @OperationLog(module = "字典管理", type = OperationType.CREATE, description = "新增字典类型")
+    @OperationLog(module = "字典管理", type = OperationType.INSERT, description = "新增字典类型")
     @PreAuthorize("hasAuthority('system:dict:add')")
     @PostMapping("/type")
     public Result<Void> addType(@RequestBody SysDictType dictType) {
@@ -133,7 +133,7 @@ public class SysDictController {
     }
 
     @Operation(summary = "新增字典数据")
-    @OperationLog(module = "字典管理", type = OperationType.CREATE, description = "新增字典数据")
+    @OperationLog(module = "字典管理", type = OperationType.INSERT, description = "新增字典数据")
     @PreAuthorize("hasAuthority('system:dict:add')")
     @PostMapping("/data")
     public Result<Void> addData(@RequestBody SysDictData dictData) {

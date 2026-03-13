@@ -26,7 +26,7 @@
             <artifactId>mp-common-redis</artifactId>
         </dependency>
 
-        <!-- Sa-Token Redis 集成 - 必须在 mp-common-security 之前引入 -->
+        <!-- Sa-Token Redis 集成 -->
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-dao-redis-jackson</artifactId>
@@ -58,6 +58,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <!-- Spring WebSocket -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
         <!-- Caffeine -->

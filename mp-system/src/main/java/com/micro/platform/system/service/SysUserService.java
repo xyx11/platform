@@ -97,4 +97,9 @@ public interface SysUserService extends IServiceX<SysUser> {
      * 批量解锁用户
      */
     void batchUnlockUsers(java.util.List<Long> userIds);
+
+    /**
+     * 修改用户状态
+     */
+    void updateStatus(Long userId, Integer status);
 }

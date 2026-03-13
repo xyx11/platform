@@ -3,16 +3,23 @@ package com.micro.platform.system.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.system.service.WorkflowTaskService;
-import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
-import org.flowable.engine.history.HistoricTaskInstance;
+import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.task.api.Task;
+import org.flowable.task.api.history.HistoricTaskInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +28,10 @@ import java.util.stream.Collectors;
 /**
  * 工作流任务服务实现
  */
-@Slf4j
 @Service
 public class WorkflowTaskServiceImpl implements WorkflowTaskService {
+
+    private static final Logger log = LoggerFactory.getLogger(WorkflowTaskServiceImpl.class);
 
     private final TaskService taskService;
     private final RuntimeService runtimeService;
@@ -38,10 +46,9 @@ public class WorkflowTaskServiceImpl implements WorkflowTaskService {
     }
 
     @Override
-    public List<Map<String, Object>> getTodoTasks(String userId, int pageNum, int pageSize) {
-        log.debug("获取用户待办任务：{}, 页码：{}, 大小：{}", userId, pageNum, pageSize);
+    public List<Map<String, Object>> getTodoTasks(String userId, int pageNum, int pageSize, Map<String, Object> params) {
+        log.debug("获取用户待办任务：{}, 页码：{}, 大小：{}, 筛选条件：{}", userId, pageNum, pageSize, params);
 
-        Page<Task> page = new Page<>(pageNum, pageSize);
         var query = taskService.createTaskQuery()
                 .taskAssignee(userId)
                 .orderByTaskPriority()
@@ -49,36 +56,108 @@ public class WorkflowTaskServiceImpl implements WorkflowTaskService {
                 .orderByTaskCreateTime()
                 .asc();
 
+        // 按任务名称筛选
+        if (params != null && StringUtils.hasText((String) params.get("taskName"))) {
+            String taskName = (String) params.get("taskName");
+            query.taskNameLike("%" + taskName + "%");
+        }
+
+        // 按流程名称筛选 - 使用历史流程实例查询
+        if (params != null && StringUtils.hasText((String) params.get("processName"))) {
+            String processName = (String) params.get("processName");
+            // 先查询所有历史流程实例，然后过滤名称
+            var processQuery = historyService.createHistoricProcessInstanceQuery()
+                    .unfinished()
+                    .list();
+            List<String> processInstanceIds = processQuery.stream()
+                    .filter(p -> processName == null || p.getProcessDefinitionName() != null && p.getProcessDefinitionName().contains(processName))
+                    .map(HistoricProcessInstance::getId)
+                    .collect(Collectors.toList());
+            if (!processInstanceIds.isEmpty()) {
+                query.processInstanceIdIn(processInstanceIds);
+            } else {
+                return new ArrayList<>();
+            }
+        }
+
+        // 按时间范围筛选（创建时间）
+        if (params != null) {
+            String startTime = (String) params.get("startTime");
+            String endTime = (String) params.get("endTime");
+
+            if (StringUtils.hasText(startTime)) {
+                try {
+                    LocalDateTime startDateTime = LocalDate.parse(startTime, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
+                    query.taskCreatedAfter(Date.from(startDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant()));
+                } catch (Exception e) {
+                    log.warn("开始时间格式错误：{}", startTime);
+                }
+            }
+
+            if (StringUtils.hasText(endTime)) {
+                try {
+                    LocalDateTime endDateTime = LocalDate.parse(endTime, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay().plusDays(1);
+                    query.taskCreatedBefore(Date.from(endDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant()));
+                } catch (Exception e) {
+                    log.warn("结束时间格式错误：{}", endTime);
+                }
+            }
+        }
+
         List<Task> tasks = query.listPage((pageNum - 1) * pageSize, pageSize);
 
         return tasks.stream().map(this::convertTaskToMap).collect(Collectors.toList());
     }
 
     @Override
-    public List<Map<String, Object>> getDoneTasks(String userId, int pageNum, int pageSize) {
-        log.debug("获取用户已办任务：{}, 页码：{}, 大小：{}", userId, pageNum, pageSize);
+    public List<Map<String, Object>> getDoneTasks(String userId, int pageNum, int pageSize, Map<String, Object> params) {
+        log.debug("获取用户已办任务：{}, 页码：{}, 大小：{}, 筛选条件：{}", userId, pageNum, pageSize, params);
 
-        List<HistoricTaskInstance> tasks = historyService.createHistoricTaskInstanceQuery()
+        var query = historyService.createHistoricTaskInstanceQuery()
                 .taskAssignee(userId)
                 .finished()
                 .orderByHistoricTaskInstanceEndTime()
-                .desc()
-                .listPage((pageNum - 1) * pageSize, pageSize);
+                .desc();
+
+        // 按任务名称筛选
+        if (params != null && StringUtils.hasText((String) params.get("taskName"))) {
+            String taskName = (String) params.get("taskName");
+            query.taskNameLike("%" + taskName + "%");
+        }
+
+        // 按流程名称筛选
+        if (params != null && StringUtils.hasText((String) params.get("processName"))) {
+            String processName = (String) params.get("processName");
+            var processQuery = historyService.createHistoricProcessInstanceQuery()
+                    .finished()
+                    .list();
+            List<String> processInstanceIds = processQuery.stream()
+                    .filter(p -> processName == null || p.getProcessDefinitionName() != null && p.getProcessDefinitionName().contains(processName))
+                    .map(p -> p.getId())
+                    .collect(Collectors.toList());
+            if (!processInstanceIds.isEmpty()) {
+                query.processInstanceIdIn(processInstanceIds);
+            } else {
+                return new ArrayList<>();
+            }
+        }
+
+        List<HistoricTaskInstance> tasks = query.listPage((pageNum - 1) * pageSize, pageSize);
 
         return tasks.stream().map(this::convertHistoricTaskToMap).collect(Collectors.toList());
     }
 
     @Override
     public Map<String, Object> getTask(String taskId) {
-        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        log.debug("获取任务详情：{}", taskId);
 
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         if (task == null) {
             throw new BusinessException("任务不存在");
         }
 
         Map<String, Object> result = convertTaskToMap(task);
 
-        // 获取流程变量
         String processInstanceId = task.getProcessInstanceId();
         var variables = runtimeService.getVariables(processInstanceId);
         result.put("variables", variables);
@@ -89,15 +168,18 @@ public class WorkflowTaskServiceImpl implements WorkflowTaskService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void completeTask(String taskId, String userId, Map<String, Object> variables) {
-        log.info("完成任务：{}, 用户：{}", taskId, userId);
+        log.info("完成任务：{}, 操作人：{}", taskId, userId);
 
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         if (task == null) {
             throw new BusinessException("任务不存在");
         }
 
+        if (!userId.equals(task.getAssignee())) {
+            throw new BusinessException("无权处理该任务");
+        }
+
         taskService.complete(taskId, variables);
-        log.info("任务完成：{}", taskId);
     }
 
     @Override
@@ -110,8 +192,8 @@ public class WorkflowTaskServiceImpl implements WorkflowTaskService {
             throw new BusinessException("任务不存在");
         }
 
-        taskService.delegateTask(taskId, delegateUser);
-        log.info("任务委派成功：{}", taskId);
+        taskService.setOwner(taskId, assignee);
+        taskService.setAssignee(taskId, delegateUser);
     }
 
     @Override
@@ -125,20 +207,20 @@ public class WorkflowTaskServiceImpl implements WorkflowTaskService {
         }
 
         taskService.setAssignee(taskId, newAssignee);
-        log.info("任务转办成功：{}", taskId);
     }
 
     @Override
     public List<Map<String, Object>> getTaskHistory(String processInstanceId) {
         log.debug("获取任务历史：{}", processInstanceId);
 
-        List<HistoricTaskInstance> history = historyService.createHistoricTaskInstanceQuery()
+        var query = historyService.createHistoricTaskInstanceQuery()
                 .processInstanceId(processInstanceId)
-                .orderByHistoricTaskInstanceStartTime()
-                .asc()
-                .list();
+                .orderByHistoricTaskInstanceEndTime()
+                .asc();
 
-        return history.stream().map(this::convertHistoricTaskToMap).collect(Collectors.toList());
+        List<HistoricTaskInstance> tasks = query.list();
+
+        return tasks.stream().map(this::convertHistoricTaskToMap).collect(Collectors.toList());
     }
 
     @Override
@@ -147,41 +229,34 @@ public class WorkflowTaskServiceImpl implements WorkflowTaskService {
 
         Map<String, Object> stats = new HashMap<>();
 
-        // 待办任务数量
         long todoCount = taskService.createTaskQuery().taskAssignee(userId).count();
         stats.put("todoCount", todoCount);
 
-        // 已办任务数量
         long doneCount = historyService.createHistoricTaskInstanceQuery()
                 .taskAssignee(userId)
                 .finished()
                 .count();
         stats.put("doneCount", doneCount);
 
-        // 按优先级统计
-        long highPriority = taskService.createTaskQuery()
-                .taskAssignee(userId)
-                .taskPriority("high")
-                .count();
-        long normalPriority = taskService.createTaskQuery()
-                .taskAssignee(userId)
-                .taskPriority("normal")
-                .count();
-        long lowPriority = taskService.createTaskQuery()
-                .taskAssignee(userId)
-                .taskPriority("low")
-                .count();
+        List<Task> allTasks = taskService.createTaskQuery().taskAssignee(userId).list();
+        long highPriority = allTasks.stream().filter(t -> t.getPriority() == 100).count();
+        long normalPriority = allTasks.stream().filter(t -> t.getPriority() == 50).count();
+        long lowPriority = allTasks.stream().filter(t -> t.getPriority() == 10).count();
 
         stats.put("highPriorityCount", highPriority);
         stats.put("normalPriorityCount", normalPriority);
         stats.put("lowPriorityCount", lowPriority);
 
+        Map<String, Long> statsByProcess = new HashMap<>();
+        for (Task task : allTasks) {
+            String processName = task.getProcessDefinitionId();
+            statsByProcess.put(processName, statsByProcess.getOrDefault(processName, 0L) + 1);
+        }
+        stats.put("statsByProcess", statsByProcess);
+
         return stats;
     }
 
-    /**
-     * 转换任务为 Map
-     */
     private Map<String, Object> convertTaskToMap(Task task) {
         Map<String, Object> map = new HashMap<>();
         map.put("taskId", task.getId());
@@ -193,37 +268,19 @@ public class WorkflowTaskServiceImpl implements WorkflowTaskService {
         map.put("createTime", task.getCreateTime());
         map.put("processInstanceId", task.getProcessInstanceId());
         map.put("processDefinitionId", task.getProcessDefinitionId());
-        map.put("executionId", task.getExecutionId());
         map.put("description", task.getDescription());
-
-        // 获取流程定义名称
-        try {
-            var definition = task.getProcessDefinitionId() != null ?
-                null : null; // 简化处理
-            map.put("processDefinitionName", "");
-        } catch (Exception e) {
-            map.put("processDefinitionName", "");
-        }
-
         return map;
     }
 
-    /**
-     * 转换历史任务为 Map
-     */
     private Map<String, Object> convertHistoricTaskToMap(HistoricTaskInstance task) {
         Map<String, Object> map = new HashMap<>();
         map.put("taskId", task.getId());
         map.put("taskName", task.getName());
         map.put("taskKey", task.getTaskDefinitionKey());
         map.put("assignee", task.getAssignee());
-        map.put("owner", task.getOwner());
-        map.put("priority", task.getPriority());
         map.put("createTime", task.getStartTime());
         map.put("endTime", task.getEndTime());
         map.put("duration", task.getDurationInMillis());
-        map.put("processInstanceId", task.getProcessInstanceId());
-        map.put("processDefinitionId", task.getProcessDefinitionId());
         map.put("description", task.getDescription());
         map.put("deleteReason", task.getDeleteReason());
         return map;

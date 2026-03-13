@@ -31,7 +31,7 @@ public class FormDefinitionController {
     @GetMapping("/list")
     @Operation(summary = "查询表单定义列表")
     @PreAuthorize("@ss.hasPermission('system:form-definition:list')")
-    @OperationLog(module = "动态表单定义", type = OperationType.SELECT)
+    @OperationLog(module = "动态表单定义", type = OperationType.QUERY)
     public Result<PageResult<FormDefinition>> list(FormDefinition formDefinition,
                                                     @RequestParam(defaultValue = "1") Integer pageNum,
                                                     @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -43,7 +43,7 @@ public class FormDefinitionController {
     @GetMapping("/{id}")
     @Operation(summary = "获取表单定义详情")
     @PreAuthorize("@ss.hasPermission('system:form-definition:query')")
-    @OperationLog(module = "动态表单定义", type = OperationType.SELECT)
+    @OperationLog(module = "动态表单定义", type = OperationType.QUERY)
     public Result<FormDefinition> get(@PathVariable Long id) {
         FormDefinition formDefinition = formDefinitionService.getById(id);
         return Result.success(formDefinition);

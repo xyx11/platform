@@ -3,7 +3,7 @@ package com.micro.platform.common.core.interceptor;
 import com.micro.platform.common.core.aspect.DataScopeContext;
 import com.micro.platform.common.core.enums.DataScopeType;
 import com.micro.platform.common.core.util.DataScopeUtil;
-import com.micro.platform.common.security.entity.LoginUser;
+import com.micro.platform.common.core.entity.LoginUser;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -18,9 +18,10 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.interceptor.Interceptor;
-import org.apache.ibatis.interceptor.InterceptorChain;
-import org.apache.ibatis.interceptor.Invocation;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.plugin.Intercepts;
+import org.apache.ibatis.plugin.Invocation;
+import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -35,6 +36,13 @@ import java.util.Properties;
  * 拦截 MyBatis 查询语句，自动添加数据权限过滤条件
  */
 @Component
+@Intercepts({
+    @Signature(
+        type = Executor.class,
+        method = "query",
+        args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}
+    )
+})
 public class DataScopeInterceptor implements Interceptor {
 
     @Override
@@ -80,7 +88,7 @@ public class DataScopeInterceptor implements Interceptor {
 
         // 重新执行查询
         Executor executor = (Executor) invocation.getTarget();
-        return executor.query(ms, parameter, rowBounds, resultHandler, boundSql, boundSql.getSql() + " " + dataScopeSql);
+        return executor.query(ms, parameter, rowBounds, resultHandler);
     }
 
     /**
@@ -125,7 +133,7 @@ public class DataScopeInterceptor implements Interceptor {
 
     @Override
     public Object plugin(Object target) {
-        return Interceptor.wrap(target, this);
+        return org.apache.ibatis.plugin.Plugin.wrap(target, this);
     }
 
     @Override

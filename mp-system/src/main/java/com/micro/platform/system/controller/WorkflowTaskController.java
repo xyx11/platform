@@ -30,30 +30,48 @@ public class WorkflowTaskController {
 
     @GetMapping("/todo")
     @Operation(summary = "获取待办任务列表")
-    @OperationLog(module = "工作流任务", type = OperationType.SELECT)
+    @OperationLog(module = "工作流任务", type = OperationType.QUERY)
     public Result<List<Map<String, Object>>> getTodoTasks(
             @RequestParam(required = false, defaultValue = "1") int pageNum,
-            @RequestParam(required = false, defaultValue = "10") int pageSize) {
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String processName,
+            @RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime,
+            @RequestParam(required = false) String taskName) {
         String userId = SecurityUtil.getUserId().toString();
-        List<Map<String, Object>> list = workflowTaskService.getTodoTasks(userId, pageNum, pageSize);
+        Map<String, Object> params = new HashMap<>();
+        params.put("processName", processName);
+        params.put("startTime", startTime);
+        params.put("endTime", endTime);
+        params.put("taskName", taskName);
+        List<Map<String, Object>> list = workflowTaskService.getTodoTasks(userId, pageNum, pageSize, params);
         return Result.success(list);
     }
 
     @GetMapping("/done")
     @Operation(summary = "获取已办任务列表")
-    @OperationLog(module = "工作流任务", type = OperationType.SELECT)
+    @OperationLog(module = "工作流任务", type = OperationType.QUERY)
     public Result<List<Map<String, Object>>> getDoneTasks(
             @RequestParam(required = false, defaultValue = "1") int pageNum,
-            @RequestParam(required = false, defaultValue = "10") int pageSize) {
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String processName,
+            @RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime,
+            @RequestParam(required = false) String taskName) {
         String userId = SecurityUtil.getUserId().toString();
-        List<Map<String, Object>> list = workflowTaskService.getDoneTasks(userId, pageNum, pageSize);
+        Map<String, Object> params = new HashMap<>();
+        params.put("processName", processName);
+        params.put("startTime", startTime);
+        params.put("endTime", endTime);
+        params.put("taskName", taskName);
+        List<Map<String, Object>> list = workflowTaskService.getDoneTasks(userId, pageNum, pageSize, params);
         return Result.success(list);
     }
 
     @GetMapping("/{taskId}")
     @Operation(summary = "获取任务详情")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
-    @OperationLog(module = "工作流任务", type = OperationType.SELECT)
+    @OperationLog(module = "工作流任务", type = OperationType.QUERY)
     public Result<Map<String, Object>> getTask(@PathVariable String taskId) {
         Map<String, Object> result = workflowTaskService.getTask(taskId);
         return Result.success(result);
@@ -95,7 +113,7 @@ public class WorkflowTaskController {
     @GetMapping("/{processInstanceId}/history")
     @Operation(summary = "获取任务历史")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
-    @OperationLog(module = "工作流任务", type = OperationType.SELECT)
+    @OperationLog(module = "工作流任务", type = OperationType.QUERY)
     public Result<List<Map<String, Object>>> getTaskHistory(@PathVariable String processInstanceId) {
         List<Map<String, Object>> list = workflowTaskService.getTaskHistory(processInstanceId);
         return Result.success(list);
@@ -103,7 +121,7 @@ public class WorkflowTaskController {
 
     @GetMapping("/stats")
     @Operation(summary = "获取任务统计信息")
-    @OperationLog(module = "工作流任务", type = OperationType.SELECT)
+    @OperationLog(module = "工作流任务", type = OperationType.QUERY)
     public Result<Map<String, Object>> getTaskStats() {
         String userId = SecurityUtil.getUserId().toString();
         Map<String, Object> result = workflowTaskService.getTaskStats(userId);
