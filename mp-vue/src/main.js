@@ -5,6 +5,7 @@ import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import { ElMessage, ElMessageBox, ElNotification, ElLoading } from 'element-plus'
 
 import App from './App.vue'
 import router from './router'
@@ -20,9 +21,60 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 // 配置全局方法
 app.config.globalProperties.request = request
-app.config.globalProperties.resetForm = (ref) => {
-  if (ref) {
-    ref.resetFields()
+
+// 封装 modal 对象
+app.config.globalProperties.$modal = {
+  msgSuccess: (message) => {
+    ElMessage.success(message)
+  },
+  msgError: (message) => {
+    ElMessage.error(message)
+  },
+  msgWarning: (message) => {
+    ElMessage.warning(message)
+  },
+  msgInfo: (message) => {
+    ElMessage.info(message)
+  },
+  confirm: (message, title, options) => {
+    return ElMessageBox.confirm(message, title || '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+      ...options
+    })
+  },
+  prompt: (message, title, options) => {
+    return ElMessageBox.prompt(message, title || '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+      ...options
+    })
+  },
+  alert: (message, title, options) => {
+    return ElMessageBox.alert(message, title || '提示', {
+      confirmButtonText: '确定',
+      type: 'info',
+      ...options
+    })
+  },
+  closeLoading: () => {
+    ElLoading.service().close()
+  },
+  loading: (message) => {
+    return ElLoading.service({
+      lock: true,
+      text: message || '加载中...',
+      background: 'rgba(0, 0, 0, 0.7)'
+    })
+  }
+}
+
+// 表单重置方法
+app.config.globalProperties.resetForm = function(refName) {
+  if (refName && this[refName]) {
+    this[refName].resetFields()
   }
 }
 

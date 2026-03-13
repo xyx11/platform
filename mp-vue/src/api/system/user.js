@@ -12,7 +12,7 @@ export function getUserList(params) {
 // 获取用户详情
 export function getUserDetail(userId) {
   return request({
-    url: '/system/user/detail/' + userId,
+    url: '/system/user/' + userId,
     method: 'get'
   })
 }
