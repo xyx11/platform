@@ -1,6 +1,7 @@
 package com.micro.platform.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.micro.platform.common.core.result.PageResult;
 import com.micro.platform.common.core.result.Result;
 import com.micro.platform.common.log.annotation.OperationLog;
 import com.micro.platform.common.log.annotation.OperationType;
@@ -33,11 +34,11 @@ public class SysNoticeController {
     @Operation(summary = "获取通知公告列表")
     @PreAuthorize("hasAuthority('system:notice:query')")
     @GetMapping("/list")
-    public Result<Page<SysNotice>> list(SysNotice notice,
+    public Result<PageResult<SysNotice>> list(SysNotice notice,
                                         @RequestParam(defaultValue = "1") Integer pageNum,
                                         @RequestParam(defaultValue = "10") Integer pageSize) {
         Page<SysNotice> page = sysNoticeService.selectNoticePage(notice, pageNum, pageSize);
-        return Result.success(page);
+        return Result.success(PageResult.<SysNotice>build(page));
     }
 
     @Operation(summary = "获取通知公告详情")
@@ -60,7 +61,7 @@ public class SysNoticeController {
     @PostMapping
     public Result<Void> add(@RequestBody SysNotice notice) {
         // 如果是定时发布，需要设置发布时间
-        if (notice.getTimingPublish() == 1 && notice.getPublishTime() == null) {
+        if (notice.getTimingPublish() != null && notice.getTimingPublish() == 1 && notice.getPublishTime() == null) {
             return Result.error("定时发布需要设置发布时间");
         }
         // 如果不是定时发布，立即发布
@@ -135,20 +136,20 @@ public class SysNoticeController {
 
     @Operation(summary = "获取我的未读公告列表")
     @GetMapping("/unread/list")
-    public Result<Page<SysNotice>> unreadList(@RequestParam(defaultValue = "1") Integer pageNum,
+    public Result<PageResult<SysNotice>> unreadList(@RequestParam(defaultValue = "1") Integer pageNum,
                                                @RequestParam(defaultValue = "10") Integer pageSize) {
         Long userId = SecurityUtil.getUserId();
         Page<SysNotice> page = sysNoticeService.getUnreadNotices(userId, pageNum, pageSize);
-        return Result.success(page);
+        return Result.success(PageResult.<SysNotice>build(page));
     }
 
     @Operation(summary = "获取我的已读公告列表")
     @GetMapping("/read/list")
-    public Result<Page<SysNotice>> readList(@RequestParam(defaultValue = "1") Integer pageNum,
+    public Result<PageResult<SysNotice>> readList(@RequestParam(defaultValue = "1") Integer pageNum,
                                              @RequestParam(defaultValue = "10") Integer pageSize) {
         Long userId = SecurityUtil.getUserId();
         Page<SysNotice> page = sysNoticeService.getReadNotices(userId, pageNum, pageSize);
-        return Result.success(page);
+        return Result.success(PageResult.<SysNotice>build(page));
     }
 
     @Operation(summary = "获取未读公告数量")
