@@ -12,8 +12,17 @@ const service = axios.create({
 })
 
 // 添加请求方法别名 - 使用箭头函数绑定 this
-service.get = (url, params) => service({ url, params, method: 'get' })
-service.post = (url, data) => service({ url, data, method: 'post' })
+service.get = (url, params) => {
+  const config = { url, params, method: 'get' }
+  // 支持 responseType 等配置（如 blob 用于文件下载）
+  if (params && params.responseType) {
+    config.responseType = params.responseType
+  }
+  return service(config)
+}
+service.post = (url, data, config = {}) => {
+  return service({ url, data, method: 'post', ...config })
+}
 service.put = (url, data) => service({ url, data, method: 'put' })
 service.delete = (url, params) => {
   // 支持 { data: ... } 参数格式
@@ -50,6 +59,11 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   response => {
+    // 如果是 blob 类型（文件下载），直接返回
+    if (response.config.responseType === 'blob' || response.headers['content-type']?.includes('application/vnd.openxmlformats-officedocument')) {
+      return response.data
+    }
+
     const res = response.data
 
     // 如果返回的状态码不是 200，说明接口有错误

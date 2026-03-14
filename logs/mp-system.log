@@ -241,3 +241,160 @@ SaLog -->: 全局组件 SaJsonTemplate 载入成功: cn.dev33.satoken.spring.jso
 2026-03-14T09:55:48.422+08:00  INFO 66615 --- [mp-system] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2026-03-14T09:55:48.423+08:00  INFO 66615 --- [mp-system] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
 2026-03-14T09:55:48.431+08:00  WARN 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.c.c.e.GlobalExceptionHandler       : 登录状态异常：未提供 token
+2026-03-14T09:56:36.196+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id, dept_id, username, password, nickname, avatar, gender, email, phone, status, login_ip, login_date, create_by, create_time, update_by, update_time, deleted FROM sys_user WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:56:36.196+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.SysNoticeMapper.selectList     : ==>  Preparing: SELECT notice_id, notice_title, notice_type, notice_content, status, publish_time, timing_publish, create_by, create_by_name, create_time, update_by, update_time, remark, deleted FROM sys_notice WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:56:36.196+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.mapper.SysRoleMapper.selectList  : ==>  Preparing: SELECT role_id, role_name, role_code, description, data_scope, status, sort, create_by, create_time, update_by, update_time, deleted FROM sys_role WHERE deleted = 0 ORDER BY sort ASC
+2026-03-14T09:56:36.196+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.mapper.SysDeptMapper.selectList  : ==>  Preparing: SELECT dept_id, parent_id, dept_name, sort, leader, phone, email, status, deleted, create_by, create_time, update_by, update_time FROM sys_dept WHERE deleted = 0 AND (deleted = ?) ORDER BY sort ASC
+2026-03-14T09:56:36.201+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.mapper.SysRoleMapper.selectList  : ==> Parameters: 
+2026-03-14T09:56:36.201+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.SysNoticeMapper.selectList     : ==> Parameters: 
+2026-03-14T09:56:36.201+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.mapper.SysUserMapper.selectList  : ==> Parameters: 
+2026-03-14T09:56:36.201+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.mapper.SysDeptMapper.selectList  : ==> Parameters: 0(Integer)
+2026-03-14T09:56:36.205+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.SysNoticeMapper.selectList     : <==      Total: 1
+2026-03-14T09:56:36.205+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.mapper.SysUserMapper.selectList  : <==      Total: 2
+2026-03-14T09:56:36.206+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.mapper.SysRoleMapper.selectList  : <==      Total: 2
+2026-03-14T09:56:36.208+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.mapper.SysDeptMapper.selectList  : <==      Total: 14
+2026-03-14T09:56:36.209+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:56:36.211+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 1(Long)
+2026-03-14T09:56:36.212+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:56:36.213+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:56:36.213+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 2032632661765328898(Long)
+2026-03-14T09:56:36.213+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:56:36.214+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.SysNoticeUserMapper.countRead  : ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 1
+2026-03-14T09:56:36.214+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.m.S.countUsersByRoleId           : ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+2026-03-14T09:56:36.214+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.SysNoticeUserMapper.countRead  : ==> Parameters: 2032478286455562241(Long)
+2026-03-14T09:56:36.214+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.m.S.countUsersByRoleId           : ==> Parameters: 1(Long)
+2026-03-14T09:56:36.215+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.SysNoticeUserMapper.countRead  : <==      Total: 1
+2026-03-14T09:56:36.215+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.m.S.countUsersByRoleId           : <==      Total: 1
+2026-03-14T09:56:36.219+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.m.S.countUsersByRoleId           : ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+2026-03-14T09:56:36.219+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.countUnread                  : ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 0
+2026-03-14T09:56:36.219+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.m.S.countUsersByRoleId           : ==> Parameters: 2030981208189464577(Long)
+2026-03-14T09:56:36.219+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.countUnread                  : ==> Parameters: 2032478286455562241(Long)
+2026-03-14T09:56:36.219+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.m.S.countUsersByRoleId           : <==      Total: 1
+2026-03-14T09:56:36.219+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.countUnread                  : <==      Total: 1
+2026-03-14T09:56:36.227+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id, dept_id, username, password, nickname, avatar, gender, email, phone, status, login_ip, login_date, create_by, create_time, update_by, update_time, deleted FROM sys_user WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:56:36.227+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.mapper.SysUserMapper.selectList  : ==> Parameters: 
+2026-03-14T09:56:36.227+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.mapper.SysUserMapper.selectList  : <==      Total: 2
+2026-03-14T09:56:36.228+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:56:36.228+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 1(Long)
+2026-03-14T09:56:36.228+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:56:36.228+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:56:36.229+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 2032632661765328898(Long)
+2026-03-14T09:56:36.229+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:56:36.973+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id, dept_id, username, password, nickname, avatar, gender, email, phone, status, login_ip, login_date, create_by, create_time, update_by, update_time, deleted FROM sys_user WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:56:36.973+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.mapper.SysDeptMapper.selectList  : ==>  Preparing: SELECT dept_id, parent_id, dept_name, sort, leader, phone, email, status, deleted, create_by, create_time, update_by, update_time FROM sys_dept WHERE deleted = 0 AND (deleted = ?) ORDER BY sort ASC
+2026-03-14T09:56:36.973+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.SysNoticeMapper.selectList     : ==>  Preparing: SELECT notice_id, notice_title, notice_type, notice_content, status, publish_time, timing_publish, create_by, create_by_name, create_time, update_by, update_time, remark, deleted FROM sys_notice WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:56:36.973+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.mapper.SysRoleMapper.selectList  : ==>  Preparing: SELECT role_id, role_name, role_code, description, data_scope, status, sort, create_by, create_time, update_by, update_time, deleted FROM sys_role WHERE deleted = 0 ORDER BY sort ASC
+2026-03-14T09:56:36.973+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.mapper.SysRoleMapper.selectList  : ==> Parameters: 
+2026-03-14T09:56:36.973+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.SysNoticeMapper.selectList     : ==> Parameters: 
+2026-03-14T09:56:36.973+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.mapper.SysUserMapper.selectList  : ==> Parameters: 
+2026-03-14T09:56:36.974+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.mapper.SysDeptMapper.selectList  : ==> Parameters: 0(Integer)
+2026-03-14T09:56:36.974+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.SysNoticeMapper.selectList     : <==      Total: 1
+2026-03-14T09:56:36.974+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.mapper.SysRoleMapper.selectList  : <==      Total: 2
+2026-03-14T09:56:36.974+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.mapper.SysUserMapper.selectList  : <==      Total: 2
+2026-03-14T09:56:36.976+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:56:36.976+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 1(Long)
+2026-03-14T09:56:36.976+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.mapper.SysDeptMapper.selectList  : <==      Total: 14
+2026-03-14T09:56:36.977+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:56:36.978+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:56:36.978+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 2032632661765328898(Long)
+2026-03-14T09:56:36.979+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:56:36.980+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.m.S.countUsersByRoleId           : ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+2026-03-14T09:56:36.980+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.SysNoticeUserMapper.countRead  : ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 1
+2026-03-14T09:56:36.980+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.m.S.countUsersByRoleId           : ==> Parameters: 1(Long)
+2026-03-14T09:56:36.981+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.SysNoticeUserMapper.countRead  : ==> Parameters: 2032478286455562241(Long)
+2026-03-14T09:56:36.981+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.SysNoticeUserMapper.countRead  : <==      Total: 1
+2026-03-14T09:56:36.981+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.m.S.countUsersByRoleId           : <==      Total: 1
+2026-03-14T09:56:36.984+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.S.countUnread                  : ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 0
+2026-03-14T09:56:36.984+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.m.S.countUsersByRoleId           : ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+2026-03-14T09:56:36.984+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.S.countUnread                  : ==> Parameters: 2032478286455562241(Long)
+2026-03-14T09:56:36.984+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.m.S.countUsersByRoleId           : ==> Parameters: 2030981208189464577(Long)
+2026-03-14T09:56:36.984+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.S.countUnread                  : <==      Total: 1
+2026-03-14T09:56:36.984+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.m.S.countUsersByRoleId           : <==      Total: 1
+2026-03-14T09:56:36.992+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id, dept_id, username, password, nickname, avatar, gender, email, phone, status, login_ip, login_date, create_by, create_time, update_by, update_time, deleted FROM sys_user WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:56:36.993+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.mapper.SysUserMapper.selectList  : ==> Parameters: 
+2026-03-14T09:56:36.994+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.mapper.SysUserMapper.selectList  : <==      Total: 2
+2026-03-14T09:56:36.994+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:56:36.994+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 1(Long)
+2026-03-14T09:56:36.995+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:56:36.995+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:56:36.995+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 2032632661765328898(Long)
+2026-03-14T09:56:36.995+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:56:41.315+08:00  INFO 66615 --- [mp-system] [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2026-03-14T09:58:37.725+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id, dept_id, username, password, nickname, avatar, gender, email, phone, status, login_ip, login_date, create_by, create_time, update_by, update_time, deleted FROM sys_user WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:58:37.725+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.mapper.SysRoleMapper.selectList  : ==>  Preparing: SELECT role_id, role_name, role_code, description, data_scope, status, sort, create_by, create_time, update_by, update_time, deleted FROM sys_role WHERE deleted = 0 ORDER BY sort ASC
+2026-03-14T09:58:37.725+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.mapper.SysDeptMapper.selectList  : ==>  Preparing: SELECT dept_id, parent_id, dept_name, sort, leader, phone, email, status, deleted, create_by, create_time, update_by, update_time FROM sys_dept WHERE deleted = 0 AND (deleted = ?) ORDER BY sort ASC
+2026-03-14T09:58:37.725+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.mapper.SysRoleMapper.selectList  : ==> Parameters: 
+2026-03-14T09:58:37.725+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.mapper.SysUserMapper.selectList  : ==> Parameters: 
+2026-03-14T09:58:37.725+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.SysNoticeMapper.selectList     : ==>  Preparing: SELECT notice_id, notice_title, notice_type, notice_content, status, publish_time, timing_publish, create_by, create_by_name, create_time, update_by, update_time, remark, deleted FROM sys_notice WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:58:37.725+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.mapper.SysDeptMapper.selectList  : ==> Parameters: 0(Integer)
+2026-03-14T09:58:37.725+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.SysNoticeMapper.selectList     : ==> Parameters: 
+2026-03-14T09:58:37.726+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.mapper.SysRoleMapper.selectList  : <==      Total: 2
+2026-03-14T09:58:37.726+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.mapper.SysUserMapper.selectList  : <==      Total: 2
+2026-03-14T09:58:37.727+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.SysNoticeMapper.selectList     : <==      Total: 1
+2026-03-14T09:58:37.727+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-1] c.m.p.s.mapper.SysDeptMapper.selectList  : <==      Total: 14
+2026-03-14T09:58:37.727+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:58:37.728+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 1(Long)
+2026-03-14T09:58:37.729+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:58:37.730+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:58:37.730+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 2032632661765328898(Long)
+2026-03-14T09:58:37.731+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-9] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:58:37.732+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.SysNoticeUserMapper.countRead  : ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 1
+2026-03-14T09:58:37.732+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.SysNoticeUserMapper.countRead  : ==> Parameters: 2032478286455562241(Long)
+2026-03-14T09:58:37.732+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.S.countUsersByRoleId           : ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+2026-03-14T09:58:37.733+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.SysNoticeUserMapper.countRead  : <==      Total: 1
+2026-03-14T09:58:37.733+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.S.countUsersByRoleId           : ==> Parameters: 1(Long)
+2026-03-14T09:58:37.733+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.S.countUsersByRoleId           : <==      Total: 1
+2026-03-14T09:58:37.738+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.S.countUnread                  : ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 0
+2026-03-14T09:58:37.739+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.S.countUsersByRoleId           : ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+2026-03-14T09:58:37.739+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.S.countUnread                  : ==> Parameters: 2032478286455562241(Long)
+2026-03-14T09:58:37.739+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.S.countUsersByRoleId           : ==> Parameters: 2030981208189464577(Long)
+2026-03-14T09:58:37.739+08:00 DEBUG 66615 --- [mp-system] [io-8082-exec-10] c.m.p.s.m.S.countUnread                  : <==      Total: 1
+2026-03-14T09:58:37.739+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-8] c.m.p.s.m.S.countUsersByRoleId           : <==      Total: 1
+2026-03-14T09:58:37.755+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id, dept_id, username, password, nickname, avatar, gender, email, phone, status, login_ip, login_date, create_by, create_time, update_by, update_time, deleted FROM sys_user WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:58:37.755+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.mapper.SysUserMapper.selectList  : ==> Parameters: 
+2026-03-14T09:58:37.757+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.mapper.SysUserMapper.selectList  : <==      Total: 2
+2026-03-14T09:58:37.758+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:58:37.758+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 1(Long)
+2026-03-14T09:58:37.759+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:58:37.760+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:58:37.760+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 2032632661765328898(Long)
+2026-03-14T09:58:37.761+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-2] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:58:49.991+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.mapper.SysRoleMapper.selectList  : ==>  Preparing: SELECT role_id, role_name, role_code, description, data_scope, status, sort, create_by, create_time, update_by, update_time, deleted FROM sys_role WHERE deleted = 0 ORDER BY sort ASC
+2026-03-14T09:58:49.991+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id, dept_id, username, password, nickname, avatar, gender, email, phone, status, login_ip, login_date, create_by, create_time, update_by, update_time, deleted FROM sys_user WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:58:49.991+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.mapper.SysRoleMapper.selectList  : ==> Parameters: 
+2026-03-14T09:58:49.991+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.mapper.SysUserMapper.selectList  : ==> Parameters: 
+2026-03-14T09:58:49.991+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.m.SysNoticeMapper.selectList     : ==>  Preparing: SELECT notice_id, notice_title, notice_type, notice_content, status, publish_time, timing_publish, create_by, create_by_name, create_time, update_by, update_time, remark, deleted FROM sys_notice WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:58:49.991+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.m.SysNoticeMapper.selectList     : ==> Parameters: 
+2026-03-14T09:58:49.991+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.mapper.SysDeptMapper.selectList  : ==>  Preparing: SELECT dept_id, parent_id, dept_name, sort, leader, phone, email, status, deleted, create_by, create_time, update_by, update_time FROM sys_dept WHERE deleted = 0 AND (deleted = ?) ORDER BY sort ASC
+2026-03-14T09:58:49.992+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.mapper.SysDeptMapper.selectList  : ==> Parameters: 0(Integer)
+2026-03-14T09:58:49.993+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.m.SysNoticeMapper.selectList     : <==      Total: 1
+2026-03-14T09:58:49.993+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.mapper.SysUserMapper.selectList  : <==      Total: 2
+2026-03-14T09:58:49.993+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.mapper.SysRoleMapper.selectList  : <==      Total: 2
+2026-03-14T09:58:49.993+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-6] c.m.p.s.mapper.SysDeptMapper.selectList  : <==      Total: 14
+2026-03-14T09:58:49.994+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:58:49.994+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 1(Long)
+2026-03-14T09:58:49.995+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:58:49.996+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:58:49.996+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 2032632661765328898(Long)
+2026-03-14T09:58:49.997+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-4] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:58:49.999+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.m.SysNoticeUserMapper.countRead  : ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 1
+2026-03-14T09:58:49.999+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.countUsersByRoleId           : ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+2026-03-14T09:58:49.999+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.countUsersByRoleId           : ==> Parameters: 1(Long)
+2026-03-14T09:58:49.999+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.m.SysNoticeUserMapper.countRead  : ==> Parameters: 2032478286455562241(Long)
+2026-03-14T09:58:50.000+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.countUsersByRoleId           : <==      Total: 1
+2026-03-14T09:58:50.000+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.m.SysNoticeUserMapper.countRead  : <==      Total: 1
+2026-03-14T09:58:50.004+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.countUsersByRoleId           : ==>  Preparing: SELECT COUNT(*) FROM sys_user_role ur WHERE ur.role_id = ?
+2026-03-14T09:58:50.004+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.m.S.countUnread                  : ==>  Preparing: SELECT COUNT(*) FROM sys_notice_user WHERE notice_id = ? AND read_status = 0
+2026-03-14T09:58:50.004+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.countUsersByRoleId           : ==> Parameters: 2030981208189464577(Long)
+2026-03-14T09:58:50.004+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.m.S.countUnread                  : ==> Parameters: 2032478286455562241(Long)
+2026-03-14T09:58:50.005+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-5] c.m.p.s.m.S.countUnread                  : <==      Total: 1
+2026-03-14T09:58:50.005+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-3] c.m.p.s.m.S.countUsersByRoleId           : <==      Total: 1
+2026-03-14T09:58:50.019+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id, dept_id, username, password, nickname, avatar, gender, email, phone, status, login_ip, login_date, create_by, create_time, update_by, update_time, deleted FROM sys_user WHERE deleted = 0 ORDER BY create_time DESC
+2026-03-14T09:58:50.019+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.mapper.SysUserMapper.selectList  : ==> Parameters: 
+2026-03-14T09:58:50.020+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.mapper.SysUserMapper.selectList  : <==      Total: 2
+2026-03-14T09:58:50.021+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:58:50.021+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 1(Long)
+2026-03-14T09:58:50.022+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1
+2026-03-14T09:58:50.022+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : ==>  Preparing: SELECT role_id FROM sys_user_role WHERE user_id = ?
+2026-03-14T09:58:50.022+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : ==> Parameters: 2032632661765328898(Long)
+2026-03-14T09:58:50.023+08:00 DEBUG 66615 --- [mp-system] [nio-8082-exec-7] c.m.p.s.m.S.selectRoleIdsByUserId        : <==      Total: 1

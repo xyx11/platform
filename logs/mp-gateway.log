@@ -292,3 +292,158 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
 2026-03-14T09:56:13.611+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying {_genkey_0=/monitor/**} to Path
 2026-03-14T09:56:13.611+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying filter {_genkey_0=0} to StripPrefix
 2026-03-14T09:56:13.612+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system-monitor
+INFO: Sentinel log output type is: file
+INFO: Sentinel log charset is: utf-8
+INFO: Sentinel log base directory is: /Users/xieyunxing/logs/csp/
+INFO: Sentinel log name use pid is: false
+INFO: Sentinel log level is: INFO
+2026-03-14T09:56:43.607+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-system applying {pattern=/mp-system/**} to Path
+2026-03-14T09:56:43.609+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-system applying filter {regexp=/mp-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:56:43.610+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-system
+2026-03-14T09:56:43.610+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-job applying {pattern=/mp-job/**} to Path
+2026-03-14T09:56:43.611+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-job applying filter {regexp=/mp-job/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:56:43.611+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-job
+2026-03-14T09:56:43.612+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-generator applying {pattern=/mp-generator/**} to Path
+2026-03-14T09:56:43.620+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-generator applying filter {regexp=/mp-generator/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:56:43.621+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-generator
+2026-03-14T09:56:43.621+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-gateway applying {pattern=/mp-gateway/**} to Path
+2026-03-14T09:56:43.622+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-gateway applying filter {regexp=/mp-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:56:43.622+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-gateway
+2026-03-14T09:56:43.622+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-auth applying {pattern=/mp-auth/**} to Path
+2026-03-14T09:56:43.623+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-auth applying filter {regexp=/mp-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:56:43.623+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-auth
+2026-03-14T09:56:43.623+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-auth applying {_genkey_0=/auth/**} to Path
+2026-03-14T09:56:43.623+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-auth applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:56:43.624+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-auth
+2026-03-14T09:56:43.624+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system applying {_genkey_0=/system/**} to Path
+2026-03-14T09:56:43.624+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:56:43.624+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system
+2026-03-14T09:56:43.624+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-generator applying {_genkey_0=/generator/**} to Path
+2026-03-14T09:56:43.625+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-generator applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:56:43.625+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-generator
+2026-03-14T09:56:43.625+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-job applying {_genkey_0=/job/**} to Path
+2026-03-14T09:56:43.625+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-job applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:56:43.626+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-job
+2026-03-14T09:56:43.626+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying {_genkey_0=/monitor/**} to Path
+2026-03-14T09:56:43.626+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:56:43.626+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system-monitor
+2026-03-14T09:57:13.616+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-system applying {pattern=/mp-system/**} to Path
+2026-03-14T09:57:13.618+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-system applying filter {regexp=/mp-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:57:13.619+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-system
+2026-03-14T09:57:13.619+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-job applying {pattern=/mp-job/**} to Path
+2026-03-14T09:57:13.620+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-job applying filter {regexp=/mp-job/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:57:13.621+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-job
+2026-03-14T09:57:13.621+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-generator applying {pattern=/mp-generator/**} to Path
+2026-03-14T09:57:13.622+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-generator applying filter {regexp=/mp-generator/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:57:13.622+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-generator
+2026-03-14T09:57:13.622+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-gateway applying {pattern=/mp-gateway/**} to Path
+2026-03-14T09:57:13.623+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-gateway applying filter {regexp=/mp-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:57:13.623+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-gateway
+2026-03-14T09:57:13.624+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-auth applying {pattern=/mp-auth/**} to Path
+2026-03-14T09:57:13.624+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-auth applying filter {regexp=/mp-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:57:13.624+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-auth
+2026-03-14T09:57:13.625+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-auth applying {_genkey_0=/auth/**} to Path
+2026-03-14T09:57:13.625+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-auth applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:57:13.625+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-auth
+2026-03-14T09:57:13.625+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system applying {_genkey_0=/system/**} to Path
+2026-03-14T09:57:13.626+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:57:13.626+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system
+2026-03-14T09:57:13.626+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-generator applying {_genkey_0=/generator/**} to Path
+2026-03-14T09:57:13.627+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-generator applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:57:13.627+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-generator
+2026-03-14T09:57:13.627+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-job applying {_genkey_0=/job/**} to Path
+2026-03-14T09:57:13.627+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-job applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:57:13.628+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-job
+2026-03-14T09:57:13.628+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying {_genkey_0=/monitor/**} to Path
+2026-03-14T09:57:13.628+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:57:13.628+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system-monitor
+2026-03-14T09:57:43.611+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-system applying {pattern=/mp-system/**} to Path
+2026-03-14T09:57:43.613+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-system applying filter {regexp=/mp-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:57:43.613+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-system
+2026-03-14T09:57:43.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-job applying {pattern=/mp-job/**} to Path
+2026-03-14T09:57:43.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-job applying filter {regexp=/mp-job/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:57:43.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-job
+2026-03-14T09:57:43.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-generator applying {pattern=/mp-generator/**} to Path
+2026-03-14T09:57:43.615+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-generator applying filter {regexp=/mp-generator/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:57:43.615+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-generator
+2026-03-14T09:57:43.616+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-gateway applying {pattern=/mp-gateway/**} to Path
+2026-03-14T09:57:43.617+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-gateway applying filter {regexp=/mp-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:57:43.617+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-gateway
+2026-03-14T09:57:43.618+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-auth applying {pattern=/mp-auth/**} to Path
+2026-03-14T09:57:43.618+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-auth applying filter {regexp=/mp-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:57:43.618+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-auth
+2026-03-14T09:57:43.618+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-auth applying {_genkey_0=/auth/**} to Path
+2026-03-14T09:57:43.619+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-auth applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:57:43.619+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-auth
+2026-03-14T09:57:43.619+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system applying {_genkey_0=/system/**} to Path
+2026-03-14T09:57:43.620+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:57:43.620+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system
+2026-03-14T09:57:43.620+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-generator applying {_genkey_0=/generator/**} to Path
+2026-03-14T09:57:43.620+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-generator applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:57:43.621+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-generator
+2026-03-14T09:57:43.621+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-job applying {_genkey_0=/job/**} to Path
+2026-03-14T09:57:43.621+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-job applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:57:43.621+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-job
+2026-03-14T09:57:43.621+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying {_genkey_0=/monitor/**} to Path
+2026-03-14T09:57:43.622+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:57:43.622+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-11] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system-monitor
+2026-03-14T09:58:13.611+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-system applying {pattern=/mp-system/**} to Path
+2026-03-14T09:58:13.611+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-system applying filter {regexp=/mp-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:58:13.612+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-system
+2026-03-14T09:58:13.612+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-job applying {pattern=/mp-job/**} to Path
+2026-03-14T09:58:13.612+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-job applying filter {regexp=/mp-job/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:58:13.612+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-job
+2026-03-14T09:58:13.612+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-generator applying {pattern=/mp-generator/**} to Path
+2026-03-14T09:58:13.612+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-generator applying filter {regexp=/mp-generator/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:58:13.612+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-generator
+2026-03-14T09:58:13.613+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-gateway applying {pattern=/mp-gateway/**} to Path
+2026-03-14T09:58:13.613+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-gateway applying filter {regexp=/mp-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:58:13.613+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-gateway
+2026-03-14T09:58:13.613+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-auth applying {pattern=/mp-auth/**} to Path
+2026-03-14T09:58:13.613+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-auth applying filter {regexp=/mp-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:58:13.613+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-auth
+2026-03-14T09:58:13.613+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-auth applying {_genkey_0=/auth/**} to Path
+2026-03-14T09:58:13.613+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-auth applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:58:13.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-auth
+2026-03-14T09:58:13.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system applying {_genkey_0=/system/**} to Path
+2026-03-14T09:58:13.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:58:13.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system
+2026-03-14T09:58:13.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-generator applying {_genkey_0=/generator/**} to Path
+2026-03-14T09:58:13.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-generator applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:58:13.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-generator
+2026-03-14T09:58:13.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-job applying {_genkey_0=/job/**} to Path
+2026-03-14T09:58:13.614+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-job applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:58:13.615+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-job
+2026-03-14T09:58:13.615+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying {_genkey_0=/monitor/**} to Path
+2026-03-14T09:58:13.615+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:58:13.615+08:00 DEBUG 66699 --- [mp-gateway] [undedElastic-10] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system-monitor
+2026-03-14T09:58:43.621+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-system applying {pattern=/mp-system/**} to Path
+2026-03-14T09:58:43.623+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-system applying filter {regexp=/mp-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:58:43.623+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-system
+2026-03-14T09:58:43.624+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-job applying {pattern=/mp-job/**} to Path
+2026-03-14T09:58:43.625+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-job applying filter {regexp=/mp-job/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:58:43.625+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-job
+2026-03-14T09:58:43.625+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-generator applying {pattern=/mp-generator/**} to Path
+2026-03-14T09:58:43.626+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-generator applying filter {regexp=/mp-generator/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:58:43.626+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-generator
+2026-03-14T09:58:43.626+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-gateway applying {pattern=/mp-gateway/**} to Path
+2026-03-14T09:58:43.626+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-gateway applying filter {regexp=/mp-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:58:43.627+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-gateway
+2026-03-14T09:58:43.627+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-auth applying {pattern=/mp-auth/**} to Path
+2026-03-14T09:58:43.627+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition ReactiveCompositeDiscoveryClient_mp-auth applying filter {regexp=/mp-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+2026-03-14T09:58:43.627+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: ReactiveCompositeDiscoveryClient_mp-auth
+2026-03-14T09:58:43.628+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-auth applying {_genkey_0=/auth/**} to Path
+2026-03-14T09:58:43.628+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-auth applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:58:43.629+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-auth
+2026-03-14T09:58:43.629+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system applying {_genkey_0=/system/**} to Path
+2026-03-14T09:58:43.629+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:58:43.630+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system
+2026-03-14T09:58:43.630+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-generator applying {_genkey_0=/generator/**} to Path
+2026-03-14T09:58:43.630+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-generator applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:58:43.630+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-generator
+2026-03-14T09:58:43.630+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-job applying {_genkey_0=/job/**} to Path
+2026-03-14T09:58:43.631+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-job applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:58:43.631+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-job
+2026-03-14T09:58:43.631+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying {_genkey_0=/monitor/**} to Path
+2026-03-14T09:58:43.631+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition mp-system-monitor applying filter {_genkey_0=0} to StripPrefix
+2026-03-14T09:58:43.632+08:00 DEBUG 66699 --- [mp-gateway] [oundedElastic-3] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: mp-system-monitor
