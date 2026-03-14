@@ -27,42 +27,54 @@
 - AuthService 支持密码重置时发送邮件通知
 - 添加邮件服务配置示例（application.yml）
 
-### 5. 短信服务接口
+### 5. 短信服务集成
 - 添加 `SmsService` 接口定义
 - 添加 `SmsServiceStub` 开发环境空实现
-- 生产环境可替换为阿里云/腾讯云短信服务
+- 实现 `AliyunSmsService` 阿里云短信服务
+- 实现 `TencentSmsService` 腾讯云短信服务
+- 添加 `SmsProperties` 配置属性类
+- 支持通过配置切换短信服务商
+- 集成示例代码和依赖说明
 
-### 6. 个人中心增强（前期完成）
+### 6. 个人中心增强
 - 头像上传功能
 - 手机号验证码修改
 - 邮箱验证码修改
 - 验证码倒计时控制
 
-### 7. 工作流表单绑定（前期完成）
+### 7. 工作流表单绑定
 - 新增 WfFormBinding 实体和服务
 - 实现表单绑定 CRUD 功能
 - 前端页面集成
 
-### 8. 导出接口统一（前期完成）
+### 8. 导出接口统一
 - 所有导出接口改为 `ResponseEntity<byte[]>` 返回格式
 - 前端统一使用 blob 类型接收
 
-## 可选配置（TODO 注释说明）
+## 生产环境配置
 
-### 短信服务集成
-需要配置短信服务商（阿里云、腾讯云等）：
-- `SysProfileController.java` - 发送手机号验证码
-- `AuthService.java` - 发送密码重置验证码
+### 短信服务配置
+在 `application.yml` 中配置：
+```yaml
+sms:
+  enabled: true  # 启用短信服务
+  provider: aliyun  # 或 tencent
+  access-key-id: your-access-key-id
+  access-key-secret: your-access-key-secret
+  sign-name: 您的签名名称
+  template-code: SMS_123456789
+  aliyun-region-id: cn-hangzhou
+```
 
 ### 邮件服务配置
-已在 `application.yml` 添加配置模板，需要修改为实际配置：
+在 `application.yml` 中配置：
 ```yaml
 spring:
   mail:
-    host: smtp.qq.com        # 修改为实际 SMTP 服务器
+    host: smtp.qq.com
     port: 465
-    username: your-email     # 修改为实际邮箱
-    password: your-auth-code # 修改为授权码
+    username: your-email@example.com
+    password: your-auth-code
 ```
 
 ## 系统功能清单
@@ -119,3 +131,5 @@ spring:
 - 数据库：MySQL 8+
 - 缓存：Redis
 - 工作流：Flowable
+- 短信：阿里云/腾讯云（可选）
+- 邮件：JavaMail（可选）
