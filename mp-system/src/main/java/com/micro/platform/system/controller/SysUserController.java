@@ -90,25 +90,21 @@ public class SysUserController {
     @Operation(summary = "导出用户数据")
     @OperationLog(module = "用户管理", type = OperationType.EXPORT, description = "导出用户数据")
     @PreAuthorize("hasAuthority('system:user:query')")
-    @GetMapping(value = "/export", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    public ResponseEntity<byte[]> export(HttpServletResponse response, SysUser user) {
-        try {
-            sysUserService.exportUser(response, user);
-            return null;
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, SysUser user) throws Exception {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        sysUserService.exportUser(response, user);
+        response.flushBuffer();
     }
 
     @Operation(summary = "下载导入模板")
-    @GetMapping(value = "/downloadTemplate", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    public ResponseEntity<byte[]> downloadTemplate(HttpServletResponse response) {
-        try {
-            sysUserService.downloadTemplate(response);
-            return null;
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+    @GetMapping("/downloadTemplate")
+    public void downloadTemplate(HttpServletResponse response) throws Exception {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        sysUserService.downloadTemplate(response);
+        response.flushBuffer();
     }
 
     @Operation(summary = "导入用户数据")

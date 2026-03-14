@@ -33,84 +33,84 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.2.5)
 
-2026-03-14T09:51:54.124+08:00  INFO 64168 --- [mp-job] [           main] com.micro.platform.job.JobApplication    : Starting JobApplication using Java 25.0.2 with PID 64168 (/Users/xieyunxing/micro-platform/mp-job/target/classes started by xieyunxing in /Users/xieyunxing/micro-platform/mp-job)
-2026-03-14T09:51:54.124+08:00 DEBUG 64168 --- [mp-job] [           main] com.micro.platform.job.JobApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
-2026-03-14T09:51:54.124+08:00  INFO 64168 --- [mp-job] [           main] com.micro.platform.job.JobApplication    : The following 1 profile is active: "local"
-2026-03-14T09:51:54.417+08:00  INFO 64168 --- [mp-job] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2026-03-14T09:51:54.418+08:00  INFO 64168 --- [mp-job] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2026-03-14T09:51:54.425+08:00  INFO 64168 --- [mp-job] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 4 ms. Found 0 Redis repository interfaces.
-2026-03-14T09:51:54.500+08:00  INFO 64168 --- [mp-job] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=09134ad5-f0d1-3afd-9791-6f184d9d958b
-2026-03-14T09:51:54.586+08:00  WARN 64168 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:51:54.588+08:00  WARN 64168 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:51:54.588+08:00  WARN 64168 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x000007fe014bd000] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:51:54.589+08:00  WARN 64168 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:51:54.596+08:00  WARN 64168 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:51:54.597+08:00  WARN 64168 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:51:54.600+08:00  WARN 64168 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsJakartaHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:55:40.735+08:00  INFO 66672 --- [mp-job] [           main] com.micro.platform.job.JobApplication    : Starting JobApplication using Java 25.0.2 with PID 66672 (/Users/xieyunxing/micro-platform/mp-job/target/classes started by xieyunxing in /Users/xieyunxing/micro-platform/mp-job)
+2026-03-14T09:55:40.735+08:00 DEBUG 66672 --- [mp-job] [           main] com.micro.platform.job.JobApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-14T09:55:40.735+08:00  INFO 66672 --- [mp-job] [           main] com.micro.platform.job.JobApplication    : The following 1 profile is active: "local"
+2026-03-14T09:55:41.059+08:00  INFO 66672 --- [mp-job] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-14T09:55:41.060+08:00  INFO 66672 --- [mp-job] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-14T09:55:41.068+08:00  INFO 66672 --- [mp-job] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2026-03-14T09:55:41.151+08:00  INFO 66672 --- [mp-job] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=09134ad5-f0d1-3afd-9791-6f184d9d958b
+2026-03-14T09:55:41.248+08:00  WARN 66672 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:55:41.250+08:00  WARN 66672 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:55:41.250+08:00  WARN 66672 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x00001ff8014c0258] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:55:41.251+08:00  WARN 66672 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:55:41.266+08:00  WARN 66672 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:55:41.268+08:00  WARN 66672 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:55:41.272+08:00  WARN 66672 --- [mp-job] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsJakartaHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
 WARNING: A restricted method in java.lang.System has been called
 WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/Users/xieyunxing/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.20/tomcat-embed-core-10.1.20.jar)
 WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
 WARNING: Restricted methods will be blocked in a future release unless native access is enabled
 
-2026-03-14T09:51:54.703+08:00  INFO 64168 --- [mp-job] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8084 (http)
-2026-03-14T09:51:54.707+08:00  INFO 64168 --- [mp-job] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-03-14T09:51:54.707+08:00  INFO 64168 --- [mp-job] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
-2026-03-14T09:51:54.725+08:00  INFO 64168 --- [mp-job] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-03-14T09:51:54.725+08:00  INFO 64168 --- [mp-job] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 534 ms
-2026-03-14T09:51:54.868+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1,master} inited
-2026-03-14T09:51:54.869+08:00  INFO 64168 --- [mp-job] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource - add a datasource named [master] success
-2026-03-14T09:51:54.869+08:00  INFO 64168 --- [mp-job] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+2026-03-14T09:55:41.380+08:00  INFO 66672 --- [mp-job] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8084 (http)
+2026-03-14T09:55:41.384+08:00  INFO 66672 --- [mp-job] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-14T09:55:41.385+08:00  INFO 66672 --- [mp-job] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-14T09:55:41.403+08:00  INFO 66672 --- [mp-job] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-14T09:55:41.403+08:00  INFO 66672 --- [mp-job] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 600 ms
+2026-03-14T09:55:41.563+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1,master} inited
+2026-03-14T09:55:41.563+08:00  INFO 66672 --- [mp-job] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource - add a datasource named [master] success
+2026-03-14T09:55:41.563+08:00  INFO 66672 --- [mp-job] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
  _ _   |_  _ _|_. ___ _ |    _ 
 | | |\/|_)(_| | |_\  |_)||_|_\ 
      /               |         
                         3.5.6 
-2026-03-14T09:51:55.093+08:00  WARN 64168 --- [mp-job] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+2026-03-14T09:55:41.788+08:00  WARN 66672 --- [mp-job] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
 
-Using generated security password: b7debcf2-73d1-4ca7-a65a-36f0ddc615b4
+Using generated security password: d45df4e2-60e7-4d41-9a6c-6c70bb229194
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
-2026-03-14T09:51:55.206+08:00  INFO 64168 --- [mp-job] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2ce62e27, org.springframework.security.web.context.SecurityContextHolderFilter@4536a09a, org.springframework.security.web.header.HeaderWriterFilter@69e8b711, org.springframework.web.filter.CorsFilter@3538a129, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@58932d08, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2d117280, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@766db6f9, org.springframework.security.web.access.ExceptionTranslationFilter@33bd9ac3, org.springframework.security.web.access.intercept.AuthorizationFilter@3c9c91e3]
+2026-03-14T09:55:41.897+08:00  INFO 66672 --- [mp-job] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2f2d8770, org.springframework.security.web.context.SecurityContextHolderFilter@6cb3463b, org.springframework.security.web.header.HeaderWriterFilter@58647985, org.springframework.web.filter.CorsFilter@742dbac8, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@16cbba0f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@45648e75, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2ce62e27, org.springframework.security.web.access.ExceptionTranslationFilter@2213854b, org.springframework.security.web.access.intercept.AuthorizationFilter@43e30f15]
 WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
 WARNING: sun.misc.Unsafe::objectFieldOffset has been called by io.netty.util.internal.PlatformDependent0$4 (file:/Users/xieyunxing/.m2/repository/io/netty/netty-common/4.1.109.Final/netty-common-4.1.109.Final.jar)
 WARNING: Please consider reporting this to the maintainers of class io.netty.util.internal.PlatformDependent0$4
 WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
-2026-03-14T09:51:55.616+08:00  WARN 64168 --- [mp-job] [           main] c.xxl.job.core.executor.XxlJobExecutor   : >>>>>>>>>>> xxl-job accessToken is empty. To ensure system security, please set the accessToken.
-2026-03-14T09:51:55.623+08:00  INFO 64168 --- [mp-job] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8084 (http) with context path ''
-2026-03-14T09:51:55.628+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ans.namespace attribute : null
-2026-03-14T09:51:55.629+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ALIBABA_ALIWARE_NAMESPACE attribute :null
-2026-03-14T09:51:55.629+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : initializer namespace from namespace attribute :null
-2026-03-14T09:51:55.637+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : FailoverDataSource type is class com.alibaba.nacos.client.naming.backups.datasource.DiskFailoverDataSource
-2026-03-14T09:51:55.641+08:00  INFO 64168 --- [mp-job] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [req-serv] nacos-server port:8848
-2026-03-14T09:51:55.641+08:00  INFO 64168 --- [mp-job] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [http-client] connect timeout:1000
-2026-03-14T09:51:55.642+08:00  INFO 64168 --- [mp-job] [           main] c.alibaba.nacos.client.utils.ParamUtil   : PER_TASK_CONFIG_SIZE: 3000.0
-2026-03-14T09:51:55.643+08:00  INFO 64168 --- [mp-job] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-2026-03-14T09:51:55.643+08:00  INFO 64168 --- [mp-job] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-2026-03-14T09:51:55.644+08:00  INFO 64168 --- [mp-job] [       Thread-7] c.a.n.c.a.r.identify.CredentialWatcher   : null No credential found
-2026-03-14T09:51:55.648+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [RpcClientFactory] create a new rpc client of 5def2105-260b-4b9b-8ddb-1772d244e5bc
-2026-03-14T09:51:55.648+08:00  INFO 64168 --- [mp-job] [       Thread-6] com.xxl.job.core.server.EmbedServer      : >>>>>>>>>>> xxl-job remoting server start success, nettype = class com.xxl.job.core.server.EmbedServer, port = 9999
-2026-03-14T09:51:55.655+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : Create naming rpc client for uuid->5def2105-260b-4b9b-8ddb-1772d244e5bc
-2026-03-14T09:51:55.655+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [5def2105-260b-4b9b-8ddb-1772d244e5bc] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
-2026-03-14T09:51:55.655+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [5def2105-260b-4b9b-8ddb-1772d244e5bc] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
-2026-03-14T09:51:55.655+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [5def2105-260b-4b9b-8ddb-1772d244e5bc] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
-2026-03-14T09:51:55.656+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [5def2105-260b-4b9b-8ddb-1772d244e5bc] Try to connect to server on start up, server: {serverIp = '127.0.0.1', server main port = 8848}
-2026-03-14T09:51:55.670+08:00  INFO 64168 --- [mp-job] [           main] c.a.n.c.remote.client.grpc.GrpcClient    : grpc client connection server:127.0.0.1 ip,serverPort:9848,grpcTslConfig:{"sslProvider":"","enableTls":false,"mutualAuthEnable":false,"trustAll":false}
-2026-03-14T09:51:55.834+08:00  INFO 64168 --- [mp-job] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to get current node abilities...
-2026-03-14T09:51:55.834+08:00  INFO 64168 --- [mp-job] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to initialize current node abilities, support modes: [SDK_CLIENT]
-2026-03-14T09:51:55.834+08:00  INFO 64168 --- [mp-job] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Initialize current abilities finish...
-2026-03-14T09:51:55.835+08:00  INFO 64168 --- [mp-job] [           main] c.a.n.c.a.d.NacosAbilityManagerHolder    : [AbilityControlManager] Successfully initialize AbilityControlManager
-2026-03-14T09:51:55.841+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [5def2105-260b-4b9b-8ddb-1772d244e5bc] Success to connect to server [127.0.0.1:8848] on start up, connectionId = 1773453115806_127.0.0.1_54931
-2026-03-14T09:51:55.842+08:00  INFO 64168 --- [mp-job] [remote.worker.0] com.alibaba.nacos.common.remote.client   : [5def2105-260b-4b9b-8ddb-1772d244e5bc] Notify connected event to listeners.
-2026-03-14T09:51:55.842+08:00  INFO 64168 --- [mp-job] [remote.worker.0] com.alibaba.nacos.client.naming          : Grpc connection connect
-2026-03-14T09:51:55.842+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [5def2105-260b-4b9b-8ddb-1772d244e5bc] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
-2026-03-14T09:51:55.842+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [5def2105-260b-4b9b-8ddb-1772d244e5bc] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda/0x000007fe01a42f00
-2026-03-14T09:51:55.842+08:00  INFO 64168 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : [REGISTER-SERVICE] public registering service mp-job with instance Instance{instanceId='null', ip='192.168.0.104', port=8084, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={IPv6=null, preserved.register.source=SPRING_CLOUD}}
-2026-03-14T09:51:55.847+08:00  INFO 64168 --- [mp-job] [           main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP mp-job 192.168.0.104:8084 register finished
-2026-03-14T09:51:55.854+08:00  INFO 64168 --- [mp-job] [           main] com.micro.platform.job.JobApplication    : Started JobApplication in 1.904 seconds (process running for 2.011)
-2026-03-14T09:52:01.905+08:00  INFO 64168 --- [mp-job] [nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-14T09:52:01.905+08:00  INFO 64168 --- [mp-job] [nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-03-14T09:52:01.906+08:00  INFO 64168 --- [mp-job] [nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2026-03-14T09:52:01.914+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:42.295+08:00  WARN 66672 --- [mp-job] [           main] c.xxl.job.core.executor.XxlJobExecutor   : >>>>>>>>>>> xxl-job accessToken is empty. To ensure system security, please set the accessToken.
+2026-03-14T09:55:42.304+08:00  INFO 66672 --- [mp-job] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8084 (http) with context path ''
+2026-03-14T09:55:42.308+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ans.namespace attribute : null
+2026-03-14T09:55:42.308+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ALIBABA_ALIWARE_NAMESPACE attribute :null
+2026-03-14T09:55:42.308+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : initializer namespace from namespace attribute :null
+2026-03-14T09:55:42.317+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : FailoverDataSource type is class com.alibaba.nacos.client.naming.backups.datasource.DiskFailoverDataSource
+2026-03-14T09:55:42.323+08:00  INFO 66672 --- [mp-job] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [req-serv] nacos-server port:8848
+2026-03-14T09:55:42.323+08:00  INFO 66672 --- [mp-job] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [http-client] connect timeout:1000
+2026-03-14T09:55:42.324+08:00  INFO 66672 --- [mp-job] [           main] c.alibaba.nacos.client.utils.ParamUtil   : PER_TASK_CONFIG_SIZE: 3000.0
+2026-03-14T09:55:42.326+08:00  INFO 66672 --- [mp-job] [       Thread-7] c.a.n.c.a.r.identify.CredentialWatcher   : null No credential found
+2026-03-14T09:55:42.327+08:00  INFO 66672 --- [mp-job] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+2026-03-14T09:55:42.327+08:00  INFO 66672 --- [mp-job] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+2026-03-14T09:55:42.331+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [RpcClientFactory] create a new rpc client of 9a2287ce-bdb0-47fd-95bf-7d496202647b
+2026-03-14T09:55:42.332+08:00  INFO 66672 --- [mp-job] [       Thread-6] com.xxl.job.core.server.EmbedServer      : >>>>>>>>>>> xxl-job remoting server start success, nettype = class com.xxl.job.core.server.EmbedServer, port = 9999
+2026-03-14T09:55:42.338+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : Create naming rpc client for uuid->9a2287ce-bdb0-47fd-95bf-7d496202647b
+2026-03-14T09:55:42.339+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [9a2287ce-bdb0-47fd-95bf-7d496202647b] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
+2026-03-14T09:55:42.339+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [9a2287ce-bdb0-47fd-95bf-7d496202647b] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
+2026-03-14T09:55:42.339+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [9a2287ce-bdb0-47fd-95bf-7d496202647b] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
+2026-03-14T09:55:42.339+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [9a2287ce-bdb0-47fd-95bf-7d496202647b] Try to connect to server on start up, server: {serverIp = '127.0.0.1', server main port = 8848}
+2026-03-14T09:55:42.352+08:00  INFO 66672 --- [mp-job] [           main] c.a.n.c.remote.client.grpc.GrpcClient    : grpc client connection server:127.0.0.1 ip,serverPort:9848,grpcTslConfig:{"sslProvider":"","enableTls":false,"mutualAuthEnable":false,"trustAll":false}
+2026-03-14T09:55:42.530+08:00  INFO 66672 --- [mp-job] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to get current node abilities...
+2026-03-14T09:55:42.530+08:00  INFO 66672 --- [mp-job] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to initialize current node abilities, support modes: [SDK_CLIENT]
+2026-03-14T09:55:42.530+08:00  INFO 66672 --- [mp-job] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Initialize current abilities finish...
+2026-03-14T09:55:42.530+08:00  INFO 66672 --- [mp-job] [           main] c.a.n.c.a.d.NacosAbilityManagerHolder    : [AbilityControlManager] Successfully initialize AbilityControlManager
+2026-03-14T09:55:42.541+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [9a2287ce-bdb0-47fd-95bf-7d496202647b] Success to connect to server [127.0.0.1:8848] on start up, connectionId = 1773453342502_127.0.0.1_55221
+2026-03-14T09:55:42.541+08:00  INFO 66672 --- [mp-job] [remote.worker.0] com.alibaba.nacos.common.remote.client   : [9a2287ce-bdb0-47fd-95bf-7d496202647b] Notify connected event to listeners.
+2026-03-14T09:55:42.541+08:00  INFO 66672 --- [mp-job] [remote.worker.0] com.alibaba.nacos.client.naming          : Grpc connection connect
+2026-03-14T09:55:42.541+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [9a2287ce-bdb0-47fd-95bf-7d496202647b] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
+2026-03-14T09:55:42.541+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.common.remote.client   : [9a2287ce-bdb0-47fd-95bf-7d496202647b] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda/0x00001ff801a45770
+2026-03-14T09:55:42.541+08:00  INFO 66672 --- [mp-job] [           main] com.alibaba.nacos.client.naming          : [REGISTER-SERVICE] public registering service mp-job with instance Instance{instanceId='null', ip='192.168.0.104', port=8084, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={IPv6=null, preserved.register.source=SPRING_CLOUD}}
+2026-03-14T09:55:42.547+08:00  INFO 66672 --- [mp-job] [           main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP mp-job 192.168.0.104:8084 register finished
+2026-03-14T09:55:42.554+08:00  INFO 66672 --- [mp-job] [           main] com.micro.platform.job.JobApplication    : Started JobApplication in 1.968 seconds (process running for 2.075)
+2026-03-14T09:55:48.568+08:00  INFO 66672 --- [mp-job] [nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-14T09:55:48.568+08:00  INFO 66672 --- [mp-job] [nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-14T09:55:48.569+08:00  INFO 66672 --- [mp-job] [nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-03-14T09:55:48.577+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -197,7 +197,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:02.949+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:49.613+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -284,7 +284,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:03.972+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:50.635+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -371,7 +371,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:05.004+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-4] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:51.660+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-4] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -458,7 +458,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:06.033+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-5] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:52.685+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-5] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -545,7 +545,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:07.061+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-6] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:53.715+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-6] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -632,7 +632,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:08.091+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-7] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:54.748+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-7] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -719,7 +719,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:09.114+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-8] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:55.778+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-8] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -806,7 +806,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:10.142+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-9] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:56.804+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-9] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -893,7 +893,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:11.165+08:00 ERROR 64168 --- [mp-job] [io-8084-exec-10] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:57.824+08:00 ERROR 66672 --- [mp-job] [io-8084-exec-10] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -980,7 +980,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:12.191+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:58.848+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1067,7 +1067,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:13.223+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:55:59.873+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1154,7 +1154,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:14.247+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:00.897+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1241,7 +1241,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:15.274+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-4] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:01.923+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-4] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1328,7 +1328,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:16.301+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-5] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:02.949+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-5] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1415,7 +1415,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:17.323+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-6] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:03.976+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-6] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1502,7 +1502,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:18.351+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-7] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:05.006+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-7] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1589,7 +1589,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:19.380+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-8] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:06.035+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-8] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1676,7 +1676,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:20.407+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-9] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:07.063+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-9] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1763,7 +1763,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:21.437+08:00 ERROR 64168 --- [mp-job] [io-8084-exec-10] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:08.093+08:00 ERROR 66672 --- [mp-job] [io-8084-exec-10] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1850,7 +1850,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:22.463+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:09.123+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -1937,7 +1937,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:23.492+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:10.148+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -2024,7 +2024,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:24.519+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:11.175+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -2111,7 +2111,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:25.549+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-4] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:12.201+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-4] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -2198,7 +2198,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:26.577+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-5] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:13.220+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-5] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -2285,7 +2285,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:27.597+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-6] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:14.249+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-6] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -2372,7 +2372,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:28.622+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-7] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:15.281+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-7] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
@@ -2459,181 +2459,7 @@ cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
 	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
 
-2026-03-14T09:52:29.645+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-8] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
-
-cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
-	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
-	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:104) ~[sa-token-core-1.34.0.jar:na]
-	at cn.dev33.satoken.stp.StpLogic.getLoginId(StpLogic.java:673) ~[sa-token-core-1.34.0.jar:na]
-	at cn.dev33.satoken.stp.StpLogic.checkLogin(StpLogic.java:658) ~[sa-token-core-1.34.0.jar:na]
-	at cn.dev33.satoken.stp.StpUtil.checkLogin(StpUtil.java:289) ~[sa-token-core-1.34.0.jar:na]
-	at com.micro.platform.job.config.SecurityConfig.lambda$addInterceptors$0(SecurityConfig.java:18) ~[classes/:na]
-	at cn.dev33.satoken.interceptor.SaInterceptor.preHandle(SaInterceptor.java:96) ~[sa-token-spring-boot3-starter-1.34.0.jar:na]
-	at org.springframework.web.servlet.HandlerExecutionChain.applyPreHandle(HandlerExecutionChain.java:146) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1084) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:527) ~[jakarta.servlet-api-6.0.0.jar:6.0.0]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614) ~[jakarta.servlet-api-6.0.0.jar:6.0.0]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:206) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230) ~[spring-security-config-6.2.4.jar:6.2.4]
-	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1736) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
-
-2026-03-14T09:52:30.671+08:00 ERROR 64168 --- [mp-job] [nio-8084-exec-9] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
-
-cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
-	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
-	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:104) ~[sa-token-core-1.34.0.jar:na]
-	at cn.dev33.satoken.stp.StpLogic.getLoginId(StpLogic.java:673) ~[sa-token-core-1.34.0.jar:na]
-	at cn.dev33.satoken.stp.StpLogic.checkLogin(StpLogic.java:658) ~[sa-token-core-1.34.0.jar:na]
-	at cn.dev33.satoken.stp.StpUtil.checkLogin(StpUtil.java:289) ~[sa-token-core-1.34.0.jar:na]
-	at com.micro.platform.job.config.SecurityConfig.lambda$addInterceptors$0(SecurityConfig.java:18) ~[classes/:na]
-	at cn.dev33.satoken.interceptor.SaInterceptor.preHandle(SaInterceptor.java:96) ~[sa-token-spring-boot3-starter-1.34.0.jar:na]
-	at org.springframework.web.servlet.HandlerExecutionChain.applyPreHandle(HandlerExecutionChain.java:146) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1084) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:527) ~[jakarta.servlet-api-6.0.0.jar:6.0.0]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:614) ~[jakarta.servlet-api-6.0.0.jar:6.0.0]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:206) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.2.4.jar:6.2.4]
-	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195) ~[spring-webmvc-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230) ~[spring-security-config-6.2.4.jar:6.2.4]
-	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.6.jar:6.1.6]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:175) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:150) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1736) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.20.jar:10.1.20]
-	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
-
-2026-03-14T09:52:31.702+08:00 ERROR 64168 --- [mp-job] [io-8084-exec-10] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
+2026-03-14T09:56:16.312+08:00 ERROR 66672 --- [mp-job] [nio-8084-exec-8] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token] with root cause
 
 cn.dev33.satoken.exception.NotLoginException: 未能读取到有效Token
 	at cn.dev33.satoken.exception.NotLoginException.newInstance(NotLoginException.java:137) ~[sa-token-core-1.34.0.jar:na]
