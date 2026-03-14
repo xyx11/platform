@@ -1,11 +1,20 @@
 import request from '@/utils/request'
 
-// 发送验证码
+// 发送短信验证码
 export function sendSmsCode(phone) {
   return request({
     url: '/system/user/sms/code',
     method: 'post',
     data: { phone }
+  })
+}
+
+// 发送邮箱验证码
+export function sendEmailCode(email) {
+  return request({
+    url: '/system/user/email/code',
+    method: 'post',
+    data: { email }
   })
 }
 
