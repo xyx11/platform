@@ -9,7 +9,7 @@ import com.micro.platform.common.redis.util.RedisUtil;
 import com.micro.platform.common.security.util.SecurityUtil;
 import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.service.SysUserService;
-import com.micro.platform.system.service.EmailNotificationService;
+import com.micro.platform.common.core.service.EmailNotificationService;
 import com.micro.platform.common.core.service.SmsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

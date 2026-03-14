@@ -1,4 +1,6 @@
-package com.micro.platform.system.service;
+package com.micro.platform.common.core.service;
+
+import java.util.List;
 
 /**
  * 邮件通知服务
@@ -23,5 +25,5 @@ public interface EmailNotificationService {
     /**
      * 批量发送邮件
      */
-    void batchSendEmail(java.util.List<String> recipients, String subject, String content);
+    void batchSendEmail(List<String> recipients, String subject, String content);
 }

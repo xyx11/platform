@@ -2,7 +2,7 @@ package com.micro.platform.system.controller;
 
 import com.micro.platform.common.core.result.Result;
 import com.micro.platform.common.security.util.SecurityUtil;
-import com.micro.platform.system.service.EmailNotificationService;
+import com.micro.platform.common.core.service.EmailNotificationService;
 import com.micro.platform.system.service.WebSocketNotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

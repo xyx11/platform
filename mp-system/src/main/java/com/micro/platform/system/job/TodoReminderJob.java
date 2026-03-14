@@ -2,7 +2,7 @@ package com.micro.platform.system.job;
 
 import com.micro.platform.system.entity.SysTodo;
 import com.micro.platform.system.entity.SysUser;
-import com.micro.platform.system.service.EmailNotificationService;
+import com.micro.platform.common.core.service.EmailNotificationService;
 import com.micro.platform.system.service.SysTodoService;
 import com.micro.platform.system.service.SysUserService;
 import com.micro.platform.system.service.WebSocketNotificationService;
