@@ -51,6 +51,12 @@
 - 所有导出接口改为 `ResponseEntity<byte[]>` 返回格式
 - 前端统一使用 blob 类型接收
 
+### 9. 服务重构优化（最近）
+- 将 `EmailNotificationService` 接口从 mp-system 移至 mp-common-core
+- 修复 AuthService 编译错误和导入问题
+- 优化 refreshToken 方法实现
+- 统一所有模块的 EmailNotificationService 导入路径
+
 ## 生产环境配置
 
 ### 短信服务配置
