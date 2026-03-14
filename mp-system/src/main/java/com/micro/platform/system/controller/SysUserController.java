@@ -123,12 +123,27 @@ public class SysUserController {
     @PreAuthorize("hasAuthority('system:user:edit')")
     @PutMapping("/password/batch")
     public Result<Void> batchResetPassword(@RequestBody Map<String, Object> params) {
-        @SuppressWarnings("unchecked")
-        List<Integer> userIdsInt = (List<Integer>) params.get("userIds");
+        List<Long> userIds = extractLongList(params.get("userIds"));
         String password = (String) params.get("password");
-        List<Long> userIds = userIdsInt != null ? userIdsInt.stream().map(Long::valueOf).toList() : null;
         sysUserService.batchResetPassword(userIds, password);
         return Result.success();
+    }
+
+    /**
+     * 从对象中提取 Long 列表（兼容 Integer 和 Long）
+     */
+    @SuppressWarnings("unchecked")
+    private List<Long> extractLongList(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        if (obj instanceof List) {
+            List<?> list = (List<?>) obj;
+            return list.stream()
+                .map(item -> item instanceof Integer ? ((Integer) item).longValue() : (Long) item)
+                .toList();
+        }
+        return null;
     }
 
     @Operation(summary = "解锁用户")
