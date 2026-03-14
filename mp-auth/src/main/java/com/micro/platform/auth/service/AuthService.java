@@ -40,6 +40,8 @@ public class AuthService {
     private final SysUserMapper userMapper;
     private final SysLoginLogMapper loginLogMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    @Autowired(required = false)
+    private EmailNotificationService emailNotificationService;
 
     public AuthService(RedisUtil redisUtil, SysUserMapper userMapper, SysLoginLogMapper loginLogMapper) {
         this.redisUtil = redisUtil;
@@ -338,8 +340,22 @@ public class AuthService {
         // 存储验证码，10 分钟过期
         redisUtil.set(redisKey, code, 600, TimeUnit.SECONDS);
 
-        // TODO: 实际项目中应该调用短信服务发送验证码
+        // TODO: 实际项目中应该调用短信服务发送验证码（需要配置短信服务商）
+        // 示例：smsService.send(phone, code);
         log.info("发送找回密码验证码到手机号：{}，验证码：{}", phone, code);
+        
+        // 如果手机关联了邮箱，也可以发送邮件通知
+        if (user != null && user.getEmail() != null) {
+            try {
+                emailNotificationService.sendSimpleEmail(
+                    user.getEmail(),
+                    "密码重置验证码",
+                    "您正在申请密码重置，验证码为：" + code + "，10 分钟内有效。如非本人操作，请联系管理员。"
+                );
+            } catch (Exception e) {
+                log.warn("邮件发送失败：{}", e.getMessage());
+            }
+        }
     }
 
     /**

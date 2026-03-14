@@ -6,6 +6,21 @@ spring:
     name: mp-system
   profiles:
     active: dev
+  # 邮件配置
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: noreply@example.com
+    password: your-auth-code
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+        socket:
+          factory:
+            class: javax.net.ssl.SSLSocketFactory
   main:
     allow-bean-definition-overriding: true
   cloud:

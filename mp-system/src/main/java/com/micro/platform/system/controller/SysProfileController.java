@@ -9,8 +9,11 @@ import com.micro.platform.common.redis.util.RedisUtil;
 import com.micro.platform.common.security.util.SecurityUtil;
 import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.service.SysUserService;
+import com.micro.platform.system.service.EmailNotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,12 +30,17 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/system/user")
 public class SysProfileController {
 
+    private static final Logger log = LoggerFactory.getLogger(SysProfileController.class);
+
     private final SysUserService sysUserService;
     private final RedisUtil redisUtil;
+    private final EmailNotificationService emailNotificationService;
 
-    public SysProfileController(SysUserService sysUserService, RedisUtil redisUtil) {
+    public SysProfileController(SysUserService sysUserService, RedisUtil redisUtil,
+                                EmailNotificationService emailNotificationService) {
         this.sysUserService = sysUserService;
         this.redisUtil = redisUtil;
+        this.emailNotificationService = emailNotificationService;
     }
 
     @Operation(summary = "获取个人信息")
@@ -177,8 +185,9 @@ public class SysProfileController {
         String cacheKey = "sms:" + type + ":" + phone;
         redisUtil.set(cacheKey, code, 300, TimeUnit.SECONDS);
 
-        // TODO: 调用短信服务发送验证码
-        // smsService.send(phone, code);
+        // TODO: 调用短信服务发送验证码（需要配置短信服务商）
+        // 示例：smsService.send(phone, code);
+        log.info("发送短信验证码到手机号：{}，验证码：{}", phone, code);
 
         return Result.success();
     }
@@ -209,8 +218,12 @@ public class SysProfileController {
         String cacheKey = "email:" + type + ":" + email;
         redisUtil.set(cacheKey, code, 300, TimeUnit.SECONDS);
 
-        // TODO: 调用邮件服务发送验证码
-        // emailService.send(email, "邮箱验证码", "您的验证码是：" + code);
+        // 调用邮件服务发送验证码
+        try {
+            emailNotificationService.sendSimpleEmail(email, "邮箱验证码", "您的验证码是：" + code + "，5 分钟内有效");
+        } catch (Exception e) {
+            log.warn("邮件发送失败，验证码已存储到 Redis，请稍后重试");
+        }
 
         return Result.success();
     }
