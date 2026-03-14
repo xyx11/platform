@@ -30,7 +30,14 @@ public class TencentSmsService implements SmsService {
         }
 
         try {
-            // TODO: 集成腾讯云短信 SDK
+            // ========== 腾讯云短信 SDK 集成示例 ==========
+            // 1. 添加依赖 (pom.xml):
+            //    <dependency>
+            //        <groupId>com.tencentcloudapi</groupId>
+            //        <artifactId>tencentcloud-sdk-java-sms</artifactId>
+            //        <version>3.1.0</version>
+            //    </dependency>
+            // 2. 取消下面代码注释并配置 application.yml 中的短信参数
             // 示例代码：
             // Credential cred = new Credential(
             //     smsProperties.getAccessKeyId(),

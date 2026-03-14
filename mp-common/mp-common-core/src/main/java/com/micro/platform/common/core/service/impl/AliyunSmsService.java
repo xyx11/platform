@@ -30,7 +30,14 @@ public class AliyunSmsService implements SmsService {
         }
 
         try {
-            // TODO: 集成阿里云短信 SDK
+            // ========== 阿里云短信 SDK 集成示例 ==========
+            // 1. 添加依赖 (pom.xml):
+            //    <dependency>
+            //        <groupId>com.aliyun</groupId>
+            //        <artifactId>dysmsapi20170525</artifactId>
+            //        <version>2.0.24</version>
+            //    </dependency>
+            // 2. 取消下面代码注释并配置 application.yml 中的短信参数
             // 示例代码：
             // DefaultProfile profile = DefaultProfile.getProfile(
             //     smsProperties.getAliyunRegionId(),
