@@ -301,48 +301,72 @@ const sendEmailCode = () => {
 // 提交表单
 const submitForm = () => {
   formRef.value.validate(valid => {
-    if (valid) {
-      const data = { ...form }
-      
-      // 如果手机号修改了，需要验证
-      if (form.phone && form.phone !== userInfo.value.phone) {
-        if (!form.phoneCode) {
-          ElMessage.error('请输入手机验证码')
-          return
-        }
-        data.phone = form.phoneCode
-        // 调用修改手机号接口
+    if (!valid) return
+    
+    const data = { ...form }
+    let hasChanges = false
+    const updatePromises = []
+    
+    // 如果手机号修改了，需要验证
+    if (form.phone && form.phone !== userInfo.value.phone) {
+      if (!form.phoneCode) {
+        ElMessage.error('请输入手机验证码')
+        return
+      }
+      // 调用修改手机号接口
+      updatePromises.push(
         request.put('/system/user/profile/phone', { phone: form.phone, code: form.phoneCode })
           .then(() => {
             ElMessage.success('手机号修改成功')
+            userInfo.value.phone = form.phone
           })
+      )
+      hasChanges = true
+      data.phone = null // 清空 phone，避免传给 updateProfile
+    }
+    
+    // 如果邮箱修改了，需要验证
+    if (form.email && form.email !== userInfo.value.email) {
+      if (!form.emailCode) {
+        ElMessage.error('请输入邮箱验证码')
         return
       }
-      
-      // 如果邮箱修改了，需要验证
-      if (form.email && form.email !== userInfo.value.email) {
-        if (!form.emailCode) {
-          ElMessage.error('请输入邮箱验证码')
-          return
-        }
-        // 调用修改邮箱接口
+      // 调用修改邮箱接口
+      updatePromises.push(
         request.put('/system/user/profile/email', { email: form.email, code: form.emailCode })
           .then(() => {
             ElMessage.success('邮箱修改成功')
+            userInfo.value.email = form.email
           })
-        return
-      }
-      
-      // 其他信息修改
-      delete data.phoneCode
-      delete data.emailCode
-      delete data.phone
-      delete data.email
-      
-      request.put('/system/user/profile', data).then(() => {
-        ElMessage.success('保存成功')
-        getUserInfo()
-      })
+      )
+      hasChanges = true
+      data.email = null // 清空 email，避免传给 updateProfile
+    }
+    
+    // 删除验证码字段
+    delete data.phoneCode
+    delete data.emailCode
+    
+    // 如果只有手机号或邮箱修改，上面已经处理了
+    // 如果还有其他信息修改，调用 updateProfile
+    if (form.nickname !== userInfo.value.nickname || form.gender !== userInfo.value.gender) {
+      updatePromises.push(
+        request.put('/system/user/profile', data).then(() => {
+          ElMessage.success('保存成功')
+          getUserInfo()
+        })
+      )
+      hasChanges = true
+    }
+    
+    if (!hasChanges) {
+      ElMessage.info('没有任何修改')
+      return
+    }
+    
+    // 如果有多个修改，提示用户
+    if (updatePromises.length > 1) {
+      ElMessage.success('正在保存修改...')
     }
   })
 }
