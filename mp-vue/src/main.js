@@ -11,8 +11,16 @@ import App from './App.vue'
 import router from './router'
 import request from './utils/request'
 
+// 导入全局组件
+import RightToolbar from './components/RightToolbar.vue'
+import Pagination from './components/Pagination.vue'
+
 const app = createApp(App)
 const pinia = createPinia()
+
+// 注册全局组件
+app.component('RightToolbar', RightToolbar)
+app.component('Pagination', Pagination)
 
 // 注册 Element Plus 图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
