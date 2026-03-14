@@ -1,54 +1,67 @@
 <template>
   <div class="role-container">
-    <el-card>
+    <el-card shadow="never">
       <el-form :model="queryParams" inline>
         <el-form-item label="角色名称">
-          <el-input v-model="queryParams.roleName" placeholder="请输入角色名称" clearable @keyup.enter="handleQuery" />
+          <el-input v-model="queryParams.roleName" placeholder="请输入角色名称" clearable @keyup.enter="handleQuery" style="width: 200px" />
         </el-form-item>
         <el-form-item label="角色编码">
-          <el-input v-model="queryParams.roleCode" placeholder="请输入角色编码" clearable @keyup.enter="handleQuery" />
+          <el-input v-model="queryParams.roleCode" placeholder="请输入角色编码" clearable @keyup.enter="handleQuery" style="width: 200px" />
         </el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
+          <el-select v-model="queryParams.status" placeholder="请选择状态" clearable style="width: 120px">
             <el-option label="正常" :value="1" />
             <el-option label="禁用" :value="0" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="handleQuery">查询</el-button>
-          <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+          <el-button type="primary" @click="handleQuery">查询</el-button>
+          <el-button @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
 
-    <el-card class="table-card">
+    <el-card class="table-card" shadow="never">
       <template #header>
         <div class="header-actions">
-          <el-button type="primary" icon="Plus" @click="handleAdd">新增角色</el-button>
-          <el-button type="danger" icon="Delete" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
-          <el-button type="success" icon="Download" @click="handleExport">导出</el-button>
+          <span class="card-title">角色列表</span>
+          <div class="card-buttons">
+            <el-button type="primary" @click="handleAdd">新增角色</el-button>
+            <el-button type="danger" :disabled="multiple" @click="handleBatchDelete">批量删除</el-button>
+            <el-button @click="handleExport">导出</el-button>
+          </div>
         </div>
       </template>
 
-      <el-table :data="roleList" border stripe v-loading="loading" @selection-change="handleSelectionChange">
+      <el-table :data="roleList" border v-loading="loading" @selection-change="handleSelectionChange" :cell-style="{ padding: '8px 0' }">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="roleId" label="角色 ID" width="100" />
-        <el-table-column prop="roleName" label="角色名称" width="150" />
-        <el-table-column prop="roleCode" label="角色编码" width="150" />
-        <el-table-column prop="sort" label="排序" width="80" />
-        <el-table-column prop="status" label="状态" width="80">
+        <el-table-column prop="roleName" label="角色名称" min-width="150" show-overflow-tooltip />
+        <el-table-column prop="roleCode" label="角色编码" min-width="150" show-overflow-tooltip />
+        <el-table-column prop="dataScope" label="数据范围" width="120">
           <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'danger'">
-              {{ row.status === 1 ? '正常' : '禁用' }}
+            <el-tag :type="getDataScopeType(row.dataScope)" size="small">
+              {{ getDataScopeText(row.dataScope) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="180" />
-        <el-table-column label="操作" width="250" fixed="right">
+        <el-table-column prop="sort" label="排序" width="80" align="center" />
+        <el-table-column prop="status" label="状态" width="100" align="center">
           <template #default="{ row }">
-            <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
-            <el-button link type="danger" icon="Delete" @click="handleDelete(row)">删除</el-button>
-            <el-button link type="warning" icon="Setting" @click="handleAuthMenu(row)">分配权限</el-button>
+            <el-switch
+              v-model="row.status"
+              :active-value="1"
+              :inactive-value="0"
+              @change="handleStatusChange(row)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" width="180" align="center" />
+        <el-table-column label="操作" width="280" fixed="right" align="center">
+          <template #default="{ row }">
+            <el-button link type="primary" size="small" @click="handleUpdate(row)">修改</el-button>
+            <el-button link type="danger" size="small" @click="handleDelete(row)">删除</el-button>
+            <el-button link type="warning" size="small" @click="handleAuthMenu(row)">分配权限</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -70,26 +83,29 @@
     <el-dialog
       :title="dialog.title"
       v-model="dialog.visible"
-      width="600px"
+      width="500px"
       @close="resetForm"
+      :close-on-click-modal="false"
     >
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="form.roleName" placeholder="请输入角色名称" />
+          <el-input v-model="form.roleName" placeholder="请输入角色名称" maxlength="30" />
         </el-form-item>
         <el-form-item label="角色编码" prop="roleCode">
-          <el-input v-model="form.roleCode" placeholder="请输入角色编码" />
+          <el-input v-model="form.roleCode" placeholder="请输入角色编码" maxlength="30" />
         </el-form-item>
         <el-form-item label="数据范围" prop="dataScope">
-          <el-select v-model="form.dataScope" placeholder="请选择数据范围">
+          <el-select v-model="form.dataScope" placeholder="请选择数据范围" style="width: 100%">
             <el-option label="全部数据" :value="1" />
             <el-option label="本部门及以下" :value="2" />
             <el-option label="本部门" :value="3" />
             <el-option label="仅本人" :value="4" />
           </el-select>
+          <div class="form-tip">分配用户时，数据范围决定用户可看到哪些部门的数据</div>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input-number v-model="form.sort" :min="0" />
+          <el-input-number v-model="form.sort" :min="0" :max="999" />
+          <div class="form-tip">数值越小越靠前</div>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -98,43 +114,57 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="description">
-          <el-input v-model="form.description" type="textarea" :rows="3" placeholder="请输入备注" />
+          <el-input v-model="form.description" type="textarea" :rows="3" placeholder="请输入备注" maxlength="200" show-word-limit />
         </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="dialog.visible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">确定</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitting">确定</el-button>
       </template>
     </el-dialog>
 
     <!-- 分配权限对话框 -->
-    <el-dialog title="分配权限" v-model="authDialog.visible" width="500px">
+    <el-dialog title="分配权限" v-model="authDialog.visible" width="500px" :close-on-click-modal="false">
+      <div class="auth-toolbar">
+        <el-input v-model="menuFilterText" placeholder="搜索菜单..." prefix-icon="Search" clearable style="width: 200px" />
+        <div class="auth-actions">
+          <el-checkbox v-model="expandAll" @change="handleExpandChange">展开/收起</el-checkbox>
+          <el-button size="small" @click="handleCheckAll">全选</el-button>
+          <el-button size="small" @click="handleUncheckAll">取消全选</el-button>
+        </div>
+      </div>
       <el-tree
         ref="menuTreeRef"
         :data="menuList"
         :props="{ children: 'children', label: 'menuName' }"
+        :filter-node-method="filterNode"
         show-checkbox
         node-key="menuId"
         :default-checked-keys="checkedKeys"
+        :expand-on-click-node="false"
       />
       <template #footer>
         <el-button @click="authDialog.visible = false">取消</el-button>
-        <el-button type="primary" @click="submitAuth">确定</el-button>
+        <el-button type="primary" @click="submitAuth" :loading="submittingAuth">确定</el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, onMounted } from 'vue'
+<script setup name="SysRole">
+import { ref, reactive, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Search } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const roleList = ref([])
 const menuList = ref([])
 const loading = ref(false)
+const submitting = ref(false)
+const submittingAuth = ref(false)
 const multiple = ref(true)
 const roleIds = ref([])
+const expandAll = ref(true)
 
 const queryParams = reactive({
   roleName: '',
@@ -157,6 +187,7 @@ const authDialog = reactive({
   visible: false
 })
 
+const menuFilterText = ref('')
 const formRef = ref(null)
 const menuTreeRef = ref(null)
 
@@ -174,9 +205,20 @@ const checkedKeys = ref([])
 const currentRoleId = ref(null)
 
 const rules = {
-  roleName: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
-  roleCode: [{ required: true, message: '请输入角色编码', trigger: 'blur' }]
+  roleName: [
+    { required: true, message: '请输入角色名称', trigger: 'blur' },
+    { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
+  ],
+  roleCode: [
+    { required: true, message: '请输入角色编码', trigger: 'blur' },
+    { pattern: /^[a-z_]+$/, message: '只能输入小写字母和下划线', trigger: 'blur' }
+  ]
 }
+
+// 监听搜索框输入
+watch(menuFilterText, (val) => {
+  menuTreeRef.value?.filter(val)
+})
 
 // 获取角色列表
 const getRoleList = () => {
@@ -184,8 +226,9 @@ const getRoleList = () => {
   request.get('/system/role/list', { params: queryParams }).then(res => {
     roleList.value = res.data?.records || []
     pagination.total = res.data?.total || 0
-    loading.value = false
   }).catch(() => {
+    ElMessage.error('获取角色列表失败')
+  }).finally(() => {
     loading.value = false
   })
 }
@@ -207,7 +250,7 @@ const resetQuery = () => {
 // 获取菜单列表
 const getMenuList = () => {
   request.get('/system/menu/list').then(res => {
-    menuList.value = res.data
+    menuList.value = res.data || []
   })
 }
 
@@ -215,6 +258,33 @@ const getMenuList = () => {
 const handleSelectionChange = (selection) => {
   roleIds.value = selection.map(item => item.roleId)
   multiple.value = !selection.length
+}
+
+// 数据范围类型
+const getDataScopeType = (dataScope) => {
+  const types = { 1: 'success', 2: 'warning', 3: 'primary', 4: 'info' }
+  return types[dataScope] || 'info'
+}
+
+const getDataScopeText = (dataScope) => {
+  const texts = { 1: '全部数据', 2: '本部门及以下', 3: '本部门', 4: '仅本人' }
+  return texts[dataScope] || '未知'
+}
+
+// 状态变更
+const handleStatusChange = (row) => {
+  const text = row.status === 1 ? '启用' : '禁用'
+  ElMessageBox.confirm(`确认要${text}角色"${row.roleName}"吗？`, '提示', {
+    type: 'warning'
+  }).then(() => {
+    request.put('/system/role', { roleId: row.roleId, status: row.status }).then(() => {
+      ElMessage.success(`${text}成功`)
+    }).catch(() => {
+      row.status = row.status === 1 ? 0 : 1
+    })
+  }).catch(() => {
+    row.status = row.status === 1 ? 0 : 1
+  })
 }
 
 // 新增
@@ -239,11 +309,15 @@ const handleDelete = (row) => {
       ElMessage.success('删除成功')
       getRoleList()
     })
-  })
+  }).catch(() => {})
 }
 
 // 批量删除
 const handleBatchDelete = () => {
+  if (!roleIds.value.length) {
+    ElMessage.warning('请选择要删除的角色')
+    return
+  }
   ElMessageBox.confirm(`确认删除选中的 ${roleIds.value.length} 个角色吗？`, '警告', {
     type: 'warning'
   }).then(() => {
@@ -251,17 +325,55 @@ const handleBatchDelete = () => {
       ElMessage.success('批量删除成功')
       getRoleList()
     })
-  })
+  }).catch(() => {})
 }
 
 // 分配权限
 const handleAuthMenu = (row) => {
   authDialog.visible = true
   currentRoleId.value = row.roleId
+  checkedKeys.value = []
   // 获取角色的菜单权限
   request.get(`/system/role/menus/${row.roleId}`).then(res => {
     checkedKeys.value = res.data || []
   })
+}
+
+// 过滤节点
+const filterNode = (value, data) => {
+  if (!value) return true
+  return data.menuName && data.menuName.toLowerCase().includes(value.toLowerCase())
+}
+
+// 展开/收起
+const handleExpandChange = () => {
+  const nodes = menuTreeRef.value.store.nodesMap
+  for (const node in nodes) {
+    nodes[node].expanded = expandAll.value
+  }
+}
+
+// 全选
+const handleCheckAll = () => {
+  const allKeys = getAllMenuIds(menuList.value)
+  menuTreeRef.value.setCheckedKeys(allKeys)
+}
+
+// 取消全选
+const handleUncheckAll = () => {
+  menuTreeRef.value.setCheckedKeys([])
+}
+
+// 递归获取所有菜单 ID
+const getAllMenuIds = (menus) => {
+  const ids = []
+  menus.forEach(menu => {
+    ids.push(menu.menuId)
+    if (menu.children && menu.children.length) {
+      ids.push(...getAllMenuIds(menu.children))
+    }
+  })
+  return ids
 }
 
 // 提交权限分配
@@ -270,17 +382,33 @@ const submitAuth = () => {
   const halfCheckedKeys = menuTreeRef.value.getHalfCheckedKeys()
   const menuIds = [...checkedKeys, ...halfCheckedKeys]
 
+  if (!menuIds.length) {
+    ElMessageBox.confirm('确定不分配任何权限吗？', '提示', {
+      type: 'warning'
+    }).then(() => {
+      doSubmitAuth(menuIds)
+    })
+    return
+  }
+  doSubmitAuth(menuIds)
+}
+
+const doSubmitAuth = (menuIds) => {
+  submittingAuth.value = true
   request.post('/system/role/authMenu', {
     roleId: currentRoleId.value,
     menuIds
   }).then(() => {
     ElMessage.success('权限分配成功')
     authDialog.visible = false
+  }).catch(() => {}).finally(() => {
+    submittingAuth.value = false
   })
 }
 
 // 导出
 const handleExport = () => {
+  loading.value = true
   const params = {
     roleName: queryParams.roleName,
     roleCode: queryParams.roleCode,
@@ -295,18 +423,27 @@ const handleExport = () => {
     link.click()
     window.URL.revokeObjectURL(url)
     ElMessage.success('导出成功')
+  }).catch(() => {
+    ElMessage.error('导出失败')
+  }).finally(() => {
+    loading.value = false
   })
 }
 
 // 提交表单
 const submitForm = () => {
+  if (!formRef.value) return
+  
   formRef.value.validate(valid => {
     if (valid) {
+      submitting.value = true
       const api = form.roleId ? request.put : request.post
       api('/system/role', form).then(() => {
         ElMessage.success('操作成功')
         dialog.visible = false
         getRoleList()
+      }).catch(() => {}).finally(() => {
+        submitting.value = false
       })
     }
   })
