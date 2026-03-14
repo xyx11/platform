@@ -48,9 +48,7 @@ public class OperationLogServiceImpl implements OperationLogService {
             if (operationLog.getOperatorName() != null) {
                 sysOperationLog.setOperName(operationLog.getOperatorName());
             }
-            if (operationLog.getOperatorId() != null) {
-                sysOperationLog.setOperId(operationLog.getOperatorId());
-            }
+            // SysOperationLog 没有 operatorId 字段，跳过
             if (operationLog.getRequestMethod() != null) {
                 sysOperationLog.setRequestMethod(operationLog.getRequestMethod());
             }

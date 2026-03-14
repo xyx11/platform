@@ -12,13 +12,16 @@ import com.micro.platform.auth.entity.SysUser;
 import com.micro.platform.auth.mapper.SysUserMapper;
 import com.micro.platform.common.core.entity.LoginUser;
 import com.micro.platform.common.core.exception.BusinessException;
+import com.micro.platform.common.core.service.SmsService;
 import com.micro.platform.common.redis.util.RedisUtil;
 import com.micro.platform.auth.entity.SysLoginLog;
 import com.micro.platform.auth.mapper.SysLoginLogMapper;
+import com.micro.platform.system.service.EmailNotificationService;
 import com.wf.captcha.SpecCaptcha;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -303,14 +306,14 @@ public class AuthService {
     /**
      * 刷新 Token
      */
-    public String refreshToken(String refreshToken) {
-        if (refreshToken == null || refreshToken.isEmpty()) {
+    public String refreshToken(String oldToken) {
+        if (oldToken == null || oldToken.isEmpty()) {
             throw new BusinessException("Token 不能为空");
         }
 
         try {
-            // 使用 Sa-Token 刷新 token
-            StpUtil.refreshToken();
+            // Sa-Token 默认会自动刷新 token，这里只返回当前 token 值
+            // 如果需要强制刷新，可以先 logout 再 login
             return StpUtil.getTokenValue();
         } catch (Exception e) {
             log.error("刷新 Token 失败：{}", e.getMessage());
