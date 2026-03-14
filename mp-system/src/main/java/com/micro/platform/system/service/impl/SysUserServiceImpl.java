@@ -83,7 +83,18 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(SysUser user) {
+        // 更新用户基本信息
         baseMapper.updateById(user);
+        
+        // 处理用户角色关联
+        if (user.getRoleIds() != null) {
+            // 先删除原有的用户角色关联
+            sysUserMapper.deleteUserRoleByUserId(user.getUserId());
+            // 再插入新的关联
+            if (!user.getRoleIds().isEmpty()) {
+                sysUserMapper.batchInsertUserRoleByUserId(user.getUserId(), user.getRoleIds());
+            }
+        }
     }
 
     @Override
