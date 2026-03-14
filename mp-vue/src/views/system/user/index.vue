@@ -433,7 +433,7 @@ const getDeptTree = () => {
   request.get('/system/dept/list').then(res => {
     deptTreeData.value = res.data || []
   }).catch(err => {
-    console.error('获取部门树失败:', err)
+    // 获取部门树失败
   })
 }
 
@@ -456,7 +456,7 @@ const getUserList = () => {
     userList.value = res.data?.records || []
     pagination.total = res.data?.total || 0
   }).catch(err => {
-    console.error('获取用户列表失败:', err)
+    // 获取用户列表失败
   }).finally(() => {
     loading.value = false
   })
@@ -467,7 +467,7 @@ const getRoleList = () => {
   request.get('/system/role/list').then(res => {
     roleList.value = res.data?.records || []
   }).catch(err => {
-    console.error('获取角色列表失败:', err)
+    // 获取角色列表失败
   })
 }
 

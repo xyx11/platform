@@ -553,7 +553,7 @@ const getDeptList = () => {
     })
   }).catch(err => {
     loading.value = false
-    console.error('获取部门列表失败:', err)
+    // 获取部门列表失败
     ElMessage.error('获取部门列表失败')
   })
 }
@@ -716,7 +716,7 @@ const exportSelected = () => {
     window.URL.revokeObjectURL(url)
     ElMessage.success(`导出 ${selectedRows.value.length} 项成功`)
   }).catch((err) => {
-    console.error('导出失败:', err)
+    // 导出失败
     ElMessage.error('导出失败：' + (err.message || '未知错误'))
   }).finally(() => {
     exporting.value = false
@@ -1011,7 +1011,7 @@ const handleExport = () => {
     window.URL.revokeObjectURL(url)
     ElMessage.success('导出成功')
   }).catch((err) => {
-    console.error('导出失败:', err)
+    // 导出失败
     ElMessage.error('导出失败：' + (err.message || '未知错误'))
   }).finally(() => {
     exporting.value = false
