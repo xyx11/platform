@@ -1,13 +1,13 @@
 <template>
   <div class="dict-container">
     <!-- 字典类型管理 -->
-    <el-card>
+    <el-card class="search-card">
       <el-form :model="typeQueryParams" inline>
         <el-form-item label="字典名称">
-          <el-input v-model="typeQueryParams.dictName" placeholder="请输入字典名称" clearable />
+          <el-input v-model="typeQueryParams.dictName" placeholder="请输入字典名称" clearable @keyup.enter="handleTypeQuery" />
         </el-form-item>
         <el-form-item label="字典类型">
-          <el-input v-model="typeQueryParams.dictType" placeholder="请输入字典类型" clearable />
+          <el-input v-model="typeQueryParams.dictType" placeholder="请输入字典类型" clearable @keyup.enter="handleTypeQuery" />
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="typeQueryParams.status" placeholder="请选择状态" clearable>
@@ -25,9 +25,12 @@
     <el-card class="table-card">
       <template #header>
         <div class="header-actions">
-          <el-button type="primary" icon="Plus" @click="handleAddType">新增字典类型</el-button>
-          <el-button type="danger" icon="Delete" :disabled="typeMultiple" @click="handleBatchDeleteType">批量删除</el-button>
-          <el-button type="success" icon="Download" @click="handleExportType">导出字典</el-button>
+          <span class="card-title">字典类型列表</span>
+          <div class="card-buttons">
+            <el-button type="primary" icon="Plus" @click="handleAddType">新增字典类型</el-button>
+            <el-button type="danger" icon="Delete" :disabled="typeMultiple" @click="handleBatchDeleteType">批量删除</el-button>
+            <el-button type="success" icon="Download" @click="handleExportType">导出字典</el-button>
+          </div>
         </div>
       </template>
 
@@ -37,6 +40,7 @@
         stripe
         v-loading="typeLoading"
         @selection-change="handleTypeSelectionChange"
+        :header-cell-style="{ background: '#f5f7fa', color: '#606266' }"
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="dictId" label="字典 ID" width="100" />
@@ -62,6 +66,7 @@
 
       <div class="pagination">
         <el-pagination
+          v-show="typePagination.total > 0"
           v-model:current-page="typePagination.current"
           v-model:page-size="typePagination.size"
           :total="typePagination.total"
@@ -70,6 +75,9 @@
           @size-change="getTypeList"
           @current-change="getTypeList"
         />
+        <div class="pagination-info">
+          共 {{ typePagination.total }} 条，每页 {{ typePagination.size }} 条，当前第 {{ typePagination.current }} 页
+        </div>
       </div>
     </el-card>
 
@@ -261,9 +269,15 @@ const dataRules = {
 // 获取字典类型列表
 const getTypeList = () => {
   typeLoading.value = true
-  request.get('/system/dict/type/list', { params: typeQueryParams }).then(res => {
-    typeList.value = res.data?.records || []
-    typePagination.total = res.data?.total || 0
+  const params = {
+    ...typeQueryParams,
+    pageNum: typePagination.current,
+    pageSize: typePagination.size
+  }
+  request.get('/system/dict/type/list', { params }).then(res => {
+    const pageData = res.data || {}
+    typeList.value = pageData.records || []
+    typePagination.total = pageData.total || 0
     typeLoading.value = false
   }).catch(() => {
     typeLoading.value = false
@@ -470,18 +484,55 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dict-container {
+  padding: 16px;
+
+  .search-card {
+    margin-bottom: 16px;
+    border-radius: 8px;
+
+    .el-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+
   .table-card {
-    margin-top: 20px;
+    border-radius: 8px;
 
     .header-actions {
       display: flex;
-      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      .card-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #303133;
+      }
+
+      .card-buttons {
+        display: flex;
+        gap: 12px;
+      }
     }
 
     .pagination {
-      margin-top: 20px;
       display: flex;
       justify-content: flex-end;
+      align-items: center;
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e3e4e6;
+
+      .pagination-info {
+        font-size: 13px;
+        color: #606266;
+        white-space: nowrap;
+      }
     }
   }
 

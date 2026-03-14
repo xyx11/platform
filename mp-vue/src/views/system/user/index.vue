@@ -35,12 +35,12 @@
         <el-card shadow="never" class="search-card">
           <el-form :model="queryParams" inline label-width="70px">
             <el-form-item label="用户名">
-              <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable style="width: 160px">
+              <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable style="width: 160px" @keyup.enter="handleQuery">
                 <template #prefix><el-icon><User /></el-icon></template>
               </el-input>
             </el-form-item>
             <el-form-item label="手机号">
-              <el-input v-model="queryParams.phone" placeholder="请输入手机号" clearable style="width: 150px">
+              <el-input v-model="queryParams.phone" placeholder="请输入手机号" clearable style="width: 150px" @keyup.enter="handleQuery">
                 <template #prefix><el-icon><Cellphone /></el-icon></template>
               </el-input>
             </el-form-item>
@@ -94,8 +94,8 @@
                     <el-dropdown-menu>
                       <el-dropdown-item divided>表格设置</el-dropdown-item>
                       <el-dropdown-item v-for="col in columns" :key="col.prop" :disabled="col.disabled">
-                        <el-checkbox 
-                          v-model="col.visible" 
+                        <el-checkbox
+                          v-model="col.visible"
                           @change="toggleColumn(col.prop)"
                           :disabled="col.disabled"
                         >
@@ -106,7 +106,7 @@
                   </template>
                 </el-dropdown>
               </div>
-              
+
               <!-- 统计信息 -->
               <div class="header-stats">
                 <div class="stat-item">
@@ -143,15 +143,15 @@
             class="user-table"
           >
             <el-table-column type="selection" width="45" align="center" />
-            <el-table-column 
-              v-if="columns.find(c => c.prop === 'userId')?.visible" 
-              prop="userId" 
-              label="用户 ID" 
+            <el-table-column
+              v-if="columns.find(c => c.prop === 'userId')?.visible"
+              prop="userId"
+              label="用户 ID"
               width="100"
             />
-            <el-table-column 
-              v-if="columns.find(c => c.prop === 'userInfo')?.visible" 
-              label="用户信息" 
+            <el-table-column
+              v-if="columns.find(c => c.prop === 'userInfo')?.visible"
+              label="用户信息"
               min-width="200"
             >
               <template #default="{ row }">
@@ -166,17 +166,17 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column 
-              v-if="columns.find(c => c.prop === 'deptName')?.visible" 
-              prop="deptName" 
-              label="部门" 
-              width="140" 
-              show-overflow-tooltip 
+            <el-table-column
+              v-if="columns.find(c => c.prop === 'deptName')?.visible"
+              prop="deptName"
+              label="部门"
+              width="140"
+              show-overflow-tooltip
             />
-            <el-table-column 
-              v-if="columns.find(c => c.prop === 'phone')?.visible" 
-              prop="phone" 
-              label="手机号" 
+            <el-table-column
+              v-if="columns.find(c => c.prop === 'phone')?.visible"
+              prop="phone"
+              label="手机号"
               width="130"
             >
               <template #default="{ row }">
@@ -185,18 +185,18 @@
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column 
-              v-if="columns.find(c => c.prop === 'email')?.visible" 
-              prop="email" 
-              label="邮箱" 
-              width="180" 
-              show-overflow-tooltip 
+            <el-table-column
+              v-if="columns.find(c => c.prop === 'email')?.visible"
+              prop="email"
+              label="邮箱"
+              width="180"
+              show-overflow-tooltip
             />
-            <el-table-column 
-              v-if="columns.find(c => c.prop === 'status')?.visible" 
-              prop="status" 
-              label="状态" 
-              width="100" 
+            <el-table-column
+              v-if="columns.find(c => c.prop === 'status')?.visible"
+              prop="status"
+              label="状态"
+              width="100"
               align="center"
             >
               <template #default="{ row }">
@@ -210,11 +210,11 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column 
-              v-if="columns.find(c => c.prop === 'createTime')?.visible" 
-              prop="createTime" 
-              label="创建时间" 
-              width="170" 
+            <el-table-column
+              v-if="columns.find(c => c.prop === 'createTime')?.visible"
+              prop="createTime"
+              label="创建时间"
+              width="170"
             />
             <el-table-column label="操作" width="280" fixed="right" align="center">
               <template #default="{ row }">
@@ -226,17 +226,19 @@
             </el-table-column>
           </el-table>
 
-          <div class="pagination">
+          <div class="pagination-wrapper">
             <el-pagination
-              v-show="pagination.total > 0"
-              v-model:current-page="pagination.current"
-              v-model:page-size="pagination.size"
+              :current-page="pagination.current"
+              :page-size="pagination.size"
               :total="pagination.total"
               :page-sizes="[10, 20, 50, 100]"
               layout="total, sizes, prev, pager, next, jumper"
               @size-change="getUserList"
               @current-change="getUserList"
             />
+            <div class="pagination-info">
+              共 {{ pagination.total }} 条，每页 {{ pagination.size }} 条，当前第 {{ pagination.current }} 页
+            </div>
           </div>
         </el-card>
       </el-col>
@@ -255,11 +257,13 @@
           <el-col :span="12">
             <el-form-item label="用户名" prop="username">
               <el-input v-model="form.username" placeholder="请输入用户名" :disabled="!!form.userId" />
+              <div class="form-tip">用户名必须以字母开头，只能包含字母、数字和下划线</div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="密码" prop="password" v-if="!form.userId">
               <el-input v-model="form.password" type="password" placeholder="请输入密码" show-password />
+              <div class="form-tip">密码长度至少 6 位</div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -303,23 +307,27 @@
         <el-row :gutter="16">
           <el-col :span="12">
             <el-form-item label="手机号" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入手机号" maxlength="11" />
+              <el-input v-model="form.phone" placeholder="请输入手机号" maxlength="11">
+                <template #prefix><el-icon><Cellphone /></el-icon></template>
+              </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" />
+              <el-input v-model="form.email" placeholder="请输入邮箱">
+                <template #prefix><el-icon><Message /></el-icon></template>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="角色" prop="roleIds">
-              <el-checkbox-group v-model="form.roleIds">
-                <el-checkbox v-for="role in roleList" :key="role.roleId" :label="String(role.roleId)">
+              <div class="role-checkbox-group">
+                <el-checkbox v-for="role in roleList" :key="role.roleId" :label="String(role.roleId)" border>
                   {{ role.roleName }}
                 </el-checkbox>
-              </el-checkbox-group>
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -413,7 +421,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   UploadFilled, OfficeBuilding, User, Cellphone, Search, Refresh, Plus, Delete,
-  Key, Download, Upload, Document, ArrowDown, Setting, CircleCheck, CircleClose
+  Key, Download, Upload, Document, ArrowDown, Setting, CircleCheck, CircleClose, Message
 } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
@@ -501,7 +509,8 @@ const columns = reactive([
 
 const rules = {
   username: [
-    { required: true, message: '请输入用户名', trigger: 'blur', min: 2, max: 20 }
+    { required: true, message: '请输入用户名', trigger: 'blur', min: 2, max: 20 },
+    { pattern: /^[a-zA-Z][a-zA-Z0-9_]{1,19}$/, message: '用户名必须以字母开头，只能包含字母、数字和下划线', trigger: 'blur' }
   ],
   password: [{ required: true, message: '请输入密码', trigger: 'blur', min: 6, max: 20 }],
   nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
@@ -556,11 +565,18 @@ const handleNodeClick = (data) => {
 // 获取用户列表
 const getUserList = () => {
   loading.value = true
-  request.get('/system/user/list', { params: queryParams }).then(res => {
-    userList.value = res.data?.records || []
-    pagination.total = res.data?.total || 0
+  const params = {
+    ...queryParams,
+    pageNum: pagination.current,
+    pageSize: pagination.size
+  }
+  request.get('/system/user/list', { params }).then(res => {
+    const pageData = res.data || {}
+    userList.value = pageData.records || []
+    pagination.total = Number(pageData.total) || 0
   }).catch(err => {
-    // 获取用户列表失败
+    console.error('获取用户列表失败:', err)
+    ElMessage.error('获取用户列表失败')
   }).finally(() => {
     loading.value = false
   })
@@ -905,10 +921,24 @@ const resetForm = () => {
   })
 }
 
+// 键盘快捷键
+const handleKeyPress = (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+    e.preventDefault()
+    handleAdd()
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+    e.preventDefault()
+    getUserList()
+    ElMessage.success('刷新成功')
+  }
+}
+
 onMounted(() => {
   getUserList()
   getDeptTree()
   getRoleList()
+  document.addEventListener('keydown', handleKeyPress)
 })
 </script>
 
@@ -1090,10 +1120,20 @@ $bg-color-page: #f5f6f7;
       }
     }
 
-    .pagination {
+    .pagination-wrapper {
       margin-top: 20px;
       display: flex;
       justify-content: flex-end;
+      align-items: center;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid $border-color;
+
+      .pagination-info {
+        font-size: 13px;
+        color: $text-regular;
+        white-space: nowrap;
+      }
     }
   }
 
@@ -1131,6 +1171,26 @@ $bg-color-page: #f5f6f7;
   :deep(.el-checkbox) {
     margin-right: 16px;
     margin-bottom: 12px;
+  }
+
+  // 角色复选框组样式
+  .role-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  // 表格单元格内边距
+  :deep(.el-table__cell) {
+    padding: 12px 0;
+  }
+
+  // 表单提示文字
+  .form-tip {
+    font-size: 12px;
+    color: #909399;
+    margin-top: 4px;
+    line-height: 1.5;
   }
 }
 </style>

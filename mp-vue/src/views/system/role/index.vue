@@ -1,6 +1,6 @@
 <template>
   <div class="role-container">
-    <el-card shadow="never">
+    <el-card shadow="never" class="search-card">
       <el-form :model="queryParams" inline>
         <el-form-item label="角色名称">
           <el-input v-model="queryParams.roleName" placeholder="请输入角色名称" clearable @keyup.enter="handleQuery" style="width: 200px" />
@@ -15,8 +15,12 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleQuery">查询</el-button>
-          <el-button @click="resetQuery">重置</el-button>
+          <el-button type="primary" @click="handleQuery">
+            <el-icon><Search /></el-icon> 查询
+          </el-button>
+          <el-button @click="resetQuery">
+            <el-icon><Refresh /></el-icon> 重置
+          </el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -33,7 +37,7 @@
         </div>
       </template>
 
-      <el-table :data="roleList" border v-loading="loading" @selection-change="handleSelectionChange" :cell-style="{ padding: '8px 0' }">
+      <el-table :data="roleList" border v-loading="loading" @selection-change="handleSelectionChange" :cell-style="{ padding: '8px 0' }" :header-cell-style="{ background: '#f5f7fa', color: '#606266' }">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="roleId" label="角色 ID" width="100" />
         <el-table-column prop="roleName" label="角色名称" min-width="150" show-overflow-tooltip />
@@ -68,14 +72,17 @@
 
       <div class="pagination">
         <el-pagination
-          v-model:current-page="pagination.current"
-          v-model:page-size="pagination.size"
+          :current-page="pagination.current"
+          :page-size="pagination.size"
           :total="pagination.total"
           :page-sizes="[10, 20, 50, 100]"
           layout="total, sizes, prev, pager, next, jumper"
-          @size-change="getRoleList"
-          @current-change="getRoleList"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
         />
+        <div class="pagination-info">
+          共 {{ pagination.total }} 条，每页 {{ pagination.size }} 条，当前第 {{ pagination.current }} 页
+        </div>
       </div>
     </el-card>
 
@@ -154,7 +161,7 @@
 <script setup name="SysRole">
 import { ref, reactive, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search } from '@element-plus/icons-vue'
+import { Search, Refresh } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
 const roleList = ref([])
@@ -223,9 +230,15 @@ watch(menuFilterText, (val) => {
 // 获取角色列表
 const getRoleList = () => {
   loading.value = true
-  request.get('/system/role/list', { params: queryParams }).then(res => {
-    roleList.value = res.data?.records || []
-    pagination.total = res.data?.total || 0
+  const params = {
+    ...queryParams,
+    pageNum: pagination.current,
+    pageSize: pagination.size
+  }
+  request.get('/system/role/list', { params }).then(res => {
+    const pageData = res.data || {}
+    roleList.value = pageData.records || []
+    pagination.total = Number(pageData.total) || 0
   }).catch(() => {
     ElMessage.error('获取角色列表失败')
   }).finally(() => {
@@ -245,6 +258,19 @@ const resetQuery = () => {
   queryParams.roleCode = ''
   queryParams.status = null
   handleQuery()
+}
+
+// 分页大小改变
+const handleSizeChange = (size) => {
+  pagination.size = size
+  pagination.current = 1
+  getRoleList()
+}
+
+// 当前页改变
+const handleCurrentChange = (page) => {
+  pagination.current = page
+  getRoleList()
 }
 
 // 获取菜单列表
@@ -471,19 +497,57 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .role-container {
+  padding: 16px;
+
+  .search-card {
+    margin-bottom: 16px;
+    border-radius: 8px;
+
+    .el-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+
   .table-card {
-    margin-top: 20px;
+    border-radius: 8px;
 
     .header-actions {
       display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      .card-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #303133;
+      }
+
+      .card-buttons {
+        display: flex;
+        gap: 12px;
+      }
     }
 
     .pagination {
-      margin-top: 20px;
+      position: relative;
+      z-index: 10;
       display: flex;
       justify-content: flex-end;
+      align-items: center;
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e3e4e6;
+
+      .pagination-info {
+        font-size: 13px;
+        color: #606266;
+        white-space: nowrap;
+      }
     }
   }
 }
