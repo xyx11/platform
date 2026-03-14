@@ -448,7 +448,7 @@ const handleDetail = async (row) => {
     variableList.value = data.variables ? Object.entries(data.variables).map(([key, value]) => ({ key, value })) : []
     detailVisible.value = true
   } catch (error) {
-    console.error('获取任务详情失败:', error)
+    // 获取任务详情失败
     ElMessage.error('获取任务详情失败')
   }
 }

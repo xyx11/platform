@@ -151,7 +151,7 @@ const getCaptcha = () => {
     loginForm.captchaKey = res.data.captchaKey
     captchaImg.value = res.data.captchaImg
   }).catch(err => {
-    console.error('获取验证码失败:', err)
+    // 获取验证码失败
     captchaImg.value = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmNWY3ZmEiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzkwOTM5OSIgZm9udC1zaXplPSIxMyI+点击刷新</text></svg>'
   })
 }
@@ -184,7 +184,7 @@ const handleLogin = async () => {
           router.replace({ path: '/dashboard' })
         }, 300)
       } catch (error) {
-        console.error('登录失败:', error)
+        // 登录失败
         // 静默刷新验证码，不显示错误提示
         request.get('/auth/captcha').then(res => {
           loginForm.captchaKey = res.data.captchaKey
