@@ -3,7 +3,6 @@ package com.micro.platform.system.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.service.IServiceX;
 import com.micro.platform.system.entity.SysRole;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +46,7 @@ public interface SysRoleService extends IServiceX<SysRole> {
     /**
      * 导出角色数据
      */
-    void exportRole(HttpServletResponse response, SysRole role);
+    byte[] exportRole(SysRole role);
 
     /**
      * 查询角色列表（支持条件查询）

@@ -6,11 +6,10 @@ import com.micro.platform.common.core.service.impl.ServiceImplX;
 import com.micro.platform.system.entity.SysMenu;
 import com.micro.platform.system.mapper.SysMenuMapper;
 import com.micro.platform.system.service.SysMenuService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.net.URLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,18 +62,15 @@ public class SysMenuServiceImpl extends ServiceImplX<SysMenuMapper, SysMenu> imp
     }
 
     @Override
-    public void exportMenu(HttpServletResponse response, SysMenu menu) {
+    public byte[] exportMenu(SysMenu menu) {
         try {
             List<SysMenu> list = selectMenuList(menu);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("菜单数据", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysMenu.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysMenu.class)
                     .sheet("菜单数据")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出菜单数据失败：" + e.getMessage());
         }

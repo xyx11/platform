@@ -10,12 +10,11 @@ import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.mapper.SysRoleMapper;
 import com.micro.platform.system.mapper.SysUserMapper;
 import com.micro.platform.system.service.SysRoleService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.net.URLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,18 +105,15 @@ public class SysRoleServiceImpl extends ServiceImplX<SysRoleMapper, SysRole> imp
     }
 
     @Override
-    public void exportRole(HttpServletResponse response, SysRole role) {
+    public byte[] exportRole(SysRole role) {
         try {
             List<SysRole> list = selectRoleList(role);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("角色数据", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysRole.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysRole.class)
                     .sheet("角色数据")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出角色数据失败：" + e.getMessage());
         }
@@ -148,19 +144,19 @@ public class SysRoleServiceImpl extends ServiceImplX<SysRoleMapper, SysRole> imp
             stats.put("roleStats", roleStats);
         } else {
             // 统计指定角色
-            SysRole role = getById(roleId);
-            if (role == null) {
+            SysRole r = getById(roleId);
+            if (r == null) {
                 throw new BusinessException("角色不存在");
             }
 
             stats.put("roleId", roleId);
-            stats.put("roleName", role.getRoleName());
-            stats.put("roleCode", role.getRoleCode());
-            stats.put("description", role.getDescription());
-            stats.put("dataScope", role.getDataScope());
+            stats.put("roleName", r.getRoleName());
+            stats.put("roleCode", r.getRoleCode());
+            stats.put("description", r.getDescription());
+            stats.put("dataScope", r.getDataScope());
             stats.put("userCount", getRoleUserCount(roleId));
-            stats.put("status", role.getStatus());
-            stats.put("sort", role.getSort());
+            stats.put("status", r.getStatus());
+            stats.put("sort", r.getSort());
         }
 
         return stats;

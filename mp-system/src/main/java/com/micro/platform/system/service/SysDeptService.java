@@ -2,7 +2,6 @@ package com.micro.platform.system.service;
 
 import com.micro.platform.common.core.service.IServiceX;
 import com.micro.platform.system.entity.SysDept;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,7 @@ public interface SysDeptService extends IServiceX<SysDept> {
     /**
      * 导出部门数据
      */
-    void exportDept(HttpServletResponse response, SysDept dept);
+    byte[] exportDept(SysDept dept);
 
     /**
      * 查询部门列表（支持条件查询）
@@ -55,7 +54,7 @@ public interface SysDeptService extends IServiceX<SysDept> {
     /**
      * 批量导出部门数据
      */
-    void exportDeptBatch(HttpServletResponse response, List<Long> deptIds);
+    byte[] exportDeptBatch(List<Long> deptIds);
 
     /**
      * 批量删除部门
@@ -75,5 +74,5 @@ public interface SysDeptService extends IServiceX<SysDept> {
     /**
      * 导出部门数据（包含树形结构）
      */
-    void exportDeptWithTree(HttpServletResponse response, SysDept dept);
+    byte[] exportDeptWithTree(SysDept dept);
 }

@@ -9,13 +9,12 @@ import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.mapper.SysDeptMapper;
 import com.micro.platform.system.mapper.SysUserMapper;
 import com.micro.platform.system.service.SysDeptService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.net.URLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,18 +73,15 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
     }
 
     @Override
-    public void exportDept(HttpServletResponse response, SysDept dept) {
+    public byte[] exportDept(SysDept dept) {
         try {
             List<SysDept> list = selectDeptList(dept);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("部门数据", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysDept.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysDept.class)
                     .sheet("部门数据")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出部门数据失败：" + e.getMessage());
         }
@@ -180,21 +176,18 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
     }
 
     @Override
-    public void exportDeptBatch(HttpServletResponse response, List<Long> deptIds) {
+    public byte[] exportDeptBatch(List<Long> deptIds) {
         try {
             if (deptIds == null || deptIds.isEmpty()) {
-                return;
+                return new byte[0];
             }
             List<SysDept> list = listByIds(deptIds);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("部门数据", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysDept.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysDept.class)
                     .sheet("部门数据")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("批量导出部门数据失败：" + e.getMessage());
         }
@@ -290,14 +283,11 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
      * 导出部门数据（包含树形结构）
      */
     @Override
-    public void exportDeptWithTree(HttpServletResponse response, SysDept dept) {
+    public byte[] exportDeptWithTree(SysDept dept) {
         try {
             List<SysDept> list = selectDeptTree(dept);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("部门数据_" + System.currentTimeMillis(), "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
 
             // 添加层级列
             List<Map<String, Object>> dataList = new ArrayList<>();
@@ -305,10 +295,11 @@ public class SysDeptServiceImpl extends ServiceImplX<SysDeptMapper, SysDept> imp
                 convertDeptToMap(d, 0, dataList);
             }
 
-            EasyExcel.write(response.getOutputStream())
+            EasyExcel.write(os)
                 .head(createDeptExcelHead())
                 .sheet("部门数据")
                 .doWrite(dataList);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出部门数据失败：" + e.getMessage());
         }

@@ -8,10 +8,11 @@ import com.micro.platform.system.entity.SysMenu;
 import com.micro.platform.system.service.SysMenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,8 +89,13 @@ public class SysMenuController {
     @Operation(summary = "导出菜单数据")
     @PreAuthorize("hasAuthority('system:menu:query')")
     @GetMapping("/export")
-    public void export(HttpServletResponse response, SysMenu menu) {
-        sysMenuService.exportMenu(response, menu);
+    public ResponseEntity<byte[]> export(SysMenu menu) throws Exception {
+        byte[] data = sysMenuService.exportMenu(menu);
+        String fileName = URLEncoder.encode("菜单数据", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 
     @Operation(summary = "获取菜单统计信息")

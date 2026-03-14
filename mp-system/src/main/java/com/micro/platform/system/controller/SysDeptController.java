@@ -9,12 +9,13 @@ import com.micro.platform.system.entity.SysDept;
 import com.micro.platform.system.service.SysDeptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -100,16 +101,26 @@ public class SysDeptController {
     @OperationLog(module = "部门管理", type = OperationType.EXPORT, description = "导出部门数据")
     @PreAuthorize("hasAuthority('system:dept:query')")
     @GetMapping("/export")
-    public void export(HttpServletResponse response, SysDept dept) {
-        sysDeptService.exportDept(response, dept);
+    public ResponseEntity<byte[]> export(SysDept dept) throws Exception {
+        byte[] data = sysDeptService.exportDept(dept);
+        String fileName = URLEncoder.encode("部门数据", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 
     @Operation(summary = "批量导出部门数据")
     @OperationLog(module = "部门管理", type = OperationType.EXPORT, description = "批量导出部门数据")
     @PreAuthorize("hasAuthority('system:dept:query')")
     @PostMapping("/export/batch")
-    public void exportBatch(HttpServletResponse response, @RequestBody List<Long> deptIds) {
-        sysDeptService.exportDeptBatch(response, deptIds);
+    public ResponseEntity<byte[]> exportBatch(@RequestBody List<Long> deptIds) throws Exception {
+        byte[] data = sysDeptService.exportDeptBatch(deptIds);
+        String fileName = URLEncoder.encode("部门数据_批量", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 
     @Operation(summary = "批量删除部门")
