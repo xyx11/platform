@@ -520,10 +520,18 @@ const handleAdd = () => {
 const handleUpdate = (row) => {
   dialog.title = '修改用户'
   dialog.visible = true
-
-  Object.assign(form, row, { roleIds: row.roleIds || [] })
+  // 显式赋值表单字段，避免 Object.assign 精度问题
+  form.userId = row.userId
+  form.username = row.username
+  form.nickname = row.nickname
+  form.deptId = row.deptId
+  form.gender = row.gender
+  form.phone = row.phone
+  form.email = row.email
+  form.status = row.status
+  form.roleIds = row.roleIds || []
+  form.avatar = row.avatar
 }
-
 // 删除
 const handleDelete = (row) => {
   ElMessageBox.confirm(`确认删除用户 "${row.username}" 吗？删除后无法恢复！`, '警告', {
