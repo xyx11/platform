@@ -9,8 +9,9 @@ import com.micro.platform.system.entity.SysConfig;
 import com.micro.platform.system.service.SysConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
+import java.net.URLEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -117,7 +118,12 @@ public class SysConfigController {
     @OperationLog(module = "参数配置", type = OperationType.EXPORT, description = "导出参数配置数据")
     @PreAuthorize("hasAuthority('system:config:query')")
     @GetMapping("/export")
-    public void export(HttpServletResponse response, SysConfig config) {
-        sysConfigService.exportConfig(response, config);
+    public ResponseEntity<byte[]> export(SysConfig config) throws Exception {
+        byte[] data = sysConfigService.exportConfig(config);
+        String fileName = URLEncoder.encode("参数配置", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 }

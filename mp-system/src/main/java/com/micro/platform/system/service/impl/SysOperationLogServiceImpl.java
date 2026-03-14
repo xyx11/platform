@@ -7,11 +7,10 @@ import com.micro.platform.common.core.service.impl.ServiceImplX;
 import com.micro.platform.system.entity.SysOperationLog;
 import com.micro.platform.system.mapper.SysOperationLogMapper;
 import com.micro.platform.system.service.SysOperationLogService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.net.URLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -43,18 +42,15 @@ public class SysOperationLogServiceImpl extends ServiceImplX<SysOperationLogMapp
     }
 
     @Override
-    public void exportOperationLog(HttpServletResponse response, SysOperationLog log) {
+    public byte[] exportOperationLog(SysOperationLog log) {
         try {
             List<SysOperationLog> list = selectOperationLogList(log);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("操作日志", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysOperationLog.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysOperationLog.class)
                     .sheet("操作日志")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出操作日志失败：" + e.getMessage());
         }

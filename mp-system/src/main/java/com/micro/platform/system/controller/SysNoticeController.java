@@ -10,10 +10,11 @@ import com.micro.platform.system.entity.SysNotice;
 import com.micro.platform.system.service.SysNoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -105,8 +106,13 @@ public class SysNoticeController {
     @OperationLog(module = "通知公告", type = OperationType.EXPORT, description = "导出通知公告")
     @PreAuthorize("hasAuthority('system:notice:query')")
     @GetMapping("/export")
-    public void export(HttpServletResponse response, SysNotice notice) {
-        sysNoticeService.exportNotice(response, notice);
+    public ResponseEntity<byte[]> export(SysNotice notice) throws Exception {
+        byte[] data = sysNoticeService.exportNotice(notice);
+        String fileName = URLEncoder.encode("通知公告", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 
     @Operation(summary = "修改公告状态")

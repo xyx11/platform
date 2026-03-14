@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.service.IServiceX;
 import com.micro.platform.system.entity.SysNotice;
 import com.micro.platform.system.entity.SysNoticeUser;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,7 @@ public interface SysNoticeService extends IServiceX<SysNotice> {
     /**
      * 导出公告数据
      */
-    void exportNotice(HttpServletResponse response, SysNotice notice);
+    byte[] exportNotice(SysNotice notice);
 
     /**
      * 标记公告为已读

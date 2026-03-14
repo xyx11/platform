@@ -11,10 +11,11 @@ import com.micro.platform.system.service.SysDictDataService;
 import com.micro.platform.system.service.SysDictTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -105,8 +106,13 @@ public class SysDictController {
     @OperationLog(module = "字典管理", type = OperationType.EXPORT, description = "导出字典数据")
     @PreAuthorize("hasAuthority('system:dict:query')")
     @GetMapping("/type/export")
-    public void exportDictType(HttpServletResponse response, SysDictType dictType) {
-        dictTypeService.exportDictType(response, dictType);
+    public ResponseEntity<byte[]> exportDictType(SysDictType dictType) throws Exception {
+        byte[] data = dictTypeService.exportDictType(dictType);
+        String fileName = URLEncoder.encode("字典类型数据", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 
     @Operation(summary = "获取字典数据列表")

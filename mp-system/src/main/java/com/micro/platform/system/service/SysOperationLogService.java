@@ -3,7 +3,6 @@ package com.micro.platform.system.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.service.IServiceX;
 import com.micro.platform.system.entity.SysOperationLog;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Map;
 
@@ -25,7 +24,7 @@ public interface SysOperationLogService extends IServiceX<SysOperationLog> {
     /**
      * 导出操作日志
      */
-    void exportOperationLog(HttpServletResponse response, SysOperationLog log);
+    byte[] exportOperationLog(SysOperationLog log);
 
     /**
      * 获取操作日志统计信息

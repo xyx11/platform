@@ -10,7 +10,6 @@ import com.micro.platform.common.security.util.SecurityUtil;
 import com.micro.platform.system.entity.SysFile;
 import com.micro.platform.system.mapper.SysFileMapper;
 import com.micro.platform.system.service.SysFileService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -140,7 +139,7 @@ public class SysFileServiceImpl extends ServiceImplX<SysFileMapper, SysFile> imp
     }
 
     @Override
-    public void exportFile(HttpServletResponse response, SysFile file) {
+    public byte[] exportFile(SysFile file) {
         try {
             LambdaQueryWrapper<SysFile> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(StringUtils.hasText(file.getOriginalName()), SysFile::getOriginalName, file.getOriginalName())
@@ -149,14 +148,11 @@ public class SysFileServiceImpl extends ServiceImplX<SysFileMapper, SysFile> imp
                     .orderByDesc(SysFile::getCreateTime);
             List<SysFile> list = baseMapper.selectList(wrapper);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("文件管理", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysFile.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysFile.class)
                     .sheet("文件管理")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出文件数据失败：" + e.getMessage());
         }

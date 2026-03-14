@@ -12,12 +12,11 @@ import com.micro.platform.system.mapper.SysNoticeMapper;
 import com.micro.platform.system.mapper.SysNoticeUserMapper;
 import com.micro.platform.system.mapper.SysUserMapper;
 import com.micro.platform.system.service.SysNoticeService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.net.URLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -74,7 +73,7 @@ public class SysNoticeServiceImpl extends ServiceImplX<SysNoticeMapper, SysNotic
     }
 
     @Override
-    public void exportNotice(HttpServletResponse response, SysNotice notice) {
+    public byte[] exportNotice(SysNotice notice) {
         try {
             LambdaQueryWrapper<SysNotice> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(StringUtils.hasText(notice.getNoticeTitle()), SysNotice::getNoticeTitle, notice.getNoticeTitle())
@@ -83,14 +82,11 @@ public class SysNoticeServiceImpl extends ServiceImplX<SysNoticeMapper, SysNotic
                     .orderByDesc(SysNotice::getCreateTime);
             List<SysNotice> list = baseMapper.selectList(wrapper);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("通知公告", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysNotice.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysNotice.class)
                     .sheet("通知公告")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出通知公告失败：" + e.getMessage());
         }

@@ -9,11 +9,10 @@ import com.micro.platform.common.redis.util.RedisUtil;
 import com.micro.platform.system.entity.SysConfig;
 import com.micro.platform.system.mapper.SysConfigMapper;
 import com.micro.platform.system.service.SysConfigService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.net.URLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -155,7 +154,7 @@ public class SysConfigServiceImpl extends ServiceImplX<SysConfigMapper, SysConfi
     }
 
     @Override
-    public void exportConfig(HttpServletResponse response, SysConfig config) {
+    public byte[] exportConfig(SysConfig config) {
         try {
             LambdaQueryWrapper<SysConfig> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(StringUtils.hasText(config.getConfigName()), SysConfig::getConfigName, config.getConfigName())
@@ -164,14 +163,11 @@ public class SysConfigServiceImpl extends ServiceImplX<SysConfigMapper, SysConfi
                     .orderByDesc(SysConfig::getCreateTime);
             List<SysConfig> list = baseMapper.selectList(wrapper);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("参数配置", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysConfig.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysConfig.class)
                     .sheet("参数配置")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出参数配置失败：" + e.getMessage());
         }

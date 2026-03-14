@@ -9,10 +9,11 @@ import com.micro.platform.system.entity.SysPost;
 import com.micro.platform.system.service.SysPostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -95,8 +96,13 @@ public class SysPostController {
     @OperationLog(module = "岗位管理", type = OperationType.EXPORT, description = "导出岗位数据")
     @PreAuthorize("hasAuthority('system:post:query')")
     @GetMapping("/export")
-    public void export(HttpServletResponse response, SysPost post) {
-        sysPostService.exportPost(response, post);
+    public ResponseEntity<byte[]> export(SysPost post) throws Exception {
+        byte[] data = sysPostService.exportPost(post);
+        String fileName = URLEncoder.encode("岗位数据", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 
     @Operation(summary = "获取岗位统计信息")

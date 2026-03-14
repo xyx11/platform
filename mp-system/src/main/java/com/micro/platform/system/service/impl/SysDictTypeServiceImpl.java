@@ -11,12 +11,11 @@ import com.micro.platform.system.mapper.SysDictDataMapper;
 import com.micro.platform.system.mapper.SysDictTypeMapper;
 import com.micro.platform.system.service.SysDictDataService;
 import com.micro.platform.system.service.SysDictTypeService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.net.URLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -58,18 +57,15 @@ public class SysDictTypeServiceImpl extends ServiceImplX<SysDictTypeMapper, SysD
     }
 
     @Override
-    public void exportDictType(HttpServletResponse response, SysDictType dictType) {
+    public byte[] exportDictType(SysDictType dictType) {
         try {
             List<SysDictType> list = selectDictTypeList(dictType);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("字典类型数据", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysDictType.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysDictType.class)
                     .sheet("字典类型")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出字典类型数据失败：" + e.getMessage());
         }

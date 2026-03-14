@@ -8,8 +8,9 @@ import com.micro.platform.system.entity.SysLoginLog;
 import com.micro.platform.system.service.SysLoginLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
+import java.net.URLEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,8 +70,13 @@ public class SysLoginLogController {
     @OperationLog(module = "登录日志", type = OperationType.EXPORT, description = "导出登录日志")
     @PreAuthorize("hasAuthority('system:loginlog:query')")
     @GetMapping("/export")
-    public void export(HttpServletResponse response, SysLoginLog log) {
-        sysLoginLogService.exportLoginLog(response, log);
+    public ResponseEntity<byte[]> export(SysLoginLog log) throws Exception {
+        byte[] data = sysLoginLogService.exportLoginLog(log);
+        String fileName = URLEncoder.encode("登录日志", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 
     @Operation(summary = "获取登录日志统计信息")

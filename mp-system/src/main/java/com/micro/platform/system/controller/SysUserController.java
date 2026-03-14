@@ -9,7 +9,6 @@ import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -10,12 +10,11 @@ import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.mapper.SysPostMapper;
 import com.micro.platform.system.mapper.SysUserMapper;
 import com.micro.platform.system.service.SysPostService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.net.URLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.util.*;
 
 /**
@@ -56,18 +55,15 @@ public class SysPostServiceImpl extends ServiceImpl<SysPostMapper, SysPost> impl
     }
 
     @Override
-    public void exportPost(HttpServletResponse response, SysPost post) {
+    public byte[] exportPost(SysPost post) {
         try {
             List<SysPost> list = selectNormalPosts();
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("岗位数据", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysPost.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysPost.class)
                     .sheet("岗位数据")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出岗位数据失败：" + e.getMessage());
         }

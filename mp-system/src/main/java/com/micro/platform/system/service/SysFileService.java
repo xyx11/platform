@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.result.Result;
 import com.micro.platform.common.core.service.IServiceX;
 import com.micro.platform.system.entity.SysFile;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -30,5 +29,5 @@ public interface SysFileService extends IServiceX<SysFile> {
     /**
      * 导出文件数据
      */
-    void exportFile(HttpServletResponse response, SysFile file);
+    byte[] exportFile(SysFile file);
 }

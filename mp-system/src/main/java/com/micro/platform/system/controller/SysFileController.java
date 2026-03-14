@@ -8,8 +8,9 @@ import com.micro.platform.system.entity.SysFile;
 import com.micro.platform.system.service.SysFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
+import java.net.URLEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -100,7 +101,12 @@ public class SysFileController {
     @OperationLog(module = "文件管理", type = OperationType.EXPORT, description = "导出文件数据")
     @PreAuthorize("hasAuthority('system:file:query')")
     @GetMapping("/export")
-    public void export(HttpServletResponse response, SysFile file) {
-        sysFileService.exportFile(response, file);
+    public ResponseEntity<byte[]> export(SysFile file) throws Exception {
+        byte[] data = sysFileService.exportFile(file);
+        String fileName = URLEncoder.encode("文件数据", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 }

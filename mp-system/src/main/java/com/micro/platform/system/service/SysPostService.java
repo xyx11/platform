@@ -3,7 +3,6 @@ package com.micro.platform.system.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.micro.platform.system.entity.SysPost;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,7 @@ public interface SysPostService extends IService<SysPost> {
     /**
      * 导出岗位数据
      */
-    void exportPost(HttpServletResponse response, SysPost post);
+    byte[] exportPost(SysPost post);
 
     /**
      * 获取岗位统计信息
