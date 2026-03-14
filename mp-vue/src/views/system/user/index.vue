@@ -235,7 +235,7 @@
           <el-col :span="24">
             <el-form-item label="角色" prop="roleIds">
               <el-checkbox-group v-model="form.roleIds">
-                <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">
+                <el-checkbox v-for="role in roleList" :key="role.roleId" :label="String(role.roleId)">
                   {{ role.roleName }}
                 </el-checkbox>
               </el-checkbox-group>
@@ -277,7 +277,7 @@
         </el-form-item>
         <el-form-item label="选择角色">
           <el-checkbox-group v-model="roleForm.roleIds">
-            <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId" border>
+            <el-checkbox v-for="role in roleList" :key="role.roleId" :label="String(role.roleId)" border>
               {{ role.roleName }}
             </el-checkbox>
           </el-checkbox-group>
@@ -529,7 +529,7 @@ const handleUpdate = (row) => {
   form.phone = row.phone
   form.email = row.email
   form.status = row.status
-  form.roleIds = row.roleIds || []
+  form.roleIds = (row.roleIds || []).map(id => String(id))
   form.avatar = row.avatar
 }
 // 删除
@@ -635,7 +635,7 @@ const handleAssignRole = (row) => {
   roleForm.username = row.username
   roleForm.roleIds = []
   request.get('/system/user/roles/' + row.userId).then(res => {
-    roleForm.roleIds = res.data?.roleIds || []
+    roleForm.roleIds = (res.data?.roleIds || []).map(id => String(id))
   })
 }
 
@@ -755,8 +755,10 @@ const submitForm = () => {
   formRef.value.validate(valid => {
     if (valid) {
     
-      const api = form.userId ? request.put : request.post
-      api('/system/user', form).then(() => {
+      const api = form.userId !== null && form.userId !== undefined && form.userId !== '' ? request.put : request.post
+      // 将 roleIds 字符串数组转回 Long 数组（后端可以处理）
+      const submitData = { ...form, roleIds: form.roleIds }
+      api('/system/user', submitData).then(() => {
         ElMessage.success('操作成功')
         dialog.visible = false
         getUserList()

@@ -232,3 +232,15 @@ Total change sets:            3
 2026-03-14T09:18:14.173+08:00  INFO 44764 --- [mp-auth] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2026-03-14T09:18:14.174+08:00  INFO 44764 --- [mp-auth] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
 2026-03-14T09:18:14.182+08:00  WARN 44764 --- [mp-auth] [nio-8081-exec-1] c.m.p.c.c.e.GlobalExceptionHandler       : 登录状态异常：未提供 token
+2026-03-14T09:27:41.352+08:00 DEBUG 44764 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : ==>  Preparing: SELECT user_id, dept_id, username, password, nickname, avatar, gender, email, phone, status, login_ip, login_date, create_by, create_time, update_by, update_time, deleted FROM sys_user WHERE deleted = 0 AND (username = ? AND deleted = ?)
+2026-03-14T09:27:41.356+08:00 DEBUG 44764 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : ==> Parameters: admin(String), 0(Integer)
+2026-03-14T09:27:41.361+08:00 DEBUG 44764 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.selectList  : <==      Total: 1
+2026-03-14T09:27:41.784+08:00 DEBUG 44764 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysLoginLogMapper.insert  : ==>  Preparing: INSERT INTO sys_login_log (log_id, user_id, username, status, ip, location, browser, os, msg, login_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-14T09:27:41.844+08:00 DEBUG 44764 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysLoginLogMapper.insert  : ==> Parameters: 2032629709264715778(Long), 1(Long), admin(String), 1(Integer), 0:0:0:0:0:0:0:1(String), 山东省威海市(String), Chrome(String), OSX(String), 登录成功(String), 2026-03-14T09:27:41.311177(LocalDateTime)
+2026-03-14T09:27:41.845+08:00 DEBUG 44764 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysLoginLogMapper.insert  : <==    Updates: 1
+2026-03-14T09:27:41.847+08:00 DEBUG 44764 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.updateById  : ==>  Preparing: UPDATE sys_user SET login_ip = ?, login_date = ?, update_time = ? WHERE user_id = ? AND deleted = 0
+2026-03-14T09:27:41.848+08:00 DEBUG 44764 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.updateById  : ==> Parameters: 0:0:0:0:0:0:0:1(String), 2026-03-14T09:27:41.846087(LocalDateTime), null, 1(Long)
+2026-03-14T09:27:41.849+08:00 DEBUG 44764 --- [mp-auth] [nio-8081-exec-4] c.m.p.a.mapper.SysUserMapper.updateById  : <==    Updates: 1
+SaLog -->: 账号 1 登录成功 (loginType=login), 会话凭证Token=93e8c8b6-69f4-4401-a52e-b6328756d285
+2026-03-14T09:27:41.864+08:00  INFO 44764 --- [mp-auth] [nio-8081-exec-4] c.m.platform.auth.service.AuthService    : 用户登录成功：admin
+2026-03-14T09:27:41.864+08:00  INFO 44764 --- [mp-auth] [nio-8081-exec-4] c.m.p.c.log.aspect.OperationLogAspect    : 操作日志：用户登录
