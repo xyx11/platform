@@ -454,7 +454,6 @@ onMounted(() => {
       width: 120px;
     }
   }
-}
 
   .user-card {
     .user-info {

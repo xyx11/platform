@@ -97,7 +97,7 @@
 <script setup name="WorkflowForm">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getFormBindingList, bindForm, unbindForm, getFormDefinitionList } from '@/api/system/workflow-form'
+import { getFormBindingList as getFormBindingListApi, bindForm, unbindForm, getFormDefinitionList as getFormDefinitionListApi } from '@/api/system/workflow-form'
 
 const loading = ref(false)
 const submitting = ref(false)
@@ -125,7 +125,7 @@ const formRules = {
 const getFormBindingList = async () => {
   loading.value = true
   try {
-    const res = await getFormBindingList({ pageNum: 1, pageSize: 100 })
+    const res = await getFormBindingListApi({ pageNum: 1, pageSize: 100 })
     formBindingList.value = res.data?.records || res.data?.list || []
   } catch (error) {
     ElMessage.error('获取表单绑定列表失败：' + error.message)
@@ -137,7 +137,7 @@ const getFormBindingList = async () => {
 // 获取表单定义列表
 const getFormDefinitionList = async () => {
   try {
-    const res = await getFormDefinitionList()
+    const res = await getFormDefinitionListApi()
     formDefinitionList.value = res.data?.records || res.data || []
   } catch (error) {
     // 获取表单定义列表失败

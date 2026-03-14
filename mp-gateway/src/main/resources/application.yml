@@ -39,7 +39,7 @@ spring:
           predicates:
             - Path=/system/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
         - id: mp-job
           uri: lb://mp-job
           predicates:
