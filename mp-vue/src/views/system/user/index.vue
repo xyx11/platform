@@ -465,7 +465,7 @@ const getUserList = () => {
 // 获取角色列表
 const getRoleList = () => {
   request.get('/system/role/list').then(res => {
-    roleList.value = res.data || []
+    roleList.value = res.data?.records || []
   }).catch(err => {
     console.error('获取角色列表失败:', err)
   })
