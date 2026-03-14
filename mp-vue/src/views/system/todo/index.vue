@@ -696,7 +696,7 @@ function initWebSocket() {
 
 // 处理 WebSocket 通知
 function handleNotification(notification) {
-  console.log('收到 WebSocket 通知:', notification)
+  // 收到 WebSocket 通知
   // 刷新列表和统计
   getList()
   getStats()

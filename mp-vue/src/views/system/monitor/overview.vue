@@ -213,7 +213,7 @@ const loadOverviewData = () => {
       onlineUserCount.value = onlineRes.data.length || 0
     }
   }).catch(err => {
-    console.error('加载监控总览数据失败:', err)
+    // 加载监控总览数据失败
   }).finally(() => {
     loading.value = false
   })

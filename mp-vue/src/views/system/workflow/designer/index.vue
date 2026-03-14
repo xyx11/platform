@@ -153,11 +153,11 @@ export default {
       }
     },
     mockSaveApi(params) {
-      console.log('Mock save API:', params)
+      // Mock save API
       return Promise.resolve({ success: true })
     },
     mockDeployApi(params) {
-      console.log('Mock deploy API:', params)
+      // Mock deploy API
       return Promise.resolve({ success: true })
     }
   }

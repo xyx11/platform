@@ -257,7 +257,7 @@ const loadRedisInfo = () => {
     redisInfo.aofEnabled = false // 后端未提供
     redisInfo.aofLastBgsaveStatus = '-' // 后端未提供
   }).catch(err => {
-    console.error('加载 Redis 信息失败:', err)
+    // 加载 Redis 信息失败
     redisStatus.status = 'DOWN'
   }).finally(() => {
     loading.value = false

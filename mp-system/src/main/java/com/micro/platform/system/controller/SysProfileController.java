@@ -5,6 +5,7 @@ import com.micro.platform.common.core.exception.BusinessException;
 import com.micro.platform.common.core.result.Result;
 import com.micro.platform.common.log.annotation.OperationLog;
 import com.micro.platform.common.log.annotation.OperationType;
+import com.micro.platform.common.redis.util.RedisUtil;
 import com.micro.platform.common.security.util.SecurityUtil;
 import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.service.SysUserService;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 个人中心控制器
@@ -26,9 +28,11 @@ import java.util.Map;
 public class SysProfileController {
 
     private final SysUserService sysUserService;
+    private final RedisUtil redisUtil;
 
-    public SysProfileController(SysUserService sysUserService) {
+    public SysProfileController(SysUserService sysUserService, RedisUtil redisUtil) {
         this.sysUserService = sysUserService;
+        this.redisUtil = redisUtil;
     }
 
     @Operation(summary = "获取个人信息")
@@ -99,10 +103,16 @@ public class SysProfileController {
             return Result.error("手机号不能为空");
         }
 
-        // TODO: 验证短信验证码
-        // if (!validateSmsCode(userId, phone, code)) {
-        //     return Result.error("验证码错误");
-        // }
+        // 验证短信验证码
+        if (StrUtil.isNotBlank(code)) {
+            String cacheKey = "sms:change_phone:" + phone;
+            String cachedCode = (String) redisUtil.get(cacheKey);
+            if (cachedCode == null || !cachedCode.equals(code)) {
+                return Result.error("验证码错误或已过期");
+            }
+            // 验证成功后删除验证码
+            redisUtil.delete(cacheKey);
+        }
 
         SysUser user = new SysUser();
         user.setUserId(userId);
@@ -128,10 +138,16 @@ public class SysProfileController {
             return Result.error("邮箱格式不正确");
         }
 
-        // TODO: 验证邮箱验证码
-        // if (!validateEmailCode(userId, email, code)) {
-        //     return Result.error("验证码错误");
-        // }
+        // 验证邮箱验证码
+        if (StrUtil.isNotBlank(code)) {
+            String cacheKey = "email:change_email:" + email;
+            String cachedCode = (String) redisUtil.get(cacheKey);
+            if (cachedCode == null || !cachedCode.equals(code)) {
+                return Result.error("验证码错误或已过期");
+            }
+            // 验证成功后删除验证码
+            redisUtil.delete(cacheKey);
+        }
 
         SysUser user = new SysUser();
         user.setUserId(userId);
@@ -141,6 +157,7 @@ public class SysProfileController {
     }
 
     @Operation(summary = "发送手机验证码")
+    @OperationLog(module = "个人中心", type = OperationType.OTHER, description = "发送手机验证码")
     @PostMapping("/sms/code")
     public Result<Void> sendSmsCode(@RequestBody Map<String, String> params) {
         String phone = params.get("phone");
@@ -156,11 +173,44 @@ public class SysProfileController {
         // 生成 6 位验证码
         String code = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
 
-        // TODO: 存储验证码到 Redis，5 分钟过期
-        // redisUtil.set("sms:" + type + ":" + phone, code, 300, TimeUnit.SECONDS);
+        // 存储验证码到 Redis，5 分钟过期
+        String cacheKey = "sms:" + type + ":" + phone;
+        redisUtil.set(cacheKey, code, 300, TimeUnit.SECONDS);
 
         // TODO: 调用短信服务发送验证码
         // smsService.send(phone, code);
+
+        return Result.success();
+    }
+
+    @Operation(summary = "发送邮箱验证码")
+    @OperationLog(module = "个人中心", type = OperationType.OTHER, description = "发送邮箱验证码")
+    @PostMapping("/email/code")
+    public Result<Void> sendEmailCode(@RequestBody Map<String, String> params) {
+        String email = params.get("email");
+        String type = params.get("type");
+        if (type == null || type.isEmpty()) {
+            type = "change_email";
+        }
+
+        if (StrUtil.isBlank(email)) {
+            return Result.error("邮箱不能为空");
+        }
+
+        // 验证邮箱格式
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            return Result.error("邮箱格式不正确");
+        }
+
+        // 生成 6 位验证码
+        String code = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
+
+        // 存储验证码到 Redis，5 分钟过期
+        String cacheKey = "email:" + type + ":" + email;
+        redisUtil.set(cacheKey, code, 300, TimeUnit.SECONDS);
+
+        // TODO: 调用邮件服务发送验证码
+        // emailService.send(email, "邮箱验证码", "您的验证码是：" + code);
 
         return Result.success();
     }

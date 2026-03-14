@@ -99,7 +99,7 @@ const loadOnlineUsers = () => {
     onlineUsers.value = res.data || []
     total.value = onlineUsers.value.length
   }).catch(err => {
-    console.error('加载在线用户失败:', err)
+    // 加载在线用户失败
   }).finally(() => {
     loading.value = false
   })
@@ -132,7 +132,7 @@ const handleKickout = (row) => {
       ElMessage.success('强退成功')
       loadOnlineUsers()
     }).catch(err => {
-      console.error('强退失败:', err)
+      // 强退失败
     })
   }).catch(() => {})
 }

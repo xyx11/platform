@@ -266,7 +266,7 @@ const loadCacheStats = () => {
     // 计算 keys 数量（从 hitRate 推断或直接使用 dbSize）
     cacheStats.keysCount = parseInt(data.dbSize) || 0
   }).catch(err => {
-    console.error('加载缓存统计失败:', err)
+    // 加载缓存统计失败
   }).finally(() => {
     loading.value = false
   })
@@ -287,7 +287,7 @@ const loadCacheKeys = () => {
     }))
     keyTotal.value = keys.length
   }).catch(err => {
-    console.error('加载缓存键失败:', err)
+    // 加载缓存键失败
   }).finally(() => {
     keysLoading.value = false
   })
@@ -309,7 +309,7 @@ const handleViewKey = (row) => {
     }
     viewDialogVisible.value = true
   }).catch(err => {
-    console.error('查看键值失败:', err)
+    // 查看键值失败
   })
 }
 
@@ -327,7 +327,7 @@ const handleDeleteKey = (row) => {
       ElMessage.success('删除成功')
       loadCacheKeys()
     }).catch(err => {
-      console.error('删除失败:', err)
+      // 删除失败
     })
   }).catch(() => {})
 }

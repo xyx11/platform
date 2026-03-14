@@ -241,7 +241,7 @@ const fetchStats = async () => {
     const { data } = await request.get('/system/workflow/stats')
     stats.value = data || {}
   } catch (error) {
-    console.error('获取统计数据失败:', error)
+    // 获取统计数据失败
   }
 }
 
@@ -259,7 +259,7 @@ const fetchInstanceList = async () => {
     instanceList.value = data?.records || []
     total.value = data?.total || 0
   } catch (error) {
-    console.error('获取实例列表失败:', error)
+    // 获取实例列表失败
     ElMessage.error('获取流程实例列表失败')
   } finally {
     loading.value = false
@@ -301,7 +301,7 @@ const viewDetail = async (row) => {
     variableList.value = data.variables ? Object.entries(data.variables).map(([key, value]) => ({ key, value })) : []
     detailVisible.value = true
   } catch (error) {
-    console.error('获取实例详情失败:', error)
+    // 获取实例详情失败
     ElMessage.error('获取实例详情失败')
   }
 }
@@ -313,7 +313,7 @@ const viewHistory = async (row) => {
     historyList.value = data || []
     historyVisible.value = true
   } catch (error) {
-    console.error('获取历史轨迹失败:', error)
+    // 获取历史轨迹失败
     ElMessage.error('获取历史轨迹失败')
   }
 }
@@ -334,7 +334,7 @@ const suspendOrActivate = async (row) => {
     fetchStats()
   } catch (error) {
     if (error !== 'cancel') {
-      console.error(`${action}失败:`, error)
+      // 操作失败
       ElMessage.error(`${action}失败`)
     }
   }
@@ -355,7 +355,7 @@ const deleteInstance = async (row) => {
     fetchStats()
   } catch (error) {
     if (error !== 'cancel') {
-      console.error('删除失败:', error)
+      // 删除失败
       ElMessage.error('删除失败')
     }
   }

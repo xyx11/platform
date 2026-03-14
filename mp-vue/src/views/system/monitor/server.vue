@@ -307,7 +307,7 @@ const loadServerInfo = () => {
       systemInfo.uptime = data.jvmRunTime
     }
   }).catch(err => {
-    console.error('加载服务器信息失败:', err)
+    // 加载服务器信息失败
   }).finally(() => {
     loading.value = false
   })
