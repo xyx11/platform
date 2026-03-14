@@ -93,7 +93,7 @@
 
             <el-form-item class="form-options">
               <el-checkbox v-model="loginForm.rememberMe" size="default">记住密码</el-checkbox>
-              <el-link type="primary" :underline="false" class="forgot-link">忘记密码？</el-link>
+              <el-link type="primary" :underline="false" class="forgot-link" @click="goToResetPassword">忘记密码？</el-link>
             </el-form-item>
 
             <el-form-item>
@@ -128,6 +128,11 @@ import request from '@/utils/request'
 
 const router = useRouter()
 const loginFormRef = ref(null)
+
+// 跳转到重置密码
+const goToResetPassword = () => {
+  router.push({ path: '/reset-password' })
+}
 const loading = ref(false)
 const captchaImg = ref('')
 

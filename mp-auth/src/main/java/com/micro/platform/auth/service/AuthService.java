@@ -300,8 +300,18 @@ public class AuthService {
      * 刷新 Token
      */
     public String refreshToken(String refreshToken) {
-        // TODO: 实现刷新逻辑
-        return "new-token";
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new BusinessException("Token 不能为空");
+        }
+
+        try {
+            // 使用 Sa-Token 刷新 token
+            StpUtil.refreshToken();
+            return StpUtil.getTokenValue();
+        } catch (Exception e) {
+            log.error("刷新 Token 失败：{}", e.getMessage());
+            throw new BusinessException("刷新 Token 失败，请重新登录");
+        }
     }
 
     /**

@@ -3,6 +3,7 @@ package com.micro.platform.common.log.aspect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.micro.platform.common.log.annotation.OperationLog;
+import com.micro.platform.common.log.service.OperationLogService;
 import com.micro.platform.common.security.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,6 +13,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -34,6 +36,9 @@ public class OperationLogAspect {
 
     private final ObjectMapper objectMapper = new ObjectMapper()
         .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+
+    @Autowired(required = false)
+    private OperationLogService operationLogService;
 
     @Pointcut("@annotation(com.micro.platform.common.log.annotation.OperationLog)")
     public void logPointcut() {
@@ -142,9 +147,12 @@ public class OperationLogAspect {
     }
 
     private void saveLog(com.micro.platform.common.log.entity.OperationLog operationLog) {
-        // TODO: 异步保存到数据库或发送到消息队列
-        log.info("操作日志：{} - {} ({}ms)", operationLog.getStatus() == 1 ? "成功" : "失败",
-            operationLog.getDescription(), operationLog.getExecuteTime());
+        if (operationLogService != null) {
+            operationLogService.saveLog(operationLog);
+        } else {
+            log.info("操作日志：{} - {} ({}ms)", operationLog.getStatus() == 1 ? "成功" : "失败",
+                operationLog.getDescription(), operationLog.getExecuteTime());
+        }
     }
 
     /**
