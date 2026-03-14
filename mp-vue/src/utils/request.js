@@ -54,7 +54,7 @@ service.interceptors.request.use(
     return config
   },
   error => {
-    console.error('[Request Error]', error)
+    if (import.meta.env.DEV) { console.error('[Request Error]', error) }
     return Promise.reject(error)
   }
 )
@@ -100,7 +100,7 @@ service.interceptors.response.use(
     return res
   },
   error => {
-    console.error('[Response Error]', error)
+    if (import.meta.env.DEV) { console.error('[Response Error]', error) }
     let message = '网络错误'
 
     if (error.response) {

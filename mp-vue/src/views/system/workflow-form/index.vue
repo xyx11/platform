@@ -125,8 +125,12 @@ const formRules = {
 const getFormBindingList = async () => {
   loading.value = true
   try {
-    // TODO: 需要后端实现查询接口
-    formBindingList.value = []
+    const res = await request({
+      url: '/system/workflow-form/list',
+      method: 'get',
+      params: { pageNum: 1, pageSize: 100 }
+    })
+    formBindingList.value = res.data?.records || res.data?.list || []
   } catch (error) {
     ElMessage.error('获取表单绑定列表失败：' + error.message)
   } finally {
@@ -143,7 +147,7 @@ const getFormDefinitionList = async () => {
     })
     formDefinitionList.value = res.data?.records || res.data || []
   } catch (error) {
-    console.error('获取表单定义列表失败:', error)
+    // 获取表单定义列表失败
   }
 }
 
