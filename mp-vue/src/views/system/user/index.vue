@@ -520,6 +520,7 @@ const handleAdd = () => {
 const handleUpdate = (row) => {
   dialog.title = '修改用户'
   dialog.visible = true
+
   Object.assign(form, row, { roleIds: row.roleIds || [] })
 }
 
@@ -745,6 +746,7 @@ const submitImport = () => {
 const submitForm = () => {
   formRef.value.validate(valid => {
     if (valid) {
+    
       const api = form.userId ? request.put : request.post
       api('/system/user', form).then(() => {
         ElMessage.success('操作成功')
