@@ -33,64 +33,64 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.2.5)
 
-2026-03-14T09:46:51.812+08:00  INFO 61167 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Starting SystemApplication using Java 25.0.2 with PID 61167 (/Users/xieyunxing/micro-platform/mp-system/target/classes started by xieyunxing in /Users/xieyunxing/micro-platform/mp-system)
-2026-03-14T09:46:51.812+08:00 DEBUG 61167 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
-2026-03-14T09:46:51.812+08:00  INFO 61167 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : The following 1 profile is active: "local"
-2026-03-14T09:46:52.163+08:00  INFO 61167 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2026-03-14T09:46:52.163+08:00  INFO 61167 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2026-03-14T09:46:52.174+08:00  INFO 61167 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
-2026-03-14T09:46:52.273+08:00  INFO 61167 --- [mp-system] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=a799d7ef-b48e-3522-bc8d-83c149c62614
-2026-03-14T09:46:52.390+08:00  WARN 61167 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:46:52.391+08:00  WARN 61167 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:46:52.392+08:00  WARN 61167 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x000003f8014ed258] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:46:52.394+08:00  WARN 61167 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:46:52.401+08:00  WARN 61167 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:46:52.403+08:00  WARN 61167 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
-2026-03-14T09:46:52.407+08:00  WARN 61167 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsJakartaHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:51:50.100+08:00  INFO 64047 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Starting SystemApplication using Java 25.0.2 with PID 64047 (/Users/xieyunxing/micro-platform/mp-system/target/classes started by xieyunxing in /Users/xieyunxing/micro-platform/mp-system)
+2026-03-14T09:51:50.100+08:00 DEBUG 64047 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-03-14T09:51:50.100+08:00  INFO 64047 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : The following 1 profile is active: "local"
+2026-03-14T09:51:50.453+08:00  INFO 64047 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-14T09:51:50.454+08:00  INFO 64047 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-14T09:51:50.465+08:00  INFO 64047 --- [mp-system] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
+2026-03-14T09:51:50.562+08:00  INFO 64047 --- [mp-system] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=a799d7ef-b48e-3522-bc8d-83c149c62614
+2026-03-14T09:51:50.679+08:00  WARN 64047 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:51:50.681+08:00  WARN 64047 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:51:50.682+08:00  WARN 64047 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x00001ff0014f6508] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:51:50.683+08:00  WARN 64047 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:51:50.690+08:00  WARN 64047 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.datasource.dynamic-com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:51:50.692+08:00  WARN 64047 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration' of type [com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAopConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2026-03-14T09:51:50.695+08:00  WARN 64047 --- [mp-system] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'dsProcessor' of type [com.baomidou.dynamic.datasource.processor.DsJakartaHeaderProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [projectingArgumentResolverBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
 WARNING: A restricted method in java.lang.System has been called
 WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/Users/xieyunxing/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.20/tomcat-embed-core-10.1.20.jar)
 WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
 WARNING: Restricted methods will be blocked in a future release unless native access is enabled
 
-2026-03-14T09:46:52.528+08:00  INFO 61167 --- [mp-system] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8082 (http)
-2026-03-14T09:46:52.533+08:00  INFO 61167 --- [mp-system] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-03-14T09:46:52.533+08:00  INFO 61167 --- [mp-system] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
-2026-03-14T09:46:52.554+08:00  INFO 61167 --- [mp-system] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-03-14T09:46:52.555+08:00  INFO 61167 --- [mp-system] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 725 ms
+2026-03-14T09:51:50.822+08:00  INFO 64047 --- [mp-system] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8082 (http)
+2026-03-14T09:51:50.827+08:00  INFO 64047 --- [mp-system] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-14T09:51:50.827+08:00  INFO 64047 --- [mp-system] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-03-14T09:51:50.849+08:00  INFO 64047 --- [mp-system] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-03-14T09:51:50.849+08:00  INFO 64047 --- [mp-system] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 732 ms
 WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
 WARNING: sun.misc.Unsafe::objectFieldOffset has been called by io.netty.util.internal.PlatformDependent0$4 (file:/Users/xieyunxing/.m2/repository/io/netty/netty-common/4.1.109.Final/netty-common-4.1.109.Final.jar)
 WARNING: Please consider reporting this to the maintainers of class io.netty.util.internal.PlatformDependent0$4
 WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
-2026-03-14T09:46:52.860+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1,master} inited
-2026-03-14T09:46:52.860+08:00  INFO 61167 --- [mp-system] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource - add a datasource named [master] success
-2026-03-14T09:46:52.861+08:00  INFO 61167 --- [mp-system] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
+2026-03-14T09:51:51.167+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1,master} inited
+2026-03-14T09:51:51.167+08:00  INFO 64047 --- [mp-system] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource - add a datasource named [master] success
+2026-03-14T09:51:51.167+08:00  INFO 64047 --- [mp-system] [           main] c.b.d.d.DynamicRoutingDataSource         : dynamic-datasource initial loaded [1] datasource,primary datasource named [master]
  _ _   |_  _ _|_. ___ _ |    _ 
 | | |\/|_)(_| | |_\  |_)||_|_\ 
      /               |         
                         3.5.6 
-2026-03-14T09:46:53.702+08:00  INFO 61167 --- [mp-system] [           main] o.f.s.b.ProcessEngineAutoConfiguration   : No deployment resources were found for autodeployment
-2026-03-14T09:46:53.816+08:00  INFO 61167 --- [mp-system] [           main] o.f.s.b.c.CmmnEngineAutoConfiguration    : No deployment resources were found for autodeployment
-2026-03-14T09:46:53.879+08:00  INFO 61167 --- [mp-system] [           main] o.f.s.b.dmn.DmnEngineAutoConfiguration   : No deployment resources were found for autodeployment
-2026-03-14T09:46:53.903+08:00  INFO 61167 --- [mp-system] [           main] o.f.s.b.e.EventRegistryAutoConfiguration : No deployment resources were found for autodeployment
-2026-03-14T09:46:53.941+08:00  INFO 61167 --- [mp-system] [           main] o.f.s.b.app.AppEngineAutoConfiguration   : No deployment resources were found for autodeployment
-2026-03-14T09:46:53.956+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Found 5 Engine Configurators in total:
-2026-03-14T09:46:53.956+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : class org.flowable.engine.spring.configurator.SpringProcessEngineConfigurator (priority:50000)
-2026-03-14T09:46:53.956+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : class org.flowable.eventregistry.spring.configurator.SpringEventRegistryConfigurator (priority:100000)
-2026-03-14T09:46:53.956+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : class org.flowable.idm.spring.configurator.SpringIdmEngineConfigurator (priority:150000)
-2026-03-14T09:46:53.956+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : class org.flowable.dmn.spring.configurator.SpringDmnEngineConfigurator (priority:200000)
-2026-03-14T09:46:53.956+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : class org.flowable.cmmn.spring.configurator.SpringCmmnEngineConfigurator (priority:500000)
-2026-03-14T09:46:53.956+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing beforeInit() of class org.flowable.engine.spring.configurator.SpringProcessEngineConfigurator (priority:50000)
-2026-03-14T09:46:53.957+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing beforeInit() of class org.flowable.eventregistry.spring.configurator.SpringEventRegistryConfigurator (priority:100000)
-2026-03-14T09:46:53.958+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing beforeInit() of class org.flowable.idm.spring.configurator.SpringIdmEngineConfigurator (priority:150000)
-2026-03-14T09:46:53.958+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing beforeInit() of class org.flowable.dmn.spring.configurator.SpringDmnEngineConfigurator (priority:200000)
-2026-03-14T09:46:53.959+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing beforeInit() of class org.flowable.cmmn.spring.configurator.SpringCmmnEngineConfigurator (priority:500000)
-2026-03-14T09:46:54.200+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing configure() of class org.flowable.engine.spring.configurator.SpringProcessEngineConfigurator (priority:50000)
-2026-03-14T09:46:54.371+08:00  INFO 61167 --- [mp-system] [           main] o.f.engine.impl.ProcessEngineImpl        : ProcessEngine default created
-2026-03-14T09:46:54.382+08:00  INFO 61167 --- [mp-system] [           main] o.f.e.impl.cmd.ValidateV5EntitiesCmd     : Total of v5 deployments found: 0
-2026-03-14T09:46:54.384+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing configure() of class org.flowable.eventregistry.spring.configurator.SpringEventRegistryConfigurator (priority:100000)
-2026-03-14T09:46:54.597+08:00  INFO 61167 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.flw_ev_databasechangelog
+2026-03-14T09:51:52.053+08:00  INFO 64047 --- [mp-system] [           main] o.f.s.b.ProcessEngineAutoConfiguration   : No deployment resources were found for autodeployment
+2026-03-14T09:51:52.167+08:00  INFO 64047 --- [mp-system] [           main] o.f.s.b.c.CmmnEngineAutoConfiguration    : No deployment resources were found for autodeployment
+2026-03-14T09:51:52.227+08:00  INFO 64047 --- [mp-system] [           main] o.f.s.b.dmn.DmnEngineAutoConfiguration   : No deployment resources were found for autodeployment
+2026-03-14T09:51:52.253+08:00  INFO 64047 --- [mp-system] [           main] o.f.s.b.e.EventRegistryAutoConfiguration : No deployment resources were found for autodeployment
+2026-03-14T09:51:52.293+08:00  INFO 64047 --- [mp-system] [           main] o.f.s.b.app.AppEngineAutoConfiguration   : No deployment resources were found for autodeployment
+2026-03-14T09:51:52.309+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Found 5 Engine Configurators in total:
+2026-03-14T09:51:52.309+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : class org.flowable.engine.spring.configurator.SpringProcessEngineConfigurator (priority:50000)
+2026-03-14T09:51:52.309+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : class org.flowable.eventregistry.spring.configurator.SpringEventRegistryConfigurator (priority:100000)
+2026-03-14T09:51:52.309+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : class org.flowable.idm.spring.configurator.SpringIdmEngineConfigurator (priority:150000)
+2026-03-14T09:51:52.309+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : class org.flowable.dmn.spring.configurator.SpringDmnEngineConfigurator (priority:200000)
+2026-03-14T09:51:52.309+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : class org.flowable.cmmn.spring.configurator.SpringCmmnEngineConfigurator (priority:500000)
+2026-03-14T09:51:52.309+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing beforeInit() of class org.flowable.engine.spring.configurator.SpringProcessEngineConfigurator (priority:50000)
+2026-03-14T09:51:52.311+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing beforeInit() of class org.flowable.eventregistry.spring.configurator.SpringEventRegistryConfigurator (priority:100000)
+2026-03-14T09:51:52.311+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing beforeInit() of class org.flowable.idm.spring.configurator.SpringIdmEngineConfigurator (priority:150000)
+2026-03-14T09:51:52.312+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing beforeInit() of class org.flowable.dmn.spring.configurator.SpringDmnEngineConfigurator (priority:200000)
+2026-03-14T09:51:52.312+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing beforeInit() of class org.flowable.cmmn.spring.configurator.SpringCmmnEngineConfigurator (priority:500000)
+2026-03-14T09:51:52.572+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing configure() of class org.flowable.engine.spring.configurator.SpringProcessEngineConfigurator (priority:50000)
+2026-03-14T09:51:52.747+08:00  INFO 64047 --- [mp-system] [           main] o.f.engine.impl.ProcessEngineImpl        : ProcessEngine default created
+2026-03-14T09:51:52.760+08:00  INFO 64047 --- [mp-system] [           main] o.f.e.impl.cmd.ValidateV5EntitiesCmd     : Total of v5 deployments found: 0
+2026-03-14T09:51:52.763+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing configure() of class org.flowable.eventregistry.spring.configurator.SpringEventRegistryConfigurator (priority:100000)
+2026-03-14T09:51:53.009+08:00  INFO 64047 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.flw_ev_databasechangelog
 Database is up to date, no changesets to execute
-2026-03-14T09:46:54.630+08:00  INFO 61167 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.flw_ev_databasechangelog
+2026-03-14T09:51:53.032+08:00  INFO 64047 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.flw_ev_databasechangelog
 
 UPDATE SUMMARY
 Run:                          0
@@ -99,22 +99,22 @@ Filtered out:                 0
 -------------------------------
 Total change sets:            3
 
-2026-03-14T09:46:54.633+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : UPDATE SUMMARY
-2026-03-14T09:46:54.633+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Run:                          0
-2026-03-14T09:46:54.633+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Previously run:               3
-2026-03-14T09:46:54.633+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Filtered out:                 0
-2026-03-14T09:46:54.633+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : -------------------------------
-2026-03-14T09:46:54.633+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Total change sets:            3
-2026-03-14T09:46:54.633+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Update summary generated
-2026-03-14T09:46:54.643+08:00  INFO 61167 --- [mp-system] [           main] liquibase.lockservice                    : Successfully released change log lock
-2026-03-14T09:46:54.644+08:00  INFO 61167 --- [mp-system] [           main] liquibase.command                        : Command execution complete
-2026-03-14T09:46:54.645+08:00  INFO 61167 --- [mp-system] [           main] o.f.e.impl.EventRegistryEngineImpl       : EventRegistryEngine default created
-2026-03-14T09:46:54.645+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing configure() of class org.flowable.idm.spring.configurator.SpringIdmEngineConfigurator (priority:150000)
-2026-03-14T09:46:54.652+08:00  INFO 61167 --- [mp-system] [           main] o.f.idm.engine.impl.IdmEngineImpl        : IdmEngine default created
-2026-03-14T09:46:54.652+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing configure() of class org.flowable.dmn.spring.configurator.SpringDmnEngineConfigurator (priority:200000)
-2026-03-14T09:46:54.724+08:00  INFO 61167 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_dmn_databasechangelog
+2026-03-14T09:51:53.035+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : UPDATE SUMMARY
+2026-03-14T09:51:53.035+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Run:                          0
+2026-03-14T09:51:53.035+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Previously run:               3
+2026-03-14T09:51:53.035+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Filtered out:                 0
+2026-03-14T09:51:53.035+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : -------------------------------
+2026-03-14T09:51:53.035+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Total change sets:            3
+2026-03-14T09:51:53.035+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Update summary generated
+2026-03-14T09:51:53.044+08:00  INFO 64047 --- [mp-system] [           main] liquibase.lockservice                    : Successfully released change log lock
+2026-03-14T09:51:53.045+08:00  INFO 64047 --- [mp-system] [           main] liquibase.command                        : Command execution complete
+2026-03-14T09:51:53.045+08:00  INFO 64047 --- [mp-system] [           main] o.f.e.impl.EventRegistryEngineImpl       : EventRegistryEngine default created
+2026-03-14T09:51:53.045+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing configure() of class org.flowable.idm.spring.configurator.SpringIdmEngineConfigurator (priority:150000)
+2026-03-14T09:51:53.051+08:00  INFO 64047 --- [mp-system] [           main] o.f.idm.engine.impl.IdmEngineImpl        : IdmEngine default created
+2026-03-14T09:51:53.052+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing configure() of class org.flowable.dmn.spring.configurator.SpringDmnEngineConfigurator (priority:200000)
+2026-03-14T09:51:53.120+08:00  INFO 64047 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_dmn_databasechangelog
 Database is up to date, no changesets to execute
-2026-03-14T09:46:54.734+08:00  INFO 61167 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_dmn_databasechangelog
+2026-03-14T09:51:53.133+08:00  INFO 64047 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_dmn_databasechangelog
 
 UPDATE SUMMARY
 Run:                          0
@@ -123,20 +123,20 @@ Filtered out:                 0
 -------------------------------
 Total change sets:            9
 
-2026-03-14T09:46:54.735+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : UPDATE SUMMARY
-2026-03-14T09:46:54.735+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Run:                          0
-2026-03-14T09:46:54.735+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Previously run:               9
-2026-03-14T09:46:54.735+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Filtered out:                 0
-2026-03-14T09:46:54.735+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : -------------------------------
-2026-03-14T09:46:54.735+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Total change sets:            9
-2026-03-14T09:46:54.735+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Update summary generated
-2026-03-14T09:46:54.736+08:00  INFO 61167 --- [mp-system] [           main] liquibase.lockservice                    : Successfully released change log lock
-2026-03-14T09:46:54.736+08:00  INFO 61167 --- [mp-system] [           main] liquibase.command                        : Command execution complete
-2026-03-14T09:46:54.736+08:00  INFO 61167 --- [mp-system] [           main] o.f.dmn.engine.impl.DmnEngineImpl        : DmnEngine default created
-2026-03-14T09:46:54.737+08:00  INFO 61167 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing configure() of class org.flowable.cmmn.spring.configurator.SpringCmmnEngineConfigurator (priority:500000)
-2026-03-14T09:46:54.920+08:00  INFO 61167 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_cmmn_databasechangelog
+2026-03-14T09:51:53.135+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : UPDATE SUMMARY
+2026-03-14T09:51:53.135+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Run:                          0
+2026-03-14T09:51:53.135+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Previously run:               9
+2026-03-14T09:51:53.135+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Filtered out:                 0
+2026-03-14T09:51:53.135+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : -------------------------------
+2026-03-14T09:51:53.135+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Total change sets:            9
+2026-03-14T09:51:53.135+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Update summary generated
+2026-03-14T09:51:53.136+08:00  INFO 64047 --- [mp-system] [           main] liquibase.lockservice                    : Successfully released change log lock
+2026-03-14T09:51:53.137+08:00  INFO 64047 --- [mp-system] [           main] liquibase.command                        : Command execution complete
+2026-03-14T09:51:53.137+08:00  INFO 64047 --- [mp-system] [           main] o.f.dmn.engine.impl.DmnEngineImpl        : DmnEngine default created
+2026-03-14T09:51:53.138+08:00  INFO 64047 --- [mp-system] [           main] o.f.a.s.SpringAppEngineConfiguration     : Executing configure() of class org.flowable.cmmn.spring.configurator.SpringCmmnEngineConfigurator (priority:500000)
+2026-03-14T09:51:53.327+08:00  INFO 64047 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_cmmn_databasechangelog
 Database is up to date, no changesets to execute
-2026-03-14T09:46:54.951+08:00  INFO 61167 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_cmmn_databasechangelog
+2026-03-14T09:51:53.354+08:00  INFO 64047 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_cmmn_databasechangelog
 
 UPDATE SUMMARY
 Run:                          0
@@ -149,21 +149,21 @@ Total change sets:           17
 FILTERED CHANGE SETS SUMMARY
 DBMS mismatch:                1
 
-2026-03-14T09:46:54.954+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : UPDATE SUMMARY
-2026-03-14T09:46:54.954+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Run:                          0
-2026-03-14T09:46:54.954+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Previously run:              16
-2026-03-14T09:46:54.954+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Filtered out:                 1
-2026-03-14T09:46:54.954+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : -------------------------------
-2026-03-14T09:46:54.954+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Total change sets:           17
-2026-03-14T09:46:54.954+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : FILTERED CHANGE SETS SUMMARY
-2026-03-14T09:46:54.954+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : DBMS mismatch:                1
-2026-03-14T09:46:54.955+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Update summary generated
-2026-03-14T09:46:54.956+08:00  INFO 61167 --- [mp-system] [           main] liquibase.lockservice                    : Successfully released change log lock
-2026-03-14T09:46:54.957+08:00  INFO 61167 --- [mp-system] [           main] liquibase.command                        : Command execution complete
-2026-03-14T09:46:54.957+08:00  INFO 61167 --- [mp-system] [           main] o.f.cmmn.engine.impl.CmmnEngineImpl      : CmmnEngine default created
-2026-03-14T09:46:55.001+08:00  INFO 61167 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_app_databasechangelog
+2026-03-14T09:51:53.357+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : UPDATE SUMMARY
+2026-03-14T09:51:53.358+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Run:                          0
+2026-03-14T09:51:53.358+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Previously run:              16
+2026-03-14T09:51:53.358+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Filtered out:                 1
+2026-03-14T09:51:53.358+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : -------------------------------
+2026-03-14T09:51:53.358+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Total change sets:           17
+2026-03-14T09:51:53.358+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : FILTERED CHANGE SETS SUMMARY
+2026-03-14T09:51:53.358+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : DBMS mismatch:                1
+2026-03-14T09:51:53.358+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Update summary generated
+2026-03-14T09:51:53.359+08:00  INFO 64047 --- [mp-system] [           main] liquibase.lockservice                    : Successfully released change log lock
+2026-03-14T09:51:53.359+08:00  INFO 64047 --- [mp-system] [           main] liquibase.command                        : Command execution complete
+2026-03-14T09:51:53.360+08:00  INFO 64047 --- [mp-system] [           main] o.f.cmmn.engine.impl.CmmnEngineImpl      : CmmnEngine default created
+2026-03-14T09:51:53.407+08:00  INFO 64047 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_app_databasechangelog
 Database is up to date, no changesets to execute
-2026-03-14T09:46:55.007+08:00  INFO 61167 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_app_databasechangelog
+2026-03-14T09:51:53.416+08:00  INFO 64047 --- [mp-system] [           main] liquibase.changelog                      : Reading from micro_platform.act_app_databasechangelog
 
 UPDATE SUMMARY
 Run:                          0
@@ -172,66 +172,66 @@ Filtered out:                 0
 -------------------------------
 Total change sets:            3
 
-2026-03-14T09:46:55.008+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : UPDATE SUMMARY
-2026-03-14T09:46:55.008+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Run:                          0
-2026-03-14T09:46:55.008+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Previously run:               3
-2026-03-14T09:46:55.008+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Filtered out:                 0
-2026-03-14T09:46:55.008+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : -------------------------------
-2026-03-14T09:46:55.008+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Total change sets:            3
-2026-03-14T09:46:55.008+08:00  INFO 61167 --- [mp-system] [           main] liquibase.util                           : Update summary generated
-2026-03-14T09:46:55.009+08:00  INFO 61167 --- [mp-system] [           main] liquibase.lockservice                    : Successfully released change log lock
-2026-03-14T09:46:55.009+08:00  INFO 61167 --- [mp-system] [           main] liquibase.command                        : Command execution complete
-2026-03-14T09:46:55.010+08:00  INFO 61167 --- [mp-system] [           main] o.f.app.engine.impl.AppEngineImpl        : AppEngine default created
-2026-03-14T09:46:55.055+08:00  INFO 61167 --- [mp-system] [           main] c.m.p.system.config.SaTokenRedisConfig   : 开始配置 Sa-Token Redis 存储...
-2026-03-14T09:46:55.059+08:00  INFO 61167 --- [mp-system] [           main] c.m.p.system.config.SaTokenRedisConfig   : Sa-Token Redis 存储配置完成
-2026-03-14T09:46:55.224+08:00  INFO 61167 --- [mp-system] [           main] c.m.p.system.config.SecurityConfig       : 初始化 Sa-Token 拦截器（本地配置）
-2026-03-14T09:46:55.224+08:00  INFO 61167 --- [mp-system] [           main] c.m.p.system.config.SecurityConfig       : Sa-Token 拦截器初始化完成（本地配置）
+2026-03-14T09:51:53.418+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : UPDATE SUMMARY
+2026-03-14T09:51:53.418+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Run:                          0
+2026-03-14T09:51:53.418+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Previously run:               3
+2026-03-14T09:51:53.418+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Filtered out:                 0
+2026-03-14T09:51:53.418+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : -------------------------------
+2026-03-14T09:51:53.418+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Total change sets:            3
+2026-03-14T09:51:53.418+08:00  INFO 64047 --- [mp-system] [           main] liquibase.util                           : Update summary generated
+2026-03-14T09:51:53.420+08:00  INFO 64047 --- [mp-system] [           main] liquibase.lockservice                    : Successfully released change log lock
+2026-03-14T09:51:53.420+08:00  INFO 64047 --- [mp-system] [           main] liquibase.command                        : Command execution complete
+2026-03-14T09:51:53.421+08:00  INFO 64047 --- [mp-system] [           main] o.f.app.engine.impl.AppEngineImpl        : AppEngine default created
+2026-03-14T09:51:53.468+08:00  INFO 64047 --- [mp-system] [           main] c.m.p.system.config.SaTokenRedisConfig   : 开始配置 Sa-Token Redis 存储...
+2026-03-14T09:51:53.473+08:00  INFO 64047 --- [mp-system] [           main] c.m.p.system.config.SaTokenRedisConfig   : Sa-Token Redis 存储配置完成
+2026-03-14T09:51:53.642+08:00  INFO 64047 --- [mp-system] [           main] c.m.p.system.config.SecurityConfig       : 初始化 Sa-Token 拦截器（本地配置）
+2026-03-14T09:51:53.642+08:00  INFO 64047 --- [mp-system] [           main] c.m.p.system.config.SecurityConfig       : Sa-Token 拦截器初始化完成（本地配置）
 SaLog -->: 全局配置 SaTokenConfig [tokenName=Authorization, timeout=86400, activityTimeout=-1, isConcurrent=true, isShare=true, maxLoginCount=12, isReadBody=true, isReadHeader=true, isReadCookie=true, isWriteHeader=false, tokenStyle=uuid, dataRefreshPeriod=30, tokenSessionCheckLogin=true, autoRenew=true, tokenPrefix=Bearer, isPrint=false, isLog=true, logLevel=trace, logLevelInt=1, jwtSecretKey=null, basic=, currDomain=null, sameTokenTimeout=86400, checkSameToken=false, cookie=SaCookieConfig [domain=null, path=null, secure=false, httpOnly=false, sameSite=null]] 
 SaLog -->: 全局组件 SaTokenDao 载入成功: cn.dev33.satoken.dao.SaTokenDaoRedisJackson
 SaLog -->: 全局组件 SaTokenContext 载入成功: cn.dev33.satoken.spring.SaTokenContextForSpringInJakartaServlet
 SaLog -->: 全局组件 SaJsonTemplate 载入成功: cn.dev33.satoken.spring.json.SaJsonTemplateForJackson
-2026-03-14T09:46:55.625+08:00  INFO 61167 --- [mp-system] [           main] o.f.j.s.i.a.AbstractAsyncExecutor        : Starting up the async job executor [org.flowable.spring.job.service.SpringAsyncExecutor] for engine cmmn
-2026-03-14T09:46:55.633+08:00  INFO 61167 --- [mp-system] [       Thread-5] o.f.j.s.i.a.ResetExpiredJobsRunnable     : starting to reset expired jobs for engine cmmn
-2026-03-14T09:46:55.634+08:00  INFO 61167 --- [mp-system] [           main] o.f.j.s.i.a.AbstractAsyncExecutor        : Starting up the async job executor [org.flowable.spring.job.service.SpringAsyncExecutor] for engine bpmn
-2026-03-14T09:46:55.634+08:00  INFO 61167 --- [mp-system] [       Thread-3] o.f.j.s.i.a.AcquireAsyncJobsDueRunnable  : starting to acquire async jobs due for engine cmmn
-2026-03-14T09:46:55.634+08:00  INFO 61167 --- [mp-system] [       Thread-4] o.f.j.s.i.a.AcquireTimerJobsRunnable     : starting to acquire async jobs due for engine cmmn
-2026-03-14T09:46:55.635+08:00  INFO 61167 --- [mp-system] [       Thread-6] o.f.j.s.i.a.AcquireAsyncJobsDueRunnable  : starting to acquire async jobs due for engine bpmn
-2026-03-14T09:46:55.635+08:00  INFO 61167 --- [mp-system] [       Thread-7] o.f.j.s.i.a.AcquireTimerJobsRunnable     : starting to acquire async jobs due for engine bpmn
-2026-03-14T09:46:55.635+08:00  INFO 61167 --- [mp-system] [       Thread-8] o.f.j.s.i.a.ResetExpiredJobsRunnable     : starting to reset expired jobs for engine bpmn
-2026-03-14T09:46:55.641+08:00  INFO 61167 --- [mp-system] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8082 (http) with context path ''
-2026-03-14T09:46:55.644+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ans.namespace attribute : null
-2026-03-14T09:46:55.644+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ALIBABA_ALIWARE_NAMESPACE attribute :null
-2026-03-14T09:46:55.644+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from namespace attribute :null
-2026-03-14T09:46:55.648+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : FailoverDataSource type is class com.alibaba.nacos.client.naming.backups.datasource.DiskFailoverDataSource
-2026-03-14T09:46:55.651+08:00  INFO 61167 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [req-serv] nacos-server port:8848
-2026-03-14T09:46:55.651+08:00  INFO 61167 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [http-client] connect timeout:1000
-2026-03-14T09:46:55.651+08:00  INFO 61167 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : PER_TASK_CONFIG_SIZE: 3000.0
-2026-03-14T09:46:55.652+08:00  INFO 61167 --- [mp-system] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-2026-03-14T09:46:55.653+08:00  INFO 61167 --- [mp-system] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-2026-03-14T09:46:55.657+08:00  INFO 61167 --- [mp-system] [       Thread-9] c.a.n.c.a.r.identify.CredentialWatcher   : null No credential found
-2026-03-14T09:46:55.660+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [RpcClientFactory] create a new rpc client of 9f72a3b7-e27e-4f87-9f7e-40a51dc53ca1
-2026-03-14T09:46:55.665+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : Create naming rpc client for uuid->9f72a3b7-e27e-4f87-9f7e-40a51dc53ca1
-2026-03-14T09:46:55.665+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [9f72a3b7-e27e-4f87-9f7e-40a51dc53ca1] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
-2026-03-14T09:46:55.665+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [9f72a3b7-e27e-4f87-9f7e-40a51dc53ca1] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
-2026-03-14T09:46:55.665+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [9f72a3b7-e27e-4f87-9f7e-40a51dc53ca1] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
-2026-03-14T09:46:55.666+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [9f72a3b7-e27e-4f87-9f7e-40a51dc53ca1] Try to connect to server on start up, server: {serverIp = '127.0.0.1', server main port = 8848}
-2026-03-14T09:46:55.676+08:00  INFO 61167 --- [mp-system] [           main] c.a.n.c.remote.client.grpc.GrpcClient    : grpc client connection server:127.0.0.1 ip,serverPort:9848,grpcTslConfig:{"sslProvider":"","enableTls":false,"mutualAuthEnable":false,"trustAll":false}
-2026-03-14T09:46:55.843+08:00  INFO 61167 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to get current node abilities...
-2026-03-14T09:46:55.844+08:00  INFO 61167 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to initialize current node abilities, support modes: [SDK_CLIENT]
-2026-03-14T09:46:55.844+08:00  INFO 61167 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Initialize current abilities finish...
-2026-03-14T09:46:55.844+08:00  INFO 61167 --- [mp-system] [           main] c.a.n.c.a.d.NacosAbilityManagerHolder    : [AbilityControlManager] Successfully initialize AbilityControlManager
-2026-03-14T09:46:55.851+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [9f72a3b7-e27e-4f87-9f7e-40a51dc53ca1] Success to connect to server [127.0.0.1:8848] on start up, connectionId = 1773452815814_127.0.0.1_54636
-2026-03-14T09:46:55.851+08:00  INFO 61167 --- [mp-system] [remote.worker.0] com.alibaba.nacos.common.remote.client   : [9f72a3b7-e27e-4f87-9f7e-40a51dc53ca1] Notify connected event to listeners.
-2026-03-14T09:46:55.851+08:00  INFO 61167 --- [mp-system] [remote.worker.0] com.alibaba.nacos.client.naming          : Grpc connection connect
-2026-03-14T09:46:55.851+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [9f72a3b7-e27e-4f87-9f7e-40a51dc53ca1] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
-2026-03-14T09:46:55.852+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [9f72a3b7-e27e-4f87-9f7e-40a51dc53ca1] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda/0x000003f801d25df8
-2026-03-14T09:46:55.852+08:00  INFO 61167 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : [REGISTER-SERVICE] public registering service mp-system with instance Instance{instanceId='null', ip='192.168.0.104', port=8082, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={IPv6=null, preserved.register.source=SPRING_CLOUD}}
-2026-03-14T09:46:55.858+08:00  INFO 61167 --- [mp-system] [           main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP mp-system 192.168.0.104:8082 register finished
-2026-03-14T09:46:55.860+08:00  INFO 61167 --- [mp-system] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
-2026-03-14T09:46:55.860+08:00  INFO 61167 --- [mp-system] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5178bad7]]
-2026-03-14T09:46:55.860+08:00  INFO 61167 --- [mp-system] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
-2026-03-14T09:46:55.865+08:00  INFO 61167 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Started SystemApplication in 4.209 seconds (process running for 4.333)
-2026-03-14T09:47:03.436+08:00  INFO 61167 --- [mp-system] [nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-14T09:47:03.437+08:00  INFO 61167 --- [mp-system] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-03-14T09:47:03.437+08:00  INFO 61167 --- [mp-system] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
-2026-03-14T09:47:03.445+08:00  WARN 61167 --- [mp-system] [nio-8082-exec-1] c.m.p.c.c.e.GlobalExceptionHandler       : 登录状态异常：未提供 token
+2026-03-14T09:51:54.036+08:00  INFO 64047 --- [mp-system] [           main] o.f.j.s.i.a.AbstractAsyncExecutor        : Starting up the async job executor [org.flowable.spring.job.service.SpringAsyncExecutor] for engine cmmn
+2026-03-14T09:51:54.051+08:00  INFO 64047 --- [mp-system] [       Thread-5] o.f.j.s.i.a.ResetExpiredJobsRunnable     : starting to reset expired jobs for engine cmmn
+2026-03-14T09:51:54.052+08:00  INFO 64047 --- [mp-system] [           main] o.f.j.s.i.a.AbstractAsyncExecutor        : Starting up the async job executor [org.flowable.spring.job.service.SpringAsyncExecutor] for engine bpmn
+2026-03-14T09:51:54.052+08:00  INFO 64047 --- [mp-system] [       Thread-4] o.f.j.s.i.a.AcquireTimerJobsRunnable     : starting to acquire async jobs due for engine cmmn
+2026-03-14T09:51:54.052+08:00  INFO 64047 --- [mp-system] [       Thread-3] o.f.j.s.i.a.AcquireAsyncJobsDueRunnable  : starting to acquire async jobs due for engine cmmn
+2026-03-14T09:51:54.055+08:00  INFO 64047 --- [mp-system] [       Thread-6] o.f.j.s.i.a.AcquireAsyncJobsDueRunnable  : starting to acquire async jobs due for engine bpmn
+2026-03-14T09:51:54.055+08:00  INFO 64047 --- [mp-system] [       Thread-7] o.f.j.s.i.a.AcquireTimerJobsRunnable     : starting to acquire async jobs due for engine bpmn
+2026-03-14T09:51:54.055+08:00  INFO 64047 --- [mp-system] [       Thread-8] o.f.j.s.i.a.ResetExpiredJobsRunnable     : starting to reset expired jobs for engine bpmn
+2026-03-14T09:51:54.060+08:00  INFO 64047 --- [mp-system] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8082 (http) with context path ''
+2026-03-14T09:51:54.063+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ans.namespace attribute : null
+2026-03-14T09:51:54.063+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from ALIBABA_ALIWARE_NAMESPACE attribute :null
+2026-03-14T09:51:54.063+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : initializer namespace from namespace attribute :null
+2026-03-14T09:51:54.067+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : FailoverDataSource type is class com.alibaba.nacos.client.naming.backups.datasource.DiskFailoverDataSource
+2026-03-14T09:51:54.071+08:00  INFO 64047 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [req-serv] nacos-server port:8848
+2026-03-14T09:51:54.071+08:00  INFO 64047 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : [settings] [http-client] connect timeout:1000
+2026-03-14T09:51:54.071+08:00  INFO 64047 --- [mp-system] [           main] c.alibaba.nacos.client.utils.ParamUtil   : PER_TASK_CONFIG_SIZE: 3000.0
+2026-03-14T09:51:54.072+08:00  INFO 64047 --- [mp-system] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+2026-03-14T09:51:54.073+08:00  INFO 64047 --- [mp-system] [           main] c.a.n.p.a.s.c.ClientAuthPluginManager    : [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+2026-03-14T09:51:54.077+08:00  INFO 64047 --- [mp-system] [       Thread-9] c.a.n.c.a.r.identify.CredentialWatcher   : null No credential found
+2026-03-14T09:51:54.081+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [RpcClientFactory] create a new rpc client of b424fe18-f192-409b-9636-c17f864c6117
+2026-03-14T09:51:54.087+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : Create naming rpc client for uuid->b424fe18-f192-409b-9636-c17f864c6117
+2026-03-14T09:51:54.087+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b424fe18-f192-409b-9636-c17f864c6117] RpcClient init, ServerListFactory = com.alibaba.nacos.client.naming.core.ServerListManager
+2026-03-14T09:51:54.087+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b424fe18-f192-409b-9636-c17f864c6117] Registry connection listener to current client:com.alibaba.nacos.client.naming.remote.gprc.redo.NamingGrpcRedoService
+2026-03-14T09:51:54.087+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b424fe18-f192-409b-9636-c17f864c6117] Register server push request handler:com.alibaba.nacos.client.naming.remote.gprc.NamingPushRequestHandler
+2026-03-14T09:51:54.088+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b424fe18-f192-409b-9636-c17f864c6117] Try to connect to server on start up, server: {serverIp = '127.0.0.1', server main port = 8848}
+2026-03-14T09:51:54.098+08:00  INFO 64047 --- [mp-system] [           main] c.a.n.c.remote.client.grpc.GrpcClient    : grpc client connection server:127.0.0.1 ip,serverPort:9848,grpcTslConfig:{"sslProvider":"","enableTls":false,"mutualAuthEnable":false,"trustAll":false}
+2026-03-14T09:51:54.267+08:00  INFO 64047 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to get current node abilities...
+2026-03-14T09:51:54.267+08:00  INFO 64047 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Ready to initialize current node abilities, support modes: [SDK_CLIENT]
+2026-03-14T09:51:54.267+08:00  INFO 64047 --- [mp-system] [           main] c.a.n.c.a.AbstractAbilityControlManager  : Initialize current abilities finish...
+2026-03-14T09:51:54.267+08:00  INFO 64047 --- [mp-system] [           main] c.a.n.c.a.d.NacosAbilityManagerHolder    : [AbilityControlManager] Successfully initialize AbilityControlManager
+2026-03-14T09:51:54.274+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b424fe18-f192-409b-9636-c17f864c6117] Success to connect to server [127.0.0.1:8848] on start up, connectionId = 1773453114238_127.0.0.1_54922
+2026-03-14T09:51:54.274+08:00  INFO 64047 --- [mp-system] [remote.worker.0] com.alibaba.nacos.common.remote.client   : [b424fe18-f192-409b-9636-c17f864c6117] Notify connected event to listeners.
+2026-03-14T09:51:54.274+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b424fe18-f192-409b-9636-c17f864c6117] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$ConnectResetRequestHandler
+2026-03-14T09:51:54.275+08:00  INFO 64047 --- [mp-system] [remote.worker.0] com.alibaba.nacos.client.naming          : Grpc connection connect
+2026-03-14T09:51:54.275+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.common.remote.client   : [b424fe18-f192-409b-9636-c17f864c6117] Register server push request handler:com.alibaba.nacos.common.remote.client.RpcClient$$Lambda/0x00001ff001d248e8
+2026-03-14T09:51:54.275+08:00  INFO 64047 --- [mp-system] [           main] com.alibaba.nacos.client.naming          : [REGISTER-SERVICE] public registering service mp-system with instance Instance{instanceId='null', ip='192.168.0.104', port=8082, weight=1.0, healthy=true, enabled=true, ephemeral=true, clusterName='DEFAULT', serviceName='null', metadata={IPv6=null, preserved.register.source=SPRING_CLOUD}}
+2026-03-14T09:51:54.280+08:00  INFO 64047 --- [mp-system] [           main] c.a.c.n.registry.NacosServiceRegistry    : nacos registry, DEFAULT_GROUP mp-system 192.168.0.104:8082 register finished
+2026-03-14T09:51:54.282+08:00  INFO 64047 --- [mp-system] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-03-14T09:51:54.282+08:00  INFO 64047 --- [mp-system] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@44afe74a]]
+2026-03-14T09:51:54.282+08:00  INFO 64047 --- [mp-system] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-03-14T09:51:54.287+08:00  INFO 64047 --- [mp-system] [           main] c.m.platform.system.SystemApplication    : Started SystemApplication in 4.343 seconds (process running for 4.452)
+2026-03-14T09:52:01.763+08:00  INFO 64047 --- [mp-system] [nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-14T09:52:01.763+08:00  INFO 64047 --- [mp-system] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-14T09:52:01.763+08:00  INFO 64047 --- [mp-system] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-03-14T09:52:01.771+08:00  WARN 64047 --- [mp-system] [nio-8082-exec-1] c.m.p.c.c.e.GlobalExceptionHandler       : 登录状态异常：未提供 token

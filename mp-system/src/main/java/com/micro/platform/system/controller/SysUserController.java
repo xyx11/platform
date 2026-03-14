@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -89,15 +90,25 @@ public class SysUserController {
     @Operation(summary = "导出用户数据")
     @OperationLog(module = "用户管理", type = OperationType.EXPORT, description = "导出用户数据")
     @PreAuthorize("hasAuthority('system:user:query')")
-    @GetMapping("/export")
-    public void export(HttpServletResponse response, SysUser user) {
-        sysUserService.exportUser(response, user);
+    @GetMapping(value = "/export", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    public ResponseEntity<byte[]> export(HttpServletResponse response, SysUser user) {
+        try {
+            sysUserService.exportUser(response, user);
+            return null;
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
     }
 
     @Operation(summary = "下载导入模板")
-    @GetMapping("/downloadTemplate")
-    public void downloadTemplate(HttpServletResponse response) {
-        sysUserService.downloadTemplate(response);
+    @GetMapping(value = "/downloadTemplate", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    public ResponseEntity<byte[]> downloadTemplate(HttpServletResponse response) {
+        try {
+            sysUserService.downloadTemplate(response);
+            return null;
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
     }
 
     @Operation(summary = "导入用户数据")
