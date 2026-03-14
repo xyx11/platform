@@ -97,7 +97,7 @@
 <script setup name="WorkflowForm">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import request from '@/utils/request'
+import { getFormBindingList, bindForm, unbindForm, getFormDefinitionList } from '@/api/system/workflow-form'
 
 const loading = ref(false)
 const submitting = ref(false)
@@ -125,11 +125,7 @@ const formRules = {
 const getFormBindingList = async () => {
   loading.value = true
   try {
-    const res = await request({
-      url: '/system/workflow-form/list',
-      method: 'get',
-      params: { pageNum: 1, pageSize: 100 }
-    })
+    const res = await getFormBindingList({ pageNum: 1, pageSize: 100 })
     formBindingList.value = res.data?.records || res.data?.list || []
   } catch (error) {
     ElMessage.error('获取表单绑定列表失败：' + error.message)
@@ -141,10 +137,7 @@ const getFormBindingList = async () => {
 // 获取表单定义列表
 const getFormDefinitionList = async () => {
   try {
-    const res = await request({
-      url: '/system/form-definition/list',
-      method: 'get'
-    })
+    const res = await getFormDefinitionList()
     formDefinitionList.value = res.data?.records || res.data || []
   } catch (error) {
     // 获取表单定义列表失败
@@ -179,15 +172,11 @@ const handleDelete = (row) => {
     }
   ).then(async () => {
     try {
-      await request({
-        url: '/system/workflow-form/unbind',
-        method: 'post',
-        data: {
+      await unbindForm({
           processDefinitionKey: row.processDefinitionKey,
           taskDefinitionKey: row.taskDefinitionKey,
           formType: row.formType
-        }
-      })
+        })
       ElMessage.success('删除成功')
       getFormBindingList()
     } catch (error) {
@@ -204,11 +193,7 @@ const submitForm = async () => {
     if (valid) {
       submitting.value = true
       try {
-        await request({
-          url: '/system/workflow-form/bind',
-          method: 'post',
-          data: formData
-        })
+        await bindForm(formData)
         ElMessage.success('绑定成功')
         dialogVisible.value = false
         getFormBindingList()

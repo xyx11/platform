@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.micro.platform.system.mapper.WfFormBindingMapper">
+
+    <resultMap id="BaseResultMap" type="com.micro.platform.system.entity.WfFormBinding">
+        <id property="id" column="id"/>
+        <result property="processDefinitionKey" column="process_definition_key"/>
+        <result property="processDefinitionId" column="process_definition_id"/>
+        <result property="taskDefinitionKey" column="task_definition_key"/>
+        <result property="formCode" column="form_code"/>
+        <result property="formName" column="form_name"/>
+        <result property="formType" column="form_type"/>
+        <result property="bindingKey" column="binding_key"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, process_definition_key, process_definition_id, task_definition_key,
+        form_code, form_name, form_type, binding_key, status, remark,
+        create_by, create_time, update_by, update_time, deleted
+    </sql>
+
+</mapper>
