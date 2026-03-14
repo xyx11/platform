@@ -42,6 +42,8 @@ public class AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
     @Autowired(required = false)
     private EmailNotificationService emailNotificationService;
+    @Autowired(required = false)
+    private SmsService smsService;
 
     public AuthService(RedisUtil redisUtil, SysUserMapper userMapper, SysLoginLogMapper loginLogMapper) {
         this.redisUtil = redisUtil;
@@ -340,9 +342,12 @@ public class AuthService {
         // 存储验证码，10 分钟过期
         redisUtil.set(redisKey, code, 600, TimeUnit.SECONDS);
 
-        // TODO: 实际项目中应该调用短信服务发送验证码（需要配置短信服务商）
-        // 示例：smsService.send(phone, code);
-        log.info("发送找回密码验证码到手机号：{}，验证码：{}", phone, code);
+        // 调用短信服务发送验证码
+        if (smsService != null) {
+            smsService.sendCode(phone, code);
+        } else {
+            log.info("短信服务未配置，验证码：{} (仅记录，未发送)", code);
+        }
         
         // 如果手机关联了邮箱，也可以发送邮件通知
         if (user != null && user.getEmail() != null) {

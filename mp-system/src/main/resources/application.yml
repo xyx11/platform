@@ -39,6 +39,20 @@ spring:
   jackson:
     type-id-handling: disabled
 
+# 短信服务配置
+sms:
+  enabled: false  # 是否启用短信服务
+  provider: aliyun  # 短信服务商：aliyun, tencent
+  access-key-id: your-access-key-id
+  access-key-secret: your-access-key-secret
+  sign-name: 您的签名名称
+  template-code: SMS_123456789  # 验证码模板 ID
+  # 阿里云配置
+  aliyun-region-id: cn-hangzhou
+  # 腾讯云配置
+  tencent-app-id: 1400000000
+  tencent-region: ap-shanghai
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: com.micro.platform.**.entity

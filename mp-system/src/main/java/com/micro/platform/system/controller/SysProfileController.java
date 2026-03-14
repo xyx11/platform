@@ -10,6 +10,7 @@ import com.micro.platform.common.security.util.SecurityUtil;
 import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.service.SysUserService;
 import com.micro.platform.system.service.EmailNotificationService;
+import com.micro.platform.common.core.service.SmsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -35,12 +36,15 @@ public class SysProfileController {
     private final SysUserService sysUserService;
     private final RedisUtil redisUtil;
     private final EmailNotificationService emailNotificationService;
+    private final SmsService smsService;
 
     public SysProfileController(SysUserService sysUserService, RedisUtil redisUtil,
-                                EmailNotificationService emailNotificationService) {
+                                EmailNotificationService emailNotificationService,
+                                SmsService smsService) {
         this.sysUserService = sysUserService;
         this.redisUtil = redisUtil;
         this.emailNotificationService = emailNotificationService;
+        this.smsService = smsService;
     }
 
     @Operation(summary = "获取个人信息")
@@ -185,9 +189,12 @@ public class SysProfileController {
         String cacheKey = "sms:" + type + ":" + phone;
         redisUtil.set(cacheKey, code, 300, TimeUnit.SECONDS);
 
-        // TODO: 调用短信服务发送验证码（需要配置短信服务商）
-        // 示例：smsService.send(phone, code);
-        log.info("发送短信验证码到手机号：{}，验证码：{}", phone, code);
+        // 调用短信服务发送验证码
+        if (smsService != null) {
+            smsService.sendCode(phone, code);
+        } else {
+            log.info("短信服务未配置，验证码：{} (仅记录，未发送)", code);
+        }
 
         return Result.success();
     }
