@@ -231,9 +231,12 @@ const rules = {
 const getMenuList = () => {
   loading.value = true
   request.get('/system/menu/list', { params: queryParams }).then(res => {
+    console.log('[菜单列表] 返回数据:', res.data)
     menuList.value = handleTreeData(res.data || [])
+    console.log('[菜单列表] 树形转换后:', menuList.value)
     loading.value = false
-  }).catch(() => {
+  }).catch((err) => {
+    console.error('[菜单列表] 请求失败:', err)
     loading.value = false
   })
 }
@@ -242,7 +245,8 @@ const getMenuList = () => {
 const handleTreeData = (data, parentId = 0) => {
   const result = []
   data.forEach(item => {
-    if (item.parentId === parentId) {
+    // 使用 String 转换确保类型一致
+    if (String(item.parentId) === String(parentId)) {
       const children = handleTreeData(data, item.menuId)
       if (children.length > 0) {
         item.children = children

@@ -433,7 +433,13 @@ const menuRoutes = [
       { path: '/system/loginlog', name: 'SysLoginLog', meta: { title: '登录日志', icon: 'Document' } },
       { path: '/system/notice', name: 'SysNotice', meta: { title: '通知公告', icon: 'Bell' } },
       { path: '/system/command', name: 'SysCommand', meta: { title: '命令执行', icon: 'Tools' } },
-      { path: '/system/todo', name: 'SysTodo', meta: { title: '待办事项', icon: 'Clock' } }
+      { path: '/system/todo', name: 'SysTodo', meta: { title: '待办事项', icon: 'Clock' } },
+      { path: '/system/workflow/stats', name: 'WorkflowStats', meta: { title: '工作流统计', icon: 'TrendCharts' } },
+      { path: '/system/workflow-designer', name: 'WorkflowDesigner', meta: { title: '流程设计器', icon: 'EditPen' } },
+      { path: '/system/workflow-form', name: 'WorkflowForm', meta: { title: '流程表单', icon: 'FileText' } },
+      { path: '/system/workflow-definition', name: 'WorkflowDefinition', meta: { title: '流程定义', icon: 'Flowchart' } },
+      { path: '/system/process-instance', name: 'ProcessInstance', meta: { title: '流程实例监控', icon: 'Monitor' } },
+      { path: '/system/task', name: 'TaskManagement', meta: { title: '任务管理', icon: 'List' } }
     ]
   },
   {
