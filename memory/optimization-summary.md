@@ -7,6 +7,7 @@
 - 创建 `OperationLogService` 接口和实现
 - 更新 `OperationLogAspect` 使用异步服务保存日志
 - 配置线程池参数（核心 5 线程，最大 10 线程，队列 100）
+- 修复 common 模块 OperationLog 到 SysOperationLog 的字段映射
 
 ### 2. 忘记密码功能
 - 新增 `ResetPassword.vue` 页面
@@ -15,36 +16,54 @@
 - 更新登录页面添加忘记密码链接
 - 添加路由 `/reset-password`
 
-### 3. Token 刷新机制
-- 实现后端 `refreshToken` 方法
+### 3. Token 自动刷新
+- 后端实现 `refreshToken` 方法
 - 前端 request.js 添加自动刷新逻辑
 - 使用 refreshSubscribers 队列处理并发请求
 - 401 响应时自动尝试刷新 token
 
-### 4. 个人中心增强（前期完成）
+### 4. 邮件服务集成
+- SysProfileController 集成邮件发送验证码功能
+- AuthService 支持密码重置时发送邮件通知
+- 添加邮件服务配置示例（application.yml）
+
+### 5. 短信服务接口
+- 添加 `SmsService` 接口定义
+- 添加 `SmsServiceStub` 开发环境空实现
+- 生产环境可替换为阿里云/腾讯云短信服务
+
+### 6. 个人中心增强（前期完成）
 - 头像上传功能
 - 手机号验证码修改
 - 邮箱验证码修改
 - 验证码倒计时控制
 
-### 5. 工作流表单绑定（前期完成）
+### 7. 工作流表单绑定（前期完成）
 - 新增 WfFormBinding 实体和服务
 - 实现表单绑定 CRUD 功能
 - 前端页面集成
 
-### 6. 导出接口统一（前期完成）
+### 8. 导出接口统一（前期完成）
 - 所有导出接口改为 `ResponseEntity<byte[]>` 返回格式
 - 前端统一使用 blob 类型接收
 
-## 待集成的功能（TODO）
+## 可选配置（TODO 注释说明）
 
-1. **短信服务集成** - SysProfileController.java 和 AuthService.java
-   - 需要配置短信服务商（阿里云、腾讯云等）
-   - 实现短信发送接口
+### 短信服务集成
+需要配置短信服务商（阿里云、腾讯云等）：
+- `SysProfileController.java` - 发送手机号验证码
+- `AuthService.java` - 发送密码重置验证码
 
-2. **邮件服务集成** - SysProfileController.java
-   - 系统已有 EmailNotificationService
-   - 需要配置 SMTP 服务器
+### 邮件服务配置
+已在 `application.yml` 添加配置模板，需要修改为实际配置：
+```yaml
+spring:
+  mail:
+    host: smtp.qq.com        # 修改为实际 SMTP 服务器
+    port: 465
+    username: your-email     # 修改为实际邮箱
+    password: your-auth-code # 修改为授权码
+```
 
 ## 系统功能清单
 
