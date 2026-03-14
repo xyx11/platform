@@ -63,35 +63,79 @@
 
         <el-card shadow="never" class="table-card">
           <template #header>
-            <div class="header-actions">
-              <el-button type="primary" @click="handleAdd">
-                <el-icon><Plus /></el-icon> 新增
-              </el-button>
-              <el-button type="danger" :disabled="multiple" @click="handleBatchDelete">
-                <el-icon><Delete /></el-icon> 批量删除
-              </el-button>
-              <el-button type="warning" :disabled="multiple" @click="handleBatchResetPwd">
-                <el-icon><Key /></el-icon> 批量重置密码
-              </el-button>
-              <el-button type="success" :disabled="multiple" @click="handleBatchUnlock">
-                <el-icon><Unlock /></el-icon> 批量解锁
-              </el-button>
-              <el-dropdown @command="handleCommand">
-                <el-button type="info">
-                  <el-icon><Download /></el-icon> 导入导出 <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+            <div class="header-top">
+              <div class="header-actions">
+                <el-button type="primary" @click="handleAdd">
+                  <el-icon><Plus /></el-icon> 新增
                 </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item command="import"><el-icon><Upload /></el-icon> 导入数据</el-dropdown-item>
-                    <el-dropdown-item command="export"><el-icon><Download /></el-icon> 导出数据</el-dropdown-item>
-                    <el-dropdown-item command="template"><el-icon><Document /></el-icon> 下载模板</el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+                <el-button type="danger" :disabled="multiple" @click="handleBatchDelete">
+                  <el-icon><Delete /></el-icon> 批量删除
+                </el-button>
+                <el-button type="warning" :disabled="multiple" @click="handleBatchResetPwd">
+                  <el-icon><Key /></el-icon> 批量重置
+                </el-button>
+                <el-dropdown @command="handleCommand">
+                  <el-button type="info">
+                    <el-icon><Download /></el-icon> 导入导出 <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+                  </el-button>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item command="import"><el-icon><Upload /></el-icon> 导入数据</el-dropdown-item>
+                      <el-dropdown-item command="export"><el-icon><Download /></el-icon> 导出数据</el-dropdown-item>
+                      <el-dropdown-item command="template"><el-icon><Document /></el-icon> 下载模板</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+                <el-dropdown @command="handleSettingCommand" class="ml-auto">
+                  <el-button type="default" circle>
+                    <el-icon><Setting /></el-icon>
+                  </el-button>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item divided>表格设置</el-dropdown-item>
+                      <el-dropdown-item v-for="col in columns" :key="col.prop" :disabled="col.disabled">
+                        <el-checkbox 
+                          v-model="col.visible" 
+                          @change="toggleColumn(col.prop)"
+                          :disabled="col.disabled"
+                        >
+                          {{ col.label }}
+                        </el-checkbox>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+              </div>
+              
+              <!-- 统计信息 -->
+              <div class="header-stats">
+                <div class="stat-item">
+                  <el-icon class="stat-icon" style="color: #1e80ff"><User /></el-icon>
+                  <div class="stat-content">
+                    <span class="stat-label">用户总数</span>
+                    <span class="stat-value">{{ userCount }}</span>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <el-icon class="stat-icon" style="color: #67c23a"><CircleCheck /></el-icon>
+                  <div class="stat-content">
+                    <span class="stat-label">正常</span>
+                    <span class="stat-value" style="color: #67c23a">{{ normalCount }}</span>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <el-icon class="stat-icon" style="color: #f56c6c"><CircleClose /></el-icon>
+                  <div class="stat-content">
+                    <span class="stat-label">禁用</span>
+                    <span class="stat-value" style="color: #f56c6c">{{ disabledCount }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </template>
 
           <el-table
+            :key="tableKey"
             :data="userList"
             v-loading="loading"
             @selection-change="handleSelectionChange"
@@ -99,8 +143,17 @@
             class="user-table"
           >
             <el-table-column type="selection" width="45" align="center" />
-            <el-table-column prop="userId" label="用户 ID" width="100" />
-            <el-table-column label="用户信息" min-width="200">
+            <el-table-column 
+              v-if="columns.find(c => c.prop === 'userId')?.visible" 
+              prop="userId" 
+              label="用户 ID" 
+              width="100"
+            />
+            <el-table-column 
+              v-if="columns.find(c => c.prop === 'userInfo')?.visible" 
+              label="用户信息" 
+              min-width="200"
+            >
               <template #default="{ row }">
                 <div class="user-info">
                   <el-avatar :size="40" :src="row.avatar || getAvatarUrl(row.gender)">
@@ -113,16 +166,39 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="deptName" label="部门" width="140" show-overflow-tooltip />
-            <el-table-column prop="phone" label="手机号" width="130">
+            <el-table-column 
+              v-if="columns.find(c => c.prop === 'deptName')?.visible" 
+              prop="deptName" 
+              label="部门" 
+              width="140" 
+              show-overflow-tooltip 
+            />
+            <el-table-column 
+              v-if="columns.find(c => c.prop === 'phone')?.visible" 
+              prop="phone" 
+              label="手机号" 
+              width="130"
+            >
               <template #default="{ row }">
                 <el-tag type="info" size="small" v-if="row.phone">
                   <el-icon><Cellphone /></el-icon> {{ row.phone }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="email" label="邮箱" width="180" show-overflow-tooltip />
-            <el-table-column prop="status" label="状态" width="80" align="center">
+            <el-table-column 
+              v-if="columns.find(c => c.prop === 'email')?.visible" 
+              prop="email" 
+              label="邮箱" 
+              width="180" 
+              show-overflow-tooltip 
+            />
+            <el-table-column 
+              v-if="columns.find(c => c.prop === 'status')?.visible" 
+              prop="status" 
+              label="状态" 
+              width="100" 
+              align="center"
+            >
               <template #default="{ row }">
                 <el-switch
                   v-model="row.status"
@@ -134,7 +210,12 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="170" />
+            <el-table-column 
+              v-if="columns.find(c => c.prop === 'createTime')?.visible" 
+              prop="createTime" 
+              label="创建时间" 
+              width="170" 
+            />
             <el-table-column label="操作" width="280" fixed="right" align="center">
               <template #default="{ row }">
                 <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">编辑</el-button>
@@ -185,7 +266,7 @@
         <el-row :gutter="16">
           <el-col :span="12">
             <el-form-item label="昵称" prop="nickname">
-              <el-input v-model="form.nickname" placeholder="请输入昵称" />
+              <el-input v-model="form.nickname" placeholder="请输入昵称" maxlength="30" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -245,7 +326,7 @@
       </el-form>
       <template #footer>
         <el-button @click="dialog.visible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">确定</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitting">确定</el-button>
       </template>
     </el-dialog>
 
@@ -257,6 +338,7 @@
           description="重置密码后，用户需要使用新密码重新登录"
           type="info"
           :closable="false"
+          show-icon
           style="margin-bottom: 20px"
         />
         <el-form-item label="新密码" prop="password">
@@ -265,7 +347,7 @@
       </el-form>
       <template #footer>
         <el-button @click="pwdDialog.visible = false">取消</el-button>
-        <el-button type="primary" @click="submitPwdForm">确定</el-button>
+        <el-button type="primary" @click="submitPwdForm" :loading="pwdSubmitting">确定</el-button>
       </template>
     </el-dialog>
 
@@ -285,7 +367,7 @@
       </el-form>
       <template #footer>
         <el-button @click="roleDialog.visible = false">取消</el-button>
-        <el-button type="primary" @click="submitRoleForm">确定</el-button>
+        <el-button type="primary" @click="submitRoleForm" :loading="roleSubmitting">确定</el-button>
       </template>
     </el-dialog>
 
@@ -326,12 +408,12 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, onMounted } from 'vue'
+<script setup name="SysUser">
+import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   UploadFilled, OfficeBuilding, User, Cellphone, Search, Refresh, Plus, Delete,
-  Key, Unlock, Download, Upload, Document, ArrowDown
+  Key, Download, Upload, Document, ArrowDown, Setting, CircleCheck, CircleClose
 } from '@element-plus/icons-vue'
 import request from '@/utils/request'
 
@@ -339,8 +421,12 @@ const userList = ref([])
 const deptTreeData = ref([])
 const roleList = ref([])
 const loading = ref(false)
+const submitting = ref(false)
+const pwdSubmitting = ref(false)
+const roleSubmitting = ref(false)
 const multiple = ref(true)
 const userIds = ref([])
+const tableKey = ref(0)
 const importDialog = reactive({
   visible: false
 })
@@ -402,8 +488,21 @@ const roleForm = reactive({
   roleIds: []
 })
 
+// 表格列配置
+const columns = reactive([
+  { prop: 'userId', label: '用户 ID', visible: true, disabled: false },
+  { prop: 'userInfo', label: '用户信息', visible: true, disabled: true },
+  { prop: 'deptName', label: '部门', visible: true, disabled: false },
+  { prop: 'phone', label: '手机号', visible: true, disabled: false },
+  { prop: 'email', label: '邮箱', visible: true, disabled: false },
+  { prop: 'status', label: '状态', visible: true, disabled: false },
+  { prop: 'createTime', label: '创建时间', visible: true, disabled: false }
+])
+
 const rules = {
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur', min: 2, max: 20 }],
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur', min: 2, max: 20 }
+  ],
   password: [{ required: true, message: '请输入密码', trigger: 'blur', min: 6, max: 20 }],
   nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
   deptId: [{ required: true, message: '请选择部门', trigger: 'change' }],
@@ -421,6 +520,11 @@ const pwdRules = {
     { pattern: /^\S{6,}$/, message: '密码长度至少为 6 位', trigger: 'blur' }
   ]
 }
+
+// 统计信息
+const userCount = computed(() => pagination.total)
+const normalCount = computed(() => userList.value.filter(u => u.status === 1).length)
+const disabledCount = computed(() => userList.value.filter(u => u.status === 0).length)
 
 // 获取默认头像
 const getAvatarUrl = (gender) => {
@@ -510,6 +614,17 @@ const handleCommand = (command) => {
   }
 }
 
+// 设置菜单命令
+const handleSettingCommand = (command) => {
+  // 表格设置
+}
+
+// 切换列显示
+const toggleColumn = (prop) => {
+  tableKey.value++
+  ElMessage.success('列显示已更新')
+}
+
 // 新增
 const handleAdd = () => {
   dialog.title = '新增用户'
@@ -520,7 +635,6 @@ const handleAdd = () => {
 const handleUpdate = (row) => {
   dialog.title = '修改用户'
   dialog.visible = true
-  // 显式赋值表单字段，避免 Object.assign 精度问题
   form.userId = row.userId
   form.username = row.username
   form.nickname = row.nickname
@@ -532,6 +646,7 @@ const handleUpdate = (row) => {
   form.roleIds = (row.roleIds || []).map(id => String(id))
   form.avatar = row.avatar
 }
+
 // 删除
 const handleDelete = (row) => {
   ElMessageBox.confirm(`确认删除用户 "${row.username}" 吗？删除后无法恢复！`, '警告', {
@@ -585,6 +700,10 @@ const handleResetPwd = (row) => {
 
 // 批量重置密码
 const handleBatchResetPwd = () => {
+  if (userIds.value.length === 0) {
+    ElMessage.warning('请先选择用户')
+    return
+  }
   ElMessageBox.confirm(`确认重置选中的 ${userIds.value.length} 个用户的密码吗？`, '警告', {
     type: 'warning'
   }).then(() => {
@@ -605,29 +724,6 @@ const handleBatchResetPwd = () => {
   }).catch(() => {})
 }
 
-// 解锁用户
-const handleUnlock = (row) => {
-  ElMessageBox.confirm(`确认解锁用户 "${row.username}" 吗？`, '提示', {
-    type: 'warning'
-  }).then(() => {
-    request.post('/system/user/unlock/' + row.userId).then(() => {
-      ElMessage.success('解锁成功')
-    })
-  }).catch(() => {})
-}
-
-// 批量解锁用户
-const handleBatchUnlock = () => {
-  ElMessageBox.confirm(`确认解锁选中的 ${userIds.value.length} 个用户吗？`, '警告', {
-    type: 'warning'
-  }).then(() => {
-    request.post('/system/user/unlock/batch', userIds.value).then(() => {
-      ElMessage.success('批量解锁成功')
-      getUserList()
-    })
-  }).catch(() => {})
-}
-
 // 分配角色
 const handleAssignRole = (row) => {
   roleDialog.visible = true
@@ -641,14 +737,18 @@ const handleAssignRole = (row) => {
 
 // 提交角色分配
 const submitRoleForm = () => {
+  roleSubmitting.value = true
   request.post('/system/user/roles?userId=' + roleForm.userId, roleForm.roleIds).then(() => {
     ElMessage.success('角色分配成功')
     roleDialog.visible = false
+  }).catch(() => {}).finally(() => {
+    roleSubmitting.value = false
   })
 }
 
 // 导出
 const handleExport = () => {
+  loading.value = true
   const params = {
     ...queryParams,
     pageNum: 1,
@@ -665,6 +765,8 @@ const handleExport = () => {
     ElMessage.success('导出成功')
   }).catch(() => {
     ElMessage.error('导出失败')
+  }).finally(() => {
+    loading.value = false
   })
 }
 
@@ -750,14 +852,15 @@ const submitImport = () => {
 const submitForm = () => {
   formRef.value.validate(valid => {
     if (valid) {
-    
+      submitting.value = true
       const api = form.userId !== null && form.userId !== undefined && form.userId !== '' ? request.put : request.post
-      // 将 roleIds 字符串数组转回 Long 数组（后端可以处理）
       const submitData = { ...form, roleIds: form.roleIds }
       api('/system/user', submitData).then(() => {
         ElMessage.success('操作成功')
         dialog.visible = false
         getUserList()
+      }).catch(() => {}).finally(() => {
+        submitting.value = false
       })
     }
   })
@@ -767,9 +870,12 @@ const submitForm = () => {
 const submitPwdForm = () => {
   pwdFormRef.value.validate(valid => {
     if (valid) {
+      pwdSubmitting.value = true
       request.put('/system/user/password', pwdForm).then(() => {
         ElMessage.success('密码重置成功')
         pwdDialog.visible = false
+      }).catch(() => {}).finally(() => {
+        pwdSubmitting.value = false
       })
     }
   })
@@ -897,11 +1003,61 @@ $bg-color-page: #f5f6f7;
   .table-card {
     border-radius: 8px;
 
+    .header-top {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
     .header-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       align-items: center;
+
+      .ml-auto {
+        margin-left: auto;
+      }
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 32px;
+      padding: 12px 0;
+      border-top: 1px solid $border-color;
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .stat-icon {
+          font-size: 28px;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0, 0, 0, 0.04);
+          border-radius: 8px;
+        }
+
+        .stat-content {
+          display: flex;
+          flex-direction: column;
+
+          .stat-label {
+            font-size: 12px;
+            color: $text-secondary;
+          }
+
+          .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: $text-primary;
+          }
+        }
+      }
     }
 
     .user-table {
