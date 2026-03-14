@@ -12,18 +12,17 @@ const service = axios.create({
 })
 
 // 添加请求方法别名 - 使用箭头函数绑定 this
-service.get = (url, params) => {
-  const config = { url, params, method: 'get' }
-  // 支持 responseType 等配置（如 blob 用于文件下载）
-  if (params && params.responseType) {
-    config.responseType = params.responseType
-  }
-  return service(config)
+service.get = (url, params = {}, config = {}) => {
+  // 支持 { params: ... } 格式或直接传递 params 对象
+  const finalParams = params && params.params ? params.params : params
+  return service({ url, method: 'get', params: finalParams, ...config })
 }
 service.post = (url, data, config = {}) => {
   return service({ url, data, method: 'post', ...config })
 }
-service.put = (url, data) => service({ url, data, method: 'put' })
+service.put = (url, data, config = {}) => {
+  return service({ url, data, method: 'put', ...config })
+}
 service.delete = (url, params) => {
   // 支持 { data: ... } 参数格式
   if (params && params.data) {
@@ -44,9 +43,13 @@ service.interceptors.request.use(
         config.headers['Authorization'] = token
       }
     }
+    // 如果是 FormData（文件上传），删除默认的 Content-Type，让 axios 自动设置 multipart/form-data 和 boundary
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type']
+    }
     // 开发环境日志
     if (import.meta.env.DEV) {
-      console.log('[Request]', config.method.toUpperCase(), config.url)
+      console.log('[Request]', config.method.toUpperCase(), config.url, config.params || '')
     }
     return config
   },

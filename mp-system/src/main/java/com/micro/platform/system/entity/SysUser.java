@@ -26,6 +26,12 @@ public class SysUser implements Serializable {
     private Long deptId;
 
     /**
+     * 部门名称（非数据库字段）
+     */
+    @TableField(exist = false)
+    private String deptName;
+
+    /**
      * 用户名
      */
     private String username;
@@ -251,5 +257,13 @@ public class SysUser implements Serializable {
 
     public void setRoleIds(List<Long> roleIds) {
         this.roleIds = roleIds;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 }

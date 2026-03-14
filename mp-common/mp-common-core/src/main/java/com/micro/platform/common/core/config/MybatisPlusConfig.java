@@ -2,6 +2,7 @@ package com.micro.platform.common.core.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import com.micro.platform.common.core.interceptor.TenantInterceptor;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,11 @@ public class MybatisPlusConfig {
         TenantLineInnerInterceptor tenantLineInnerInterceptor = new TenantLineInnerInterceptor();
         tenantLineInnerInterceptor.setTenantLineHandler(tenantInterceptor);
         interceptor.addInnerInterceptor(tenantLineInnerInterceptor);
+
+        // 分页插件
+        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor(DbType.MYSQL);
+        paginationInnerInterceptor.setMaxLimit(500L);
+        interceptor.addInnerInterceptor(paginationInnerInterceptor);
 
         return interceptor;
     }

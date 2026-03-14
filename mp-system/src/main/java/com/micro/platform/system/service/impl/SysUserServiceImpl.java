@@ -13,7 +13,6 @@ import com.micro.platform.system.entity.SysUser;
 import com.micro.platform.system.mapper.SysDeptMapper;
 import com.micro.platform.system.mapper.SysUserMapper;
 import com.micro.platform.system.service.SysUserService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -56,10 +56,18 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
                 .orderByDesc(SysUser::getCreateTime);
         Page<SysUser> resultPage = baseMapper.selectPage(page, wrapper);
 
-        // 填充角色名称
+        // 填充角色名称和部门名称
         for (SysUser u : resultPage.getRecords()) {
+            // 填充角色 ID 列表
             List<Long> roleIds = sysUserMapper.selectRoleIdsByUserId(u.getUserId());
             u.setRoleIds(roleIds);
+            // 填充部门名称
+            if (u.getDeptId() != null) {
+                SysDept dept = sysDeptMapper.selectById(u.getDeptId());
+                if (dept != null) {
+                    u.setDeptName(dept.getDeptName());
+                }
+            }
         }
 
         return resultPage;
@@ -122,30 +130,24 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
     }
 
     @Override
-    public void exportUser(HttpServletResponse response, SysUser user) {
+    public byte[] exportUser(SysUser user) {
         try {
             List<SysUser> list = selectUserList(user);
 
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("用户数据", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-
-            EasyExcel.write(response.getOutputStream(), SysUser.class)
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            EasyExcel.write(os, SysUser.class)
                     .sheet("用户数据")
                     .doWrite(list);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("导出用户数据失败：" + e.getMessage());
         }
     }
 
     @Override
-    public void downloadTemplate(HttpServletResponse response) {
+    public byte[] downloadTemplate() {
         try {
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("用户导入模板", "UTF-8").replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
 
             List<SysUser> template = new ArrayList<>();
             SysUser demo = new SysUser();
@@ -158,9 +160,10 @@ public class SysUserServiceImpl extends ServiceImplX<SysUserMapper, SysUser> imp
             demo.setStatus(1);
             template.add(demo);
 
-            EasyExcel.write(response.getOutputStream(), SysUser.class)
+            EasyExcel.write(os, SysUser.class)
                     .sheet("模板")
                     .doWrite(template);
+            return os.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("下载模板失败：" + e.getMessage());
         }

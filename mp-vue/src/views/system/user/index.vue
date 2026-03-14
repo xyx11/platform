@@ -735,11 +735,7 @@ const submitImport = () => {
   const formData = new FormData()
   formData.append('file', uploadFile.value)
 
-  request.post('/system/user/import', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  }).then(res => {
+  request.post('/system/user/import', formData).then(res => {
     ElMessage.success(`导入成功！成功：${res.data?.success || 0}，失败：${res.data?.failed || 0}`)
     importDialog.visible = false
     getUserList()

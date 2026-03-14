@@ -1,6 +1,7 @@
 package com.micro.platform.common.log.aspect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.micro.platform.common.log.annotation.OperationLog;
 import com.micro.platform.common.security.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -30,7 +32,8 @@ public class OperationLogAspect {
 
     private static final Logger log = LoggerFactory.getLogger(OperationLogAspect.class);
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+        .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
     @Pointcut("@annotation(com.micro.platform.common.log.annotation.OperationLog)")
     public void logPointcut() {
@@ -72,9 +75,9 @@ public class OperationLogAspect {
                 operationLog.setBrowser(request.getHeader("User-Agent"));
             }
 
-            // 记录请求参数
+            // 记录请求参数（过滤 MultipartFile 等不可序列化的对象）
             if (annotation.recordParams()) {
-                operationLog.setRequestParams(objectMapper.writeValueAsString(point.getArgs()));
+                operationLog.setRequestParams(paramsToString(point.getArgs()));
             }
 
             // 执行方法
@@ -138,11 +141,38 @@ public class OperationLogAspect {
         return ip;
     }
 
-    /**
-     * 保存日志（异步执行）
-     */
     private void saveLog(com.micro.platform.common.log.entity.OperationLog operationLog) {
         // TODO: 异步保存到数据库或发送到消息队列
-        log.info("操作日志：{}", operationLog.getDescription());
+        log.info("操作日志：{} - {} ({}ms)", operationLog.getStatus() == 1 ? "成功" : "失败",
+            operationLog.getDescription(), operationLog.getExecuteTime());
+    }
+
+    /**
+     * 将参数转换为字符串（过滤 MultipartFile 等不可序列化的对象）
+     */
+    private String paramsToString(Object[] args) {
+        if (args == null || args.length == 0) {
+            return "";
+        }
+        Map<String, Object> params = new HashMap<>();
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (arg instanceof MultipartFile) {
+                MultipartFile file = (MultipartFile) arg;
+                Map<String, Object> fileInfo = new HashMap<>();
+                fileInfo.put("fileName", file.getOriginalFilename());
+                fileInfo.put("fileSize", file.getSize());
+                fileInfo.put("contentType", file.getContentType());
+                params.put("file[" + i + "]", fileInfo);
+            } else {
+                params.put("arg[" + i + "]", arg);
+            }
+        }
+        try {
+            return objectMapper.writeValueAsString(params);
+        } catch (Exception e) {
+            log.warn("参数序列化失败：{}", e.getMessage());
+            return "";
+        }
     }
 }

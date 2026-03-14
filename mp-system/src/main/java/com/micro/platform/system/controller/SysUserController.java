@@ -10,6 +10,8 @@ import com.micro.platform.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -91,20 +93,24 @@ public class SysUserController {
     @OperationLog(module = "用户管理", type = OperationType.EXPORT, description = "导出用户数据")
     @PreAuthorize("hasAuthority('system:user:query')")
     @GetMapping("/export")
-    public void export(HttpServletResponse response, SysUser user) throws Exception {
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setCharacterEncoding("utf-8");
-        sysUserService.exportUser(response, user);
-        response.flushBuffer();
+    public ResponseEntity<byte[]> export(SysUser user) throws Exception {
+        byte[] data = sysUserService.exportUser(user);
+        String fileName = URLEncoder.encode("用户数据", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 
     @Operation(summary = "下载导入模板")
     @GetMapping("/downloadTemplate")
-    public void downloadTemplate(HttpServletResponse response) throws Exception {
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setCharacterEncoding("utf-8");
-        sysUserService.downloadTemplate(response);
-        response.flushBuffer();
+    public ResponseEntity<byte[]> downloadTemplate() throws Exception {
+        byte[] data = sysUserService.downloadTemplate();
+        String fileName = URLEncoder.encode("用户导入模板", "UTF-8").replaceAll("\\\\+", "%20");
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx")
+                .contentType(org.springframework.http.MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
     }
 
     @Operation(summary = "导入用户数据")
@@ -137,7 +143,7 @@ public class SysUserController {
     }
 
     /**
-     * 从对象中提取 Long 列表（兼容 Integer 和 Long）
+     * 从对象中提取 Long 列表（兼容 Integer、Long 和 String）
      */
     @SuppressWarnings("unchecked")
     private List<Long> extractLongList(Object obj) {
@@ -147,7 +153,16 @@ public class SysUserController {
         if (obj instanceof List) {
             List<?> list = (List<?>) obj;
             return list.stream()
-                .map(item -> item instanceof Integer ? ((Integer) item).longValue() : (Long) item)
+                .map(item -> {
+                    if (item instanceof Integer) {
+                        return ((Integer) item).longValue();
+                    } else if (item instanceof Long) {
+                        return (Long) item;
+                    } else if (item instanceof String) {
+                        return Long.valueOf((String) item);
+                    }
+                    return null;
+                })
                 .toList();
         }
         return null;
@@ -205,9 +220,9 @@ public class SysUserController {
     @OperationLog(module = "用户管理", type = OperationType.UPDATE, description = "修改用户状态")
     @PreAuthorize("hasAuthority('system:user:edit')")
     @PutMapping("/status")
-    public Result<Void> updateStatus(
-        @RequestParam Long userId,
-        @RequestParam Integer status) {
+    public Result<Void> updateStatus(@RequestBody Map<String, Object> params) {
+        Long userId = Long.valueOf(params.get("userId").toString());
+        Integer status = Integer.valueOf(params.get("status").toString());
         sysUserService.updateStatus(userId, status);
         return Result.success();
     }
