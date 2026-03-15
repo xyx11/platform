@@ -15,6 +15,9 @@ export { useNodeSearch } from './composables/useNodeSearch'
 export { useContextMenu } from './composables/useContextMenu'
 export { useBatchOperation } from './composables/useBatchOperation'
 export { useNodeProperties } from './composables/useNodeProperties'
+export { useAutoLayout } from './composables/useAutoLayout'
+export { useSimulation } from './composables/useSimulation'
+export { useTemplate } from './composables/useTemplate'
 
 // 常量
 export * from './constants/bpmnElements'
