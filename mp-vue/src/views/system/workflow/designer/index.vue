@@ -389,8 +389,8 @@
         <el-table-column prop="description" label="描述" min-width="200" show-overflow-tooltip />
         <el-table-column label="操作" width="150">
           <template #default="{ row }">
-            <el-button size="small" @click="loadVersion(row)">加载</el-button>
-            <el-button size="small" type="danger" @click="deleteVersion(row)">删除</el-button>
+            <el-button size="small" @click="loadVersionLegacy(row)">加载</el-button>
+            <el-button size="small" type="danger" @click="deleteVersionLegacy(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -873,12 +873,12 @@
               <div class="comment-meta">
                 <span class="comment-user">{{ comment.user }}</span>
                 <span class="comment-time">{{ comment.time }}</span>
-                <el-tag :type="comment.type === 'question' ? 'danger' : (comment.type === 'suggestion' ? 'warning' : '')" size="small">{{ getCommentTypeName(comment.type) }}</el-tag>
+                <el-tag :type="comment.type === 'question' ? 'danger' : (comment.type === 'suggestion' ? 'warning' : '')" size="small">{{ getCommentTypeNameLegacy(comment.type) }}</el-tag>
               </div>
               <p class="comment-text">{{ comment.content }}</p>
               <div class="comment-actions-row">
-                <el-button link size="small" @click="replyComment(index)">回复</el-button>
-                <el-button link size="small" @click="deleteComment(index)">删除</el-button>
+                <el-button link size="small" @click="replyCommentLegacy(index)">回复</el-button>
+                <el-button link size="small" @click="deleteCommentLegacy(index)">删除</el-button>
               </div>
               <div v-if="comment.replies" class="comment-replies">
                 <div v-for="(reply, rIndex) in comment.replies" :key="rIndex" class="reply-item">
@@ -1100,6 +1100,25 @@
 
 <script setup name="WorkflowDesigner">
 import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
+// ========== 导入流程设计器组合式函数模块 ==========
+import { useDashboard } from './composables/useDashboard'
+import { useCollaboration } from './composables/useCollaboration'
+import { useComments } from './composables/useComments'
+import { useVersion } from './composables/useVersion'
+import { useFlowStats } from './composables/useFlowStats'
+import { useExport } from './composables/useExport'
+import { useNodeSearch } from './composables/useNodeSearch'
+import { useContextMenu } from './composables/useContextMenu'
+import { useBatchOperation } from './composables/useBatchOperation'
+import { useNodeProperties } from './composables/useNodeProperties'
+import { useAutoLayout } from './composables/useAutoLayout'
+import { useSimulation } from './composables/useSimulation'
+import { useTemplate } from './composables/useTemplate'
+import { useFlowForms } from './composables/useFlowForms'
+import { validateBpmn } from './utils/bpmnValidator'
+import { getFlowStatistics } from './utils/bpmnStatistics'
+import { debounce, throttle } from './utils/commonUtils'
+
 import BpmnModeler from 'bpmn-js/lib/Modeler'
 import request from '@/utils/request'
 import router from '@/router'
@@ -1227,9 +1246,6 @@ const currentStep = ref(0)
 const simulationPath = ref([])
 const simulationLogs = ref([])
 
-// 流程健康度仪表板
-const dashboardVisible = ref(false)
-
 // 智能推荐
 const recommendationVisible = ref(false)
 const recommendationForm = reactive({
@@ -1246,21 +1262,33 @@ const quickAddVisible = ref(false)
 const quickAddX = ref(0)
 const quickAddY = ref(0)
 
-// 健康度仪表板
-// 6. 健康度仪表板数据
-const structureScore = ref(0)
-const performanceScore = ref(0)
-const completenessScore = ref(0)
-const standardScore = ref(0)
-const startEventCount = ref(0)
-const endEventCount = ref(0)
-const orphanNodes = ref(0)
-const totalNodes = ref(0)
-const gatewayCount = ref(0)
-const unnamedNodes = ref(0)
-const noAssigneeTasks = ref(0)
-const taskFormCount = ref(0)
+// 6. 健康度仪表板 - 使用 useDashboard 组合式函数
+const {
+  dashboardVisible,
+  structureScore,
+  performanceScore,
+  completenessScore,
+  standardScore,
+  overallScore,
+  scoreLevel,
+  metrics,
+  issues,
+  suggestions,
+  calculating,
+  openDashboard,
+  closeDashboard,
+  calculateScores
+} = useDashboard({ bpmnModeler, processInfo })
 
+// 兼容旧代码的别名
+const startEventCount = computed(() => metrics.startEventCount)
+const endEventCount = computed(() => metrics.endEventCount)
+const orphanNodes = computed(() => metrics.orphanNodes)
+const totalNodes = computed(() => metrics.totalNodes)
+const gatewayCount = computed(() => metrics.gatewayCount)
+const unnamedNodes = computed(() => metrics.unnamedNodes)
+const noAssigneeTasks = computed(() => metrics.noAssigneeTasks)
+const taskFormCount = computed(() => metrics.userTaskCount)
 // 快捷键自定义
 // 7. 快捷键自定义
 const shortcutsVisible = ref(false)
@@ -1279,23 +1307,51 @@ const shortcutList = ref([
 const legendVisible = ref(false)
 
 // 协作编辑
-// 8. 协作编辑
-const collabVisible = ref(false)
-const onlineUsers = ref([
-  { id: 1, name: '张三', color: '#409EFF', isEditing: false },
-  { id: 2, name: '李四', color: '#67C23A', isEditing: true }
-])
-const isLocked = ref(false)
+// 8. 协作编辑 - 使用 useCollaboration 组合式函数
+const {
+  collabVisible,
+  connected,
+  isLocked,
+  lockedBy,
+  onlineUsers,
+  currentUser,
+  operationHistory,
+  getOnlineCount,
+  getEditingUsers,
+  getStatusName,
+  getStatusColor,
+  initCollaboration,
+  disconnectCollaboration,
+  lockProcess,
+  unlockProcess
+} = useCollaboration({ bpmnModeler, processInfo })
 
 
 // 评论批注
-// 9. 评论批注
-const commentVisible = ref(false)
-const comments = ref([])
-const newComment = reactive({
-  content: '',
-  type: 'comment'
-})
+// 9. 评论批注 - 使用 useComments 组合式函数
+const {
+  commentVisible,
+  comments,
+  selectedComment,
+  commentFilter,
+  newComment,
+  replyForm,
+  stats,
+  filteredComments,
+  openComments,
+  closeComments,
+  loadComments,
+  saveComments,
+  addComment,
+  replyComment,
+  deleteComment,
+  deleteReply,
+  resolveQuestion,
+  reopenQuestion,
+  getCommentTypeName,
+  getCommentTypeColor,
+  getCommentTypeIcon
+} = useComments({ bpmnModeler, processInfo })
 
 // 导出选项
 // 10. 导出选项
@@ -1383,9 +1439,33 @@ const BPMN_FRAGMENTS = {
 
 // 11. 流程数据与状态
 const selectedNode = ref(null)
-const versionVisible = ref(false)
-const versionList = ref([])
 const launching = ref(false)
+
+// 版本管理 - 使用 useVersion 组合式函数
+const {
+  versionVisible,
+  versionList,
+  currentVersion,
+  comparing,
+  compareSource,
+  compareTarget,
+  compareResult,
+  versionStats,
+  openVersionHistory,
+  closeVersionHistory,
+  loadVersions,
+  saveVersion,
+  loadVersion,
+  rollbackVersion,
+  deleteVersion,
+  deployVersion,
+  startCompare,
+  compareVersions,
+  clearCompare,
+  getActionName,
+  getActionColor,
+  exportVersion
+} = useVersion({ bpmnModeler, processInfo })
 
 const formList = ref([])
 const taskList = ref([])
@@ -1406,30 +1486,6 @@ const formConfig = ref({
   startForm: '',
   tasks: []
 })
-
-
-// 防抖函数
-const debounce = (fn, delay) => {
-  let timer = null
-  return function(...args) {
-    if (timer) clearTimeout(timer)
-    timer = setTimeout(() => fn.apply(this, args), delay)
-  }
-}
-
-// 节流函数
-const throttle = (fn, delay) => {
-  let lastTime = 0
-  return function(...args) {
-    const now = Date.now()
-    if (now - lastTime >= delay) {
-      lastTime = now
-      fn.apply(this, args)
-    }
-  }
-}
-
-
 
 // ===== 设计师配置常量 =====
 const DESIGNER_CONFIG = {
@@ -2364,7 +2420,7 @@ const duplicateProcess = async () => {
 }
 
 // 显示版本历史
-const showVersionHistory = async () => {
+const showVersionHistoryLegacy = async () => {
   if (!processInfo.value.id) {
     ElMessage.warning('流程未保存')
     return
@@ -2383,7 +2439,7 @@ const showVersionHistory = async () => {
 }
 
 // 加载版本
-const loadVersion = async (version) => {
+const loadVersionLegacy = async (version) => {
   try {
     const { data } = await request.get(`/system/workflow/definition/bpmn/${version.id}`)
     if (data?.bpmnXml) {
@@ -2399,14 +2455,14 @@ const loadVersion = async (version) => {
 }
 
 // 删除版本
-const deleteVersion = async (version) => {
+const deleteVersionLegacy = async (version) => {
   try {
     await ElMessageBox.confirm('确定要删除此版本吗？', '提示', {
       type: 'warning'
     })
     await request.delete(`/system/workflow/definition/${version.deploymentId}`)
     ElMessage.success('删除成功')
-    showVersionHistory()
+    showVersionHistoryLegacy()
   } catch (error) {
     if (error !== 'cancel') {
       console.error('删除失败:', error)
@@ -3478,7 +3534,7 @@ const navigateToSearchResult = (index) => {
   
   selection.select(element)
   canvas.scrollToElement(element, 300)
-  highlightElement(element, '#409EFF', 1500)
+  highlightElementLegacy(element, '#409EFF', 1500)
   
   const total = searchResults.value.length
   const current = index + 1
@@ -3489,7 +3545,7 @@ const navigateToSearchResult = (index) => {
 }
 
 // 高亮元素（带动画效果）
-const highlightElement = (element, color = '#409EFF', duration = 2000) => {
+const highlightElementLegacy = (element, color = '#409EFF', duration = 2000) => {
   const canvas = bpmnModeler.value.get('canvas')
   const gfx = canvas._svg.querySelector(`[data-element-id="${element.id}"]`)
   
@@ -3578,7 +3634,7 @@ watch(propertiesPanel, (newPanel) => {
 
 // ========== 流程对比功能 ==========
 // 显示版本对比
-const compareVersions = async (version1, version2) => {
+const compareVersionsLegacy = async (version1, version2) => {
   try {
     // 获取两个版本的 BPMN
     const bpmn1 = version1.bpmn || localStorage.getItem(`workflow_version_${version1.id}`)
@@ -3981,12 +4037,12 @@ const applyRecommendation = (rec) => {
 }
 
 // ========== 评论批注功能 ==========
-const openComments = () => {
-  loadComments()
+const openCommentsLegacy = () => {
+  loadCommentsLegacy()
   commentVisible.value = true
 }
 
-const loadComments = () => {
+const loadCommentsLegacy = () => {
   // 从 localStorage 加载评论
   const saved = localStorage.getItem('workflow_comments_' + processInfo.value.id)
   if (saved) {
@@ -4007,7 +4063,7 @@ const loadComments = () => {
   }
 }
 
-const addComment = () => {
+const addCommentLegacy = () => {
   if (!newComment.content.trim()) {
     ElMessage.warning('请输入评论内容')
     return
@@ -4022,11 +4078,11 @@ const addComment = () => {
   })
   
   newComment.content = ''
-  saveComments()
+  saveCommentsLegacy()
   ElMessage.success('评论已添加')
 }
 
-const replyComment = (index) => {
+const replyCommentLegacy = (index) => {
   ElMessageBox.prompt('请输入回复内容', '回复评论', {
     confirmButtonText: '发送',
     cancelButtonText: '取消'
@@ -4039,29 +4095,29 @@ const replyComment = (index) => {
         user: '当前用户',
         content: value
       })
-      saveComments()
+      saveCommentsLegacy()
       ElMessage.success('回复已发送')
     }
   }).catch(() => {})
 }
 
-const deleteComment = (index) => {
+const deleteCommentLegacy = (index) => {
   ElMessageBox.confirm('确定删除此评论吗？', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
     comments.value.splice(index, 1)
-    saveComments()
+    saveCommentsLegacy()
     ElMessage.success('评论已删除')
   }).catch(() => {})
 }
 
-const saveComments = () => {
+const saveCommentsLegacy = () => {
   localStorage.setItem('workflow_comments_' + processInfo.value.id, JSON.stringify(comments.value))
 }
 
-const getCommentTypeName = (type) => {
+const getCommentTypeNameLegacy = (type) => {
   const names = {
     comment: '评论',
     question: '问题',
@@ -4128,105 +4184,11 @@ const confirmExport = async () => {
 
 
 // ========== 健康度仪表板功能 ==========
-const openDashboard = async () => {
-  await calculateDashboardScores()
-  dashboardVisible.value = true
-}
-
-const calculateDashboardScores = async () => {
-  try {
-    const { xml } = await bpmnModeler.value.saveXML()
-    const parser = new DOMParser()
-    const xmlDoc = parser.parseFromString(xml, 'text/xml')
-    
-    // 统计节点
-    const startEvents = xmlDoc.getElementsByTagName('bpmn:startEvent').length
-    const endEvents = xmlDoc.getElementsByTagName('bpmn:endEvent').length
-    const userTasks = xmlDoc.getElementsByTagName('bpmn:userTask').length
-    const serviceTasks = xmlDoc.getElementsByTagName('bpmn:serviceTask').length
-    const scriptTasks = xmlDoc.getElementsByTagName('bpmn:scriptTask').length
-    const exclusiveGateways = xmlDoc.getElementsByTagName('bpmn:exclusiveGateway').length
-    const parallelGateways = xmlDoc.getElementsByTagName('bpmn:parallelGateway').length
-    const inclusiveGateways = xmlDoc.getElementsByTagName('bpmn:inclusiveGateway').length
-    
-    totalNodes.value = startEvents + endEvents + userTasks + serviceTasks + scriptTasks + exclusiveGateways + parallelGateways + inclusiveGateways
-    startEventCount.value = startEvents
-    endEventCount.value = endEvents
-    gatewayCount.value = exclusiveGateways + parallelGateways + inclusiveGateways
-    
-    // 检查未命名节点
-    let unnamed = 0
-    const allElements = xmlDoc.getElementsByTagName('*')
-    for (let el of allElements) {
-      if (el.nodeName.includes('Task') && !el.getAttribute('name')) {
-        unnamed++
-      }
-    }
-    unnamedNodes.value = unnamed
-    
-    // 检查无处理人任务
-    let noAssignee = 0
-    const tasks = xmlDoc.getElementsByTagName('bpmn:userTask')
-    for (let task of tasks) {
-      if (!task.getAttribute('assignee') && !task.getAttribute('candidateUsers') && !task.getAttribute('candidateGroups')) {
-        noAssignee++
-      }
-    }
-    noAssigneeTasks.value = noAssignee
-    
-    // 计算分数
-    // 结构分数
-    let structure = 100
-    if (startEvents === 0) structure -= 40
-    if (startEvents > 1) structure -= 20
-    if (endEvents === 0) structure -= 40
-    structureScore.value = Math.max(0, structure)
-    
-    // 性能分数
-    let performance = 100
-    if (totalNodes.value > 50) performance -= (totalNodes.value - 50) * 2
-    if (gatewayCount.value > 10) performance -= (gatewayCount.value - 10) * 5
-    performanceScore.value = Math.max(0, performance)
-    
-    // 完整性分数
-    let completeness = 100
-    if (!processInfo.value.name) completeness -= 30
-    if (!formConfig.value.startForm) completeness -= 30
-    taskFormCount.value = formConfig.value.tasks?.length || 0
-    if (taskFormCount.value === 0) completeness -= 20
-    completenessScore.value = Math.max(0, completeness)
-    
-    // 规范分数
-    let standard = 100
-    if (unnamed > 0) standard -= unnamed * 5
-    if (noAssignee > 0) standard -= noAssignee * 10
-    standardScore.value = Math.max(0, standard)
-  } catch (error) {
-    console.error('计算健康度分数失败:', error)
-  }
-}
-
-const overallScore = computed(() => {
-  const avg = (structureScore.value + performanceScore.value + completenessScore.value + standardScore.value) / 4
-  return Math.round(avg)
-})
-
-const getOverallComment = () => {
-  const score = overallScore.value
-  if (score >= 90) return '优秀！流程设计非常规范，可以直接部署使用。'
-  if (score >= 80) return '良好！流程设计基本规范，建议修复警告项后部署。'
-  if (score >= 60) return '及格！流程存在一些问题，建议优化后再部署。'
-  return '需要改进！流程存在严重问题，请先修复错误项。'
-}
-
-const fixAllIssues = () => {
-  ElMessage.info('正在自动修复问题...')
-  // 自动修复逻辑
-  setTimeout(() => {
-    ElMessage.success('已修复所有可自动修复的问题')
-    calculateDashboardScores()
-  }, 1000)
-}
+// ========== 健康度仪表板功能已迁移到 useDashboard 组合式函数 ==========
+// 使用 openDashboard() 打开仪表板
+// 使用 calculateScores() 计算分数
+// 使用 overallScore 获取综合评分
+// 使用 issues 和 suggestions 获取问题和建议列表
 
 // ========== 快捷键自定义功能 ==========
 const openShortcuts = () => {
