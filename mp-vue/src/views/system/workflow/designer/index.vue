@@ -1145,6 +1145,7 @@ import {
   Delete
 } from '@element-plus/icons-vue'
 
+// 1. BPMN 核心组件
 const bpmnCanvas = ref(null)
 const propertiesPanel = ref(null)
 const minimap = ref(null)
@@ -1155,12 +1156,14 @@ const activePanels = ref('events')
 const currentZoom = ref(100)
 const gridEnabled = ref(true)
 const showMinimap = ref(false)
+// 2. 保存/部署状态
 const deploying = ref(false)
 const deployed = ref(false)
 const saved = ref(false)
 const autoSaving = ref(false)
 const lastSavedTime = ref(null)
 const hasUnsavedChanges = ref(false)
+// 3. UI 面板显示控制
 const processInfoVisible = ref(false)
 const formConfigVisible = ref(false)
 const helpVisible = ref(false)
@@ -1174,6 +1177,7 @@ const nodeListVisible = ref(false)
 const contextMenuVisible = ref(false)
 const contextMenuX = ref(0)
 const contextMenuY = ref(0)
+// 4. 搜索功能
 const searchNodeText = ref("")
 const searchResults = ref([])
 const currentSearchIndex = ref(-1)
@@ -1235,6 +1239,7 @@ const recommendationForm = reactive({
 
 // 常用模板
 // 导航功能
+// 5. 导航功能
 const showBreadcrumb = ref(true)
 const showMiniToolbar = ref(true)
 const quickAddVisible = ref(false)
@@ -1242,6 +1247,7 @@ const quickAddX = ref(0)
 const quickAddY = ref(0)
 
 // 健康度仪表板
+// 6. 健康度仪表板数据
 const structureScore = ref(0)
 const performanceScore = ref(0)
 const completenessScore = ref(0)
@@ -1256,6 +1262,7 @@ const noAssigneeTasks = ref(0)
 const taskFormCount = ref(0)
 
 // 快捷键自定义
+// 7. 快捷键自定义
 const shortcutsVisible = ref(false)
 const recordingShortcut = ref(null)
 const shortcutList = ref([
@@ -1272,6 +1279,7 @@ const shortcutList = ref([
 const legendVisible = ref(false)
 
 // 协作编辑
+// 8. 协作编辑
 const collabVisible = ref(false)
 const onlineUsers = ref([
   { id: 1, name: '张三', color: '#409EFF', isEditing: false },
@@ -1281,6 +1289,7 @@ const isLocked = ref(false)
 
 
 // 评论批注
+// 9. 评论批注
 const commentVisible = ref(false)
 const comments = ref([])
 const newComment = reactive({
@@ -1289,6 +1298,7 @@ const newComment = reactive({
 })
 
 // 导出选项
+// 10. 导出选项
 const exportOptionsVisible = ref(false)
 const exportOptions = reactive({
   format: 'bpmn',
@@ -1311,8 +1321,8 @@ const templateForm = reactive({
   description: ''
 })
 
+// 11. 流程数据与状态
 const selectedNode = ref(null)
-const selectedElement = null
 const versionVisible = ref(false)
 const versionList = ref([])
 const launching = ref(false)
@@ -1323,6 +1333,7 @@ let autoSaveTimer = null
 const deployedDefinitions = ref([])
 const startFormComponents = ref([])
 
+// 12. 流程信息
 const processInfo = ref({
   name: '',
   id: '',
