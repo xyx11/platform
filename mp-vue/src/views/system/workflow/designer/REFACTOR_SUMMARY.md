@@ -2,7 +2,7 @@
 
 ## 已创建的文件
 
-### 组合式函数 (composables/)
+### 组合式函数 (composables/) - 14 个
 1. **useBpmnModeler.js** - BPMN 模型器管理 (252 行)
 2. **useShortcuts.js** - 快捷键管理 (208 行)
 3. **useFlowElements.js** - 流程元素操作 (250 行)
@@ -14,12 +14,15 @@
 9. **useContextMenu.js** - 右键菜单管理 (230 行)
 10. **useBatchOperation.js** - 批量操作管理 (210 行)
 11. **useNodeProperties.js** - 节点属性管理 (220 行)
+12. **useAutoLayout.js** - 自动布局功能 (230 行)
+13. **useSimulation.js** - 流程模拟功能 (210 行)
+14. **useTemplate.js** - 模板管理功能 (260 行)
 
-### 常量模块 (constants/)
+### 常量模块 (constants/) - 2 个
 1. **bpmnElements.js** - BPMN 元素配置 (222 行)
 2. **designerConfig.js** - 设计器配置 (110 行)
 
-### 工具函数 (utils/)
+### 工具函数 (utils/) - 4 个
 1. **bpmnValidator.js** - BPMN 验证 (190 行)
 2. **bpmnStatistics.js** - BPMN 统计 (207 行)
 3. **storageUtils.js** - 本地存储管理 (212 行)
@@ -33,14 +36,14 @@
 ## 代码统计
 
 ```
-文件数：18
-代码行数：约 4,400 行（新代码）
+文件数：21
+代码行数：约 5,240 行（新代码）
 ```
 
 ## 优化亮点
 
 ### 1. 模块化设计
-- 将 4742 行的单文件拆分为 18 个模块
+- 将 4742 行的单文件拆分为 21 个模块
 - 每个模块职责单一，易于理解和维护
 
 ### 2. 组合式 API
@@ -79,6 +82,9 @@ import {
   useContextMenu,
   useBatchOperation,
   useNodeProperties,
+  useAutoLayout,
+  useSimulation,
+  useTemplate,
   useShortcuts,
   validateBpmn,
   getFlowStatistics,
@@ -97,11 +103,13 @@ import {
   useBpmnModeler,
   useFlowElements,
   useFlowPersistence,
-  useFlowForms,
   useExport,
   useNodeSearch,
   useContextMenu,
-  useNodeProperties
+  useNodeProperties,
+  useAutoLayout,
+  useSimulation,
+  useTemplate
 } from './designer'
 
 const bpmnCanvas = ref(null)
@@ -123,12 +131,6 @@ const { doSave, deployDiagram, enableAutoSave } = useFlowPersistence({
   processInfo
 })
 
-// 表单配置
-const { loadFormList, loadUserTasks, saveFormConfig } = useFlowForms({
-  bpmnModeler,
-  processInfo
-})
-
 // 导出功能
 const { exportBpmn, exportSvg, exportPng } = useExport({
   bpmnModeler,
@@ -139,28 +141,30 @@ const { exportBpmn, exportSvg, exportPng } = useExport({
 const { search, findNext, focusNode } = useNodeSearch({ bpmnModeler })
 
 // 右键菜单
-const { contextMenuVisible, executeAction, initContextMenu } = useContextMenu({
+const { contextMenuVisible, executeAction } = useContextMenu({
   bpmnModeler,
   onAction: (action) => console.log('执行动作:', action)
 })
 
 // 节点属性
-const { openNodeProps, saveNodeProps, nodePropsVisible } = useNodeProperties({
-  bpmnModeler
+const { openNodeProps, saveNodeProps } = useNodeProperties({ bpmnModeler })
+
+// 自动布局
+const { openAutoLayout, executeAutoLayout } = useAutoLayout({ bpmnModeler })
+
+// 流程模拟
+const { openSimulation, startSimulation } = useSimulation({ bpmnModeler })
+
+// 模板管理
+const { openSaveTemplate, saveAsTemplate } = useTemplate({
+  bpmnModeler,
+  processInfo
 })
 
 // 启用自动保存
 enableAutoSave(30000)
 </script>
 ```
-
-## 下一步计划
-
-1. ~~继续将主组件的逻辑迁移到新的组合式函数中~~ (进行中)
-2. ~~创建子组件替换大型对话框~~ (进行中)
-3. 添加单元测试
-4. 性能优化
-5. 创建更多实用的组合式函数
 
 ## 已完成的功能模块
 
@@ -175,13 +179,14 @@ enableAutoSave(30000)
 - [x] 右键菜单 (useContextMenu)
 - [x] 批量操作 (useBatchOperation)
 - [x] 节点属性 (useNodeProperties)
+- [x] 自动布局 (useAutoLayout)
+- [x] 流程模拟 (useSimulation)
+- [x] 模板管理 (useTemplate)
 - [x] 通用工具函数 (commonUtils)
 
 ## 待开发的功能模块
 
-- [ ] 模板管理 (useTemplate)
 - [ ] 版本管理 (useVersion)
 - [ ] 评论批注 (useComments)
-- [ ] 流程模拟 (useSimulation)
-- [ ] 自动布局 (useAutoLayout)
 - [ ] 健康度仪表板 (useDashboard)
+- [ ] 协作编辑 (useCollaboration)
