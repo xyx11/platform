@@ -1369,6 +1369,30 @@ const throttle = (fn, delay) => {
   }
 }
 
+// 本地存储辅助
+const storage = {
+  get: (key, defaultVal) => {
+    try {
+      const item = localStorage.getItem(key)
+      return item ? JSON.parse(item) : defaultVal
+    } catch {
+      return defaultVal
+    }
+  },
+  set: (key, value) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value))
+      return true
+    } catch {
+      return false
+    }
+  },
+  remove: (key) => {
+    localStorage.removeItem(key)
+  }
+}
+
+
 const launchData = ref({
   processDefinitionId: '',
   businessKey: '',
