@@ -1541,6 +1541,7 @@ const handleKeyDown = (e) => {
 const handleNodeNavigation = (key) => {
   const modeling = bpmnModeler.value.get('modeling')
   const elementRegistry = bpmnModeler.value.get('elementRegistry')
+  if (!selectedNode.value || !selectedNode.value.id) return
   const element = elementRegistry.get(selectedNode.value.id)
 
   if (!element) return
