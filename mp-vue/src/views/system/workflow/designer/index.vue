@@ -1215,30 +1215,36 @@ const quickStats = computed(() => {
 })
 const contextMenuTarget = ref(null)
 
-// 批量操作
-const batchVisible = ref(false)
-const batchForm = reactive({
-  operation: '',
-  nodeTypes: ['userTask'],
-  assigneeType: 'user',
-  assignee: '',
-  documentation: '',
-  category: ''
-})
-const affectedNodes = ref(0)
+// 批量操作 - 使用 useBatchOperation 组合式函数
+const {
+  batchVisible,
+  batchForm,
+  affectedNodes,
+  openBatchOperation,
+  executeBatchOperation,
+  onBatchOperationChange,
+  calculateAffectedNodes
+} = useBatchOperation({ bpmnModeler, processInfo })
 
-// 自动布局
-const autoLayoutVisible = ref(false)
-const autoLayoutForm = reactive({
-  direction: 'horizontal',
-  spacing: 100,
-  rowSpacing: 80
-})
+// 自动布局 - 使用 useAutoLayout 组合式函数
+const {
+  autoLayoutVisible,
+  autoLayoutForm,
+  openAutoLayout,
+  executeAutoLayout
+} = useAutoLayout({ bpmnModeler, processInfo })
 
-// 模板库
-const templateLibVisible = ref(false)
-const templateLibTab = ref('common')
-const myTemplates = ref([])
+// 模板库 - 使用 useTemplate 组合式函数
+const {
+  templateLibVisible,
+  templateLibTab,
+  myTemplates,
+  openTemplateLib,
+  applyTemplate,
+  deleteMyTemplate,
+  importTemplate,
+  exportAsTemplate
+} = useTemplate({ bpmnModeler, processInfo })
 // 流程模拟
 // 流程模拟 - 使用 useSimulation 组合式函数
 const {
@@ -1889,12 +1895,12 @@ const openBatchDialog = () => {
 }
 
 // 自动布局对话框
-const openAutoLayout = () => {
+const openAutoLayoutLegacy = () => {
   autoLayoutVisible.value = true
 }
 
 // 模板库对话框
-const openTemplateLib = () => {
+const openTemplateLibLegacy = () => {
   templateLibVisible.value = true
 }
 
@@ -2493,7 +2499,7 @@ const deleteVersionLegacy = async (version) => {
 }
 
 // 保存为模板
-const exportAsTemplate = () => {
+const exportAsTemplateLegacy = () => {
   if (!saved.value) {
     ElMessage.warning('请先保存流程')
     return
@@ -2505,7 +2511,7 @@ const exportAsTemplate = () => {
 }
 
 // 保存模板
-const saveAsTemplate = async () => {
+const saveAsTemplateLegacy = async () => {
   if (!templateForm.name) {
     ElMessage.warning('请输入模板名称')
     return
@@ -2539,13 +2545,13 @@ const saveAsTemplate = async () => {
 }
 
 // 导入模板
-const importTemplate = () => {
+const importTemplateShow = () => {
   templateTab.value = 'import'
   templateVisible.value = true
 }
 
 // 处理模板文件
-const handleTemplateFile = (file) => {
+const handleTemplateFileLegacy = (file) => {
   const reader = new FileReader()
   reader.onload = async (e) => {
     try {
