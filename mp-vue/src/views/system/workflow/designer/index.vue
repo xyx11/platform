@@ -1370,6 +1370,35 @@ const throttle = (fn, delay) => {
 }
 
 
+
+// ===== 设计师配置常量 =====
+const DESIGNER_CONFIG = {
+  palette: {
+    width: 260,
+    minWidth: 200,
+    maxWidth: 320
+  },
+  propertiesPanel: {
+    width: 340,
+    minWidth: 280,
+    maxWidth: 400
+  },
+  grid: {
+    size: 20,
+    color: 'rgba(64, 158, 255, 0.03)'
+  },
+  zoom: {
+    min: 0.1,
+    max: 4,
+    step: 0.1
+  },
+  autoSave: {
+    enabled: true,
+    interval: 30000, // 30 秒
+    maxBackups: 5
+  }
+}
+
 // ===== BPMN 元素配置常量 =====
 const BPMN_ELEMENTS = {
   // 开始事件
