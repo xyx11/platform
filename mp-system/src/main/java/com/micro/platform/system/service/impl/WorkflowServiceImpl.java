@@ -27,6 +27,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.micro.platform.system.entity.FormDefinition;
+import com.micro.platform.system.entity.WorkflowFormBinding;
+import com.micro.platform.system.mapper.FormDefinitionMapper;
+import com.micro.platform.system.mapper.WorkflowFormBindingMapper;
 
 /**
  * 工作流服务实现
@@ -40,15 +44,21 @@ public class WorkflowServiceImpl implements WorkflowService {
     private final TaskService taskService;
     private final HistoryService historyService;
     private final RepositoryService repositoryService;
+    private final WorkflowFormBindingMapper workflowFormBindingMapper;
+    private final FormDefinitionMapper formDefinitionMapper;
 
     public WorkflowServiceImpl(RuntimeService runtimeService,
                                TaskService taskService,
                                HistoryService historyService,
-                               RepositoryService repositoryService) {
+                               RepositoryService repositoryService,
+                               WorkflowFormBindingMapper workflowFormBindingMapper,
+                               FormDefinitionMapper formDefinitionMapper) {
         this.runtimeService = runtimeService;
         this.taskService = taskService;
         this.historyService = historyService;
         this.repositoryService = repositoryService;
+        this.workflowFormBindingMapper = workflowFormBindingMapper;
+        this.formDefinitionMapper = formDefinitionMapper;
     }
 
     @Override
@@ -56,6 +66,13 @@ public class WorkflowServiceImpl implements WorkflowService {
     public ProcessInstance startProcess(String processDefinitionKey, String businessKey, Map<String, Object> variables) {
         log.info("启动流程：{}, businessKey: {}", processDefinitionKey, businessKey);
         return runtimeService.startProcessInstanceByKey(processDefinitionKey, businessKey, variables);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ProcessInstance startProcessById(String processDefinitionId, String businessKey, Map<String, Object> variables) {
+        log.info("启动流程实例，processDefinitionId: {}, businessKey: {}", processDefinitionId, businessKey);
+        return runtimeService.startProcessInstanceById(processDefinitionId, businessKey, variables);
     }
 
     @Override
@@ -333,6 +350,93 @@ public class WorkflowServiceImpl implements WorkflowService {
         stats.put("historicCount", historicCount);
 
         return stats;
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveFormConfig(Map<String, Object> config) {
+        log.info("保存表单配置：{}", config);
+        String processDefinitionId = (String) config.get("processDefinitionId");
+        String startForm = (String) config.get("startForm");
+
+        // Get process definition to get the key
+        ProcessDefinition definition = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionId(processDefinitionId)
+                .singleResult();
+
+        if (definition == null) {
+            throw new BusinessException("流程定义不存在");
+        }
+
+        // Delete old bindings
+        workflowFormBindingMapper.deleteByProcessKey(definition.getKey());
+
+        // Save start form binding
+        WorkflowFormBinding startBinding = new WorkflowFormBinding();
+        startBinding.setProcessDefinitionKey(definition.getKey());
+        startBinding.setProcessDefinitionName(definition.getName());
+        startBinding.setTaskDefinitionKey(null);
+        startBinding.setFormKey(startForm);
+        startBinding.setFormType(1); // 启动表单
+        workflowFormBindingMapper.insert(startBinding);
+
+        // Save task form bindings
+        List<Map<String, Object>> tasks = (List<Map<String, Object>>) config.get("tasks");
+        if (tasks != null) {
+            for (Map<String, Object> task : tasks) {
+                String taskKey = (String) task.get("taskDefinitionKey");
+                String formKey = (String) task.get("formKey");
+                if (formKey != null && !formKey.isEmpty()) {
+                    WorkflowFormBinding taskBinding = new WorkflowFormBinding();
+                    taskBinding.setProcessDefinitionKey(definition.getKey());
+                    taskBinding.setProcessDefinitionName(definition.getName());
+                    taskBinding.setTaskDefinitionKey(taskKey);
+                    taskBinding.setTaskName((String) task.get("taskName"));
+                    taskBinding.setFormKey(formKey);
+                    taskBinding.setFormType(2); // 办理表单
+                    workflowFormBindingMapper.insert(taskBinding);
+                }
+            }
+        }
+
+        log.info("表单配置保存成功");
+    }
+
+    @Override
+    public Map<String, Object> getStartForm(String processKey) {
+        log.info("获取启动表单：{}", processKey);
+        WorkflowFormBinding binding = workflowFormBindingMapper.selectStartForm(processKey);
+        if (binding == null) {
+            return new HashMap<>();
+        }
+
+        // 从 form_definition 表获取表单 schema
+        FormDefinition formDefinition = formDefinitionMapper.selectByCode(binding.getFormKey());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("formKey", binding.getFormKey());
+        result.put("formName", binding.getFormName() != null ? binding.getFormName() : (formDefinition != null ? formDefinition.getFormName() : ""));
+        result.put("formContent", formDefinition != null ? formDefinition.getFormSchema() : binding.getFormSchema());
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> getTaskForm(String taskDefinitionKey) {
+        log.info("获取任务表单：{}", taskDefinitionKey);
+        WorkflowFormBinding binding = workflowFormBindingMapper.selectTaskForm(taskDefinitionKey);
+        if (binding == null) {
+            return new HashMap<>();
+        }
+
+        // 从 form_definition 表获取表单 schema
+        FormDefinition formDefinition = formDefinitionMapper.selectByCode(binding.getFormKey());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("formKey", binding.getFormKey());
+        result.put("formName", binding.getFormName() != null ? binding.getFormName() : (formDefinition != null ? formDefinition.getFormName() : ""));
+        result.put("formContent", formDefinition != null ? formDefinition.getFormSchema() : binding.getFormSchema());
+        return result;
     }
 
     /**

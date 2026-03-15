@@ -145,6 +145,12 @@ const routes = [
         meta: { title: '流程表单', icon: 'FileText' }
       },
       {
+        path: 'workflow-form-designer',
+        name: 'WorkflowFormDesigner',
+        component: () => import('@/views/system/workflow-form-designer/index.vue'),
+        meta: { title: '表单设计器', icon: 'Document' }
+      },
+      {
         path: 'websocket',
         name: 'WebSocket',
         component: () => import('@/views/system/websocket/index.vue'),

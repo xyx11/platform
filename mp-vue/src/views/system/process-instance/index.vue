@@ -328,7 +328,7 @@ const suspendOrActivate = async (row) => {
       type: 'warning'
     })
 
-    await request.post(`/system/workflow/${url}/${row.processInstanceId}`)
+    await request.post(`/system/workflow/instance${url}/${row.processInstanceId}`)
     ElMessage.success(`${action}成功`)
     fetchInstanceList()
     fetchStats()

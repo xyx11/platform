@@ -11,10 +11,16 @@ import java.util.Map;
  */
 public interface WorkflowService {
 
+
     /**
      * 启动流程
      */
     ProcessInstance startProcess(String processDefinitionKey, String businessKey, Map<String, Object> variables);
+
+    /**
+     * 启动流程实例（通过流程定义 ID）
+     */
+    ProcessInstance startProcessById(String processDefinitionId, String businessKey, Map<String, Object> variables);
 
     /**
      * 获取待办任务列表
@@ -131,4 +137,19 @@ public interface WorkflowService {
      * @return 统计信息
      */
     Map<String, Object> getProcessInstanceStats();
+
+    /**
+     * 保存表单配置
+     */
+    void saveFormConfig(Map<String, Object> config);
+
+    /**
+     * 获取启动表单
+     */
+    Map<String, Object> getStartForm(String processKey);
+
+    /**
+     * 获取任务表单
+     */
+    Map<String, Object> getTaskForm(String taskDefinitionKey);
 }

@@ -179,41 +179,66 @@
     </el-dialog>
 
     <!-- 完成任务对话框 -->
-    <el-dialog v-model="completeVisible" title="完成任务" width="600px">
+    <el-dialog v-model="completeVisible" title="完成任务" width="700px">
       <el-form :model="completeForm" label-width="100px">
         <el-form-item label="任务名称">
           <span>{{ currentTask?.taskName }}</span>
         </el-form-item>
-        <el-form-item label="流程变量">
-          <el-table :data="completeForm.variables" border>
-            <el-table-column prop="key" label="变量名" width="200">
-              <template #header>
-                <el-input v-model="newVar.key" placeholder="变量名" size="small" style="width: 180px" />
-              </template>
-              <template #default="{ row, $index }">
-                <el-input v-model="row.key" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="value" label="变量值">
-              <template #header>
-                <el-input v-model="newVar.value" placeholder="变量值" size="small" />
-              </template>
-              <template #default="{ row }">
-                <el-input v-model="row.value" size="small" />
-              </template>
-            </el-table-column>
-            <el-table-column width="80" align="center">
-              <template #default="{ $index }">
-                <el-button type="danger" link @click="removeVariable($index)">
-                  <el-icon><Delete /></el-icon>
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-button type="primary" link @click="addVariable" style="margin-top: 10px">
-            <el-icon><Plus /></el-icon> 添加变量
-          </el-button>
-        </el-form-item>
+
+        <!-- 任务表单 -->
+        <template v-if="taskFormComponents.length > 0">
+          <el-divider>任务表单</el-divider>
+          <div class="task-form-container">
+            <el-form-item v-for="comp in taskFormComponents" :key="comp.id" :label="comp.label" :required="comp.required">
+              <el-input v-if="comp.type === 'input'" v-model="completeForm.formValues[comp.prop]" :placeholder="comp.placeholder || '请输入'" />
+              <el-input v-else-if="comp.type === 'textarea'" v-model="completeForm.formValues[comp.prop]" type="textarea" :rows="3" :placeholder="comp.placeholder || '请输入'" />
+              <el-input-number v-else-if="comp.type === 'number'" v-model="completeForm.formValues[comp.prop]" :min="0" style="width: 100%" />
+              <el-select v-else-if="comp.type === 'select'" v-model="completeForm.formValues[comp.prop]" :placeholder="comp.placeholder || '请选择'" style="width: 100%">
+                <el-option v-for="opt in parseOptions(comp.options)" :key="opt.value" :label="opt.label" :value="opt.value" />
+              </el-select>
+              <el-radio-group v-else-if="comp.type === 'radio'" v-model="completeForm.formValues[comp.prop]">
+                <el-radio v-for="opt in parseOptions(comp.options)" :key="opt.value" :label="opt.value">{{ opt.label }}</el-radio>
+              </el-radio-group>
+              <el-checkbox-group v-else-if="comp.type === 'checkbox'" v-model="completeForm.formValues[comp.prop]">
+                <el-checkbox v-for="opt in parseOptions(comp.options)" :key="opt.value" :label="opt.value">{{ opt.label }}</el-checkbox>
+              </el-checkbox-group>
+              <el-date-picker v-else-if="comp.type === 'date'" v-model="completeForm.formValues[comp.prop]" type="date" :placeholder="comp.placeholder || '请选择'" style="width: 100%" />
+              <el-date-picker v-else-if="comp.type === 'datetime'" v-model="completeForm.formValues[comp.prop]" type="datetime" :placeholder="comp.placeholder || '请选择'" style="width: 100%" />
+            </el-form-item>
+          </div>
+        </template>
+        <el-empty v-else description="该任务没有配置表单" />
+
+        <!-- 流程变量 -->
+        <el-divider>流程变量</el-divider>
+        <el-table :data="completeForm.variables" border>
+          <el-table-column prop="key" label="变量名" width="200">
+            <template #header>
+              <el-input v-model="newVar.key" placeholder="变量名" size="small" style="width: 180px" />
+            </template>
+            <template #default="{ row, $index }">
+              <el-input v-model="row.key" size="small" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="value" label="变量值">
+            <template #header>
+              <el-input v-model="newVar.value" placeholder="变量值" size="small" />
+            </template>
+            <template #default="{ row }">
+              <el-input v-model="row.value" size="small" />
+            </template>
+          </el-table-column>
+          <el-table-column width="80" align="center">
+            <template #default="{ $index }">
+              <el-button type="danger" link @click="removeVariable($index)">
+                <el-icon><Delete /></el-icon>
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-button type="primary" link @click="addVariable" style="margin-top: 10px">
+          <el-icon><Plus /></el-icon> 添加变量
+        </el-button>
       </el-form>
       <template #footer>
         <el-button @click="completeVisible = false">取消</el-button>
@@ -267,8 +292,11 @@ const transferType = ref('transfer')
 
 const completeForm = reactive({
   taskId: '',
-  variables: []
+  variables: [],
+  formValues: {}
 })
+
+const taskFormComponents = ref([])
 
 const newVar = reactive({
   key: '',
@@ -361,11 +389,51 @@ const formatDuration = (ms) => {
   return `${seconds}秒`
 }
 
+// 解析选项
+const parseOptions = (options) => {
+  if (!options) return []
+  if (typeof options === 'string') {
+    try {
+      return JSON.parse(options)
+    } catch {
+      return []
+    }
+  }
+  return Array.isArray(options) ? options : []
+}
+
+// 加载任务表单
+const loadTaskForm = async (taskKey) => {
+  try {
+    taskFormComponents.value = []
+    completeForm.formValues = {}
+    const { data } = await request.get(`/system/workflow/form/task/\${taskKey}`)
+    if (data?.formContent) {
+      try {
+        taskFormComponents.value = JSON.parse(data.formContent)
+      } catch (e) {
+        console.error('任务表单解析失败:', e)
+        if (Array.isArray(data.formContent)) {
+          taskFormComponents.value = data.formContent
+        }
+      }
+    }
+  } catch (error) {
+    console.error('加载任务表单失败:', error)
+    taskFormComponents.value = []
+  }
+}
+
 // 完成任务
 const handleComplete = (row) => {
   currentTask.value = row
   completeForm.taskId = row.taskId
   completeForm.variables = [{ key: '', value: '' }]
+  completeForm.formValues = {}
+  // 加载任务表单
+  if (row.taskKey) {
+    loadTaskForm(row.taskKey)
+  }
   completeVisible.value = true
 }
 
@@ -509,6 +577,12 @@ onMounted(() => {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
+  }
+
+  .task-form-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
   }
 }
 </style>

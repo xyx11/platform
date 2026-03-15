@@ -48,6 +48,22 @@ public class WorkflowController {
         return Result.success(result);
     }
 
+    @PostMapping("/instance/start")
+    @Operation(summary = "启动流程实例（通过流程定义 ID）")
+    @PreAuthorize("@ss.hasPermission('system:workflow:start')")
+    @OperationLog(module = "工作流", type = OperationType.OTHER)
+    public Result<Map<String, Object>> startProcessInstance(@RequestParam String processDefinitionId,
+                                                             @RequestParam(required = false) String businessKey,
+                                                             @RequestBody(required = false) Map<String, Object> variables) {
+        ProcessInstance instance = workflowService.startProcessById(processDefinitionId, businessKey, variables);
+        Map<String, Object> result = new HashMap<>();
+        result.put("processInstanceId", instance.getProcessInstanceId());
+        result.put("businessKey", instance.getBusinessKey());
+        result.put("processDefinitionId", instance.getProcessDefinitionId());
+        return Result.success(result);
+    }
+
+
     @GetMapping("/todo")
     @Operation(summary = "获取待办任务")
     @OperationLog(module = "工作流", type = OperationType.QUERY)
@@ -210,5 +226,32 @@ public class WorkflowController {
     public Result<Map<String, Object>> getProcessInstanceStats() {
         Map<String, Object> result = workflowService.getProcessInstanceStats();
         return Result.success(result);
+    }
+
+    @PostMapping("/form/config")
+    @Operation(summary = "保存表单配置")
+    @PreAuthorize("@ss.hasPermission('system:workflow:save')")
+    @OperationLog(module = "工作流表单", type = OperationType.INSERT)
+    public Result<Void> saveFormConfig(@RequestBody Map<String, Object> config) {
+        workflowService.saveFormConfig(config);
+        return Result.success();
+    }
+
+    @GetMapping("/form/start/{processKey}")
+    @Operation(summary = "获取启动表单")
+    @PreAuthorize("@ss.hasPermission('system:workflow:query')")
+    @OperationLog(module = "工作流表单", type = OperationType.QUERY)
+    public Result<Map<String, Object>> getStartForm(@PathVariable String processKey) {
+        Map<String, Object> form = workflowService.getStartForm(processKey);
+        return Result.success(form);
+    }
+
+    @GetMapping("/form/task/{taskDefinitionKey}")
+    @Operation(summary = "获取任务表单")
+    @PreAuthorize("@ss.hasPermission('system:workflow:query')")
+    @OperationLog(module = "工作流表单", type = OperationType.QUERY)
+    public Result<Map<String, Object>> getTaskForm(@PathVariable String taskDefinitionKey) {
+        Map<String, Object> form = workflowService.getTaskForm(taskDefinitionKey);
+        return Result.success(form);
     }
 }
