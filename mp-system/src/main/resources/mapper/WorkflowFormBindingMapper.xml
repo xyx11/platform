@@ -12,6 +12,7 @@
         <result property="formName" column="form_name"/>
         <result property="formType" column="form_type"/>
         <result property="formSchema" column="form_schema"/>
+        <result property="formConfig" column="form_config"/>
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
@@ -22,8 +23,62 @@
     <sql id="Base_Column_List">
         binding_id, process_definition_key, process_definition_name,
         task_definition_key, task_name, form_key, form_name,
-        form_type, form_schema, create_by, create_time,
+        form_type, form_schema, form_config, create_by, create_time,
         update_by, update_time, del_flag
     </sql>
+
+    <select id="selectBindings" resultType="com.micro.platform.system.entity.WorkflowFormBinding">
+        SELECT a.*, b.form_schema, b.form_config 
+        FROM workflow_form_binding a 
+        LEFT JOIN form_definition b ON a.form_key = b.form_code 
+        WHERE a.del_flag = 0
+        <if test="processDefinitionKey != null and processDefinitionKey != ''">
+            AND process_definition_key = #{processDefinitionKey}
+        </if>
+        <if test="taskDefinitionKey != null and taskDefinitionKey != ''">
+            AND task_definition_key = #{taskDefinitionKey}
+        </if>
+        ORDER BY form_type, task_name
+    </select>
+
+    <select id="selectProcessBindings" resultType="com.micro.platform.system.entity.WorkflowFormBinding">
+        SELECT a.*, b.form_schema, b.form_config 
+        FROM workflow_form_binding a 
+        LEFT JOIN form_definition b ON a.form_key = b.form_code 
+        WHERE a.del_flag = 0
+        AND process_definition_key = #{processDefinitionKey}
+        ORDER BY form_type, task_name
+    </select>
+
+    <select id="selectStartForm" resultType="com.micro.platform.system.entity.WorkflowFormBinding">
+        SELECT a.*, b.form_schema, b.form_config 
+        FROM workflow_form_binding a 
+        LEFT JOIN form_definition b ON a.form_key = b.form_code 
+        WHERE a.del_flag = 0
+        AND process_definition_key = #{processKey}
+        AND form_type = 1
+        LIMIT 1
+    </select>
+
+    <select id="selectTaskForm" resultType="com.micro.platform.system.entity.WorkflowFormBinding">
+        SELECT a.*, b.form_schema, b.form_config 
+        FROM workflow_form_binding a 
+        LEFT JOIN form_definition b ON a.form_key = b.form_code 
+        WHERE a.del_flag = 0
+        AND task_definition_key = #{taskDefinitionKey}
+        AND form_type = 2
+        LIMIT 1
+    </select>
+
+    <update id="deleteByTaskKey">
+        UPDATE workflow_form_binding SET del_flag = 1
+        WHERE process_definition_key = #{processDefinitionKey}
+        AND task_definition_key = #{taskDefinitionKey}
+    </update>
+
+    <update id="deleteByProcessKey">
+        UPDATE workflow_form_binding SET del_flag = 1
+        WHERE process_definition_key = #{processDefinitionKey}
+    </update>
 
 </mapper>
