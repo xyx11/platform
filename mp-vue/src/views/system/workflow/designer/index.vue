@@ -1240,12 +1240,22 @@ const templateLibVisible = ref(false)
 const templateLibTab = ref('common')
 const myTemplates = ref([])
 // 流程模拟
-const simulationVisible = ref(false)
-const simulationSpeed = ref('normal')
-const simulating = ref(false)
-const currentStep = ref(0)
-const simulationPath = ref([])
-const simulationLogs = ref([])
+// 流程模拟 - 使用 useSimulation 组合式函数
+const {
+  simulationVisible,
+  simulationSpeed,
+  simulating,
+  currentStep,
+  simulationPath,
+  simulationLogs,
+  openSimulation,
+  startSimulation,
+  resetSimulation,
+  nextStep
+} = useSimulation({ bpmnModeler, processInfo })
+
+// 兼容旧代码的别名
+const simulationSpeedLocal = ref('normal')
 
 // 智能推荐
 const recommendationVisible = ref(false)
@@ -3868,7 +3878,7 @@ const distributeNodes = async (direction) => {
 
 
 // ========== 流程模拟功能 ==========
-const openSimulation = async () => {
+const openSimulationLegacy = async () => {
   await buildSimulationPath()
   simulationVisible.value = true
 }
@@ -3937,7 +3947,7 @@ const buildSimulationPath = async () => {
   }
 }
 
-const startSimulation = () => {
+const startSimulationLegacy = () => {
   if (simulationPath.value.length === 0) {
     ElMessage.warning('没有可模拟的路径')
     return
@@ -3968,14 +3978,14 @@ const startSimulation = () => {
   runSimulation()
 }
 
-const resetSimulation = () => {
+const resetSimulationLegacy = () => {
   currentStep.value = -1
   simulationLogs.value = ['模拟已重置']
   simulating.value = false
   clearSimulationHighlight()
 }
 
-const nextStep = () => {
+const nextStepLegacy = () => {
   if (currentStep.value < simulationPath.value.length - 1) {
     currentStep.value++
     const node = simulationPath.value[currentStep.value]
