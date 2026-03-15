@@ -9,7 +9,7 @@ import java.util.Date;
 @TableName("form_definition")
 public class FormDefinition {
 
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long formId;
 
     private String formName;
