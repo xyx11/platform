@@ -1369,6 +1369,80 @@ const throttle = (fn, delay) => {
   }
 }
 
+
+// ===== BPMN 元素配置常量 =====
+const BPMN_ELEMENTS = {
+  // 开始事件
+  START_EVENT: { type: 'bpmn:StartEvent', name: '开始', offset: { x: 0, y: 0 } },
+  TIMER_START: { type: 'bpmn:StartEvent', name: '定时开始', offset: { x: 0, y: 0 }, eventDefinitions: [{ $type: 'bpmn:TimerEventDefinition' }] },
+  MESSAGE_START: { type: 'bpmn:StartEvent', name: '消息开始', offset: { x: 0, y: 0 }, eventDefinitions: [{ $type: 'bpmn:MessageEventDefinition' }] },
+  
+  // 结束事件
+  END_EVENT: { type: 'bpmn:EndEvent', name: '结束', offset: { x: 150, y: 0 } },
+  MESSAGE_END: { type: 'bpmn:EndEvent', name: '消息结束', offset: { x: 150, y: 0 }, eventDefinitions: [{ $type: 'bpmn:MessageEventDefinition' }] },
+  ERROR_END: { type: 'bpmn:EndEvent', name: '错误结束', offset: { x: 150, y: 0 }, eventDefinitions: [{ $type: 'bpmn:ErrorEventDefinition' }] },
+  TERMINATE_END: { type: 'bpmn:EndEvent', name: '终止结束', offset: { x: 150, y: 0 }, eventDefinitions: [{ $type: 'bpmn:TerminateEventDefinition' }] },
+  
+  // 任务
+  USER_TASK: { type: 'bpmn:UserTask', name: '用户任务', offset: { x: 150, y: 0 } },
+  SERVICE_TASK: { type: 'bpmn:ServiceTask', name: '服务任务', offset: { x: 150, y: 0 } },
+  SCRIPT_TASK: { type: 'bpmn:ScriptTask', name: '脚本任务', offset: { x: 150, y: 0 } },
+  SEND_TASK: { type: 'bpmn:SendTask', name: '发送任务', offset: { x: 150, y: 0 } },
+  RECEIVE_TASK: { type: 'bpmn:ReceiveTask', name: '接收任务', offset: { x: 150, y: 0 } },
+  MANUAL_TASK: { type: 'bpmn:ManualTask', name: '手动任务', offset: { x: 150, y: 0 } },
+  
+  // 网关
+  EXCLUSIVE_GATEWAY: { type: 'bpmn:ExclusiveGateway', name: '排他网关', offset: { x: 150, y: 0 } },
+  PARALLEL_GATEWAY: { type: 'bpmn:ParallelGateway', name: '并行网关', offset: { x: 150, y: 0 } },
+  INCLUSIVE_GATEWAY: { type: 'bpmn:InclusiveGateway', name: '包容网关', offset: { x: 150, y: 0 } },
+  EVENT_GATEWAY: { type: 'bpmn:EventBasedGateway', name: '事件网关', offset: { x: 150, y: 0 } },
+  
+  // 数据
+  DATA_OBJECT: { type: 'bpmn:DataObjectReference', name: '数据对象', offset: { x: 150, y: 100 } },
+  DATA_STORE: { type: 'bpmn:DataStoreReference', name: '数据存储', offset: { x: 150, y: 100 } },
+  
+  // 子流程
+  SUBPROCESS: { type: 'bpmn:SubProcess', name: '子流程', offset: { x: 0, y: 0 } },
+  TRANSACTION: { type: 'bpmn:Transaction', name: '事务', offset: { x: 0, y: 0 } },
+  EVENT_SUBPROCESS: { type: 'bpmn:SubProcess', name: '事件子流程', offset: { x: 0, y: 0 }, triggeredByEvent: true }
+}
+
+// 操作提示信息
+const ACTION_MESSAGES = {
+  'create-sequence-flow': '请按住 Ctrl 键，从起始元素拖拽到目标元素创建连接',
+  'create-message-flow': '请在两个元素间创建消息流',
+  'create-association': '请按 Ctrl 键点击元素创建关联'
+}
+
+// 不需要成功提示的操作
+const SKIP_SUCCESS_ACTIONS = ['create-sequence-flow', 'create-message-flow', 'create-association']
+
+// 操作到元素配置的映射
+const ACTION_TO_ELEMENT = {
+  'create-start-event': 'START_EVENT',
+  'create-timer-start': 'TIMER_START',
+  'create-message-start': 'MESSAGE_START',
+  'create-end-event': 'END_EVENT',
+  'create-message-end': 'MESSAGE_END',
+  'create-error-end': 'ERROR_END',
+  'create-terminate-end': 'TERMINATE_END',
+  'create-user-task': 'USER_TASK',
+  'create-service-task': 'SERVICE_TASK',
+  'create-script-task': 'SCRIPT_TASK',
+  'create-send-task': 'SEND_TASK',
+  'create-receive-task': 'RECEIVE_TASK',
+  'create-manual-task': 'MANUAL_TASK',
+  'create-exclusive-gateway': 'EXCLUSIVE_GATEWAY',
+  'create-parallel-gateway': 'PARALLEL_GATEWAY',
+  'create-inclusive-gateway': 'INCLUSIVE_GATEWAY',
+  'create-event-gateway': 'EVENT_GATEWAY',
+  'create-data-object': 'DATA_OBJECT',
+  'create-data-store': 'DATA_STORE',
+  'create-subprocess': 'SUBPROCESS',
+  'create-transaction': 'TRANSACTION',
+  'create-event-subprocess': 'EVENT_SUBPROCESS'
+}
+
 const launchData = ref({
   processDefinitionId: '',
   businessKey: '',
@@ -1601,124 +1675,42 @@ const getCanvasCenter = () => {
   const viewbox = canvas.viewbox()
   return { x: viewbox.x + viewbox.width / 2, y: viewbox.y + viewbox.height / 2 }
 }
-
-// 处理工具栏点击
-// 处理工具栏点击
+// 处理工具栏点击（优化版）
 const handlePaletteClick = (action) => {
+  // 处理连接类操作
+  if (ACTION_MESSAGES[action]) {
+    ElMessage.info(ACTION_MESSAGES[action])
+    return
+  }
+  
+  // 获取元素配置
+  const elementKey = ACTION_TO_ELEMENT[action]
+  if (!elementKey || !BPMN_ELEMENTS[elementKey]) {
+    ElMessage.warning('未知操作：' + action)
+    return
+  }
+  
+  const config = BPMN_ELEMENTS[elementKey]
   const center = getCanvasCenter()
-  const offset = { x: center.x + 150, y: center.y }
-  const offsetDown = { x: center.x + 150, y: center.y + 100 }
-
+  const position = {
+    x: center.x + config.offset.x,
+    y: center.y + config.offset.y
+  }
+  
   try {
-    switch (action) {
-      // 开始事件
-      case 'create-start-event':
-        createBpmnElement('bpmn:StartEvent', '开始', { x: center.x, y: center.y })
-        break
-      case 'create-timer-start':
-        createBpmnElement('bpmn:StartEvent', '定时开始', { x: center.x, y: center.y }, {
-          eventDefinitions: [{ $type: 'bpmn:TimerEventDefinition' }]
-        })
-        break
-      case 'create-message-start':
-        createBpmnElement('bpmn:StartEvent', '消息开始', { x: center.x, y: center.y }, {
-          eventDefinitions: [{ $type: 'bpmn:MessageEventDefinition' }]
-        })
-        break
-
-      // 结束事件
-      case 'create-end-event':
-        createBpmnElement('bpmn:EndEvent', '结束', offset)
-        break
-      case 'create-message-end':
-        createBpmnElement('bpmn:EndEvent', '消息结束', offset, {
-          eventDefinitions: [{ $type: 'bpmn:MessageEventDefinition' }]
-        })
-        break
-      case 'create-error-end':
-        createBpmnElement('bpmn:EndEvent', '错误结束', offset, {
-          eventDefinitions: [{ $type: 'bpmn:ErrorEventDefinition' }]
-        })
-        break
-      case 'create-terminate-end':
-        createBpmnElement('bpmn:EndEvent', '终止结束', offset, {
-          eventDefinitions: [{ $type: 'bpmn:TerminateEventDefinition' }]
-        })
-        break
-
-      // 任务
-      case 'create-user-task':
-        createBpmnElement('bpmn:UserTask', '用户任务', offset)
-        break
-      case 'create-service-task':
-        createBpmnElement('bpmn:ServiceTask', '服务任务', offset)
-        break
-      case 'create-script-task':
-        createBpmnElement('bpmn:ScriptTask', '脚本任务', offset)
-        break
-      case 'create-send-task':
-        createBpmnElement('bpmn:SendTask', '发送任务', offset)
-        break
-      case 'create-receive-task':
-        createBpmnElement('bpmn:ReceiveTask', '接收任务', offset)
-        break
-      case 'create-manual-task':
-        createBpmnElement('bpmn:ManualTask', '手动任务', offset)
-        break
-
-      // 网关
-      case 'create-exclusive-gateway':
-        createBpmnElement('bpmn:ExclusiveGateway', '排他网关', offset)
-        break
-      case 'create-parallel-gateway':
-        createBpmnElement('bpmn:ParallelGateway', '并行网关', offset)
-        break
-      case 'create-inclusive-gateway':
-        createBpmnElement('bpmn:InclusiveGateway', '包容网关', offset)
-        break
-      case 'create-event-gateway':
-        createBpmnElement('bpmn:EventBasedGateway', '事件网关', offset)
-        break
-
-      // 数据
-      case 'create-data-object':
-        createBpmnElement('bpmn:DataObjectReference', '数据对象', offsetDown)
-        break
-      case 'create-data-store':
-        createBpmnElement('bpmn:DataStoreReference', '数据存储', offsetDown)
-        break
-
-      // 子流程
-      case 'create-subprocess':
-        createBpmnElement('bpmn:SubProcess', '子流程', { x: center.x, y: center.y })
-        break
-      case 'create-transaction':
-        createBpmnElement('bpmn:Transaction', '事务', { x: center.x, y: center.y })
-        break
-      case 'create-event-subprocess':
-        createBpmnElement('bpmn:SubProcess', '事件子流程', { x: center.x, y: center.y }, {
-          triggeredByEvent: true
-        })
-        break
-
-      // 连接
-      case 'create-sequence-flow':
-        ElMessage.info('请按住 Ctrl 键，从起始元素拖拽到目标元素创建连接')
-        break
-      case 'create-message-flow':
-        ElMessage.info('请在两个元素间创建消息流')
-        break
-      case 'create-association':
-        ElMessage.info('请按 Ctrl 键点击元素创建关联')
-        break
-
-      default:
-        ElMessage.warning('未知操作：' + action)
+    // 构建元素对象
+    const element = {
+      type: config.type,
+      name: config.name,
+      ...config
     }
-
+    // 删除不需要的位置属性
+    delete element.offset
+    
+    createBpmnElement(config.type, config.name, position, element)
+    
     // 显示成功提示（连接类操作除外）
-    const skipSuccessActions = ['create-sequence-flow', 'create-message-flow', 'create-association']
-    if (!skipSuccessActions.includes(action)) {
+    if (!SKIP_SUCCESS_ACTIONS.includes(action)) {
       ElMessage.success('已添加元素')
     }
   } catch (err) {
@@ -1726,9 +1718,6 @@ const handlePaletteClick = (action) => {
     ElMessage.error('创建元素失败：' + err.message)
   }
 }
-
-
-// 批量操作对话框
 const openBatchDialog = () => {
   batchVisible.value = true
 }
