@@ -2,6 +2,7 @@ com/micro/platform/common/log/aspect/AuditLogAspect.class
 com/micro/platform/common/log/service/AuditLogService.class
 com/micro/platform/common/log/handler/AuditLogEventHandler.class
 com/micro/platform/common/log/entity/AuditLogEntity.class
+com/micro/platform/common/log/service/OperationLogService.class
 com/micro/platform/common/log/aspect/OperationLogAspect.class
 com/micro/platform/common/log/annotation/OperationType.class
 com/micro/platform/common/log/annotation/OperationLog.class

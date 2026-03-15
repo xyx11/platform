@@ -7,3 +7,4 @@
 /Users/xieyunxing/micro-platform/mp-common/mp-common-log/src/main/java/com/micro/platform/common/log/entity/OperationLog.java
 /Users/xieyunxing/micro-platform/mp-common/mp-common-log/src/main/java/com/micro/platform/common/log/handler/AuditLogEventHandler.java
 /Users/xieyunxing/micro-platform/mp-common/mp-common-log/src/main/java/com/micro/platform/common/log/service/AuditLogService.java
+/Users/xieyunxing/micro-platform/mp-common/mp-common-log/src/main/java/com/micro/platform/common/log/service/OperationLogService.java
