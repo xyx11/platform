@@ -2,7 +2,7 @@
 
 ## 已创建的文件
 
-### 组合式函数 (composables/) - 14 个
+### 组合式函数 (composables/) - 17 个
 1. **useBpmnModeler.js** - BPMN 模型器管理 (252 行)
 2. **useShortcuts.js** - 快捷键管理 (208 行)
 3. **useFlowElements.js** - 流程元素操作 (250 行)
@@ -17,6 +17,10 @@
 12. **useAutoLayout.js** - 自动布局功能 (230 行)
 13. **useSimulation.js** - 流程模拟功能 (210 行)
 14. **useTemplate.js** - 模板管理功能 (260 行)
+15. **useDashboard.js** - 流程健康度仪表板 (400 行)
+16. **useCollaboration.js** - 协作编辑 (380 行)
+17. **useComments.js** - 评论批注 (380 行)
+18. **useVersion.js** - 版本管理 (400 行)
 
 ### 常量模块 (constants/) - 2 个
 1. **bpmnElements.js** - BPMN 元素配置 (222 行)
@@ -36,14 +40,14 @@
 ## 代码统计
 
 ```
-文件数：23
-代码行数：约 6,600 行（新代码）
+文件数：25
+代码行数：约 7,000 行（新代码）
 构建状态：✓ 通过 (vite build 验证)
 ```
 
 ## 当前状态
 
-- ✅ **21 个模块已创建并验证**：所有组合式函数、常量和工具函数模块已完成
+- ✅ **25 个模块已创建并验证**：所有组合式函数、常量和工具函数模块已完成
 - ✅ **构建验证通过**：`npm run build` 成功，无编译错误
 - ✅ **模块导出正确**：index.js 统一导出所有模块
 - ⚠️ **主组件尚未迁移**：index.vue (4742 行) 仍为原始单文件结构，但可以在未来逐步迁移使用新模块
@@ -51,7 +55,7 @@
 ## 优化亮点
 
 ### 1. 模块化设计
-- 将 4742 行的单文件拆分为 21 个模块
+- 将 4742 行的单文件拆分为 25 个模块
 - 每个模块职责单一，易于理解和维护
 
 ### 2. 组合式 API
@@ -93,6 +97,10 @@ import {
   useAutoLayout,
   useSimulation,
   useTemplate,
+  useDashboard,
+  useCollaboration,
+  useComments,
+  useVersion,
   useShortcuts,
   validateBpmn,
   getFlowStatistics,
@@ -117,7 +125,11 @@ import {
   useNodeProperties,
   useAutoLayout,
   useSimulation,
-  useTemplate
+  useTemplate,
+  useDashboard,
+  useCollaboration,
+  useComments,
+  useVersion
 } from './designer'
 
 const bpmnCanvas = ref(null)
@@ -169,6 +181,18 @@ const { openSaveTemplate, saveAsTemplate } = useTemplate({
   processInfo
 })
 
+// 健康度仪表板
+const { openDashboard, overallScore } = useDashboard({ bpmnModeler, processInfo })
+
+// 协作编辑
+const { initCollaboration, lockProcess } = useCollaboration({ bpmnModeler, processInfo })
+
+// 评论批注
+const { openComments, addComment } = useComments({ bpmnModeler, processInfo })
+
+// 版本管理
+const { saveVersion, rollbackVersion } = useVersion({ bpmnModeler, processInfo })
+
 // 启用自动保存
 enableAutoSave(30000)
 </script>
@@ -191,13 +215,10 @@ enableAutoSave(30000)
 - [x] 流程模拟 (useSimulation)
 - [x] 模板管理 (useTemplate)
 - [x] 通用工具函数 (commonUtils)
-
-## 待开发的功能模块
-
-- [ ] 版本管理 (useVersion)
-- [x] 评论批注 (useComments)
 - [x] 健康度仪表板 (useDashboard)
 - [x] 协作编辑 (useCollaboration)
+- [x] 评论批注 (useComments)
+- [x] 版本管理 (useVersion)
 
 ## 后续迁移计划
 
@@ -241,3 +262,17 @@ enableAutoSave(30000)
 - 实时操作同步
 - 操作历史记录
 - 心跳和自动同步机制
+
+### useComments.js - 评论批注
+- 四种评论类型：普通评论、问题、建议、批注
+- 评论回复和删除功能
+- 问题标记为已解决/重新打开
+- 评论关联 BPMN 元素并高亮显示
+- 支持评论导出
+
+### useVersion.js - 版本管理
+- 版本历史管理（加载、保存、删除）
+- 版本对比（支持两个版本差异对比）
+- 版本回滚（回滚并创建新版本记录）
+- 版本部署（标记已部署状态）
+- 版本导出（导出 BPMN 文件）
