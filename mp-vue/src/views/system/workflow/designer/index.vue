@@ -2613,19 +2613,27 @@ const deleteSelected = () => {
 }
 
 // 缩放控制
-const zoomIn = () => {
+const zoomCanvas = (action) => {
   const canvas = bpmnModeler.value.get('canvas')
-  canvas.zoom('step-in')
+  const actions = {
+    in: 'step-in',
+    out: 'step-out',
+    fit: 'fit-viewport'
+  }
+  canvas.zoom(actions[action] || 'step-in')
 }
 
-const zoomOut = () => {
-  const canvas = bpmnModeler.value.get('canvas')
-  canvas.zoom('step-out')
-}
+const zoomIn = () => zoomCanvas('in')
+const zoomOut = () => zoomCanvas('out')
+const zoomFit = () => zoomCanvas('fit')
 
-const zoomFit = () => {
+// 设置缩放比例
+const setZoom = (percent) => {
   const canvas = bpmnModeler.value.get('canvas')
-  canvas.zoom('fit-viewport')
+  const viewbox = canvas.viewbox()
+  const scale = percent / 100
+  canvas.zoom(viewbox.scale / scale)
+  currentZoom.value = percent
 }
 
 // 切换网格
