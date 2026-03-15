@@ -24,6 +24,9 @@ public class OperationLogServiceImpl implements OperationLogService {
         this.sysOperationLogMapper = sysOperationLogMapper;
     }
 
+    // 最大日志长度限制（避免超出数据库 TEXT 字段限制）
+    private static final int MAX_LOG_LENGTH = 60000;
+
     @Override
     @Async("operationLogExecutor")
     public void saveLog(OperationLog operationLog) {
@@ -31,13 +34,15 @@ public class OperationLogServiceImpl implements OperationLogService {
             // 将 common 模块的 OperationLog 转换为 system 模块的 SysOperationLog
             SysOperationLog sysOperationLog = new SysOperationLog();
             BeanUtils.copyProperties(operationLog, sysOperationLog);
-            
-            // 特殊字段处理
+
+            // 特殊字段处理，并进行长度限制
             if (operationLog.getRequestParams() != null) {
-                sysOperationLog.setOperParam(operationLog.getRequestParams());
+                String params = truncateIfNeeded(operationLog.getRequestParams(), MAX_LOG_LENGTH);
+                sysOperationLog.setOperParam(params);
             }
             if (operationLog.getResponseResult() != null) {
-                sysOperationLog.setJsonResult(operationLog.getResponseResult());
+                String result = truncateIfNeeded(operationLog.getResponseResult(), MAX_LOG_LENGTH);
+                sysOperationLog.setJsonResult(result);
             }
             if (operationLog.getOperationIp() != null) {
                 sysOperationLog.setOperIp(operationLog.getOperationIp());
@@ -73,5 +78,19 @@ public class OperationLogServiceImpl implements OperationLogService {
         } catch (Exception e) {
             log.error("操作日志保存失败：{}", e.getMessage(), e);
         }
+    }
+
+    /**
+     * 截断字符串到指定长度（避免超出数据库字段限制）
+     */
+    private String truncateIfNeeded(String value, int maxLength) {
+        if (value == null) {
+            return null;
+        }
+        if (value.length() > maxLength) {
+            log.warn("日志内容超出限制，已截断：原长度={}, 限制长度={}", value.length(), maxLength);
+            return value.substring(0, maxLength);
+        }
+        return value;
     }
 }
