@@ -130,6 +130,24 @@ public class WorkflowController {
         return Result.success();
     }
 
+    @PostMapping("/definition/suspend/{processDefinitionId}")
+    @Operation(summary = "挂起流程定义")
+    @PreAuthorize("@ss.hasPermission('system:workflow:suspend')")
+    @OperationLog(module = "工作流", type = OperationType.OTHER)
+    public Result<Void> suspendProcessDefinition(@PathVariable String processDefinitionId) {
+        workflowService.suspendProcessDefinition(processDefinitionId);
+        return Result.success();
+    }
+
+    @PostMapping("/definition/activate/{processDefinitionId}")
+    @Operation(summary = "激活流程定义")
+    @PreAuthorize("@ss.hasPermission('system:workflow:activate')")
+    @OperationLog(module = "工作流", type = OperationType.OTHER)
+    public Result<Void> activateProcessDefinition(@PathVariable String processDefinitionId) {
+        workflowService.activateProcessDefinition(processDefinitionId);
+        return Result.success();
+    }
+
     @PostMapping("/deploy")
     @Operation(summary = "部署流程定义")
     @PreAuthorize("@ss.hasPermission('system:workflow:deploy')")

@@ -125,6 +125,20 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public void suspendProcessDefinition(String processDefinitionId) {
+        log.info("挂起流程定义：{}", processDefinitionId);
+        repositoryService.suspendProcessDefinitionById(processDefinitionId, true, null);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void activateProcessDefinition(String processDefinitionId) {
+        log.info("激活流程定义：{}", processDefinitionId);
+        repositoryService.activateProcessDefinitionById(processDefinitionId, true, null);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = "processDefinitions", allEntries = true)
     public Map<String, Object> deployProcessDefinition(String name, String bpmnXml) {
         log.info("部署流程定义：{}", name);

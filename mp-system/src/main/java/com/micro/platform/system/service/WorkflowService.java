@@ -57,6 +57,12 @@ public interface WorkflowService {
      */
     void activateProcess(String processInstanceId);
 
+    /** 挂起流程定义 */
+    void suspendProcessDefinition(String processDefinitionId);
+
+    /** 激活流程定义 */
+    void activateProcessDefinition(String processDefinitionId);
+
     /**
      * 部署流程定义
      *
