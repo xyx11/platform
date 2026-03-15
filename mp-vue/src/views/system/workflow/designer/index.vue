@@ -1572,116 +1572,120 @@ const handleNodeNavigation = (key) => {
   modeling.moveElements([element], { x: newX - element.x, y: newY - element.y }, element.parent)
 }
 
-// 处理工具栏点击
-const handlePaletteClick = (action) => {
+// 辅助函数：创建 BPMN 元素
+const createBpmnElement = (type, name, position = { x: 0, y: 0 }, extraProps = {}) => {
   const modeling = bpmnModeler.value.get('modeling')
   const elementRegistry = bpmnModeler.value.get('elementRegistry')
   const rootElement = elementRegistry.getRoot()
+  
+  const shape = { type, name, ...extraProps }
+  modeling.createShape(shape, position, rootElement)
+}
 
-  // 获取画布中心位置
+// 辅助函数：获取画布中心位置
+const getCanvasCenter = () => {
   const canvas = bpmnModeler.value.get('canvas')
   const viewbox = canvas.viewbox()
-  const centerX = viewbox.x + viewbox.width / 2
-  const centerY = viewbox.y + viewbox.height / 2
+  return { x: viewbox.x + viewbox.width / 2, y: viewbox.y + viewbox.height / 2 }
+}
+
+// 处理工具栏点击
+// 处理工具栏点击
+const handlePaletteClick = (action) => {
+  const center = getCanvasCenter()
+  const offset = { x: center.x + 150, y: center.y }
+  const offsetDown = { x: center.x + 150, y: center.y + 100 }
 
   try {
     switch (action) {
       // 开始事件
       case 'create-start-event':
-        modeling.createShape({ type: 'bpmn:StartEvent', name: '开始' }, { x: centerX, y: centerY }, rootElement)
+        createBpmnElement('bpmn:StartEvent', '开始', { x: center.x, y: center.y })
         break
       case 'create-timer-start':
-        modeling.createShape({
-          type: 'bpmn:StartEvent',
-          name: '定时开始',
+        createBpmnElement('bpmn:StartEvent', '定时开始', { x: center.x, y: center.y }, {
           eventDefinitions: [{ $type: 'bpmn:TimerEventDefinition' }]
-        }, { x: centerX, y: centerY }, rootElement)
+        })
         break
       case 'create-message-start':
-        modeling.createShape({
-          type: 'bpmn:StartEvent',
-          name: '消息开始',
+        createBpmnElement('bpmn:StartEvent', '消息开始', { x: center.x, y: center.y }, {
           eventDefinitions: [{ $type: 'bpmn:MessageEventDefinition' }]
-        }, { x: centerX, y: centerY }, rootElement)
+        })
         break
 
       // 结束事件
       case 'create-end-event':
-        modeling.createShape({ type: 'bpmn:EndEvent', name: '结束' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:EndEvent', '结束', offset)
         break
       case 'create-message-end':
-        modeling.createShape({
-          type: 'bpmn:EndEvent',
-          name: '消息结束',
+        createBpmnElement('bpmn:EndEvent', '消息结束', offset, {
           eventDefinitions: [{ $type: 'bpmn:MessageEventDefinition' }]
-        }, { x: centerX + 150, y: centerY }, rootElement)
+        })
         break
       case 'create-error-end':
-        modeling.createShape({
-          type: 'bpmn:EndEvent',
-          name: '错误结束',
+        createBpmnElement('bpmn:EndEvent', '错误结束', offset, {
           eventDefinitions: [{ $type: 'bpmn:ErrorEventDefinition' }]
-        }, { x: centerX + 150, y: centerY }, rootElement)
+        })
         break
       case 'create-terminate-end':
-        modeling.createShape({
-          type: 'bpmn:EndEvent',
-          name: '终止结束',
+        createBpmnElement('bpmn:EndEvent', '终止结束', offset, {
           eventDefinitions: [{ $type: 'bpmn:TerminateEventDefinition' }]
-        }, { x: centerX + 150, y: centerY }, rootElement)
+        })
         break
 
       // 任务
       case 'create-user-task':
-        modeling.createShape({ type: 'bpmn:UserTask', name: '用户任务' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:UserTask', '用户任务', offset)
         break
       case 'create-service-task':
-        modeling.createShape({ type: 'bpmn:ServiceTask', name: '服务任务' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:ServiceTask', '服务任务', offset)
         break
       case 'create-script-task':
-        modeling.createShape({ type: 'bpmn:ScriptTask', name: '脚本任务' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:ScriptTask', '脚本任务', offset)
         break
       case 'create-send-task':
-        modeling.createShape({ type: 'bpmn:SendTask', name: '发送任务' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:SendTask', '发送任务', offset)
         break
       case 'create-receive-task':
-        modeling.createShape({ type: 'bpmn:ReceiveTask', name: '接收任务' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:ReceiveTask', '接收任务', offset)
         break
       case 'create-manual-task':
-        modeling.createShape({ type: 'bpmn:ManualTask', name: '手动任务' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:ManualTask', '手动任务', offset)
         break
 
       // 网关
       case 'create-exclusive-gateway':
-        modeling.createShape({ type: 'bpmn:ExclusiveGateway', name: '排他网关' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:ExclusiveGateway', '排他网关', offset)
         break
       case 'create-parallel-gateway':
-        modeling.createShape({ type: 'bpmn:ParallelGateway', name: '并行网关' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:ParallelGateway', '并行网关', offset)
         break
       case 'create-inclusive-gateway':
-        modeling.createShape({ type: 'bpmn:InclusiveGateway', name: '包容网关' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:InclusiveGateway', '包容网关', offset)
         break
       case 'create-event-gateway':
-        modeling.createShape({ type: 'bpmn:EventBasedGateway', name: '事件网关' }, { x: centerX + 150, y: centerY }, rootElement)
+        createBpmnElement('bpmn:EventBasedGateway', '事件网关', offset)
         break
 
       // 数据
       case 'create-data-object':
-        modeling.createShape({ type: 'bpmn:DataObjectReference', name: '数据对象' }, { x: centerX + 150, y: centerY + 100 }, rootElement)
+        createBpmnElement('bpmn:DataObjectReference', '数据对象', offsetDown)
         break
       case 'create-data-store':
-        modeling.createShape({ type: 'bpmn:DataStoreReference', name: '数据存储' }, { x: centerX + 150, y: centerY + 100 }, rootElement)
+        createBpmnElement('bpmn:DataStoreReference', '数据存储', offsetDown)
         break
 
       // 子流程
       case 'create-subprocess':
-        modeling.createShape({ type: 'bpmn:SubProcess', name: '子流程' }, { x: centerX, y: centerY }, rootElement)
+        createBpmnElement('bpmn:SubProcess', '子流程', { x: center.x, y: center.y })
         break
       case 'create-transaction':
-        modeling.createShape({ type: 'bpmn:Transaction', name: '事务' }, { x: centerX, y: centerY }, rootElement)
+        createBpmnElement('bpmn:Transaction', '事务', { x: center.x, y: center.y })
         break
       case 'create-event-subprocess':
-        modeling.createShape({ type: 'bpmn:SubProcess', triggeredByEvent: true }, { x: centerX, y: centerY }, rootElement)
+        createBpmnElement('bpmn:SubProcess', '事件子流程', { x: center.x, y: center.y }, {
+          triggeredByEvent: true
+        })
         break
 
       // 连接
@@ -1699,7 +1703,9 @@ const handlePaletteClick = (action) => {
         ElMessage.warning('未知操作：' + action)
     }
 
-    if (action !== 'create-sequence-flow' && action !== 'create-message-flow' && action !== 'create-association') {
+    // 显示成功提示（连接类操作除外）
+    const skipSuccessActions = ['create-sequence-flow', 'create-message-flow', 'create-association']
+    if (!skipSuccessActions.includes(action)) {
       ElMessage.success('已添加元素')
     }
   } catch (err) {
