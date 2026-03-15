@@ -76,7 +76,7 @@
           <el-button @click="validateDiagram" title="基础验证">
             <el-icon><Checked /></el-icon> 验证
           </el-button>
-          <el-button @click="enhancedValidate" title="流程健康度检查">\n            <el-icon><Medical />\n</el-icon> 健康度检查\n          </el-button>\n          <el-button @click="previewDiagram" title="预览流程">
+          <el-button @click="enhancedValidate" title="流程健康度检查">\n            <el-icon><DataAnalysis /></el-icon> 健康度检查\n          </el-button>\n          <el-button @click="previewDiagram" title="预览流程">
             <el-icon><View /></el-icon> 预览
           </el-button>
           <el-button @click="duplicateProcess" :disabled="!saved" title="复制流程">
@@ -1215,6 +1215,23 @@ const autoLayoutForm = reactive({
 const templateLibVisible = ref(false)
 const templateLibTab = ref('common')
 const myTemplates = ref([])
+// 流程模拟
+const simulationVisible = ref(false)
+const simulationSpeed = ref('normal')
+const simulating = ref(false)
+const currentStep = ref(0)
+const simulationPath = ref([])
+const simulationLogs = ref([])
+
+// 流程健康度仪表板
+const dashboardVisible = ref(false)
+
+// 智能推荐
+const recommendationVisible = ref(false)
+const recommendationForm = reactive({
+  processType: '',
+  businessScenario: ''
+})
 
 // 常用模板
 // 导航功能
@@ -1262,19 +1279,6 @@ const onlineUsers = ref([
 ])
 const isLocked = ref(false)
 
-// 流程模拟
-const simulating = ref(false)
-const currentStep = ref(0)
-const simulationPath = ref([])
-const simulationLogs = ref([])
-const simulationSpeed = ref('normal')
-
-// 智能推荐
-const recommendationVisible = ref(false)
-const recommendationForm = reactive({
-  processType: ''
-})
-const recommendations = ref([])
 
 // 评论批注
 const commentVisible = ref(false)
@@ -1685,6 +1689,30 @@ const handlePaletteClick = (action) => {
   } catch (err) {
     console.error('创建元素失败:', err)
     ElMessage.error('创建元素失败：' + err.message)
+  }
+}
+
+
+// 批量操作对话框
+const openBatchDialog = () => {
+  batchVisible.value = true
+}
+
+// 自动布局对话框
+const openAutoLayout = () => {
+  autoLayoutVisible.value = true
+}
+
+// 模板库对话框
+const openTemplateLib = () => {
+  templateLibVisible.value = true
+}
+
+// 适应画布
+const resetViewPort = () => {
+  if (bpmnModeler.value) {
+    const canvas = bpmnModeler.value.get('canvas')
+    canvas.zoom('fit-viewport')
   }
 }
 
