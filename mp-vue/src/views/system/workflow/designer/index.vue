@@ -1449,6 +1449,7 @@ const initBpmnModeler = () => {
   bpmnModeler.value.importXML(defaultBpmnXml)
 
   // 监听视图变化更新缩放比例
+  const canvas = bpmnModeler.value.get('canvas')
   const eventBus = bpmnModeler.value.get('eventBus')
   eventBus.on('canvas.viewbox.changed', ({ viewbox }) => {
     currentZoom.value = Math.round(100 / viewbox.scale)
@@ -1530,14 +1531,15 @@ const handleNodeNavigation = (key) => {
   const modeling = bpmnModeler.value.get('modeling')
   const elementRegistry = bpmnModeler.value.get('elementRegistry')
   const element = elementRegistry.get(selectedNode.value.id)
-  
+
   if (!element) return
-  
-  const step = e.shiftKey ? 20 : 10 // 按住 Shift 键时移动距离加倍
-  
+
+  // 使用 event 全局变量或者通过参数传递
+  const step = 10 // 默认移动距离
+
   let newX = element.x
   let newY = element.y
-  
+
   switch (key) {
     case 'ArrowUp':
       newY -= step
@@ -1552,8 +1554,8 @@ const handleNodeNavigation = (key) => {
       newX += step
       break
   }
-  
-  modeling.moveElements([element], { x: newX - element.x, y: newY - element.y }, { x: 0, y: 0 })
+
+  modeling.moveElements([element], { x: newX - element.x, y: newY - element.y }, element.parent)
 }
 
 // 处理工具栏点击
@@ -1563,7 +1565,7 @@ const handlePaletteClick = (action) => {
   const rootElement = elementRegistry.getRoot()
 
   // 获取画布中心位置
-  const eventBus = bpmnModeler.value.get('eventBus')
+  const canvas = bpmnModeler.value.get('canvas')
   const viewbox = canvas.viewbox()
   const centerX = viewbox.x + viewbox.width / 2
   const centerY = viewbox.y + viewbox.height / 2
@@ -1855,6 +1857,7 @@ const validateBpmnNoCheck = (xml) => {
 const enableAutoSave = () => {
   // 监听画布变化
   if (bpmnModeler.value) {
+    const canvas = bpmnModeler.value.get('canvas')
     const eventBus = bpmnModeler.value.get('eventBus')
     eventBus.on('commandStack.changed', () => {
       hasUnsavedChanges.value = true
@@ -2591,24 +2594,23 @@ const deleteSelected = () => {
 
 // 缩放控制
 const zoomIn = () => {
-  const eventBus = bpmnModeler.value.get('eventBus')
+  const canvas = bpmnModeler.value.get('canvas')
   canvas.zoom('step-in')
 }
 
 const zoomOut = () => {
-  const eventBus = bpmnModeler.value.get('eventBus')
+  const canvas = bpmnModeler.value.get('canvas')
   canvas.zoom('step-out')
 }
 
 const zoomFit = () => {
-  const eventBus = bpmnModeler.value.get('eventBus')
+  const canvas = bpmnModeler.value.get('canvas')
   canvas.zoom('fit-viewport')
 }
 
 // 切换网格
 const toggleGrid = () => {
-  const eventBus = bpmnModeler.value.get('eventBus')
-  const config = bpmnModeler.value.get('config.grid')
+  const canvas = bpmnModeler.value.get('canvas')
   if (gridEnabled.value) {
     canvas.addMarker('grid-enabled')
   } else {
@@ -3210,8 +3212,8 @@ const getNodeTagType = (type) => {
 const focusNode = (row) => {
   const elementRegistry = bpmnModeler.value.get('elementRegistry')
   const selection = bpmnModeler.value.get('selection')
-  const eventBus = bpmnModeler.value.get('eventBus')
-  
+  const canvas = bpmnModeler.value.get('canvas')
+
   const element = elementRegistry.get(row.id)
   if (element) {
     selection.select(element)
@@ -3297,7 +3299,7 @@ const navigateToSearchResult = (index) => {
   
   const element = searchResults.value[index]
   const selection = bpmnModeler.value.get('selection')
-  const eventBus = bpmnModeler.value.get('eventBus')
+  const canvas = bpmnModeler.value.get('canvas')
   
   selection.select(element)
   canvas.scrollToElement(element, 300)
@@ -3313,7 +3315,7 @@ const navigateToSearchResult = (index) => {
 
 // 高亮元素（带动画效果）
 const highlightElement = (element, color = '#409EFF', duration = 2000) => {
-  const eventBus = bpmnModeler.value.get('eventBus')
+  const canvas = bpmnModeler.value.get('canvas')
   const gfx = canvas._svg.querySelector(`[data-element-id="${element.id}"]`)
   
   if (gfx) {
@@ -4116,7 +4118,7 @@ const toggleLock = () => {
 // 快速添加节点
 const quickAddNode = (type) => {
   const modeling = bpmnModeler.value.get('modeling')
-  const eventBus = bpmnModeler.value.get('eventBus')
+  const canvas = bpmnModeler.value.get('canvas')
   
   const viewbox = canvas.viewbox()
   const centerX = viewbox.x + viewbox.width / 2
