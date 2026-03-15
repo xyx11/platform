@@ -1375,7 +1375,7 @@ const defaultBpmnXml = `<?xml version="1.0" encoding="UTF-8"?>
                   xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
                   id="Definitions_1"
                   targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn:process id="Process_1" name="新流程" isExecutable="false" camunda:versionTag="1.0.0">
+  <bpmn:process id="Process_1" name="新流程" isExecutable="true" camunda:versionTag="1.0.0">
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
@@ -1781,6 +1781,14 @@ const saveAsDiagram = async () => {
 
 const doSave = async () => {
   const { xml } = await bpmnModeler.value.saveXML({ format: true })
+  
+  // 验证 BPMN
+  const validationError = validateBpmn(xml)
+  if (validationError) {
+    ElMessage.error(validationError)
+    return
+  }
+  
   try {
     const result = await saveToServer({
       name: processInfo.value.name || processName.value,
@@ -1806,6 +1814,44 @@ const saveProcessInfo = () => {
   }
   processName.value = processInfo.value.name
   doSave()
+}
+
+
+// 验证 BPMN
+const validateBpmn = (xml) => {
+  try {
+    const parser = new DOMParser()
+    const xmlDoc = parser.parseFromString(xml, 'text/xml')
+    
+    // 检查开始事件数量
+    const startEvents = xmlDoc.getElementsByTagName('bpmn:startEvent')
+    if (startEvents.length === 0) {
+      return '流程必须包含至少一个开始事件'
+    }
+    if (startEvents.length > 1) {
+      return '流程只能包含一个开始事件，当前有 ' + startEvents.length + ' 个'
+    }
+    
+    // 检查结束事件
+    const endEvents = xmlDoc.getElementsByTagName('bpmn:endEvent')
+    if (endEvents.length === 0) {
+      return '流程必须包含至少一个结束事件'
+    }
+    
+    // 检查流程是否可执行
+    const processes = xmlDoc.getElementsByTagName('bpmn:process')
+    if (processes.length > 0) {
+      const isExecutable = processes[0].getAttribute('isExecutable')
+      if (isExecutable === 'false') {
+        return '流程必须设置为可执行（isExecutable=true）'
+      }
+    }
+    
+    return null
+  } catch (e) {
+    console.error('BPMN 验证失败:', e)
+    return 'BPMN 验证失败：' + e.message
+  }
 }
 
 // 自动保存
@@ -3014,6 +3060,9 @@ const loadLastDiagram = () => {
     }
   }
 }
+
+
+// 验证 BPMN
 
 // 自动保存（每 5 分钟）
 setInterval(async () => {
