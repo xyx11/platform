@@ -1440,9 +1440,6 @@ onBeforeUnmount(() => {
 const initBpmnModeler = () => {
   bpmnModeler.value = new BpmnModeler({
     container: bpmnCanvas.value,
-    keyboard: {
-      bindTo: window
-    },
     propertiesPanel: {
       parent: propertiesPanel.value
     },
