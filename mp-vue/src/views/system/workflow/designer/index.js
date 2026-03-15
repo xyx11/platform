@@ -12,6 +12,9 @@ export { useFlowStats } from './composables/useFlowStats'
 export { useFlowForms } from './composables/useFlowForms'
 export { useExport } from './composables/useExport'
 export { useNodeSearch } from './composables/useNodeSearch'
+export { useContextMenu } from './composables/useContextMenu'
+export { useBatchOperation } from './composables/useBatchOperation'
+export { useNodeProperties } from './composables/useNodeProperties'
 
 // 常量
 export * from './constants/bpmnElements'
