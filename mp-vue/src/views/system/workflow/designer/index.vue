@@ -1394,29 +1394,73 @@ const defaultBpmnXml = `<?xml version="1.0" encoding="UTF-8"?>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>`
 
-// 快捷键映射
-const keyboardShortcuts = {
-  'Ctrl-N': () => newDiagram(),
-  'Ctrl-O': () => openFile(),
-  'Ctrl-S': () => saveDiagram(),
-  'Ctrl-Shift-S': () => saveAsDiagram(),
-  'Ctrl-D': () => duplicateProcess(),
-  'Ctrl-Z': () => undo(),
-  'Ctrl-Y': () => redo(),
-  'Delete': () => deleteSelected(),
-  'Backspace': () => deleteSelected(),
-  '+': () => zoomIn(),
-  '-': () => zoomOut(),
-  '0': () => zoomFit(),
-  'Ctrl-P': () => previewDiagram(),
-  'Ctrl-B': () => deployDiagram(),
-  'Ctrl-H': () => showHelp()
+// 快捷键配置（支持自定义）
+const defaultShortcuts = {
+  'Ctrl-N': { action: 'newDiagram', desc: '新建流程' },
+  'Ctrl-O': { action: 'openFile', desc: '打开文件' },
+  'Ctrl-S': { action: 'saveDiagram', desc: '保存流程' },
+  'Ctrl-Shift-S': { action: 'saveAsDiagram', desc: '另存为' },
+  'Ctrl-D': { action: 'duplicateProcess', desc: '复制流程' },
+  'Ctrl-Z': { action: 'undo', desc: '撤销' },
+  'Ctrl-Y': { action: 'redo', desc: '重做' },
+  'Delete': { action: 'deleteSelected', desc: '删除' },
+  'Backspace': { action: 'deleteSelected', desc: '删除' },
+  '+': { action: 'zoomIn', desc: '放大' },
+  '-': { action: 'zoomOut', desc: '缩小' },
+  '0': { action: 'zoomFit', desc: '适应画布' },
+  'Ctrl-P': { action: 'previewDiagram', desc: '预览' },
+  'Ctrl-B': { action: 'deployDiagram', desc: '部署' },
+  'Ctrl-H': { action: 'showHelp', desc: '帮助' },
+  'Ctrl-F': { action: 'searchNode', desc: '搜索节点' },
+  'F5': { action: 'refreshDiagram', desc: '刷新' }
+}
+
+// 快捷键动作映射
+const shortcutActions = {
+  newDiagram: () => newDiagram(),
+  openFile: () => openFile(),
+  saveDiagram: () => saveDiagram(),
+  saveAsDiagram: () => saveAsDiagram(),
+  duplicateProcess: () => duplicateProcess(),
+  undo: () => undo(),
+  redo: () => redo(),
+  deleteSelected: () => deleteSelected(),
+  zoomIn: () => zoomIn(),
+  zoomOut: () => zoomOut(),
+  zoomFit: () => zoomFit(),
+  previewDiagram: () => previewDiagram(),
+  deployDiagram: () => deployDiagram(),
+  showHelp: () => showHelp(),
+  searchNode: () => { searchNodeText.value = ''; searchNode() },
+  refreshDiagram: () => loadLastDiagram()
+}
+
+// 键盘事件处理（优化版）
+const handleKeyDown = (e) => {
+  // 忽略输入框内的快捷键
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    return
+  }
+  
+  const key = []
+  if (e.ctrlKey || e.metaKey) key.push('Ctrl')
+  if (e.shiftKey) key.push('Shift')
+  if (e.altKey) key.push('Alt')
+  key.push(e.key)
+  
+  const shortcut = key.join('-')
+  const config = defaultShortcuts[shortcut]
+  
+  if (config && shortcutActions[config.action]) {
+    e.preventDefault()
+    shortcutActions[config.action]()
+  }
 }
 
 onMounted(() => {
   initBpmnModeler()
   initPalette()
-  initKeyboardShortcuts()
+  document.addEventListener('keydown', handleKeyDown)
   initContextMenu()
   loadLastDiagram()
   
@@ -1506,37 +1550,6 @@ const initPalette = () => {
       handlePaletteClick(item.dataset.action)
     })
   })
-}
-
-// 初始化快捷键
-const initKeyboardShortcuts = () => {
-  document.addEventListener('keydown', handleKeyDown)
-}
-
-const handleKeyDown = (e) => {
-  const key = []
-  if (e.ctrlKey || e.metaKey) key.push('Ctrl')
-  if (e.shiftKey) key.push('Shift')
-  if (e.altKey) key.push('Alt')
-  
-  // 处理方向键导航（在有选中元素时）
-  if (selectedNode.value && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-    e.preventDefault()
-    handleNodeNavigation(e.key)
-    return
-  }
-  
-  key.push(e.key.toUpperCase())
-  const shortcut = key.join('-')
-
-  // 检查是否匹配快捷键
-  for (const [keys, handler] of Object.entries(keyboardShortcuts)) {
-    if (shortcut === keys) {
-      e.preventDefault()
-      handler()
-      break
-    }
-  }
 }
 
 // 处理节点键盘导航
