@@ -1780,10 +1780,16 @@ const saveAsDiagram = async () => {
 }
 
 const doSave = async () => {
-  const { xml } = await bpmnModeler.value.saveXML({ format: true })
+  let { xml } = await bpmnModeler.value.saveXML({ format: true })
   
-  // 验证 BPMN
-  const validationError = validateBpmn(xml)
+  // 自动修复 isExecutable 属性
+  if (xml.includes('isExecutable="false"')) {
+    xml = xml.replace(/isExecutable="false"/g, 'isExecutable="true"')
+    console.log('已自动修复 isExecutable 属性')
+  }
+  
+  // 验证 BPMN（移除 isExecutable 检查，因为已自动修复）
+  const validationError = validateBpmnNoCheck(xml)
   if (validationError) {
     ElMessage.error(validationError)
     return
@@ -1817,8 +1823,8 @@ const saveProcessInfo = () => {
 }
 
 
-// 验证 BPMN
-const validateBpmn = (xml) => {
+// 验证 BPMN（不检查 isExecutable，因为已自动修复）
+const validateBpmnNoCheck = (xml) => {
   try {
     const parser = new DOMParser()
     const xmlDoc = parser.parseFromString(xml, 'text/xml')
@@ -1836,15 +1842,6 @@ const validateBpmn = (xml) => {
     const endEvents = xmlDoc.getElementsByTagName('bpmn:endEvent')
     if (endEvents.length === 0) {
       return '流程必须包含至少一个结束事件'
-    }
-    
-    // 检查流程是否可执行
-    const processes = xmlDoc.getElementsByTagName('bpmn:process')
-    if (processes.length > 0) {
-      const isExecutable = processes[0].getAttribute('isExecutable')
-      if (isExecutable === 'false') {
-        return '流程必须设置为可执行（isExecutable=true）'
-      }
     }
     
     return null
