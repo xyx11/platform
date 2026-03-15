@@ -1454,7 +1454,12 @@ const initBpmnModeler = () => {
   })
 
   // 加载默认图表
-  bpmnModeler.value.importXML(defaultBpmnXml)
+  bpmnModeler.value.importXML(defaultBpmnXml, (err) => {
+    if (err) {
+      console.error('流程设计器初始化失败:', err)
+      return
+    }
+  })
 
   // 监听视图变化更新缩放比例
   const canvas = bpmnModeler.value.get('canvas')
