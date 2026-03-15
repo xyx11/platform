@@ -196,8 +196,8 @@ enableAutoSave(30000)
 
 - [ ] 版本管理 (useVersion)
 - [ ] 评论批注 (useComments)
-- [ ] 健康度仪表板 (useDashboard)
-- [ ] 协作编辑 (useCollaboration)
+- [x] 健康度仪表板 (useDashboard)
+- [x] 协作编辑 (useCollaboration)
 
 ## 后续迁移计划
 
