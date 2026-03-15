@@ -50,3 +50,21 @@ export function getFormDefinitionList(params) {
     params
   })
 }
+
+// 更新表单绑定状态
+export function updateFormStatus(data) {
+  return request({
+    url: '/system/workflow-form/status',
+    method: 'post',
+    data
+  })
+}
+
+// 批量删除表单绑定
+export function batchDeleteFormBindings(data) {
+  return request({
+    url: '/system/workflow-form/batch-delete',
+    method: 'post',
+    data
+  })
+}
