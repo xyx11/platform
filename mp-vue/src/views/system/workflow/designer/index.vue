@@ -1321,6 +1321,66 @@ const templateForm = reactive({
   description: ''
 })
 
+
+// BPMN 常用片段库（预定义的标准流程片段）
+const BPMN_FRAGMENTS = {
+  // 审批片段
+  approval: {
+    name: '审批片段',
+    elements: [
+      { type: 'bpmn:UserTask', name: '审批', assigneeType: 'user' },
+      { type: 'bpmn:ExclusiveGateway', name: '审批结果' },
+      { type: 'bpmn:EndEvent', name: '通过' },
+      { type: 'bpmn:EndEvent', name: '拒绝' }
+    ]
+  },
+  // 条件分支片段
+  condition: {
+    name: '条件分支',
+    elements: [
+      { type: 'bpmn:ExclusiveGateway', name: '条件判断' },
+      { type: 'bpmn:UserTask', name: '处理 A' },
+      { type: 'bpmn:UserTask', name: '处理 B' },
+      { type: 'bpmn:ParallelGateway', name: '合并' }
+    ]
+  },
+  // 并行处理片段
+  parallel: {
+    name: '并行处理',
+    elements: [
+      { type: 'bpmn:ParallelGateway', name: '并行分支' },
+      { type: 'bpmn:ServiceTask', name: '服务 A' },
+      { type: 'bpmn:ServiceTask', name: '服务 B' },
+      { type: 'bpmn:ParallelGateway', name: '等待合并' }
+    ]
+  },
+  // 会签片段
+  countSign: {
+    name: '会签片段',
+    elements: [
+      { type: 'bpmn:UserTask', name: '会签', multiInstance: { sequential: false } }
+    ]
+  },
+  // 定时任务片段
+  timerTask: {
+    name: '定时任务',
+    elements: [
+      { type: 'bpmn:StartEvent', name: '定时触发', eventDefinitions: [{ $type: 'bpmn:TimerEventDefinition' }] },
+      { type: 'bpmn:ServiceTask', name: '执行任务' }
+    ]
+  },
+  // 消息通知片段
+  notification: {
+    name: '消息通知',
+    elements: [
+      { type: 'bpmn:ServiceTask', name: '发送邮件' },
+      { type: 'bpmn:SendTask', name: '发送消息' }
+    ]
+  }
+}
+
+
+
 // 11. 流程数据与状态
 const selectedNode = ref(null)
 const versionVisible = ref(false)
