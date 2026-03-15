@@ -11,6 +11,9 @@
 6. **useFlowForms.js** - 表单配置管理 (156 行)
 7. **useExport.js** - 导出功能管理 (198 行)
 8. **useNodeSearch.js** - 节点搜索功能 (148 行)
+9. **useContextMenu.js** - 右键菜单管理 (230 行)
+10. **useBatchOperation.js** - 批量操作管理 (210 行)
+11. **useNodeProperties.js** - 节点属性管理 (220 行)
 
 ### 常量模块 (constants/)
 1. **bpmnElements.js** - BPMN 元素配置 (222 行)
@@ -30,14 +33,14 @@
 ## 代码统计
 
 ```
-文件数：15
-代码行数：约 3,200 行（新代码）
+文件数：18
+代码行数：约 4,400 行（新代码）
 ```
 
 ## 优化亮点
 
 ### 1. 模块化设计
-- 将 4742 行的单文件拆分为 11 个模块
+- 将 4742 行的单文件拆分为 18 个模块
 - 每个模块职责单一，易于理解和维护
 
 ### 2. 组合式 API
@@ -73,6 +76,9 @@ import {
   useFlowForms,
   useExport,
   useNodeSearch,
+  useContextMenu,
+  useBatchOperation,
+  useNodeProperties,
   useShortcuts,
   validateBpmn,
   getFlowStatistics,
@@ -93,7 +99,9 @@ import {
   useFlowPersistence,
   useFlowForms,
   useExport,
-  useNodeSearch
+  useNodeSearch,
+  useContextMenu,
+  useNodeProperties
 } from './designer'
 
 const bpmnCanvas = ref(null)
@@ -130,6 +138,17 @@ const { exportBpmn, exportSvg, exportPng } = useExport({
 // 节点搜索
 const { search, findNext, focusNode } = useNodeSearch({ bpmnModeler })
 
+// 右键菜单
+const { contextMenuVisible, executeAction, initContextMenu } = useContextMenu({
+  bpmnModeler,
+  onAction: (action) => console.log('执行动作:', action)
+})
+
+// 节点属性
+const { openNodeProps, saveNodeProps, nodePropsVisible } = useNodeProperties({
+  bpmnModeler
+})
+
 // 启用自动保存
 enableAutoSave(30000)
 </script>
@@ -153,6 +172,9 @@ enableAutoSave(30000)
 - [x] 表单配置管理 (useFlowForms)
 - [x] 导出功能 (useExport)
 - [x] 节点搜索 (useNodeSearch)
+- [x] 右键菜单 (useContextMenu)
+- [x] 批量操作 (useBatchOperation)
+- [x] 节点属性 (useNodeProperties)
 - [x] 通用工具函数 (commonUtils)
 
 ## 待开发的功能模块
@@ -161,21 +183,5 @@ enableAutoSave(30000)
 - [ ] 版本管理 (useVersion)
 - [ ] 评论批注 (useComments)
 - [ ] 流程模拟 (useSimulation)
-- [ ] 批量操作 (useBatch)
 - [ ] 自动布局 (useAutoLayout)
-
-## 测试建议
-
-- [ ] 测试 BPMN Modeler 初始化
-- [ ] 测试快捷键注册和触发
-- [ ] 测试元素创建和删除
-- [ ] 测试保存和部署流程
-- [ ] 测试健康度检查
-- [ ] 测试本地存储
-
-## 注意事项
-
-1. 新代码使用 ES6 模块语法
-2. 确保浏览器兼容性
-3. 注意 Vue 3 Composition API 的使用规范
-4. 组合式函数中的响应式数据使用 `ref` 或 `reactive`
+- [ ] 健康度仪表板 (useDashboard)
