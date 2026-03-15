@@ -2588,16 +2588,24 @@ const downloadFile = (content, filename, type) => {
 }
 
 // 撤销
-const undo = () => {
+// 命令栈操作
+const executeCommand = (action) => {
   const commandStack = bpmnModeler.value.get('commandStack')
-  commandStack.undo()
+  const actions = {
+    undo: () => commandStack.undo(),
+    redo: () => commandStack.redo(),
+    clear: () => commandStack.clear()
+  }
+  actions[action]?.()
+}
+
+const undo = () => {
+  executeCommand('undo')
   ElMessage.success('已撤销')
 }
 
-// 重做
 const redo = () => {
-  const commandStack = bpmnModeler.value.get('commandStack')
-  commandStack.redo()
+  executeCommand('redo')
   ElMessage.success('已重做')
 }
 
@@ -2606,11 +2614,15 @@ const deleteSelected = () => {
   const modeling = bpmnModeler.value.get('modeling')
   const selection = bpmnModeler.value.get('selection')
   const selected = selection.get()
+  
   if (selected.length > 0) {
     modeling.removeElements(selected)
     ElMessage.success('已删除')
+  } else {
+    ElMessage.warning('请先选择要删除的元素')
   }
 }
+
 
 // 缩放控制
 const zoomCanvas = (action) => {
