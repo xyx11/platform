@@ -1445,14 +1445,12 @@ const initBpmnModeler = () => {
   bpmnModeler.value.importXML(defaultBpmnXml)
 
   // 监听视图变化更新缩放比例
-  const canvas = bpmnModeler.value.get('canvas')
-  canvas.on('viewbox.changed', ({ viewbox }) => {
+  const eventBus = bpmnModeler.value.get('eventBus')
+  eventBus.on('canvas.viewbox.changed', ({ viewbox }) => {
     currentZoom.value = Math.round(100 / viewbox.scale)
   })
 
   // 监听选择变化
-  const eventBus = bpmnModeler.value.get('eventBus')
-  const elementRegistry = bpmnModeler.value.get('elementRegistry')
   eventBus.on('selection.changed', (event) => {
     const newSelection = event.newSelection
     if (newSelection && newSelection.length > 0) {
@@ -1561,7 +1559,7 @@ const handlePaletteClick = (action) => {
   const rootElement = elementRegistry.getRoot()
 
   // 获取画布中心位置
-  const canvas = bpmnModeler.value.get('canvas')
+  const eventBus = bpmnModeler.value.get('eventBus')
   const viewbox = canvas.viewbox()
   const centerX = viewbox.x + viewbox.width / 2
   const centerY = viewbox.y + viewbox.height / 2
@@ -2523,23 +2521,23 @@ const deleteSelected = () => {
 
 // 缩放控制
 const zoomIn = () => {
-  const canvas = bpmnModeler.value.get('canvas')
+  const eventBus = bpmnModeler.value.get('eventBus')
   canvas.zoom('step-in')
 }
 
 const zoomOut = () => {
-  const canvas = bpmnModeler.value.get('canvas')
+  const eventBus = bpmnModeler.value.get('eventBus')
   canvas.zoom('step-out')
 }
 
 const zoomFit = () => {
-  const canvas = bpmnModeler.value.get('canvas')
+  const eventBus = bpmnModeler.value.get('eventBus')
   canvas.zoom('fit-viewport')
 }
 
 // 切换网格
 const toggleGrid = () => {
-  const canvas = bpmnModeler.value.get('canvas')
+  const eventBus = bpmnModeler.value.get('eventBus')
   const config = bpmnModeler.value.get('config.grid')
   if (gridEnabled.value) {
     canvas.addMarker('grid-enabled')
@@ -3139,7 +3137,7 @@ const getNodeTagType = (type) => {
 const focusNode = (row) => {
   const elementRegistry = bpmnModeler.value.get('elementRegistry')
   const selection = bpmnModeler.value.get('selection')
-  const canvas = bpmnModeler.value.get('canvas')
+  const eventBus = bpmnModeler.value.get('eventBus')
   
   const element = elementRegistry.get(row.id)
   if (element) {
@@ -3226,7 +3224,7 @@ const navigateToSearchResult = (index) => {
   
   const element = searchResults.value[index]
   const selection = bpmnModeler.value.get('selection')
-  const canvas = bpmnModeler.value.get('canvas')
+  const eventBus = bpmnModeler.value.get('eventBus')
   
   selection.select(element)
   canvas.scrollToElement(element, 300)
@@ -3242,7 +3240,7 @@ const navigateToSearchResult = (index) => {
 
 // 高亮元素（带动画效果）
 const highlightElement = (element, color = '#409EFF', duration = 2000) => {
-  const canvas = bpmnModeler.value.get('canvas')
+  const eventBus = bpmnModeler.value.get('eventBus')
   const gfx = canvas._svg.querySelector(`[data-element-id="${element.id}"]`)
   
   if (gfx) {
@@ -4045,7 +4043,7 @@ const toggleLock = () => {
 // 快速添加节点
 const quickAddNode = (type) => {
   const modeling = bpmnModeler.value.get('modeling')
-  const canvas = bpmnModeler.value.get('canvas')
+  const eventBus = bpmnModeler.value.get('eventBus')
   
   const viewbox = canvas.viewbox()
   const centerX = viewbox.x + viewbox.width / 2
