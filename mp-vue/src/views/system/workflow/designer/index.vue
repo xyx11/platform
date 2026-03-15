@@ -1115,6 +1115,7 @@ import { useAutoLayout } from './composables/useAutoLayout'
 import { useSimulation } from './composables/useSimulation'
 import { useTemplate } from './composables/useTemplate'
 import { useFlowForms } from './composables/useFlowForms'
+import { useShortcuts } from './composables/useShortcuts'
 import { validateBpmn } from './utils/bpmnValidator'
 import { getFlowStatistics } from './utils/bpmnStatistics'
 import { debounce, throttle } from './utils/commonUtils'
@@ -1289,10 +1290,20 @@ const gatewayCount = computed(() => metrics.gatewayCount)
 const unnamedNodes = computed(() => metrics.unnamedNodes)
 const noAssigneeTasks = computed(() => metrics.noAssigneeTasks)
 const taskFormCount = computed(() => metrics.userTaskCount)
-// 快捷键自定义
-// 7. 快捷键自定义
-const shortcutsVisible = ref(false)
-const recordingShortcut = ref(null)
+// 快捷键自定义 - 使用 useShortcuts 组合式函数
+const {
+  shortcutsVisible,
+  recordingShortcut,
+  customShortcuts,
+  openShortcuts,
+  loadCustomShortcuts,
+  saveCustomShortcuts,
+  resetShortcuts,
+  getShortcutAction,
+  handleKeyDown
+} = useShortcuts(shortcutActions)
+
+// 快捷键列表（用于显示）
 const shortcutList = ref([
   { action: 'newDiagram', description: '新建流程', shortcut: 'Ctrl+N' },
   { action: 'saveDiagram', description: '保存流程', shortcut: 'Ctrl+S' },
@@ -1655,7 +1666,7 @@ const shortcutActions = {
 }
 
 // 键盘事件处理（优化版）
-const handleKeyDown = (e) => {
+const handleKeyDownLegacy = (e) => {
   // 忽略输入框内的快捷键
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
     return
@@ -4191,19 +4202,19 @@ const confirmExport = async () => {
 // 使用 issues 和 suggestions 获取问题和建议列表
 
 // ========== 快捷键自定义功能 ==========
-const openShortcuts = () => {
+const openShortcutsLegacy = () => {
   loadShortcuts()
   shortcutsVisible.value = true
 }
 
-const loadShortcuts = () => {
+const loadShortcutsLegacy = () => {
   const saved = localStorage.getItem('workflow_shortcuts')
   if (saved) {
     shortcutList.value = JSON.parse(saved)
   }
 }
 
-const resetShortcut = (index) => {
+const resetShortcutLegacy = (index) => {
   const defaults = {
     'newDiagram': 'Ctrl+N',
     'saveDiagram': 'Ctrl+S',
@@ -4216,7 +4227,7 @@ const resetShortcut = (index) => {
   shortcutList.value[index].shortcut = defaults[shortcutList.value[index].action]
 }
 
-const resetAllShortcuts = () => {
+const resetAllShortcutsLegacy = () => {
   const defaults = [
     { action: 'newDiagram', description: '新建流程', shortcut: 'Ctrl+N' },
     { action: 'saveDiagram', description: '保存流程', shortcut: 'Ctrl+S' },
@@ -4229,7 +4240,7 @@ const resetAllShortcuts = () => {
   shortcutList.value = defaults
 }
 
-const saveShortcuts = () => {
+const saveShortcutsLegacy = () => {
   localStorage.setItem('workflow_shortcuts', JSON.stringify(shortcutList.value))
   ElMessage.success('快捷键设置已保存')
   shortcutsVisible.value = false
