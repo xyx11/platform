@@ -2109,8 +2109,7 @@ const saveFormConfig = async () => {
       }))
     }
     
-    // TODO: 调用保存配置的 API
-    console.log('保存表单配置:', config)
+    // 保存表单配置到服务器
     await request.post('/system/workflow/form/config', config)
     
     ElMessage.success('表单配置已保存')
