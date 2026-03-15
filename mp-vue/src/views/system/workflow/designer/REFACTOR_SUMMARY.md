@@ -37,7 +37,7 @@
 
 ```
 文件数：23
-代码行数：约 6,100 行（新代码）
+代码行数：约 6,600 行（新代码）
 构建状态：✓ 通过 (vite build 验证)
 ```
 
@@ -195,7 +195,7 @@ enableAutoSave(30000)
 ## 待开发的功能模块
 
 - [ ] 版本管理 (useVersion)
-- [ ] 评论批注 (useComments)
+- [x] 评论批注 (useComments)
 - [x] 健康度仪表板 (useDashboard)
 - [x] 协作编辑 (useCollaboration)
 
