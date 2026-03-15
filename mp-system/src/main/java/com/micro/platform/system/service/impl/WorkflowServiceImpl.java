@@ -173,7 +173,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Cacheable(value = "processDefinitions", key = "#category ?: 'all'", unless = "#result == null")
-    public List<Map<String, Object>> getProcessDefinitions(String category) {
+    public Map<String, Object> getProcessDefinitions(String category) {
         log.debug("获取流程定义列表，分类：{}", category);
         ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
 
@@ -183,7 +183,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
         List<ProcessDefinition> definitions = query.orderByProcessDefinitionVersion().desc().list();
 
-        return definitions.stream().map(definition -> {
+        List<Map<String, Object>> records = definitions.stream().map(definition -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", definition.getId());
             map.put("name", definition.getName());
@@ -196,6 +196,11 @@ public class WorkflowServiceImpl implements WorkflowService {
             map.put("suspended", definition.isSuspended());
             return map;
         }).collect(Collectors.toList());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("records", records);
+        result.put("total", records.size());
+        return result;
     }
 
     @Override

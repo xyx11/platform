@@ -156,8 +156,8 @@ public class WorkflowController {
     @Operation(summary = "获取流程定义列表")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
     @OperationLog(module = "工作流", type = OperationType.QUERY)
-    public Result<List<Map<String, Object>>> getProcessDefinitions(@RequestParam(required = false) String category) {
-        List<Map<String, Object>> result = workflowService.getProcessDefinitions(category);
+    public Result<Map<String, Object>> getProcessDefinitions(@RequestParam(required = false) String category) {
+        Map<String, Object> result = workflowService.getProcessDefinitions(category);
         return Result.success(result);
     }
 

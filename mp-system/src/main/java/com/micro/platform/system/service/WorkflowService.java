@@ -81,7 +81,7 @@ public interface WorkflowService {
      * @param category 流程分类
      * @return 流程定义列表
      */
-    List<Map<String, Object>> getProcessDefinitions(String category);
+    Map<String, Object> getProcessDefinitions(String category);
 
     /**
      * 获取流程定义详情
