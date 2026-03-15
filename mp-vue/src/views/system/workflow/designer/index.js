@@ -21,6 +21,7 @@ export { useTemplate } from './composables/useTemplate'
 export { useDashboard } from './composables/useDashboard'
 export { useCollaboration } from './composables/useCollaboration'
 export { useComments } from './composables/useComments'
+export { useVersion } from './composables/useVersion'
 
 // 常量
 export * from './constants/bpmnElements'
