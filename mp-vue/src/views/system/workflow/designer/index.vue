@@ -1369,30 +1369,6 @@ const throttle = (fn, delay) => {
   }
 }
 
-// 本地存储辅助
-const storage = {
-  get: (key, defaultVal) => {
-    try {
-      const item = localStorage.getItem(key)
-      return item ? JSON.parse(item) : defaultVal
-    } catch {
-      return defaultVal
-    }
-  },
-  set: (key, value) => {
-    try {
-      localStorage.setItem(key, JSON.stringify(value))
-      return true
-    } catch {
-      return false
-    }
-  },
-  remove: (key) => {
-    localStorage.removeItem(key)
-  }
-}
-
-
 const launchData = ref({
   processDefinitionId: '',
   businessKey: '',
@@ -1612,8 +1588,8 @@ const handleNodeNavigation = (key) => {
 // 辅助函数：创建 BPMN 元素
 const createBpmnElement = (type, name, position = { x: 0, y: 0 }, extraProps = {}) => {
   const modeling = bpmnModeler.value.get('modeling')
-  const elementRegistry = bpmnModeler.value.get('elementRegistry')
-  const rootElement = elementRegistry.getRoot()
+  const canvas = bpmnModeler.value.get('canvas')
+  const rootElement = canvas.getRootElement()
   
   const shape = { type, name, ...extraProps }
   modeling.createShape(shape, position, rootElement)
