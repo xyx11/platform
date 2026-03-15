@@ -18,6 +18,7 @@ export { useNodeProperties } from './composables/useNodeProperties'
 export { useAutoLayout } from './composables/useAutoLayout'
 export { useSimulation } from './composables/useSimulation'
 export { useTemplate } from './composables/useTemplate'
+export { useDashboard } from './composables/useDashboard'
 
 // 常量
 export * from './constants/bpmnElements'
