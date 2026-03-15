@@ -38,7 +38,15 @@
 ```
 文件数：21
 代码行数：约 5,240 行（新代码）
+构建状态：✓ 通过 (vite build 验证)
 ```
+
+## 当前状态
+
+- ✅ **21 个模块已创建并验证**：所有组合式函数、常量和工具函数模块已完成
+- ✅ **构建验证通过**：`npm run build` 成功，无编译错误
+- ✅ **模块导出正确**：index.js 统一导出所有模块
+- ⚠️ **主组件尚未迁移**：index.vue (4742 行) 仍为原始单文件结构，但可以在未来逐步迁移使用新模块
 
 ## 优化亮点
 
@@ -190,3 +198,30 @@ enableAutoSave(30000)
 - [ ] 评论批注 (useComments)
 - [ ] 健康度仪表板 (useDashboard)
 - [ ] 协作编辑 (useCollaboration)
+
+## 后续迁移计划
+
+### 阶段一：核心功能迁移
+首先迁移最核心的功能到主组件：
+1. useBpmnModeler - BPMN 模型器初始化
+2. useFlowElements - 流程元素操作
+3. useFlowPersistence - 保存和部署
+
+### 阶段二：辅助功能迁移
+迁移辅助功能：
+1. useExport - 导出功能
+2. useNodeSearch - 节点搜索
+3. useNodeProperties - 节点属性
+
+### 阶段三：高级功能迁移
+迁移高级功能：
+1. useAutoLayout - 自动布局
+2. useSimulation - 流程模拟
+3. useTemplate - 模板管理
+4. useContextMenu - 右键菜单
+5. useBatchOperation - 批量操作
+
+### 阶段四：清理和优化
+1. 删除主组件中已迁移的内联代码
+2. 移除重复代码
+3. 优化性能
