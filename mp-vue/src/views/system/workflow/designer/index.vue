@@ -2700,6 +2700,50 @@ const toggleProperties = () => {
   panel.style.display = panel.style.display === 'none' ? 'block' : 'none'
 }
 
+
+// 流程健康度快速检查
+const quickHealthCheck = () => {
+  const elementRegistry = bpmnModeler.value.get('elementRegistry')
+  const elements = elementRegistry.getAll()
+  
+  const stats = {
+    total: elements.length,
+    startEvents: 0,
+    endEvents: 0,
+    tasks: 0,
+    gateways: 0,
+    issues: []
+  }
+  
+  elements.forEach(el => {
+    const type = el.type
+    const bo = el.businessObject
+    
+    if (type === 'bpmn:StartEvent') stats.startEvents++
+    else if (type === 'bpmn:EndEvent') stats.endEvents++
+    else if (type?.includes('Task')) stats.tasks++
+    else if (type?.includes('Gateway')) stats.gateways++
+    
+    // 检查未命名的节点
+    if (bo && !bo.name && !type?.includes('bpmn:Process')) {
+      stats.issues.push({ type: 'warning', message: `节点 ${el.id} 未命名` })
+    }
+  })
+  
+  // 验证流程结构
+  if (stats.startEvents === 0) {
+    stats.issues.push({ type: 'error', message: '缺少开始事件' })
+  } else if (stats.startEvents > 1) {
+    stats.issues.push({ type: 'warning', message: `存在${stats.startEvents}个开始事件` })
+  }
+  
+  if (stats.endEvents === 0) {
+    stats.issues.push({ type: 'error', message: '缺少结束事件' })
+  }
+  
+  return stats
+}
+
 // 验证流程
 
 // 详细验证（返回验证结果对象）
