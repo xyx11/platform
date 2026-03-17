@@ -469,6 +469,12 @@
         <el-form-item v-if="selectedNode.type === 'userTask'" label="处理人">
           <el-input v-model="selectedNode.assignee" placeholder="用户 ID/角色编码/变量名" />
         </el-form-item>
+        <el-form-item v-if="selectedNode.type === 'userTask'" label="办理表单">
+          <el-select v-model="selectedNode.formKey" placeholder="请选择表单" filterable style="width: 100%" clearable>
+            <el-option v-for="form in flowFormList" :key="form.id" :label="form.formName" :value="form.formCode" />
+          </el-select>
+          <div class="form-tip">用于任务处理时填写数据</div>
+        </el-form-item>
         <el-form-item v-if="selectedNode.type === 'serviceTask'" label="服务类">
           <el-input v-model="selectedNode.serviceClass" placeholder="Java 类全限定名" />
         </el-form-item>
@@ -3692,6 +3698,13 @@ const initDoubleClick = () => {
 .mt-2 { margin-top: 8px; }
 .mb-2 { margin-bottom: 8px; }
 .mb-4 { margin-bottom: 16px; }
+
+// 表单提示
+.form-tip {
+  font-size: 12px;
+  color: #909399;
+  margin-top: 4px;
+}
 
 // 响应式
 @media (max-width: 1400px) {
