@@ -1099,7 +1099,8 @@
 </template>
 
 <script setup name="WorkflowDesigner">
-import { ref, reactive, onMounted, onBeforeUnmount, watch, computed } from 'vue'\nimport { logger } from '@/utils/logger'
+import { ref, reactive, onMounted, onBeforeUnmount, watch, computed } from 'vue'
+import { logger } from '@/utils/logger'
 // ========== 导入流程设计器组合式函数模块 ==========
 // 核心组合式函数
 import {

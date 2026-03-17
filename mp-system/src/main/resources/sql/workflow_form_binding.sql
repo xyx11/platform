@@ -14,6 +14,7 @@ CREATE TABLE `workflow_form_binding` (
   `status` tinyint NOT NULL DEFAULT '1' COMMENT '状态：0-停用，1-启用',
   `remark` varchar(500) DEFAULT NULL COMMENT '备注',
   `form_schema` text COMMENT '表单 Schema（JSON）',
+  `form_config` text COMMENT '表单配置（JSON）',
   `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) DEFAULT NULL COMMENT '更新人',
