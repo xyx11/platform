@@ -1059,15 +1059,6 @@ onMounted(() => {
   }
 }
 
-.search-card {
-  margin-bottom: 16px;
-
-  .search-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-}
 
 .table-card {
   margin-bottom: 16px;
@@ -1091,27 +1082,7 @@ onMounted(() => {
   }
 }
 
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 20px;
-  color: #909399;
 
-  p {
-    margin: 16px 0 24px;
-    font-size: 14px;
-  }
-}
-
-.pagination-container {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid #ebeef5;
-}
 
 .batch-operation-card {
   margin-top: 16px;
@@ -1145,17 +1116,6 @@ onMounted(() => {
 }
 
 // 表格样式优化
-:deep(.el-table) {
-  --el-table-header-bg-color: #f5f7fa;
-  --el-table-header-text-color: #606266;
-  --el-table-row-hover-bg-color: #f5f7fa;
-
-  th.el-table__cell {
-    background-color: #f5f7fa;
-    color: #606266;
-    font-weight: 600;
-  }
-}
 
 // 卡片样式
 :deep(.el-card) {
