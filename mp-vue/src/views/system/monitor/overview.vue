@@ -258,22 +258,22 @@ onMounted(() => {
         flex-shrink: 0;
 
         &.cpu-icon {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: $gradient-total;
           color: #fff;
         }
 
         &.memory-icon {
-          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+          background: $gradient-process;
           color: #fff;
         }
 
         &.redis-icon {
-          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+          background: $gradient-start;
           color: #fff;
         }
 
         &.user-icon {
-          background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+          background: $gradient-task;
           color: #fff;
         }
       }
@@ -331,27 +331,27 @@ onMounted(() => {
         color: #fff;
 
         &.cpu-icon {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: $gradient-total;
         }
 
         &.redis-icon {
-          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+          background: $gradient-start;
         }
 
         &.cache-icon {
-          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+          background: $gradient-process;
         }
 
         &.user-icon {
-          background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+          background: $gradient-task;
         }
 
         &.log-icon {
-          background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+          background: $gradient-user;
         }
 
         &.login-icon {
-          background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+          background: $gradient-role;
         }
       }
 

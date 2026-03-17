@@ -1006,57 +1006,9 @@ onMounted(() => {
   min-height: calc(100vh - 84px);
 }
 
-// 统计卡片
+// 统计卡片行间距
 .stats-row {
   margin-bottom: 16px;
-}
-
-.stat-card {
-  .stat-content {
-    display: flex;
-    align-items: center;
-
-    .stat-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 16px;
-
-      &.total {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-      }
-      &.process {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-      }
-      &.start {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        color: white;
-      }
-      &.task {
-        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        color: white;
-      }
-    }
-
-    .stat-info {
-      flex: 1;
-      .stat-value {
-        font-size: 28px;
-        font-weight: 700;
-        color: #303133;
-        line-height: 1;
-      }
-      .stat-label {
-        font-size: 13px;
-        color: #909399;
-      }
-    }
-  }
 }
 
 

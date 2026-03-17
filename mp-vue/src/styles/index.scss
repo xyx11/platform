@@ -95,16 +95,16 @@ html, body {
       justify-content: center;
       margin-right: 16px;
 
-      &.total { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-      &.process { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
-      &.start { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
-      &.task { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
-      &.user { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; }
-      &.dept { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); color: white; }
-      &.role { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: white; }
-      &.menu { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: white; }
-      &.notice { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: white; }
-      &.log { background: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%); color: white; }
+      &.total { background: $gradient-total; color: white; }
+      &.process { background: $gradient-process; color: white; }
+      &.start { background: $gradient-start; color: white; }
+      &.task { background: $gradient-task; color: white; }
+      &.user { background: $gradient-user; color: white; }
+      &.dept { background: $gradient-dept; color: white; }
+      &.role { background: $gradient-role; color: white; }
+      &.menu { background: $gradient-menu; color: white; }
+      &.notice { background: $gradient-notice; color: white; }
+      &.log { background: $gradient-log; color: white; }
     }
 
     .stat-info {

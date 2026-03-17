@@ -47,3 +47,15 @@ $box-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.05);
 $box-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.08);
 $box-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.1);
 $box-shadow-large: 0 8px 24px rgba(0, 0, 0, 0.12);
+// 渐变背景 - 用于统计卡片等
+$gradient-total: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$gradient-process: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+$gradient-start: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+$gradient-task: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+$gradient-user: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+$gradient-dept: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+$gradient-role: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+$gradient-menu: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+$gradient-notice: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+$gradient-log: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%);
+$gradient-urgent: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
