@@ -105,6 +105,21 @@ import {
   ArrowRight, OfficeBuilding, Collection, Grid, Monitor
 } from '@element-plus/icons-vue'
 
+// 渐变背景常量
+const GRADIENTS = {
+  total: GRADIENTS.total',
+  process: GRADIENTS.process',
+  start: GRADIENTS.start',
+  task: GRADIENTS.task',
+  user: GRADIENTS.user',
+  dept: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+  role: GRADIENTS.role',
+  menu: GRADIENTS.urgent',
+  notice: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
+  log: 'linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)',
+  urgent: GRADIENTS.urgent'
+}
+
 const router = useRouter()
 const lineChartRef = ref(null)
 const pieChartRef = ref(null)
@@ -125,14 +140,14 @@ const statistics = reactive({
 
 // 统计卡片数据
 const statList = computed(() => [
-  { label: '用户总数', value: statistics.userCount, icon: User, color: '#1e80ff', bgColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', trend: 12 },
-  { label: '角色总数', value: statistics.roleCount, icon: Avatar, color: '#00b578', bgColor: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', trend: 5 },
-  { label: '菜单总数', value: statistics.menuCount, icon: Menu, color: '#ff7a45', bgColor: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', trend: 8 },
-  { label: '日志总数', value: statistics.logCount, icon: Document, color: '#36cfc9', bgColor: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', trend: 15 },
-  { label: '公告总数', value: statistics.noticeCount, icon: Bell, color: '#722ed1', bgColor: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', trend: 3 },
-  { label: '任务总数', value: statistics.jobCount, icon: Timer, color: '#f04e98', bgColor: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', trend: 20 },
-  { label: '待处理待办', value: statistics.todoPendingCount, icon: Clock, color: '#faad14', bgColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', trend: 7 },
-  { label: '紧急待办', value: statistics.todoUrgentCount, icon: Warning, color: '#ff4d4f', bgColor: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)', trend: 2 }
+  { label: '用户总数', value: statistics.userCount, icon: User, color: '#1e80ff', bgColor: GRADIENTS.total', trend: 12 },
+  { label: '角色总数', value: statistics.roleCount, icon: Avatar, color: '#00b578', bgColor: GRADIENTS.process', trend: 5 },
+  { label: '菜单总数', value: statistics.menuCount, icon: Menu, color: '#ff7a45', bgColor: GRADIENTS.start', trend: 8 },
+  { label: '日志总数', value: statistics.logCount, icon: Document, color: '#36cfc9', bgColor: GRADIENTS.task', trend: 15 },
+  { label: '公告总数', value: statistics.noticeCount, icon: Bell, color: '#722ed1', bgColor: GRADIENTS.role', trend: 3 },
+  { label: '任务总数', value: statistics.jobCount, icon: Timer, color: '#f04e98', bgColor: GRADIENTS.user', trend: 20 },
+  { label: '待处理待办', value: statistics.todoPendingCount, icon: Clock, color: '#faad14', bgColor: GRADIENTS.total', trend: 7 },
+  { label: '紧急待办', value: statistics.todoUrgentCount, icon: Warning, color: '#ff4d4f', bgColor: GRADIENTS.urgent', trend: 2 }
 ])
 
 // 快捷入口
