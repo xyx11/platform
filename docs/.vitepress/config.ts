@@ -1,6 +1,5 @@
 import { defineConfig } from 'vitepress'
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'Micro Platform',
   description: '微服务开发平台',
@@ -30,7 +29,8 @@ export default defineConfig({
             { text: '快速开始', link: '/guide/quickstart' },
             { text: '环境配置', link: '/guide/environment' },
             { text: '架构设计', link: '/guide/architecture' },
-            { text: '模块说明', link: '/guide/modules' }
+            { text: '模块说明', link: '/guide/modules' },
+            { text: '开发指南', link: '/guide/development' }
           ]
         },
         {
@@ -69,6 +69,12 @@ export default defineConfig({
           items: [
             { text: '部署指南', link: '/guide/deploy' },
             { text: '常见问题', link: '/guide/faq' },
+            { text: '项目总结', link: '/guide/summary' }
+          ]
+        },
+        {
+          text: '其他',
+          items: [
             { text: '更新日志', link: '/guide/changelog' }
           ]
         }
@@ -79,7 +85,8 @@ export default defineConfig({
           items: [
             { text: 'API 概述', link: '/api/overview' },
             { text: '认证说明', link: '/api/auth' },
-            { text: '通用响应', link: '/api/response' }
+            { text: '通用响应', link: '/api/response' },
+            { text: '接口速查', link: '/api/quick-reference' }
           ]
         },
         {
