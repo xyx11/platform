@@ -40,7 +40,8 @@ export default defineConfig({
             { text: '角色管理', link: '/guide/system/role' },
             { text: '菜单管理', link: '/guide/system/menu' },
             { text: '部门管理', link: '/guide/system/dept' },
-            { text: '字典管理', link: '/guide/system/dict' }
+            { text: '字典管理', link: '/guide/system/dict' },
+            { text: '通知管理', link: '/guide/system/notice' }
           ]
         },
         {
@@ -62,7 +63,8 @@ export default defineConfig({
             { text: '多租户', link: '/guide/advanced/tenant' },
             { text: '操作日志', link: '/guide/advanced/log' },
             { text: '系统监控', link: '/guide/monitor' },
-            { text: '定时任务', link: '/guide/scheduled-tasks' }
+            { text: '定时任务', link: '/guide/scheduled-tasks' },
+            { text: '缓存配置', link: '/guide/cache' }
           ]
         },
         {

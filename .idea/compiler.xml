@@ -6,6 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+      </profile>
+      <profile name="Annotation profile for micro-platform" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../repo/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
         <module name="mp-common-log" />
         <module name="mp-common-redis" />
         <module name="mp-system" />
