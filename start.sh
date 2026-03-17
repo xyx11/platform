@@ -11,13 +11,19 @@ NC='\033[0m' # No Color
 
 # 配置
 MVN=/opt/homebrew/bin/mvn
-NACOS_HOME="/Users/xieyunxing/Downloads/nacos"
-NACOS_SERVER="127.0.0.1:8848"
 BASE_DIR="/Users/xieyunxing/micro-platform"
 LOGS_DIR="$BASE_DIR/logs"
+
+# 中间件配置
+NACOS_HOME="/Users/xieyunxing/Downloads/nacos"
+NACOS_SERVER="127.0.0.1:8848"
 XXL_JOB_HOME="/Users/xieyunxing/Downloads/xxl-job-2.4.1"
 XXL_JOB_PORT="8888"
+
+# 应用配置
 VUE_PORT="3001"
+VUE_DIR="$BASE_DIR/mp-vue"
+APPLOGS_DIR="/Users/xieyunxing/applogs"
 
 # 服务配置：名称 - 模块 - 端口
 # 服务配置：名称：模块：端口
@@ -103,7 +109,7 @@ print_header
 
 # 确保日志目录存在
 mkdir -p $LOGS_DIR
-mkdir -p /Users/xieyunxing/applogs/xxl-job/jobhandler
+mkdir -p $APPLOGS_DIR/xxl-job/jobhandler
 
 # 检查并启动 Nacos
 echo -e "${BLUE}检查 Nacos 服务...${NC}"
@@ -132,7 +138,7 @@ if curl -s -o /dev/null -w "%{http_code}" http://$LOCALHOST:$XXL_JOB_PORT/xxl-jo
 else
     print_info "XXL-Job Admin 未运行，正在启动..."
     if [ -d "$XXL_JOB_HOME" ]; then
-        nohup java -Dserver.port=$XXL_JOB_PORT -jar $XXL_JOB_HOME/xxl-job-admin/target/xxl-job-admin-2.4.1.jar > $LOGS_DIR/xxl-job-admin.log 2>&1 &
+        nohup java -Dserver.port=$XXL_JOB_PORT -jar $XXL_JOB_HOME/xxl-job-admin/xxl-job-admin.jar > $LOGS_DIR/xxl-job-admin.log 2>&1 &
         sleep 8
         if curl -s -o /dev/null -w "%{http_code}" http://$LOCALHOST:$XXL_JOB_PORT/xxl-job-admin/ | grep -qE "200|302"; then
             print_success "XXL-Job Admin 启动完成"
@@ -202,9 +208,9 @@ VUE_PID=$(lsof -ti :$VUE_PORT 2>/dev/null)
 if [ -n "$VUE_PID" ]; then
     print_success "前端应用已在运行 (端口 $VUE_PORT)"
 else
-    if [ -d "$BASE_DIR/mp-vue" ]; then
+    if [ -d "$VUE_DIR" ]; then
         echo -n "  启动前端应用 (端口 $VUE_PORT)... "
-        cd $BASE_DIR/mp-vue
+        cd $VUE_DIR
         nohup npm run dev > $LOGS_DIR/mp-vue.log 2>&1 &
         sleep 8
         if lsof -i :$VUE_PORT &>/dev/null; then
