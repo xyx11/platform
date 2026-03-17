@@ -3,6 +3,7 @@
  * 封装流程的保存、部署、版本管理等操作
  */
 
+import { logger } from '@/utils/logger'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import request from '@/utils/request'
@@ -67,7 +68,7 @@ export function useFlowPersistence(options = {}) {
 
       return null
     } catch (e) {
-      console.error('BPMN 验证失败:', e)
+      logger.error('BPMN 验证失败:', e)
       return 'BPMN 验证失败：' + e.message
     }
   }
@@ -99,7 +100,7 @@ export function useFlowPersistence(options = {}) {
       onSaved?.(data)
       return true
     } catch (error) {
-      console.error('保存失败:', error)
+      logger.error('保存失败:', error)
       ElMessage.error('保存失败：' + (error.response?.data?.message || error.message))
       if (error.response?.status === 401) {
         setTimeout(() => {
@@ -134,7 +135,7 @@ export function useFlowPersistence(options = {}) {
       loadDeployedDefinitions()
       return true
     } catch (error) {
-      console.error('部署失败:', error)
+      logger.error('部署失败:', error)
       ElMessage.error('部署失败：' + (error.response?.data?.message || error.message))
       if (error.response?.status === 401) {
         setTimeout(() => {
@@ -253,7 +254,7 @@ export function useFlowPersistence(options = {}) {
       })
       deployedDefinitions.value = data?.records || []
     } catch (error) {
-      console.error('加载流程定义失败:', error)
+      logger.error('加载流程定义失败:', error)
     }
   }
 

@@ -512,6 +512,7 @@
 <script setup name="WorkflowForm">
 import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { logger } from '@/utils/logger'
 import {
   Search, Refresh, Plus, RefreshRight, Edit, Delete, View,
   VideoPlay, Files, DocumentRemove, Check, Download, Link,
@@ -655,7 +656,7 @@ const getFormDefinitionList = async () => {
     // 后端返回的是 Result<List<FormDefinition>>，直接使用 data
     formDefinitionList.value = res.data || []
   } catch (error) {
-    console.error('获取表单定义列表失败:', error)
+    logger.error('获取表单定义列表失败:', error)
     formDefinitionList.value = []
   } finally {
     formDefinitionLoading.value = false
@@ -669,7 +670,7 @@ const getProcessDefinitionList = async () => {
     const { data } = await request.get('/system/workflow/definition/list')
     processDefinitionList.value = data?.records || data?.list || []
   } catch (error) {
-    console.error('获取流程定义列表失败:', error)
+    logger.error('获取流程定义列表失败:', error)
   } finally {
     processDefinitionLoading.value = false
   }
@@ -900,7 +901,7 @@ const submitForm = async () => {
         dialogVisible.value = false
         getFormBindingList()
       } catch (error) {
-        console.error('绑定失败详情:', error)
+        logger.error('绑定失败详情:', error)
         const errorMsg = error.response?.data?.message || error.response?.data?.msg || error.message || '未知错误'
         const statusCode = error.response?.status || error.code || '未知'
         ElMessage.error('绑定失败 (状态码：' + statusCode + ')：' + errorMsg)

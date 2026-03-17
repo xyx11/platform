@@ -250,6 +250,7 @@
 </template>
 
 <script setup name="WorkflowFormDesigner">
+import { logger } from '@/utils/logger'
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'
@@ -393,7 +394,7 @@ const handleDesign = (row) => {
     try {
       formComponents.value = JSON.parse(row.content)
     } catch (e) {
-      console.error('解析表单内容失败:', e)
+      logger.error('解析表单内容失败:', e)
     }
   }
 }
@@ -406,7 +407,7 @@ const handlePreview = (row) => {
     try {
       formComponents.value = JSON.parse(row.content)
     } catch (e) {
-      console.error('解析表单内容失败:', e)
+      logger.error('解析表单内容失败:', e)
     }
   }
 }

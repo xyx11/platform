@@ -97,6 +97,7 @@
 </template>
 
 <script setup name="WebSocket">
+import { logger } from '@/utils/logger'
 import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Client } from '@stomp/stompjs'
@@ -131,7 +132,7 @@ const connectWebSocket = () => {
     connectHeaders: {
       Authorization: token
     },
-    debug: (str) => console.log('[STOMP]', str),
+    debug: (str) => logger.log('[STOMP]', str),
     onConnect: () => {
       connected.value = true
       connectTime.value = new Date().toLocaleString()
@@ -148,7 +149,7 @@ const connectWebSocket = () => {
       })
     },
     onStompError: (frame) => {
-      console.error('STOMP error:', frame)
+      logger.error('STOMP error:', frame)
       ElMessage.error('连接失败：' + frame.headers.message)
     },
     onDisconnect: () => {

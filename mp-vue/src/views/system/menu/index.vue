@@ -174,6 +174,7 @@
 </template>
 
 <script setup name="SysMenu">
+import { logger } from '@/utils/logger'
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'
@@ -231,12 +232,12 @@ const rules = {
 const getMenuList = () => {
   loading.value = true
   request.get('/system/menu/list', { params: queryParams }).then(res => {
-    console.log('[菜单列表] 返回数据:', res.data)
+    logger.log('[菜单列表] 返回数据:', res.data)
     menuList.value = handleTreeData(res.data || [])
-    console.log('[菜单列表] 树形转换后:', menuList.value)
+    logger.log('[菜单列表] 树形转换后:', menuList.value)
     loading.value = false
   }).catch((err) => {
-    console.error('[菜单列表] 请求失败:', err)
+    logger.error('[菜单列表] 请求失败:', err)
     loading.value = false
   })
 }

@@ -417,6 +417,7 @@
 </template>
 
 <script setup name="SysUser">
+import { logger } from '@/utils/logger'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
@@ -575,7 +576,7 @@ const getUserList = () => {
     userList.value = pageData.records || []
     pagination.total = Number(pageData.total) || 0
   }).catch(err => {
-    console.error('获取用户列表失败:', err)
+    logger.error('获取用户列表失败:', err)
     ElMessage.error('获取用户列表失败')
   }).finally(() => {
     loading.value = false

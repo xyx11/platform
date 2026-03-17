@@ -174,6 +174,7 @@
 </template>
 
 <script setup name="WorkflowStats">
+import { logger } from '@/utils/logger'
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { VideoPlay, VideoPause, Checked, Flowchart, Document, Bell, Select, Form, Refresh } from '@element-plus/icons-vue'
@@ -210,7 +211,7 @@ const fetchStats = async () => {
     const { data } = await request.get('/system/workflow/stats')
     stats.value = data || {}
   } catch (error) {
-    console.error('获取统计数据失败:', error)
+    logger.error('获取统计数据失败:', error)
   }
 }
 
@@ -221,7 +222,7 @@ const fetchDefinitionStats = async () => {
     const { data } = await request.get('/system/workflow/stats/definitions')
     definitionStats.value = data || []
   } catch (error) {
-    console.error('获取流程定义统计失败:', error)
+    logger.error('获取流程定义统计失败:', error)
   } finally {
     loading.value = false
   }
@@ -235,7 +236,7 @@ const loadTrendData = async () => {
     })
     initTrendChart(data)
   } catch (error) {
-    console.error('加载趋势数据失败:', error)
+    logger.error('加载趋势数据失败:', error)
   }
 }
 

@@ -268,6 +268,7 @@
 </template>
 
 <script setup name="TaskManagement">
+import { logger } from '@/utils/logger'
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Document, Select, Warning, Clock, Switch, User, Delete, Plus, Search, Refresh } from '@element-plus/icons-vue'
@@ -412,14 +413,14 @@ const loadTaskForm = async (taskKey) => {
       try {
         taskFormComponents.value = JSON.parse(data.formContent)
       } catch (e) {
-        console.error('任务表单解析失败:', e)
+        logger.error('任务表单解析失败:', e)
         if (Array.isArray(data.formContent)) {
           taskFormComponents.value = data.formContent
         }
       }
     }
   } catch (error) {
-    console.error('加载任务表单失败:', error)
+    logger.error('加载任务表单失败:', error)
     taskFormComponents.value = []
   }
 }
