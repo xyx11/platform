@@ -20,6 +20,7 @@ XXL_JOB_PORT="8888"
 VUE_PORT="3001"
 
 # 服务配置：名称 - 模块 - 端口
+# 服务配置：名称：模块：端口
 declare -a SERVICES=(
     "mp-auth:mp-auth:8081"
     "mp-system:mp-system:8082"
@@ -27,6 +28,11 @@ declare -a SERVICES=(
     "mp-job:mp-job:8084"
     "mp-gateway:mp-gateway:8080"
 )
+
+# URL 前缀
+LOCALHOST="localhost"
+SWAGGER_SUFFIX="/doc.html"
+
 
 print_header() {
     echo -e "${BLUE}"
@@ -68,7 +74,7 @@ check_health() {
     local attempt=1
 
     while [ $attempt -le $max_attempts ]; do
-        local status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$port/ 2>/dev/null)
+        local status=$(curl -s -o /dev/null -w "%{http_code}" http://$LOCALHOST:$port/ 2>/dev/null)
         if [ "$status" = "200" ] || [ "$status" = "404" ]; then
             return 0
         fi
@@ -121,14 +127,14 @@ echo ""
 
 # 启动 XXL-Job Admin
 echo -e "${BLUE}检查 XXL-Job 调度中心...${NC}"
-if curl -s -o /dev/null -w "%{http_code}" http://localhost:$XXL_JOB_PORT/xxl-job-admin/ | grep -qE "200|302"; then
+if curl -s -o /dev/null -w "%{http_code}" http://$LOCALHOST:$XXL_JOB_PORT/xxl-job-admin/ | grep -qE "200|302"; then
     print_success "XXL-Job Admin 已在运行 (端口 $XXL_JOB_PORT)"
 else
     print_info "XXL-Job Admin 未运行，正在启动..."
     if [ -d "$XXL_JOB_HOME" ]; then
         nohup java -Dserver.port=$XXL_JOB_PORT -jar $XXL_JOB_HOME/xxl-job-admin/target/xxl-job-admin-2.4.1.jar > $LOGS_DIR/xxl-job-admin.log 2>&1 &
         sleep 8
-        if curl -s -o /dev/null -w "%{http_code}" http://localhost:$XXL_JOB_PORT/xxl-job-admin/ | grep -qE "200|302"; then
+        if curl -s -o /dev/null -w "%{http_code}" http://$LOCALHOST:$XXL_JOB_PORT/xxl-job-admin/ | grep -qE "200|302"; then
             print_success "XXL-Job Admin 启动完成"
         else
             print_warn "XXL-Job Admin 可能启动失败，请查看日志"
@@ -218,20 +224,20 @@ echo -e "${GREEN}   所有服务启动完成!${NC}"
 echo "========================================"
 echo ""
 echo "服务列表:"
-echo "  - mp-gateway:   http://localhost:8080"
-echo "  - mp-auth:      http://localhost:8081"
-echo "  - mp-system:    http://localhost:8082"
-echo "  - mp-generator: http://localhost:8083"
-echo "  - mp-job:       http://localhost:8084"
-echo "  - xxl-job:      http://localhost:$XXL_JOB_PORT/xxl-job-admin"
-echo "  - mp-vue:       http://localhost:$VUE_PORT"
+echo "  - mp-gateway:   http://$LOCALHOST:8080"
+echo "  - mp-auth:      http://$LOCALHOST:8081"
+echo "  - mp-system:    http://$LOCALHOST:8082"
+echo "  - mp-generator: http://$LOCALHOST:8083"
+echo "  - mp-job:       http://$LOCALHOST:8084"
+echo "  - xxl-job:      http://$LOCALHOST:$XXL_JOB_PORT/xxl-job-admin"
+echo "  - mp-vue:       http://$LOCALHOST:$VUE_PORT"
 echo ""
 echo "Swagger 地址:"
-echo "  - http://localhost:8081/doc.html"
-echo "  - http://localhost:8082/doc.html"
+echo "  - http://$LOCALHOST:8081/doc.html"
+echo "  - http://$LOCALHOST:8082/doc.html"
 echo ""
 echo "XXL-Job 调度中心:"
-echo "  - 地址：http://localhost:$XXL_JOB_PORT/xxl-job-admin"
+echo "  - 地址：http://$LOCALHOST:$XXL_JOB_PORT/xxl-job-admin"
 echo "  - 账号：admin / 123456"
 echo ""
 echo "常用命令:"
