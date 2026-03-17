@@ -139,3 +139,33 @@ export function downloadExcel(blob, filename) {
 export function downloadFile(blob, filename) {
   downloadExcel(blob, filename)
 }
+
+/**
+ * 格式化字节大小
+ * @param {number} bytes - 字节数
+ * @param {string} targetUnit - 目标单位（可选，如 'GB'）
+ * @returns {string} 格式化后的大小
+ */
+export function formatBytes(bytes, targetUnit = null) {
+  if (bytes === null || bytes === undefined || bytes === 0) return '0 B'
+  
+  // 如果指定了目标单位，直接转换
+  if (targetUnit === 'GB') {
+    return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
+  }
+  
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+  const i = Math.floor(Math.log(bytes) / Math.log(1024))
+  return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i]
+}
+
+/**
+ * 根据百分比获取进度条颜色
+ * @param {number} percentage - 百分比
+ * @returns {string} 颜色值
+ */
+export function getProgressColor(percentage) {
+  if (percentage < 60) return '#00b578'  // 绿色
+  if (percentage < 80) return '#faad14'  // 橙色
+  return '#ff4d4f'  // 红色
+}

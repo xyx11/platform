@@ -191,6 +191,7 @@
 </template>
 
 <script setup>
+import { formatBytes, getProgressColor } from '@/utils/mp'
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { TrendCharts, Folder, Coin, Document, Link, Refresh } from '@element-plus/icons-vue'
@@ -226,19 +227,6 @@ const cacheHitRate = computed(() => {
   if (total === 0) return 0
   return Math.round((hits / total) * 100)
 })
-
-const formatBytes = (bytes) => {
-  if (!bytes || bytes === 0) return '0 B'
-  const sizes = ['B', 'KB', 'MB', 'GB']
-  const i = Math.floor(Math.log(bytes) / Math.log(1024))
-  return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i]
-}
-
-const getProgressColor = (percentage) => {
-  if (percentage < 60) return '#00b578'
-  if (percentage < 80) return '#faad14'
-  return '#ff4d4f'
-}
 
 const getKeyTypeTag = (type) => {
   const typeMap = {

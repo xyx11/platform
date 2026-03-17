@@ -187,6 +187,7 @@
 </template>
 
 <script setup>
+import { formatBytes, getProgressColor } from '@/utils/mp'
 import { ref, reactive, onMounted } from 'vue'
 import { Cpu, Coin, Folder, Monitor, TrendCharts, Refresh } from '@element-plus/icons-vue'
 import request from '@/utils/request'
@@ -239,12 +240,6 @@ const formatBytes = (bytes, unit = 'B') => {
   }
   const i = Math.floor(Math.log(bytes) / Math.log(1024))
   return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i]
-}
-
-const getProgressColor = (percentage) => {
-  if (percentage < 60) return '#00b578'
-  if (percentage < 80) return '#faad14'
-  return '#ff4d4f'
 }
 
 const getMemoryTagType = (usage) => {
