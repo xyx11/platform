@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
@@ -11,6 +14,9 @@ import java.time.LocalDateTime;
  * 用于记录消息的发送和接收状态，支持已读未读统计
  */
 @TableName("sys_message_receiver")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysMessageReceiver implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -62,76 +68,4 @@ public class SysMessageReceiver implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getMessageId() {
-        return messageId;
-    }
-
-    public void setMessageId(Long messageId) {
-        this.messageId = messageId;
-    }
-
-    public Long getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
-    }
-
-    public String getReceiverName() {
-        return receiverName;
-    }
-
-    public void setReceiverName(String receiverName) {
-        this.receiverName = receiverName;
-    }
-
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
-    }
-
-    public Integer getIsRead() {
-        return isRead;
-    }
-
-    public void setIsRead(Integer isRead) {
-        this.isRead = isRead;
-    }
-
-    public LocalDateTime getReadTime() {
-        return readTime;
-    }
-
-    public void setReadTime(LocalDateTime readTime) {
-        this.readTime = readTime;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
 }

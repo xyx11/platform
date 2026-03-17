@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +15,9 @@ import java.time.LocalDateTime;
  */
 @Tag(name = "通知公告", description = "通知公告实体")
 @TableName("sys_notice")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysNotice implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -118,52 +124,4 @@ public class SysNotice implements Serializable {
     @TableField(exist = false)
     @Parameter(description = "已读人数")
     private Integer readCount;
-
-    public Long getNoticeId() { return noticeId; }
-    public void setNoticeId(Long noticeId) { this.noticeId = noticeId; }
-
-    public String getNoticeTitle() { return noticeTitle; }
-    public void setNoticeTitle(String noticeTitle) { this.noticeTitle = noticeTitle; }
-
-    public String getNoticeType() { return noticeType; }
-    public void setNoticeType(String noticeType) { this.noticeType = noticeType; }
-
-    public String getNoticeContent() { return noticeContent; }
-    public void setNoticeContent(String noticeContent) { this.noticeContent = noticeContent; }
-
-    public Integer getStatus() { return status; }
-    public void setStatus(Integer status) { this.status = status; }
-
-    public LocalDateTime getPublishTime() { return publishTime; }
-    public void setPublishTime(LocalDateTime publishTime) { this.publishTime = publishTime; }
-
-    public Integer getTimingPublish() { return timingPublish; }
-    public void setTimingPublish(Integer timingPublish) { this.timingPublish = timingPublish; }
-
-    public Long getCreateBy() { return createBy; }
-    public void setCreateBy(Long createBy) { this.createBy = createBy; }
-
-    public String getCreateByName() { return createByName; }
-    public void setCreateByName(String createByName) { this.createByName = createByName; }
-
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
-
-    public Long getUpdateBy() { return updateBy; }
-    public void setUpdateBy(Long updateBy) { this.updateBy = updateBy; }
-
-    public LocalDateTime getUpdateTime() { return updateTime; }
-    public void setUpdateTime(LocalDateTime updateTime) { this.updateTime = updateTime; }
-
-    public String getRemark() { return remark; }
-    public void setRemark(String remark) { this.remark = remark; }
-
-    public Integer getDeleted() { return deleted; }
-    public void setDeleted(Integer deleted) { this.deleted = deleted; }
-
-    public Integer getUnreadCount() { return unreadCount; }
-    public void setUnreadCount(Integer unreadCount) { this.unreadCount = unreadCount; }
-
-    public Integer getReadCount() { return readCount; }
-    public void setReadCount(Integer readCount) { this.readCount = readCount; }
 }

@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
  * 任务回收站实体类
  */
 @TableName("sys_todo_recycle_bin")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysTodoRecycleBin implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -66,25 +72,4 @@ public class SysTodoRecycleBin implements Serializable {
      * 是否已恢复 (0=未恢复 1=已恢复)
      */
     private Integer isRecover;
-
-    public Long getRecycleId() { return recycleId; }
-    public void setRecycleId(Long recycleId) { this.recycleId = recycleId; }
-    public Long getTodoId() { return todoId; }
-    public void setTodoId(Long todoId) { this.todoId = todoId; }
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-    public String getTodoTitle() { return todoTitle; }
-    public void setTodoTitle(String todoTitle) { this.todoTitle = todoTitle; }
-    public String getTodoContent() { return todoContent; }
-    public void setTodoContent(String todoContent) { this.todoContent = todoContent; }
-    public Long getDeleteBy() { return deleteBy; }
-    public void setDeleteBy(Long deleteBy) { this.deleteBy = deleteBy; }
-    public String getDeleteByName() { return deleteByName; }
-    public void setDeleteByName(String deleteByName) { this.deleteByName = deleteByName; }
-    public LocalDateTime getDeleteTime() { return deleteTime; }
-    public void setDeleteTime(LocalDateTime deleteTime) { this.deleteTime = deleteTime; }
-    public LocalDateTime getRecoverTime() { return recoverTime; }
-    public void setRecoverTime(LocalDateTime recoverTime) { this.recoverTime = recoverTime; }
-    public Integer getIsRecover() { return isRecover; }
-    public void setIsRecover(Integer isRecover) { this.isRecover = isRecover; }
 }

@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
  * 待办事项实体类
  */
 @TableName("sys_todo")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysTodo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -112,41 +118,5 @@ public class SysTodo implements Serializable {
      */
     @TableField(exist = false)
     private Integer attachmentCount;
-
-    public Long getTodoId() { return todoId; }
-    public void setTodoId(Long todoId) { this.todoId = todoId; }
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-    public String getTodoTitle() { return todoTitle; }
-    public void setTodoTitle(String todoTitle) { this.todoTitle = todoTitle; }
-    public String getTodoContent() { return todoContent; }
-    public void setTodoContent(String todoContent) { this.todoContent = todoContent; }
-    public String getTodoType() { return todoType; }
-    public void setTodoType(String todoType) { this.todoType = todoType; }
-    public Integer getPriority() { return priority; }
-    public void setPriority(Integer priority) { this.priority = priority; }
-    public Integer getStatus() { return status; }
-    public void setStatus(Integer status) { this.status = status; }
-    public LocalDateTime getPlanTime() { return planTime; }
-    public void setPlanTime(LocalDateTime planTime) { this.planTime = planTime; }
-    public LocalDateTime getActualTime() { return actualTime; }
-    public void setActualTime(LocalDateTime actualTime) { this.actualTime = actualTime; }
-    public Long getCreateBy() { return createBy; }
-    public void setCreateBy(Long createBy) { this.createBy = createBy; }
-    public String getCreateByName() { return createByName; }
-    public void setCreateByName(String createByName) { this.createByName = createByName; }
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
-    public Long getUpdateBy() { return updateBy; }
-    public void setUpdateBy(Long updateBy) { this.updateBy = updateBy; }
-    public LocalDateTime getUpdateTime() { return updateTime; }
-    public void setUpdateTime(LocalDateTime updateTime) { this.updateTime = updateTime; }
-    public Integer getDeleted() { return deleted; }
-    public void setDeleted(Integer deleted) { this.deleted = deleted; }
     public java.util.List<SysTodoTag> getTags() { return tags; }
-    public void setTags(java.util.List<SysTodoTag> tags) { this.tags = tags; }
-    public Integer getCommentCount() { return commentCount; }
-    public void setCommentCount(Integer commentCount) { this.commentCount = commentCount; }
-    public Integer getAttachmentCount() { return attachmentCount; }
-    public void setAttachmentCount(Integer attachmentCount) { this.attachmentCount = attachmentCount; }
 }

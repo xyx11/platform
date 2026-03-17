@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
  * 待办事项标签实体类
  */
 @TableName("sys_todo_tag")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysTodoTag implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -67,25 +73,4 @@ public class SysTodoTag implements Serializable {
      */
     @TableLogic
     private Integer deleted;
-
-    public Long getTagId() { return tagId; }
-    public void setTagId(Long tagId) { this.tagId = tagId; }
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-    public String getTagName() { return tagName; }
-    public void setTagName(String tagName) { this.tagName = tagName; }
-    public String getTagColor() { return tagColor; }
-    public void setTagColor(String tagColor) { this.tagColor = tagColor; }
-    public Integer getSort() { return sort; }
-    public void setSort(Integer sort) { this.sort = sort; }
-    public Long getCreateBy() { return createBy; }
-    public void setCreateBy(Long createBy) { this.createBy = createBy; }
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
-    public Long getUpdateBy() { return updateBy; }
-    public void setUpdateBy(Long updateBy) { this.updateBy = updateBy; }
-    public LocalDateTime getUpdateTime() { return updateTime; }
-    public void setUpdateTime(LocalDateTime updateTime) { this.updateTime = updateTime; }
-    public Integer getDeleted() { return deleted; }
-    public void setDeleted(Integer deleted) { this.deleted = deleted; }
 }

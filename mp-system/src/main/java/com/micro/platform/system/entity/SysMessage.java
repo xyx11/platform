@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
@@ -9,6 +12,9 @@ import java.time.LocalDateTime;
  * 站内消息实体
  */
 @TableName("sys_message")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -123,172 +129,4 @@ public class SysMessage implements Serializable {
      * 租户 ID
      */
     private Long tenantId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(Integer messageType) {
-        this.messageType = messageType;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public Long getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
-    }
-
-    public String getSenderName() {
-        return senderName;
-    }
-
-    public void setSenderName(String senderName) {
-        this.senderName = senderName;
-    }
-
-    public Long getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
-    }
-
-    public Long getReceiverDeptId() {
-        return receiverDeptId;
-    }
-
-    public void setReceiverDeptId(Long receiverDeptId) {
-        this.receiverDeptId = receiverDeptId;
-    }
-
-    public Long getReceiverRoleId() {
-        return receiverRoleId;
-    }
-
-    public void setReceiverRoleId(Long receiverRoleId) {
-        this.receiverRoleId = receiverRoleId;
-    }
-
-    public Integer getIsRead() {
-        return isRead;
-    }
-
-    public void setIsRead(Integer isRead) {
-        this.isRead = isRead;
-    }
-
-    public LocalDateTime getReadTime() {
-        return readTime;
-    }
-
-    public void setReadTime(LocalDateTime readTime) {
-        this.readTime = readTime;
-    }
-
-    public LocalDateTime getScheduleTime() {
-        return scheduleTime;
-    }
-
-    public void setScheduleTime(LocalDateTime scheduleTime) {
-        this.scheduleTime = scheduleTime;
-    }
-
-    public Integer getSendStatus() {
-        return sendStatus;
-    }
-
-    public void setSendStatus(Integer sendStatus) {
-        this.sendStatus = sendStatus;
-    }
-
-    public LocalDateTime getSendTime() {
-        return sendTime;
-    }
-
-    public void setSendTime(LocalDateTime sendTime) {
-        this.sendTime = sendTime;
-    }
-
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
-
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
 }

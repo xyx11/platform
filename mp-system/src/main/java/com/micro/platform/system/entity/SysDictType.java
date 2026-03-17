@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
@@ -9,6 +12,9 @@ import java.time.LocalDateTime;
  * 字典类型实体
  */
 @TableName("sys_dict_type")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysDictType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -66,34 +72,5 @@ public class SysDictType implements Serializable {
      */
     @TableLogic
     private Integer deleted;
-    public Long getDictId() { return dictId; }
-    public void setDictId(Long dictId) { this.dictId = dictId; }
-
-    public String getDictName() { return dictName; }
-    public void setDictName(String dictName) { this.dictName = dictName; }
-
-    public String getDictType() { return dictType; }
-    public void setDictType(String dictType) { this.dictType = dictType; }
-
-    public Integer getStatus() { return status; }
-    public void setStatus(Integer status) { this.status = status; }
-
-    public String getRemark() { return remark; }
-    public void setRemark(String remark) { this.remark = remark; }
-
-    public Long getCreateBy() { return createBy; }
-    public void setCreateBy(Long createBy) { this.createBy = createBy; }
-
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
-
-    public Long getUpdateBy() { return updateBy; }
-    public void setUpdateBy(Long updateBy) { this.updateBy = updateBy; }
-
-    public LocalDateTime getUpdateTime() { return updateTime; }
-    public void setUpdateTime(LocalDateTime updateTime) { this.updateTime = updateTime; }
-
-    public Integer getDeleted() { return deleted; }
-    public void setDeleted(Integer deleted) { this.deleted = deleted; }
 
 }

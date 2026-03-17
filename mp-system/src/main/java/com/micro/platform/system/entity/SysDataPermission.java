@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
@@ -11,6 +14,9 @@ import java.time.LocalDateTime;
  * 用于定义细粒度的数据权限控制规则
  */
 @TableName("sys_data_permission")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysDataPermission implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -99,132 +105,4 @@ public class SysDataPermission implements Serializable {
      */
     @TableLogic
     private Integer deleted;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
-
-    public Long getMenuId() {
-        return menuId;
-    }
-
-    public void setMenuId(Long menuId) {
-        this.menuId = menuId;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public Integer getPermissionType() {
-        return permissionType;
-    }
-
-    public void setPermissionType(Integer permissionType) {
-        this.permissionType = permissionType;
-    }
-
-    public String getRuleExpression() {
-        return ruleExpression;
-    }
-
-    public void setRuleExpression(String ruleExpression) {
-        this.ruleExpression = ruleExpression;
-    }
-
-    public String getAllowedColumns() {
-        return allowedColumns;
-    }
-
-    public void setAllowedColumns(String allowedColumns) {
-        this.allowedColumns = allowedColumns;
-    }
-
-    public String getDeniedColumns() {
-        return deniedColumns;
-    }
-
-    public void setDeniedColumns(String deniedColumns) {
-        this.deniedColumns = deniedColumns;
-    }
-
-    public String getDataFilter() {
-        return dataFilter;
-    }
-
-    public void setDataFilter(String dataFilter) {
-        this.dataFilter = dataFilter;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
 }

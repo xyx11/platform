@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
  * 待办事项与标签关联表
  */
 @TableName("sys_todo_tag_relation")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysTodoTagRelation implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,13 +41,4 @@ public class SysTodoTagRelation implements Serializable {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
-
-    public Long getRelationId() { return relationId; }
-    public void setRelationId(Long relationId) { this.relationId = relationId; }
-    public Long getTodoId() { return todoId; }
-    public void setTodoId(Long todoId) { this.todoId = todoId; }
-    public Long getTagId() { return tagId; }
-    public void setTagId(Long tagId) { this.tagId = tagId; }
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
 }

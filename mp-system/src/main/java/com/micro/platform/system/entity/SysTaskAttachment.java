@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
  * 任务附件实体类
  */
 @TableName("sys_task_attachment")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysTaskAttachment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -71,27 +77,4 @@ public class SysTaskAttachment implements Serializable {
      */
     @TableLogic
     private Integer deleted;
-
-    public Long getAttachmentId() { return attachmentId; }
-    public void setAttachmentId(Long attachmentId) { this.attachmentId = attachmentId; }
-    public Long getTodoId() { return todoId; }
-    public void setTodoId(Long todoId) { this.todoId = todoId; }
-    public String getAttachmentName() { return attachmentName; }
-    public void setAttachmentName(String attachmentName) { this.attachmentName = attachmentName; }
-    public String getAttachmentPath() { return attachmentPath; }
-    public void setAttachmentPath(String attachmentPath) { this.attachmentPath = attachmentPath; }
-    public String getAttachmentType() { return attachmentType; }
-    public void setAttachmentType(String attachmentType) { this.attachmentType = attachmentType; }
-    public Long getFileSize() { return fileSize; }
-    public void setFileSize(Long fileSize) { this.fileSize = fileSize; }
-    public Long getUploadUserId() { return uploadUserId; }
-    public void setUploadUserId(Long uploadUserId) { this.uploadUserId = uploadUserId; }
-    public String getUploadUserName() { return uploadUserName; }
-    public void setUploadUserName(String uploadUserName) { this.uploadUserName = uploadUserName; }
-    public Integer getDownloadCount() { return downloadCount; }
-    public void setDownloadCount(Integer downloadCount) { this.downloadCount = downloadCount; }
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
-    public Integer getDeleted() { return deleted; }
-    public void setDeleted(Integer deleted) { this.deleted = deleted; }
 }

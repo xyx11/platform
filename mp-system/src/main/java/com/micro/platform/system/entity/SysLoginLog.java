@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
@@ -9,6 +12,9 @@ import java.time.LocalDateTime;
  * 系统登录日志实体
  */
 @TableName("sys_login_log")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysLoginLog implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -63,34 +69,4 @@ public class SysLoginLog implements Serializable {
      * 登录时间
      */
     private LocalDateTime loginTime;
-
-    public Long getLogId() { return logId; }
-    public void setLogId(Long logId) { this.logId = logId; }
-
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
-    public Integer getStatus() { return status; }
-    public void setStatus(Integer status) { this.status = status; }
-
-    public String getIp() { return ip; }
-    public void setIp(String ip) { this.ip = ip; }
-
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
-
-    public String getBrowser() { return browser; }
-    public void setBrowser(String browser) { this.browser = browser; }
-
-    public String getOs() { return os; }
-    public void setOs(String os) { this.os = os; }
-
-    public String getMsg() { return msg; }
-    public void setMsg(String msg) { this.msg = msg; }
-
-    public LocalDateTime getLoginTime() { return loginTime; }
-    public void setLoginTime(LocalDateTime loginTime) { this.loginTime = loginTime; }
 }

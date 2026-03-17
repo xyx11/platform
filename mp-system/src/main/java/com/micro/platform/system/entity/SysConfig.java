@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
@@ -9,6 +12,9 @@ import java.time.LocalDateTime;
  * 系统参数配置实体
  */
 @TableName("sys_config")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -76,40 +82,5 @@ public class SysConfig implements Serializable {
      */
     @TableLogic
     private Integer deleted;
-    public Long getConfigId() { return configId; }
-    public void setConfigId(Long configId) { this.configId = configId; }
-
-    public String getConfigName() { return configName; }
-    public void setConfigName(String configName) { this.configName = configName; }
-
-    public String getConfigKey() { return configKey; }
-    public void setConfigKey(String configKey) { this.configKey = configKey; }
-
-    public String getConfigValue() { return configValue; }
-    public void setConfigValue(String configValue) { this.configValue = configValue; }
-
-    public Integer getConfigType() { return configType; }
-    public void setConfigType(Integer configType) { this.configType = configType; }
-
-    public Integer getStatus() { return status; }
-    public void setStatus(Integer status) { this.status = status; }
-
-    public String getRemark() { return remark; }
-    public void setRemark(String remark) { this.remark = remark; }
-
-    public Long getCreateBy() { return createBy; }
-    public void setCreateBy(Long createBy) { this.createBy = createBy; }
-
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
-
-    public Long getUpdateBy() { return updateBy; }
-    public void setUpdateBy(Long updateBy) { this.updateBy = updateBy; }
-
-    public LocalDateTime getUpdateTime() { return updateTime; }
-    public void setUpdateTime(LocalDateTime updateTime) { this.updateTime = updateTime; }
-
-    public Integer getDeleted() { return deleted; }
-    public void setDeleted(Integer deleted) { this.deleted = deleted; }
 
 }

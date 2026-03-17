@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
@@ -10,6 +13,9 @@ import java.util.List;
  * 系统菜单实体
  */
 @TableName("sys_menu")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysMenu implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -118,45 +124,5 @@ public class SysMenu implements Serializable {
      */
     @TableField(exist = false)
     private List<SysMenu> children;
-
-    public Long getMenuId() { return menuId; }
-    public void setMenuId(Long menuId) { this.menuId = menuId; }
-    public Long getParentId() { return parentId; }
-    public void setParentId(Long parentId) { this.parentId = parentId; }
-    public String getMenuName() { return menuName; }
-    public void setMenuName(String menuName) { this.menuName = menuName; }
-    public String getPath() { return path; }
-    public void setPath(String path) { this.path = path; }
-    public String getComponent() { return component; }
-    public void setComponent(String component) { this.component = component; }
-    public String getPermission() { return permission; }
-    public void setPermission(String permission) { this.permission = permission; }
-    public Integer getType() { return type; }
-    public void setType(Integer type) { this.type = type; }
-    public String getIcon() { return icon; }
-    public void setIcon(String icon) { this.icon = icon; }
-    public Integer getSort() { return sort; }
-    public void setSort(Integer sort) { this.sort = sort; }
-    public Integer getIsFrame() { return isFrame; }
-    public void setIsFrame(Integer isFrame) { this.isFrame = isFrame; }
-    public Integer getIsCache() { return isCache; }
-    public void setIsCache(Integer isCache) { this.isCache = isCache; }
-    public Integer getVisible() { return visible; }
-    public void setVisible(Integer visible) { this.visible = visible; }
-    public Integer getStatus() { return status; }
-    public void setStatus(Integer status) { this.status = status; }
-    public String getRemark() { return remark; }
-    public void setRemark(String remark) { this.remark = remark; }
-    public Long getCreateBy() { return createBy; }
-    public void setCreateBy(Long createBy) { this.createBy = createBy; }
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
-    public Long getUpdateBy() { return updateBy; }
-    public void setUpdateBy(Long updateBy) { this.updateBy = updateBy; }
-    public LocalDateTime getUpdateTime() { return updateTime; }
-    public void setUpdateTime(LocalDateTime updateTime) { this.updateTime = updateTime; }
-    public Integer getDeleted() { return deleted; }
-    public void setDeleted(Integer deleted) { this.deleted = deleted; }
     public List<SysMenu> getChildren() { return children; }
-    public void setChildren(List<SysMenu> children) { this.children = children; }
 }

@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
@@ -12,6 +15,9 @@ import java.time.LocalDateTime;
  * 用于 SaaS 商业化场景，定义不同套餐的权益和价格
  */
 @TableName("sys_tenant_package")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysTenantPackage implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -110,148 +116,4 @@ public class SysTenantPackage implements Serializable {
      */
     @TableLogic
     private Integer deleted;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getPackageType() {
-        return packageType;
-    }
-
-    public void setPackageType(Integer packageType) {
-        this.packageType = packageType;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public Integer getMaxUsers() {
-        return maxUsers;
-    }
-
-    public void setMaxUsers(Integer maxUsers) {
-        this.maxUsers = maxUsers;
-    }
-
-    public Integer getMaxDepts() {
-        return maxDepts;
-    }
-
-    public void setMaxDepts(Integer maxDepts) {
-        this.maxDepts = maxDepts;
-    }
-
-    public Integer getMaxStorage() {
-        return maxStorage;
-    }
-
-    public void setMaxStorage(Integer maxStorage) {
-        this.maxStorage = maxStorage;
-    }
-
-    public String getFeatures() {
-        return features;
-    }
-
-    public void setFeatures(String features) {
-        this.features = features;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
 }

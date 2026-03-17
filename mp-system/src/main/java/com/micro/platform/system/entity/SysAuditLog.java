@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
@@ -11,6 +14,9 @@ import java.time.LocalDateTime;
  * 用于记录系统中敏感数据的变更历史，支持数据追踪和审计
  */
 @TableName("sys_audit_log")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysAuditLog implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -134,188 +140,4 @@ public class SysAuditLog implements Serializable {
      * 租户 ID（多租户场景）
      */
     private Long tenantId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getModule() {
-        return module;
-    }
-
-    public void setModule(String module) {
-        this.module = module;
-    }
-
-    public Integer getOperationType() {
-        return operationType;
-    }
-
-    public void setOperationType(Integer operationType) {
-        this.operationType = operationType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public Long getRecordId() {
-        return recordId;
-    }
-
-    public void setRecordId(Long recordId) {
-        this.recordId = recordId;
-    }
-
-    public String getBeforeData() {
-        return beforeData;
-    }
-
-    public void setBeforeData(String beforeData) {
-        this.beforeData = beforeData;
-    }
-
-    public String getAfterData() {
-        return afterData;
-    }
-
-    public void setAfterData(String afterData) {
-        this.afterData = afterData;
-    }
-
-    public String getChangeFields() {
-        return changeFields;
-    }
-
-    public void setChangeFields(String changeFields) {
-        this.changeFields = changeFields;
-    }
-
-    public Long getOperatorId() {
-        return operatorId;
-    }
-
-    public void setOperatorId(Long operatorId) {
-        this.operatorId = operatorId;
-    }
-
-    public String getOperatorName() {
-        return operatorName;
-    }
-
-    public void setOperatorName(String operatorName) {
-        this.operatorName = operatorName;
-    }
-
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
-    }
-
-    public String getDeptName() {
-        return deptName;
-    }
-
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
-    }
-
-    public String getOperIp() {
-        return operIp;
-    }
-
-    public void setOperIp(String operIp) {
-        this.operIp = operIp;
-    }
-
-    public String getOperLocation() {
-        return operLocation;
-    }
-
-    public void setOperLocation(String operLocation) {
-        this.operLocation = operLocation;
-    }
-
-    public String getRequestMethod() {
-        return requestMethod;
-    }
-
-    public void setRequestMethod(String requestMethod) {
-        this.requestMethod = requestMethod;
-    }
-
-    public String getRequestUrl() {
-        return requestUrl;
-    }
-
-    public void setRequestUrl(String requestUrl) {
-        this.requestUrl = requestUrl;
-    }
-
-    public String getRequestParams() {
-        return requestParams;
-    }
-
-    public void setRequestParams(String requestParams) {
-        this.requestParams = requestParams;
-    }
-
-    public Long getExecuteTime() {
-        return executeTime;
-    }
-
-    public void setExecuteTime(Long executeTime) {
-        this.executeTime = executeTime;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
 }

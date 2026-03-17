@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
@@ -11,6 +14,9 @@ import java.time.LocalDateTime;
  * 用于存储表单提交的数据
  */
 @TableName("form_data")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class FormData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -93,124 +99,4 @@ public class FormData implements Serializable {
      * 租户 ID
      */
     private Long tenantId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getFormId() {
-        return formId;
-    }
-
-    public void setFormId(Long formId) {
-        this.formId = formId;
-    }
-
-    public String getFormCode() {
-        return formCode;
-    }
-
-    public void setFormCode(String formCode) {
-        this.formCode = formCode;
-    }
-
-    public String getFormData() {
-        return formData;
-    }
-
-    public void setFormData(String formData) {
-        this.formData = formData;
-    }
-
-    public Long getSubmitterId() {
-        return submitterId;
-    }
-
-    public void setSubmitterId(Long submitterId) {
-        this.submitterId = submitterId;
-    }
-
-    public String getSubmitterName() {
-        return submitterName;
-    }
-
-    public void setSubmitterName(String submitterName) {
-        this.submitterName = submitterName;
-    }
-
-    public LocalDateTime getSubmitTime() {
-        return submitTime;
-    }
-
-    public void setSubmitTime(LocalDateTime submitTime) {
-        this.submitTime = submitTime;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getSubmitType() {
-        return submitType;
-    }
-
-    public void setSubmitType(Integer submitType) {
-        this.submitType = submitType;
-    }
-
-    public Long getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public void setProcessInstanceId(Long processInstanceId) {
-        this.processInstanceId = processInstanceId;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
-
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
 }

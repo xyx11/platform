@@ -1,5 +1,8 @@
 package com.micro.platform.system.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +15,9 @@ import java.time.LocalDateTime;
  */
 @Tag(name = "公告阅读记录", description = "公告阅读记录实体")
 @TableName("sys_notice_user")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysNoticeUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,22 +59,4 @@ public class SysNoticeUser implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     @Parameter(description = "创建时间")
     private LocalDateTime createTime;
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Long getNoticeId() { return noticeId; }
-    public void setNoticeId(Long noticeId) { this.noticeId = noticeId; }
-
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-
-    public Integer getReadStatus() { return readStatus; }
-    public void setReadStatus(Integer readStatus) { this.readStatus = readStatus; }
-
-    public LocalDateTime getReadTime() { return readTime; }
-    public void setReadTime(LocalDateTime readTime) { this.readTime = readTime; }
-
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
 }
