@@ -64,7 +64,8 @@ export default defineConfig({
             { text: '操作日志', link: '/guide/advanced/log' },
             { text: '系统监控', link: '/guide/monitor' },
             { text: '定时任务', link: '/guide/scheduled-tasks' },
-            { text: '缓存配置', link: '/guide/cache' }
+            { text: '缓存配置', link: '/guide/cache' },
+            { text: 'AOP 切面', link: '/guide/aop-aspects' }
           ]
         },
         {
@@ -87,6 +88,7 @@ export default defineConfig({
             { text: '最佳实践', link: '/guide/best-practices' },
             { text: '快速参考', link: '/guide/quick-reference' },
             { text: '工具类参考', link: '/guide/utils-reference' },
+            { text: '注解参考', link: '/guide/annotations' },
             { text: '更新日志', link: '/guide/changelog' }
           ]
         }

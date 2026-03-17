@@ -329,7 +329,172 @@ redisLock.renewLock("lock:key", "clientId", 300);
 boolean isLocked = redisLock.isLocked("lock:key", "clientId");
 ```
 
-### ExcelUtils - Excel 工具
+### RateLimiterUtils - 限流工具
+
+```java
+// 令牌桶限流
+boolean allowed = RateLimiterUtils.tryAcquire("api:user:get", 10.0);
+
+// 带超时获取
+boolean allowed = RateLimiterUtils.tryAcquire("api:user:get", 10.0, 100, TimeUnit.MILLISECONDS);
+
+// 阻塞获取
+RateLimiterUtils.acquire("api:user:get", 10.0);
+
+// 固定窗口限流
+RateLimiterUtils.FixedWindowLimiter fixedLimiter =
+    new RateLimiterUtils.FixedWindowLimiter(100, 60000); // 1 分钟 100 次
+boolean allowed = fixedLimiter.tryAcquire("key");
+
+// 滑动窗口限流
+RateLimiterUtils.SlidingWindowLimiter slidingLimiter =
+    new RateLimiterUtils.SlidingWindowLimiter(100, 60000, 10); // 10 个槽
+boolean allowed = slidingLimiter.tryAcquire("key");
+```
+
+### SpElUtils - SpEL 表达式工具
+
+```java
+// 解析 SpEL 表达式
+Object result = SpElUtils.parseExpression("#user.userName", method, args);
+
+// 获取当前 IP
+String ip = SpElUtils.getCurrentIp();
+
+// 获取当前 URI
+String uri = SpElUtils.getCurrentUri();
+
+// 获取当前用户 ID
+Long userId = SpElUtils.getCurrentUserId();
+
+// 获取当前用户名
+String username = SpElUtils.getCurrentUsername();
+```
+
+### ValidationUtils - 验证工具
+
+```java
+// 手机号验证
+ValidationUtils.isPhone("13800138000");     // true
+
+// 邮箱验证
+ValidationUtils.isEmail("test@example.com"); // true
+
+// 身份证号验证
+ValidationUtils.isIdCard("110101199001011234"); // true
+
+// 密码强度检查
+ValidationUtils.checkPassword("Abc123456");  // 通过
+ValidationUtils.checkPassword("123456");     // 弱
+
+// 银行卡号验证（Luhn 算法）
+ValidationUtils.isBankCard("6222021234567890"); // true
+
+// URL 验证
+ValidationUtils.isUrl("https://example.com"); // true
+
+// 车牌号验证
+ValidationUtils.isLicensePlate("京 A12345"); // true
+
+// 统一社会信用代码验证
+ValidationUtils.isCreditCode("91110000000000000X"); // true
+```
+
+### CryptoUtils - 加密工具
+
+```java
+// MD5
+String md5 = CryptoUtils.md5("password");
+String md5Hex = CryptoUtils.md5Hex("password");
+
+// SHA-256
+String sha256 = CryptoUtils.sha256("password");
+
+// SHA-512
+String sha512 = CryptoUtils.sha512("password");
+
+// HMAC
+String hmac = CryptoUtils.hmacSHA256("data", "secret");
+
+// Base64
+String encoded = CryptoUtils.base64Encode("data");
+String decoded = CryptoUtils.base64Decode(encoded);
+
+// AES 加密/解密
+String encrypted = CryptoUtils.aesEncrypt("data", key);
+String decrypted = CryptoUtils.aesDecrypt(encrypted, key);
+
+// 生成盐值
+String salt = CryptoUtils.generateSalt(16);
+
+// 密码加密（带盐）
+String hashed = CryptoUtils.hashPassword("password", salt);
+boolean match = CryptoUtils.verifyPassword("password", hashed, salt);
+```
+
+### FileUtils - 文件工具
+
+```java
+// 读取文件
+String content = FileUtils.readFileToString(file);
+byte[] bytes = FileUtils.readFileToByteArray(file);
+
+// 写入文件
+FileUtils.write(file, "content");
+FileUtils.writeStringToFile(file, "content", "UTF-8");
+
+// 复制文件/目录
+FileUtils.copyFile(source, target);
+FileUtils.copyDirectory(srcDir, destDir);
+
+// 移动文件
+FileUtils.moveFile(source, target);
+
+// 删除
+FileUtils.deleteFile(file);
+FileUtils.deleteDirectory(dir);
+FileUtils.cleanDirectory(dir);
+
+// 创建目录
+FileUtils.forceMkdir(dir);
+
+// 文件信息
+FileUtils.size(file);         // 文件大小
+FileUtils.lastModified(file); // 最后修改时间
+FileUtils.getFileExtension(file); // 扩展名
+FileUtils.getFileName(file);  // 文件名
+
+// ZIP 操作
+FileUtils.zip(source, zipFile);
+FileUtils.unzip(zipFile, destDir);
+```
+
+### DateUtils - 日期工具
+
+```java
+// 格式化
+String formatted = DateUtils.format(date);
+String formatted = DateUtils.format(date, "yyyy-MM-dd HH:mm:ss");
+
+// 解析
+Date date = DateUtils.parse("2024-01-01");
+Date date = DateUtils.parse("2024-01-01 12:00:00", "yyyy-MM-dd HH:mm:ss");
+
+// 当前时间
+String today = DateUtils.today();
+String now = DateUtils.now();
+LocalDateTime localNow = DateUtils.localDateTimeNow();
+
+// 日期计算
+Date tomorrow = DateUtils.addDays(date, 1);
+Date nextMonth = DateUtils.addMonths(date, 1);
+long daysBetween = DateUtils.daysBetween(start, end);
+
+// 相对时间描述
+String desc = DateUtils.describe(DateUtils.addMinutes(new Date(), -5)); // "5 分钟前"
+```
+
+### JsonUtils - JSON 工具
 
 ```java
 // 定义实体类
@@ -360,6 +525,46 @@ ExcelUtils.exportExcel(data, headers, fields, response, "数据导出");
 // 导入 Excel
 List<User> users = ExcelUtils.importExcel(workbook, User.class);
 List<Map<String, Object>> rows = ExcelUtils.readExcel(workbook);
+```
+
+### DateUtils - 日期工具
+
+```java
+// 格式化
+String formatted = DateUtils.format(date);
+String formatted = DateUtils.format(date, "yyyy-MM-dd HH:mm:ss");
+
+// 解析
+Date date = DateUtils.parse("2024-01-01");
+Date date = DateUtils.parse("2024-01-01 12:00:00", "yyyy-MM-dd HH:mm:ss");
+
+// 当前时间
+String today = DateUtils.today();
+String now = DateUtils.now();
+LocalDateTime localNow = DateUtils.localDateTimeNow();
+
+// 日期计算
+Date tomorrow = DateUtils.addDays(date, 1);
+Date nextMonth = DateUtils.addMonths(date, 1);
+long daysBetween = DateUtils.daysBetween(start, end);
+
+// 相对时间描述
+String desc = DateUtils.describe(DateUtils.addMinutes(new Date(), -5)); // "5 分钟前"
+
+// 开始/结束时间
+Date startOfDay = DateUtils.beginOfDay(date);
+Date endOfDay = DateUtils.endOfDay(date);
+Date startOfMonth = DateUtils.beginOfMonth(date);
+Date endOfMonth = DateUtils.endOfMonth(date);
+
+// 比较
+boolean isBefore = DateUtils.isBefore(date1, date2);
+boolean isAfter = DateUtils.isAfter(date1, date2);
+boolean isEqual = DateUtils.isEqual(date1, date2);
+
+// 星期/季度
+int dayOfWeek = DateUtils.dayOfWeek(date);
+int quarter = DateUtils.quarter(date);
 ```
 
 ## 前端工具函数
