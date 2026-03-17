@@ -4,7 +4,6 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Micro Platform',
   description: '微服务开发平台文档',
-  base: '/micro-platform/',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
