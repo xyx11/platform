@@ -65,7 +65,7 @@ export default defineConfig({
             { text: '系统监控', link: '/guide/monitor' },
             { text: '定时任务', link: '/guide/scheduled-tasks' },
             { text: '缓存配置', link: '/guide/cache' },
-            { text: 'AOP 切面', link: '/guide/aop-aspects' }
+            { text: 'AOP 切面', link: '/guide/aop-aspects' },\n            { text: '开发指南', link: '/guide/development-guide' }
           ]
         },
         {
