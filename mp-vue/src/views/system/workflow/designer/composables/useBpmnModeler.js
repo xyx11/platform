@@ -3,6 +3,7 @@
  * 封装 bpmn-js 模型器的初始化和核心操作
  */
 
+import { logger } from '@/utils/logger'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import BpmnModeler from 'bpmn-js/lib/Modeler'
 import {
@@ -65,7 +66,7 @@ export function useBpmnModeler(canvasRef, propertiesPanelRef) {
    */
   const initModeler = () => {
     if (!canvasRef.value || !propertiesPanelRef.value) {
-      console.error('画布或属性面板容器未准备好')
+      logger.error('画布或属性面板容器未准备好')
       return
     }
 
@@ -86,7 +87,7 @@ export function useBpmnModeler(canvasRef, propertiesPanelRef) {
         .catch((err) => {
           // 忽略 'no diagram to display' 错误，这是正常的
           if (!err.message.includes('no diagram to display')) {
-            console.error('流程设计器初始化失败:', err)
+            logger.error('流程设计器初始化失败:', err)
           }
         })
 
@@ -102,7 +103,7 @@ export function useBpmnModeler(canvasRef, propertiesPanelRef) {
 
       isInitialized.value = true
     } catch (error) {
-      console.error('初始化 BPMN Modeler 失败:', error)
+      logger.error('初始化 BPMN Modeler 失败:', error)
     }
   }
 

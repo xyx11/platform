@@ -3,6 +3,7 @@
  * 封装流程健康度的评估、评分和建议生成等功能
  */
 
+import { logger } from '@/utils/logger'
 import { ref, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 
@@ -152,7 +153,7 @@ export function useDashboard(options = {}) {
 
       ElMessage.success('健康度评估完成')
     } catch (error) {
-      console.error('健康度评估失败:', error)
+      logger.error('健康度评估失败:', error)
       ElMessage.error('健康度评估失败：' + error.message)
     } finally {
       calculating.value = false

@@ -3,6 +3,7 @@
  * 封装表单关联、任务表单配置等功能
  */
 
+import { logger } from '@/utils/logger'
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'
@@ -37,7 +38,7 @@ export function useFlowForms(options = {}) {
       formList.value = Array.isArray(data) ? data : (data?.records || [])
       return formList.value
     } catch (error) {
-      console.error('加载表单列表失败:', error)
+      logger.error('加载表单列表失败:', error)
       ElMessage.error('加载表单列表失败')
       return []
     } finally {
@@ -74,7 +75,7 @@ export function useFlowForms(options = {}) {
       taskList.value = tasks
       return tasks
     } catch (error) {
-      console.error('加载用户任务失败:', error)
+      logger.error('加载用户任务失败:', error)
       ElMessage.error('加载任务节点失败')
       return []
     }
@@ -114,7 +115,7 @@ export function useFlowForms(options = {}) {
       ElMessage.success('表单配置已保存')
       return true
     } catch (error) {
-      console.error('保存表单配置失败:', error)
+      logger.error('保存表单配置失败:', error)
       ElMessage.error('保存表单配置失败：' + (error.response?.data?.message || error.message))
       return false
     }
@@ -152,7 +153,7 @@ export function useFlowForms(options = {}) {
       }
       return null
     } catch (error) {
-      console.error('加载表单配置失败:', error)
+      logger.error('加载表单配置失败:', error)
       // 404 错误返回 null，不显示错误提示
       if (error.response?.status === 404) {
         return null

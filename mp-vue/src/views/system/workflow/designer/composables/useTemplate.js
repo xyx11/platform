@@ -3,6 +3,7 @@
  * 封装流程模板的保存、加载、管理等功能
  */
 
+import { logger } from '@/utils/logger'
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { saveTemplate, getTemplates, deleteTemplate, importTemplate as importTpl } from '../utils/storageUtils'
@@ -144,7 +145,7 @@ export function useTemplate(options = {}) {
       loadMyTemplates()
       return true
     } catch (error) {
-      console.error('保存模板失败:', error)
+      logger.error('保存模板失败:', error)
       ElMessage.error('保存模板失败')
       return false
     } finally {
@@ -182,7 +183,7 @@ export function useTemplate(options = {}) {
         ElMessage.error('无效的模板文件')
       }
     } catch (error) {
-      console.error('导入模板失败:', error)
+      logger.error('导入模板失败:', error)
       ElMessage.error('导入模板失败：文件格式不正确')
     }
   }
@@ -223,7 +224,7 @@ export function useTemplate(options = {}) {
       templateLibVisible.value = false
       return true
     } catch (error) {
-      console.error('应用模板失败:', error)
+      logger.error('应用模板失败:', error)
       ElMessage.error('应用模板失败')
       return false
     }

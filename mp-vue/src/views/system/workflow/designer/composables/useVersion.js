@@ -3,6 +3,7 @@
  * 封装流程版本管理功能，包括版本历史、版本对比、版本回滚等
  */
 
+import { logger } from '@/utils/logger'
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -77,7 +78,7 @@ export function useVersion(options = {}) {
       // 临时使用模拟数据
       versionList.value = getSampleVersions()
     } catch (error) {
-      console.error('加载版本列表失败:', error)
+      logger.error('加载版本列表失败:', error)
       ElMessage.error('加载版本列表失败')
     }
   }
@@ -168,7 +169,7 @@ export function useVersion(options = {}) {
       ElMessage.success('版本已保存')
       return newVersion
     } catch (error) {
-      console.error('保存版本失败:', error)
+      logger.error('保存版本失败:', error)
       ElMessage.error('保存版本失败')
       return null
     }
@@ -228,7 +229,7 @@ export function useVersion(options = {}) {
       versionVisible.value = false
       return true
     } catch (error) {
-      console.error('加载版本失败:', error)
+      logger.error('加载版本失败:', error)
       ElMessage.error('加载版本失败')
       return false
     }
@@ -281,7 +282,7 @@ export function useVersion(options = {}) {
       versionVisible.value = false
       return true
     } catch (error) {
-      console.error('版本回滚失败:', error)
+      logger.error('版本回滚失败:', error)
       ElMessage.error('版本回滚失败')
       return false
     }
@@ -423,7 +424,7 @@ export function useVersion(options = {}) {
 
       comparing.value = false
     } catch (error) {
-      console.error('版本对比失败:', error)
+      logger.error('版本对比失败:', error)
       ElMessage.error('版本对比失败')
       comparing.value = false
     }

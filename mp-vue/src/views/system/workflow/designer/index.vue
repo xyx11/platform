@@ -1099,7 +1099,7 @@
 </template>
 
 <script setup name="WorkflowDesigner">
-import { ref, reactive, onMounted, onBeforeUnmount, watch, computed } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, watch, computed } from 'vue'\nimport { logger } from '@/utils/logger'
 // ========== 导入流程设计器组合式函数模块 ==========
 // 核心组合式函数
 import {
@@ -1232,11 +1232,11 @@ const {
   bpmnModeler,
   processInfo,
   onSaved: (data) => {
-    console.log('保存成功', data)
+    logger.log('保存成功', data)
     processInfoVisible.value = false
   },
   onDeployed: (data) => {
-    console.log('部署成功', data)
+    logger.log('部署成功', data)
   }
 })
 
@@ -1730,7 +1730,7 @@ const handleTemplateFileLegacy = (file) => {
         ElMessage.error('无效的模板文件')
       }
     } catch (error) {
-      console.error('导入模板失败:', error)
+      logger.error('导入模板失败:', error)
       ElMessage.error('导入模板失败：文件格式不正确')
     }
   }
@@ -1762,7 +1762,7 @@ const loadStartForm = async () => {
           // 从 schema 中提取 components
           startFormComponents.value = schema?.fields || schema?.components || schema?.items || []
         } catch (e) {
-          console.error('解析表单 schema 失败:', e)
+          logger.error('解析表单 schema 失败:', e)
           startFormComponents.value = []
         }
       } else {
@@ -1772,7 +1772,7 @@ const loadStartForm = async () => {
       startFormComponents.value = []
     }
   } catch (error) {
-    console.error('加载启动表单失败:', error)
+    logger.error('加载启动表单失败:', error)
     startFormComponents.value = []
   }
 }
@@ -1804,7 +1804,7 @@ const submitLaunch = async () => {
       ElMessage.error(data?.message || '流程发起失败')
     }
   } catch (error) {
-    console.error('流程发起失败:', error)
+    logger.error('流程发起失败:', error)
     ElMessage.error('流程发起失败：' + (error.response?.data?.message || error.message))
   } finally {
     launching.value = false
@@ -2128,7 +2128,7 @@ const performDeployment = async () => {
       }, 500)
     }
   } catch (err) {
-    console.error('部署失败:', err)
+    logger.error('部署失败:', err)
     ElMessage.error('部署失败：' + (err.message || '未知错误'))
   } finally {
     deploying.value = false
@@ -2436,7 +2436,7 @@ const loadLastDiagram = () => {
       bpmnModeler.value.importXML(saved)
       ElMessage.info('已恢复上次编辑的流程')
     } catch (err) {
-      console.error('恢复失败:', err)
+      logger.error('恢复失败:', err)
     }
   }
 }
@@ -2744,7 +2744,7 @@ const compareVersionsLegacy = async (version1, version2) => {
       showClose: true
     })
   } catch (error) {
-    console.error('版本对比失败:', error)
+    logger.error('版本对比失败:', error)
     ElMessage.error('版本对比失败：' + error.message)
   }
 }
@@ -2769,7 +2769,7 @@ const quickCopyNode = async () => {
     
     ElMessage.success('复制成功')
   } catch (error) {
-    console.error('复制失败:', error)
+    logger.error('复制失败:', error)
     ElMessage.error('复制失败：' + error.message)
   }
 }
@@ -2817,7 +2817,7 @@ const alignNodes = async (alignment) => {
     
     ElMessage.success('对齐完成')
   } catch (error) {
-    console.error('对齐失败:', error)
+    logger.error('对齐失败:', error)
     ElMessage.error('对齐失败：' + error.message)
   }
 }
@@ -2875,7 +2875,7 @@ const distributeNodes = async (direction) => {
     
     ElMessage.success('分布完成')
   } catch (error) {
-    console.error('分布失败:', error)
+    logger.error('分布失败:', error)
     ElMessage.error('分布失败：' + error.message)
   }
 }
@@ -2946,7 +2946,7 @@ const buildSimulationPath = async () => {
     currentStep.value = -1
     simulationLogs.value = ['模拟路径已生成，共 ' + path.length + ' 个节点']
   } catch (error) {
-    console.error('构建模拟路径失败:', error)
+    logger.error('构建模拟路径失败:', error)
     ElMessage.error('构建模拟路径失败')
   }
 }
@@ -3189,7 +3189,7 @@ const confirmExport = async () => {
     ElMessage.success('导出成功')
     exportOptionsVisible.value = false
   } catch (error) {
-    console.error('导出失败:', error)
+    logger.error('导出失败:', error)
     ElMessage.error('导出失败：' + error.message)
   }
 }

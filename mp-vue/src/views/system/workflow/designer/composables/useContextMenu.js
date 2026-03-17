@@ -3,6 +3,7 @@
  * 封装上下文菜单、快捷操作等功能
  */
 
+import { logger } from '@/utils/logger'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
@@ -115,7 +116,7 @@ export function useContextMenu(options = {}) {
           onAction?.(action)
       }
     } catch (error) {
-      console.error('执行菜单动作失败:', error)
+      logger.error('执行菜单动作失败:', error)
       ElMessage.error('操作失败：' + error.message)
     }
   }
@@ -300,7 +301,7 @@ export function useContextMenu(options = {}) {
       }
       ElMessage.success('已对齐')
     } catch (error) {
-      console.error('对齐操作失败:', error)
+      logger.error('对齐操作失败:', error)
       ElMessage.error('对齐失败：' + error.message)
     }
   }
