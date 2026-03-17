@@ -23,6 +23,8 @@ XXL_JOB_PORT="8888"
 # 应用配置
 VUE_PORT="3001"
 VUE_DIR="$BASE_DIR/mp-vue"
+DOCS_PORT="5173"
+DOCS_DIR="$BASE_DIR/docs"
 APPLOGS_DIR="/Users/xieyunxing/applogs"
 
 # 服务配置：名称 - 模块 - 端口
@@ -224,6 +226,28 @@ else
     fi
 fi
 
+# 启动文档站点
+echo -e "${BLUE}检查文档站点...${NC}"
+DOCS_PID=$(lsof -ti :$DOCS_PORT 2>/dev/null)
+if [ -n "$DOCS_PID" ]; then
+    print_success "文档站点已在运行 (端口 $DOCS_PORT)"
+else
+    if [ -d "$DOCS_DIR" ]; then
+        echo -n "  启动文档站点 (端口 $DOCS_PORT)... "
+        cd $DOCS_DIR
+        nohup npm run docs:dev > $LOGS_DIR/docs.log 2>&1 &
+        sleep 3
+        if lsof -i :$DOCS_PORT &>/dev/null; then
+            print_success "已启动"
+        else
+            print_warn "可能启动失败，请查看日志"
+        fi
+        cd $BASE_DIR
+    else
+        print_warn "docs 目录不存在，跳过启动"
+    fi
+fi
+
 echo ""
 echo "========================================"
 echo -e "${GREEN}   所有服务启动完成!${NC}"
@@ -237,6 +261,7 @@ echo "  - mp-generator: http://$LOCALHOST:8083"
 echo "  - mp-job:       http://$LOCALHOST:8084"
 echo "  - xxl-job:      http://$LOCALHOST:$XXL_JOB_PORT/xxl-job-admin"
 echo "  - mp-vue:       http://$LOCALHOST:$VUE_PORT"
+echo "  - docs:         http://$LOCALHOST:$DOCS_PORT"
 echo ""
 echo "Swagger 地址:"
 echo "  - http://$LOCALHOST:8081/doc.html"
@@ -251,4 +276,5 @@ echo "  查看日志：tail -f logs/mp-auth.log"
 echo "  停止服务：pkill -f 'spring-boot.run.profiles=local'"
 echo "  停止 Nacos: $NACOS_HOME/bin/shutdown.sh"
 echo "  停止前端：pkill -f 'npm run dev'"
+echo "  停止文档：pkill -f 'vitepress dev'"
 echo ""
