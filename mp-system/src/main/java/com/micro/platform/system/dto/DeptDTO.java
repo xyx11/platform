@@ -1,5 +1,6 @@
 package com.micro.platform.system.dto;
 
+import lombok.Data;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.Size;
 /**
  * 部门 DTO
  */
+@Data
 public class DeptDTO {
 
     /**
@@ -53,20 +55,4 @@ public class DeptDTO {
     private Integer status;
 
     // Getters and Setters
-    public Long getDeptId() { return deptId; }
-    public void setDeptId(Long deptId) { this.deptId = deptId; }
-    public Long getParentId() { return parentId; }
-    public void setParentId(Long parentId) { this.parentId = parentId; }
-    public String getDeptName() { return deptName; }
-    public void setDeptName(String deptName) { this.deptName = deptName; }
-    public Integer getSort() { return sort; }
-    public void setSort(Integer sort) { this.sort = sort; }
-    public String getLeader() { return leader; }
-    public void setLeader(String leader) { this.leader = leader; }
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public Integer getStatus() { return status; }
-    public void setStatus(Integer status) { this.status = status; }
 }

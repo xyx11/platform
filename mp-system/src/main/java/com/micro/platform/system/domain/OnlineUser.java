@@ -1,10 +1,12 @@
 package com.micro.platform.system.domain;
 
+import lombok.Data;
 import java.io.Serializable;
 
 /**
  * 在线用户
  */
+@Data
 public class OnlineUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -68,100 +70,4 @@ public class OnlineUser implements Serializable {
      * 角色名称
      */
     private String roleName;
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getDeptName() {
-        return deptName;
-    }
-
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getIpaddr() {
-        return ipaddr;
-    }
-
-    public void setIpaddr(String ipaddr) {
-        this.ipaddr = ipaddr;
-    }
-
-    public String getLoginLocation() {
-        return loginLocation;
-    }
-
-    public void setLoginLocation(String loginLocation) {
-        this.loginLocation = loginLocation;
-    }
-
-    public String getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
-    }
-
-    public String getOs() {
-        return os;
-    }
-
-    public void setOs(String os) {
-        this.os = os;
-    }
-
-    public String getLoginTime() {
-        return loginTime;
-    }
-
-    public void setLoginTime(String loginTime) {
-        this.loginTime = loginTime;
-    }
-
-    public Long getOnlineDuration() {
-        return onlineDuration;
-    }
-
-    public void setOnlineDuration(Long onlineDuration) {
-        this.onlineDuration = onlineDuration;
-    }
-
-    public String getRoleKey() {
-        return roleKey;
-    }
-
-    public void setRoleKey(String roleKey) {
-        this.roleKey = roleKey;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
 }

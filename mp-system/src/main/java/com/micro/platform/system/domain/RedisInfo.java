@@ -1,11 +1,13 @@
 package com.micro.platform.system.domain;
 
+import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * Redis 信息
  */
+@Data
 public class RedisInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -70,100 +72,8 @@ public class RedisInfo implements Serializable {
      */
     private List<DbInfo> dbInfo;
 
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getUptime() {
-        return uptime;
-    }
-
-    public void setUptime(String uptime) {
-        this.uptime = uptime;
-    }
-
-    public String getConnectedClients() {
-        return connectedClients;
-    }
-
-    public void setConnectedClients(String connectedClients) {
-        this.connectedClients = connectedClients;
-    }
-
-    public String getUsedMemory() {
-        return usedMemory;
-    }
-
-    public void setUsedMemory(String usedMemory) {
-        this.usedMemory = usedMemory;
-    }
-
-    public String getUsedMemoryPeak() {
-        return usedMemoryPeak;
-    }
-
-    public void setUsedMemoryPeak(String usedMemoryPeak) {
-        this.usedMemoryPeak = usedMemoryPeak;
-    }
-
-    public String getUsedMemoryRatio() {
-        return usedMemoryRatio;
-    }
-
-    public void setUsedMemoryRatio(String usedMemoryRatio) {
-        this.usedMemoryRatio = usedMemoryRatio;
-    }
-
-    public String getMemFragmentationRatio() {
-        return memFragmentationRatio;
-    }
-
-    public void setMemFragmentationRatio(String memFragmentationRatio) {
-        this.memFragmentationRatio = memFragmentationRatio;
-    }
-
-    public String getTotalCommandsProcessed() {
-        return totalCommandsProcessed;
-    }
-
-    public void setTotalCommandsProcessed(String totalCommandsProcessed) {
-        this.totalCommandsProcessed = totalCommandsProcessed;
-    }
-
-    public String getInstantaneousOpsPerSec() {
-        return instantaneousOpsPerSec;
-    }
-
-    public void setInstantaneousOpsPerSec(String instantaneousOpsPerSec) {
-        this.instantaneousOpsPerSec = instantaneousOpsPerSec;
-    }
-
-    public String getKeyspaceHits() {
-        return keyspaceHits;
-    }
-
-    public void setKeyspaceHits(String keyspaceHits) {
-        this.keyspaceHits = keyspaceHits;
-    }
-
-    public String getKeyspaceMisses() {
-        return keyspaceMisses;
-    }
-
-    public void setKeyspaceMisses(String keyspaceMisses) {
-        this.keyspaceMisses = keyspaceMisses;
-    }
-
     public List<DbInfo> getDbInfo() {
         return dbInfo;
-    }
-
-    public void setDbInfo(List<DbInfo> dbInfo) {
-        this.dbInfo = dbInfo;
     }
 
     /**
@@ -173,21 +83,5 @@ public class RedisInfo implements Serializable {
         private static final long serialVersionUID = 1L;
         private String dbName;
         private Integer keysCount;
-
-        public String getDbName() {
-            return dbName;
-        }
-
-        public void setDbName(String dbName) {
-            this.dbName = dbName;
-        }
-
-        public Integer getKeysCount() {
-            return keysCount;
-        }
-
-        public void setKeysCount(Integer keysCount) {
-            this.keysCount = keysCount;
-        }
     }
 }
