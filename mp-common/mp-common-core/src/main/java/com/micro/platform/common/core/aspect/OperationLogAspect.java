@@ -82,7 +82,7 @@ public class OperationLogAspect {
                     ip,
                     uri,
                     success ? "成功" : "失败",
-                   耗时，
+                   timeConsuming,
                     errorMsg);
         }
     }
