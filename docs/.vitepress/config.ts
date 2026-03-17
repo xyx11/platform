@@ -61,7 +61,14 @@ export default defineConfig({
             { text: '数据权限', link: '/guide/advanced/data-permission' },
             { text: '多租户', link: '/guide/advanced/tenant' },
             { text: '操作日志', link: '/guide/advanced/log' },
-            { text: '系统监控', link: '/guide/monitor' }
+            { text: '系统监控', link: '/guide/monitor' },
+            { text: '定时任务', link: '/guide/scheduled-tasks' }
+          ]
+        },
+        {
+          text: '第三方服务',
+          items: [
+            { text: '服务集成', link: '/guide/integrations' }
           ]
         },
         {
