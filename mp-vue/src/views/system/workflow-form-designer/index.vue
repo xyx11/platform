@@ -532,13 +532,7 @@ const handleExport = () => {
   loading.value = true
   const params = { ...queryParams, pageNum: 1, pageSize: 1000 }
   request.get('/system/workflow/form/designer/export', { params, responseType: 'blob' }).then(res => {
-    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = '流程表单_' + new Date().getTime() + '.xlsx'
-    link.click()
-    window.URL.revokeObjectURL(url)
+    downloadExcel(res, '流程表单_' + new Date().getTime() + '.xlsx')
     ElMessage.success('导出成功')
   }).catch(() => {
     ElMessage.error('导出失败')

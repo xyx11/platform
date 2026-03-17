@@ -772,13 +772,7 @@ const handleExport = () => {
     pageSize: 1000
   }
   request.get('/system/user/export', { params, responseType: 'blob' }).then(res => {
-    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = '用户数据_' + new Date().getTime() + '.xlsx'
-    link.click()
-    window.URL.revokeObjectURL(url)
+    downloadExcel(res, '用户数据_' + new Date().getTime() + '.xlsx')
     ElMessage.success('导出成功')
   }).catch(() => {
     ElMessage.error('导出失败')
@@ -790,13 +784,7 @@ const handleExport = () => {
 // 下载模板
 const downloadTemplate = () => {
   request.get('/system/user/downloadTemplate', { responseType: 'blob' }).then(res => {
-    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = '用户导入模板.xlsx'
-    link.click()
-    window.URL.revokeObjectURL(url)
+    downloadExcel(res, '用户导入模板.xlsx')
     ElMessage.success('模板下载成功')
   }).catch(() => {
     ElMessage.error('模板下载失败')

@@ -117,3 +117,25 @@ export function throttle(func, wait = 500) {
     }
   }
 }
+/**
+ * 下载 Excel 文件
+ * @param {Blob} blob - Blob 数据
+ * @param {string} filename - 文件名
+ */
+export function downloadExcel(blob, filename) {
+  const url = window.URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  link.click()
+  window.URL.revokeObjectURL(url)
+}
+
+/**
+ * 下载文件（通用）
+ * @param {Blob} blob - Blob 数据
+ * @param {string} filename - 文件名
+ */
+export function downloadFile(blob, filename) {
+  downloadExcel(blob, filename)
+}

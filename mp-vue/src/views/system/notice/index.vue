@@ -369,13 +369,7 @@ function handleExport() {
     status: queryParams.value.status
   }
   request.get('/system/notice/export', { params, responseType: 'blob' }).then(res => {
-    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = '通知公告_' + new Date().getTime() + '.xlsx'
-    link.click()
-    window.URL.revokeObjectURL(url)
+    downloadExcel(res, '通知公告_' + new Date().getTime() + '.xlsx')
     ElMessage.success('导出成功')
   })
 }

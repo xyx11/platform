@@ -366,13 +366,7 @@ const handleExportType = () => {
     pageSize: 1000
   }
   request.get('/system/dict/type/export', { params: queryParams, responseType: 'blob' }).then(res => {
-    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = '字典数据_' + new Date().getTime() + '.xlsx'
-    link.click()
-    window.URL.revokeObjectURL(url)
+    downloadExcel(res, '字典数据_' + new Date().getTime() + '.xlsx')
     ElMessage.success('导出成功')
   })
 }
