@@ -4,7 +4,6 @@
 # Node 模块
 node_modules
 
-# 开发时生成的临时文件
+# 缓存
 .cache
-.temp
 package-lock.json

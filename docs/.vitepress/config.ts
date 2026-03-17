@@ -17,7 +17,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '指南', link: '/guide/introduction' },
       { text: 'API 文档', link: '/api/overview' },
-      { text: '常见问题', link: '/guide/faq' },
+      { text: '更新日志', link: '/guide/changelog' },
       { text: 'GitHub', link: 'https://github.com/xyx11/platform' }
     ],
 
@@ -60,13 +60,16 @@ export default defineConfig({
             { text: '代码生成', link: '/guide/advanced/generator' },
             { text: '数据权限', link: '/guide/advanced/data-permission' },
             { text: '多租户', link: '/guide/advanced/tenant' },
-            { text: '操作日志', link: '/guide/advanced/log' }
+            { text: '操作日志', link: '/guide/advanced/log' },
+            { text: '系统监控', link: '/guide/monitor' }
           ]
         },
         {
-          text: '其他',
+          text: '部署与运维',
           items: [
-            { text: '常见问题', link: '/guide/faq' }
+            { text: '部署指南', link: '/guide/deploy' },
+            { text: '常见问题', link: '/guide/faq' },
+            { text: '更新日志', link: '/guide/changelog' }
           ]
         }
       ],
