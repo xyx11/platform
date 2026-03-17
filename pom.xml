@@ -79,7 +79,7 @@
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
 
         <!-- Lombok -->
-        <lombok.version>1.18.36</lombok.version>
+        <lombok.version>1.18.38</lombok.version>
 
         <!-- Apache POI -->
         <poi.version>5.2.5</poi.version>

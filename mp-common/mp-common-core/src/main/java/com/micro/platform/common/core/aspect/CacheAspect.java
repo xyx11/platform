@@ -73,7 +73,7 @@ public class CacheAspect {
         }
 
         // 构建缓存键
-        String cacheKey = buildCacheKey(cacheAnnotation.value(), cacheAnnotation.key(), method, args);
+        String cacheKey = buildCacheKey(cacheAnnotation.name(), cacheAnnotation.key(), method, args);
 
         // 尝试从缓存获取
         Object cachedValue = getFromCache(cacheKey);
@@ -113,9 +113,9 @@ public class CacheAspect {
 
         // 删除缓存
         if (cacheEvict.allEntries()) {
-            evictAll(cacheEvict.value());
+            evictAll(cacheEvict.name());
         } else {
-            String cacheKey = buildCacheKey(cacheEvict.value(), cacheEvict.key(), method, args);
+            String cacheKey = buildCacheKey(cacheEvict.name(), cacheEvict.key(), method, args);
             evictFromCache(cacheKey);
         }
 

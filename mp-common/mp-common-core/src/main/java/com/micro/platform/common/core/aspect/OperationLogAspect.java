@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +72,7 @@ public class OperationLogAspect {
         } finally {
             // 记录操作日志
             long endTime = System.currentTimeMillis();
-            long耗时 = endTime - startTime;
+            long timeConsuming = endTime - startTime;
 
             log.info("操作日志 - 模块：{}，类型：{}，描述：{}，操作人：{}，IP: {}，URI: {}，状态：{}，耗时：{}ms，错误：{}",
                     logInfo.get("module"),
@@ -82,7 +82,7 @@ public class OperationLogAspect {
                     ip,
                     uri,
                     success ? "成功" : "失败",
-                   timeConsuming,
+                    timeConsuming,
                     errorMsg);
         }
     }

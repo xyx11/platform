@@ -5,12 +5,15 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.*;
+import java.time.ZoneId;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import com.micro.platform.common.core.annotation.ExcelColumn;
 
 /**
  * Excel 工具类
@@ -64,7 +67,7 @@ public class ExcelUtils {
                         if (value instanceof Number) {
                             cell.setCellValue(((Number) value).doubleValue());
                         } else if (value instanceof Date) {
-                            cell.setCellValue(DateUtils.format((Date) value));
+                            cell.setCellValue(DateUtils.format(((Date) value).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
                         } else {
                             cell.setCellValue(value.toString());
                         }
@@ -112,7 +115,7 @@ public class ExcelUtils {
                     if (value instanceof Number) {
                         cell.setCellValue(((Number) value).doubleValue());
                     } else if (value instanceof Date) {
-                        cell.setCellValue(DateUtils.format((Date) value));
+                        cell.setCellValue(DateUtils.format(((Date) value).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
                     } else {
                         cell.setCellValue(value.toString());
                     }

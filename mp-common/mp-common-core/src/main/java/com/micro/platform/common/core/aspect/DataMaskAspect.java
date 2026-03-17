@@ -1,7 +1,6 @@
 package com.micro.platform.common.core.aspect;
 
 import com.micro.platform.common.core.annotation.DataMask;
-import com.micro.platform.common.core.util.ValidationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
