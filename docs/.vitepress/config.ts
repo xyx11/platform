@@ -73,8 +73,10 @@ export default defineConfig({
           ]
         },
         {
-          text: '其他',
+          text: '参考',
           items: [
+            { text: '最佳实践', link: '/guide/best-practices' },
+            { text: '快速参考', link: '/guide/quick-reference' },
             { text: '更新日志', link: '/guide/changelog' }
           ]
         }
