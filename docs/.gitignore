@@ -7,3 +7,4 @@ node_modules
 # 开发时生成的临时文件
 .cache
 .temp
+package-lock.json
