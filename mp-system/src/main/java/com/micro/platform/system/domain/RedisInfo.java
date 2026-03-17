@@ -79,9 +79,26 @@ public class RedisInfo implements Serializable {
     /**
      * 数据库信息
      */
+    @Data
     public static class DbInfo implements Serializable {
         private static final long serialVersionUID = 1L;
         private String dbName;
         private Integer keysCount;
+
+        public String getDbName() {
+            return dbName;
+        }
+
+        public void setDbName(String dbName) {
+            this.dbName = dbName;
+        }
+
+        public Integer getKeysCount() {
+            return keysCount;
+        }
+
+        public void setKeysCount(Integer keysCount) {
+            this.keysCount = keysCount;
+        }
     }
 }

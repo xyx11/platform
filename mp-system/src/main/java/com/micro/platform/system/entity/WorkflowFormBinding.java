@@ -2,6 +2,8 @@ package com.micro.platform.system.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

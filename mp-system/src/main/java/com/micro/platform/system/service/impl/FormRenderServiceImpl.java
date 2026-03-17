@@ -37,7 +37,7 @@ public class FormRenderServiceImpl implements FormRenderService {
         }
 
         Map<String, Object> result = new HashMap<>();
-        result.put("formId", form.getId());
+        result.put("formId", form.getFormId());
         result.put("formName", form.getFormName());
         result.put("formCode", form.getFormCode());
         result.put("formType", form.getFormType());

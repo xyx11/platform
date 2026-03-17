@@ -10,6 +10,9 @@ import java.util.Date;
  * 表单定义实体
  */
 @TableName("form_definition")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class FormDefinition {
 
     @TableId(value = "id", type = IdType.AUTO)

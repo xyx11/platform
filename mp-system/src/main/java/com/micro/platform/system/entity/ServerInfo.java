@@ -43,6 +43,7 @@ public class ServerInfo implements Serializable {
     /**
      * CPU 信息
      */
+    @Data
     public static class CpuInfo {
         /**
          * CPU 核心数
@@ -63,6 +64,7 @@ public class ServerInfo implements Serializable {
     /**
      * 内存信息
      */
+    @Data
     public static class MemoryInfo {
         /**
          * 总内存 (MB)
@@ -88,6 +90,7 @@ public class ServerInfo implements Serializable {
     /**
      * JVM 信息
      */
+    @Data
     public static class JvmInfo {
         /**
          * JVM 版本
@@ -133,6 +136,7 @@ public class ServerInfo implements Serializable {
     /**
      * 系统信息
      */
+    @Data
     public static class SystemInfo {
         /**
          * 操作系统名称
@@ -163,6 +167,7 @@ public class ServerInfo implements Serializable {
     /**
      * 磁盘信息
      */
+    @Data
     public static class DiskInfo {
         /**
          * 盘符路径

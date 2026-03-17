@@ -50,7 +50,7 @@ class FormDefinitionServiceTest {
         }
 
         testForm = new FormDefinition();
-        testForm.setId(1L);
+        testForm.setFormId(1L);
         testForm.setFormName("测试表单");
         testForm.setFormCode("test_form");
         testForm.setFormType(1);

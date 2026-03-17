@@ -89,11 +89,44 @@ public class ServerInfo implements Serializable {
     /**
      * 磁盘信息
      */
+    @Data
     public static class DiskInfo implements Serializable {
         private static final long serialVersionUID = 1L;
         private String diskName;
         private String total;
         private String used;
         private String free;
+
+        public String getDiskName() {
+            return diskName;
+        }
+
+        public void setDiskName(String diskName) {
+            this.diskName = diskName;
+        }
+
+        public String getTotal() {
+            return total;
+        }
+
+        public void setTotal(String total) {
+            this.total = total;
+        }
+
+        public String getUsed() {
+            return used;
+        }
+
+        public void setUsed(String used) {
+            this.used = used;
+        }
+
+        public String getFree() {
+            return free;
+        }
+
+        public void setFree(String free) {
+            this.free = free;
+        }
     }
 }
