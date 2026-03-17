@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import router from '@/router'
+import { logger } from '@/utils/logger'
 
 // 刷新 token 锁
-let isRefreshing = false
 let refreshSubscribers = []
 
 // 添加到刷新队列
@@ -63,13 +63,11 @@ service.interceptors.request.use(
       delete config.headers['Content-Type']
     }
     // 开发环境日志
-    if (import.meta.env.DEV) {
-      console.log('[Request]', config.method.toUpperCase(), config.url, config.params || '')
-    }
+    logger.log('[Request]', config.method.toUpperCase(), config.url, config.params || '')
     return config
   },
   error => {
-    if (import.meta.env.DEV) { console.error('[Request Error]', error) }
+    logger.error('[Request Error]', error)
     return Promise.reject(error)
   }
 )
@@ -90,7 +88,7 @@ service.interceptors.response.use(
       if (res.code === 401) {
         const isRefreshing = localStorage.getItem('is_refreshing')
         const isRelogin = localStorage.getItem('is_relogin')
-        
+
         // 如果正在刷新 token，等待刷新完成
         if (isRefreshing && !isRelogin) {
           return new Promise((resolve) => {
@@ -100,11 +98,11 @@ service.interceptors.response.use(
             })
           })
         }
-        
+
         // 防止重复刷新
         if (!isRefreshing && !isRelogin) {
           localStorage.setItem('is_refreshing', 'true')
-          
+
           // 尝试刷新 token
           const refreshToken = localStorage.getItem('refresh_token')
           if (refreshToken) {
@@ -170,7 +168,7 @@ service.interceptors.response.use(
     return res
   },
   error => {
-    if (import.meta.env.DEV) { console.error('[Response Error]', error) }
+    logger.error('[Response Error]', error)
     let message = '网络错误'
 
     if (error.response) {

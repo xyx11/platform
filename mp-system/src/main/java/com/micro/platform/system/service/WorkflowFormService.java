@@ -1,5 +1,6 @@
 package com.micro.platform.system.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.system.entity.WorkflowFormBinding;
 
 import java.util.List;
@@ -14,6 +15,13 @@ public interface WorkflowFormService {
      * 获取表单绑定列表
      */
     List<WorkflowFormBinding> getFormBindings(String processDefinitionKey, String taskDefinitionKey);
+
+    /**
+     * 获取表单绑定列表（分页）
+     */
+    Page<WorkflowFormBinding> getFormBindingsPage(String processDefinitionKey, String taskDefinitionKey,
+                                                   String formName, String formKey, Integer formType, Integer status,
+                                                   Integer pageNum, Integer pageSize);
 
     /**
      * 获取流程的所有表单绑定
@@ -44,4 +52,9 @@ public interface WorkflowFormService {
      * 获取任务表单
      */
     Map<String, Object> getTaskForm(String taskDefinitionKey);
+
+    /**
+     * 更新表单状态
+     */
+    void updateFormStatus(WorkflowFormBinding binding);
 }

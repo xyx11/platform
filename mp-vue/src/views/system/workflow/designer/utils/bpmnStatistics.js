@@ -2,6 +2,8 @@
  * BPMN 流程统计工具
  */
 
+import { logger } from '@/utils/logger'
+
 /**
  * 流程统计数据结构
  */
@@ -152,7 +154,7 @@ export function getFlowStatistics(xml) {
       comment: getComplexityComment(complexity)
     }
   } catch (e) {
-    console.error('统计流程失败:', e)
+    logger.error('统计流程失败:', e)
     return {
       stats: new FlowStatistics(),
       complexity: 0,

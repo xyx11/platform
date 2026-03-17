@@ -5,6 +5,7 @@
 
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
+import { logger } from '@/utils/logger'
 
 /**
  * 模拟速度
@@ -83,7 +84,7 @@ export function useSimulation(options = {}) {
       // 开始执行
       await executeSimulation(path)
     } catch (error) {
-      console.error('模拟失败:', error)
+      logger.error('模拟失败:', error)
       ElMessage.error('模拟失败：' + error.message)
       simulating.value = false
     }

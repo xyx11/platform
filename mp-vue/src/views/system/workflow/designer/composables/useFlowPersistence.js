@@ -155,7 +155,6 @@ export function useFlowPersistence(options = {}) {
     let fixedXml = xml
     if (xml.includes('isExecutable="false"')) {
       fixedXml = xml.replace(/isExecutable="false"/g, 'isExecutable="true"')
-      console.log('已自动修复 isExecutable 属性')
     }
 
     // 验证 BPMN
@@ -209,7 +208,6 @@ export function useFlowPersistence(options = {}) {
       hasUnsavedChanges.value = false
       ElMessage.success('自动保存成功')
     } catch (err) {
-      console.error('自动保存失败:', err)
       ElMessage.error('自动保存失败，但已保存到本地备份')
     } finally {
       autoSaving.value = false

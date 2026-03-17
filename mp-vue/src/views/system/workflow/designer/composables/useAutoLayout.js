@@ -5,6 +5,7 @@
 
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
+import { logger } from '@/utils/logger'
 
 /**
  * 布局方向
@@ -71,7 +72,7 @@ export function useAutoLayout(options = {}) {
       autoLayoutVisible.value = false
       return true
     } catch (error) {
-      console.error('自动布局失败:', error)
+      logger.error('自动布局失败:', error)
       ElMessage.error('自动布局失败：' + error.message)
       return false
     }
@@ -139,7 +140,7 @@ export function useAutoLayout(options = {}) {
     } else {
       // 从上到下布局
       let yOffset = 0
-      layoutRow(grouped.startEvents, currentX, currentY + yOffset, spacing, modeling)
+      layoutRow(grouped.startEvents, currentX, currentY, spacing, modeling)
       yOffset += rowSpacing * 2
 
       layoutRow(grouped.tasks, currentX, currentY + yOffset, spacing, modeling)

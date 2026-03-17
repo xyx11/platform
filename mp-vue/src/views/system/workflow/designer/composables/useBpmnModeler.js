@@ -78,13 +78,17 @@ export function useBpmnModeler(canvasRef, propertiesPanelRef) {
         ...MODELER_CONFIG
       })
 
-      // 加载默认图表
-      bpmnModeler.value.importXML(DEFAULT_BPMN_XML, (err) => {
-        if (err) {
-          console.error('流程设计器初始化失败:', err)
-          return
-        }
-      })
+      // 加载默认图表（使用 Promise 方式）
+      bpmnModeler.value.importXML(DEFAULT_BPMN_XML)
+        .then(() => {
+          // BPMN 模型器初始化完成
+        })
+        .catch((err) => {
+          // 忽略 'no diagram to display' 错误，这是正常的
+          if (!err.message.includes('no diagram to display')) {
+            console.error('流程设计器初始化失败:', err)
+          }
+        })
 
       // 监听视图变化更新缩放比例
       const canvas = bpmnModeler.value.get('canvas')

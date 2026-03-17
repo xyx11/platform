@@ -4,7 +4,7 @@
  */
 
 import { ref, reactive } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/request'
 
 /**
@@ -31,9 +31,10 @@ export function useFlowForms(options = {}) {
     loading.value = true
     try {
       const { data } = await request.get('/system/form-definition/list', {
-        params: { pageNum: 1, pageSize: 100, status: 1, ...params }
+        params: { status: 1, ...params }
       })
-      formList.value = data?.records || []
+      // 后端返回的是 Result<List>，直接使用 data
+      formList.value = Array.isArray(data) ? data : (data?.records || [])
       return formList.value
     } catch (error) {
       console.error('加载表单列表失败:', error)
@@ -89,23 +90,32 @@ export function useFlowForms(options = {}) {
     }
 
     try {
-      const config = {
-        processDefinitionId: processInfo?.value?.id,
-        startForm: formConfig.startForm,
-        tasks: taskList.value.map(t => ({
-          taskDefinitionKey: t.id,
-          formKey: t.formKey,
-          assigneeType: t.assigneeType,
-          assignee: t.assignee
-        }))
+      // 先解除旧的绑定
+      await request.post('/system/workflow-form/unbind', null, {
+        params: { processDefinitionKey: processInfo?.value?.id }
+      })
+
+      // 批量绑定新的配置
+      const tasks = taskList.value.map(t => ({
+        taskDefinitionKey: t.id,
+        formKey: t.formKey,
+        assigneeType: t.assigneeType,
+        assignee: t.assignee
+      }))
+
+      // 逐个保存任务配置
+      for (const task of tasks) {
+        await request.post('/system/workflow-form/bind', {
+          processDefinitionKey: processInfo?.value?.id,
+          ...task
+        })
       }
 
-      await request.post('/system/workflow/form/config', config)
       ElMessage.success('表单配置已保存')
       return true
     } catch (error) {
       console.error('保存表单配置失败:', error)
-      ElMessage.error('保存表单配置失败')
+      ElMessage.error('保存表单配置失败：' + (error.response?.data?.message || error.message))
       return false
     }
   }
@@ -117,14 +127,36 @@ export function useFlowForms(options = {}) {
     if (!processDefinitionId) return null
 
     try {
-      const { data } = await request.get(`/system/workflow/form/config/${processDefinitionId}`)
-      if (data) {
-        formConfig.startForm = data.startForm || ''
-        formConfig.tasks = data.tasks || []
+      // 使用 workflow-form/list API 获取配置
+      const { data } = await request.get('/system/workflow-form/list', {
+        params: { processDefinitionKey: processDefinitionId }
+      })
+
+      if (data && Array.isArray(data)) {
+        // 将列表转换为配置格式
+        const tasks = data.map(item => ({
+          taskDefinitionKey: item.taskDefinitionKey,
+          formKey: item.formKey,
+          assigneeType: item.assigneeType || 'user',
+          assignee: item.assignee || ''
+        }))
+
+        // 启动表单需要从第一个任务或者额外获取
+        formConfig.startForm = data[0]?.formKey || ''
+        formConfig.tasks = tasks
+
+        return {
+          startForm: formConfig.startForm,
+          tasks
+        }
       }
-      return data
+      return null
     } catch (error) {
       console.error('加载表单配置失败:', error)
+      // 404 错误返回 null，不显示错误提示
+      if (error.response?.status === 404) {
+        return null
+      }
       return null
     }
   }
@@ -132,52 +164,65 @@ export function useFlowForms(options = {}) {
   /**
    * 批量设置处理人类型
    */
-  const batchSetAssigneeType = (selectedRows, assigneeType) => {
-    if (!selectedRows || selectedRows.length === 0) {
+  const batchSetAssigneeType = (selectedRows) => {
+    const rows = selectedRows || []
+    if (rows.length === 0) {
       ElMessage.warning('请先选择任务')
       return false
     }
 
-    selectedRows.forEach(task => {
-      task.assigneeType = assigneeType
-    })
-
-    ElMessage.success(`已为 ${selectedRows.length} 个任务设置处理人类型`)
+    ElMessageBox.prompt('请输入处理人类型 (user/deptManager/position/variable)', '批量设置处理人类型', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      inputValue: 'user'
+    }).then(({ value }) => {
+      rows.forEach(task => {
+        task.assigneeType = value
+      })
+      ElMessage.success(`已为 ${rows.length} 个任务设置处理人类型`)
+    }).catch(() => {})
+    
     return true
   }
 
   /**
    * 批量设置处理人
    */
-  const batchSetAssignee = (selectedRows, assignee) => {
-    if (!selectedRows || selectedRows.length === 0) {
+  const batchSetAssignee = (selectedRows) => {
+    const rows = selectedRows || []
+    if (rows.length === 0) {
       ElMessage.warning('请先选择任务')
       return false
     }
 
-    selectedRows.forEach(task => {
-      task.assignee = assignee
-    })
-
-    ElMessage.success(`已为 ${selectedRows.length} 个任务设置处理人`)
+    ElMessageBox.prompt('请输入处理人 ID 或变量名', '批量设置处理人', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      inputValue: ''
+    }).then(({ value }) => {
+      rows.forEach(task => {
+        task.assignee = value
+      })
+      ElMessage.success(`已为 ${rows.length} 个任务设置处理人`)
+    }).catch(() => {})
+    
     return true
   }
 
   /**
    * 批量设置表单
    */
-  const batchSetForm = (selectedRows, formKey) => {
-    if (!selectedRows || selectedRows.length === 0) {
+  const batchSetForm = (selectedRows) => {
+    const rows = selectedRows || []
+    if (rows.length === 0) {
       ElMessage.warning('请先选择任务')
       return false
     }
 
-    selectedRows.forEach(task => {
-      task.formKey = formKey
-    })
-
-    ElMessage.success(`已为 ${selectedRows.length} 个任务设置表单`)
-    return true
+    // 需要主组件传入 formList 并处理选择逻辑
+    // 这个函数需要主组件自己实现
+    ElMessage.info('请在表格中直接为每个任务选择表单')
+    return false
   }
 
   /**
@@ -192,6 +237,7 @@ export function useFlowForms(options = {}) {
     })
   }
 
+  
   /**
    * 获取表单名称
    */
@@ -218,4 +264,67 @@ export function useFlowForms(options = {}) {
     clearSelection,
     getFormName
   }
+}
+/**
+ * 应用已保存的表单配置到任务列表
+ */
+const applyFormConfig = (savedConfig) => {
+  if (!savedConfig || !savedConfig.tasks) return
+  
+  savedConfig.tasks.forEach(savedTask => {
+    const task = taskList.value.find(t => t.id === savedTask.taskDefinitionKey)
+    if (task) {
+      task.formKey = savedTask.formKey || ''
+      task.assigneeType = savedTask.assigneeType || 'user'
+      task.assignee = savedTask.assignee || ''
+    }
+  })
+}
+
+/**
+ * 获取任务节点详细信息
+ */
+const getTaskDetails = () => {
+  return taskList.value.map(t => ({
+    ...t,
+    formName: getFormName(t.formKey)
+  }))
+}
+
+/**
+ * 验证表单配置完整性
+ */
+const validateFormConfig = () => {
+  const issues = []
+  
+  if (!formConfig.startForm) {
+    issues.push({ type: 'error', message: '未选择启动表单' })
+  }
+  
+  const unconfiguredTasks = taskList.value.filter(t => !t.formKey)
+  if (unconfiguredTasks.length > 0) {
+    issues.push({ 
+      type: 'warning', 
+      message: `${unconfiguredTasks.length} 个任务节点未关联表单` 
+    })
+  }
+  
+  const noAssigneeTasks = taskList.value.filter(t => !t.assignee && t.assigneeType === 'user')
+  if (noAssigneeTasks.length > 0) {
+    issues.push({ 
+      type: 'warning', 
+      message: `${noAssigneeTasks.length} 个任务节点未指定处理人` 
+    })
+  }
+  
+  return {
+    valid: issues.filter(i => i.type === 'error').length === 0,
+    issues
+  }
+}
+
+export { 
+  applyFormConfig,
+  getTaskDetails,
+  validateFormConfig
 }

@@ -1,5 +1,6 @@
 import { Client } from '@stomp/stompjs'
 import { ElMessage } from 'element-plus'
+import { logger } from './logger'
 
 let stompClient = null
 let reconnectAttempts = 0
@@ -8,13 +9,13 @@ const MAX_RECONNECT_ATTEMPTS = 5
 // 连接 WebSocket
 export function connectWebSocket(userId, onNotification) {
   if (stompClient && stompClient.active) {
-    console.log('WebSocket 已连接')
+    logger.log('WebSocket 已连接')
     return
   }
 
   const token = localStorage.getItem('access_token')
   if (!token) {
-    console.log('未登录，跳过 WebSocket 连接')
+    logger.log('未登录，跳过 WebSocket 连接')
     return
   }
 
@@ -28,7 +29,7 @@ export function connectWebSocket(userId, onNotification) {
       'Authorization': `Bearer ${token}`
     },
     debug: function (str) {
-      console.log('STOMP: ' + str)
+      logger.debug('STOMP: ' + str)
     },
     reconnectDelay: 5000,
     heartbeatIncoming: 4000,
@@ -36,30 +37,30 @@ export function connectWebSocket(userId, onNotification) {
   })
 
   stompClient.onConnect = function (frame) {
-    console.log('WebSocket 连接成功')
+    logger.log('WebSocket 连接成功')
     reconnectAttempts = 0
 
     // 订阅个人通知
     stompClient.subscribe(`/queue/notification.${userId}`, function (message) {
       const notification = JSON.parse(message.body)
-      console.log('收到通知:', notification)
+      logger.log('收到通知:', notification)
       handleNotification(notification, onNotification)
     })
 
     // 订阅全局通知（可选）
     stompClient.subscribe('/topic/notification', function (message) {
       const notification = JSON.parse(message.body)
-      console.log('收到全局通知:', notification)
+      logger.log('收到全局通知:', notification)
       handleNotification(notification, onNotification)
     })
   }
 
   stompClient.onError = function (error) {
-    console.error('WebSocket 错误:', error)
+    logger.error('WebSocket 错误:', error)
   }
 
   stompClient.onDisconnect = function () {
-    console.log('WebSocket 断开连接')
+    logger.log('WebSocket 断开连接')
     handleDisconnect(userId, onNotification)
   }
 
@@ -99,12 +100,12 @@ function handleNotification(notification, onNotification) {
 function handleDisconnect(userId, onNotification) {
   if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
     reconnectAttempts++
-    console.log(`尝试重连 WebSocket (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`)
+    logger.log(`尝试重连 WebSocket (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`)
     setTimeout(() => {
       connectWebSocket(userId, onNotification)
     }, 3000)
   } else {
-    console.log('WebSocket 重连失败次数过多，停止重连')
+    logger.log('WebSocket 重连失败次数过多，停止重连')
     ElMessage.error('WebSocket 连接断开，请刷新页面重试')
   }
 }
@@ -114,7 +115,7 @@ export function disconnectWebSocket() {
   if (stompClient) {
     stompClient.deactivate()
     stompClient = null
-    console.log('WebSocket 已断开')
+    logger.log('WebSocket 已断开')
   }
 }
 

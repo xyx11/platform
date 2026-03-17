@@ -601,20 +601,20 @@
           <p>4. 办理表单用于任务处理时填写数据</p>
         </el-alert>
         <el-form-item label="启动表单">
-          <el-select v-model="formConfig.startForm" placeholder="请选择启动表单" filterable style="width: 100%">
-            <el-option v-for="form in formList" :key="form.id" :label="form.formName" :value="form.formCode" />
+          <el-select v-model="flowFormConfig.startForm" placeholder="请选择启动表单" filterable style="width: 100%">
+            <el-option v-for="form in flowFormList" :key="form.id" :label="form.formName" :value="form.formCode" />
           </el-select>
           <div class="form-tip">用于流程发起时填写数据</div>
         </el-form-item>
         <el-divider>任务节点表单配置</el-divider>
-        <el-table ref="tableRef" :data="taskList" border>
+        <el-table ref="tableRef" :data="flowTaskList" border>
           <el-table-column type="selection" width="55" />
           <el-table-column prop="id" label="任务 ID" width="150" />
           <el-table-column prop="name" label="任务名称" width="200" />
           <el-table-column label="办理表单">
             <template #default="{ row }">
               <el-select v-model="row.formKey" placeholder="请选择表单" filterable style="width: 100%">
-                <el-option v-for="form in formList" :key="form.id" :label="form.formName" :value="form.formCode" />
+                <el-option v-for="form in flowFormList" :key="form.id" :label="form.formName" :value="form.formCode" />
               </el-select>
             </template>
           </el-table-column>
@@ -636,7 +636,7 @@
         </el-table>
         <div class="batch-actions">
           <el-button size="small" @click="batchSetAssigneeType">批量设置处理人类型</el-button>
-          <el-button size="small" @click="clearSelection">清空选择</el-button>
+          <el-button size="small" @click="clearTaskSelection">清空选择</el-button>
         </div>
       </el-form>
       <template #footer>
@@ -950,7 +950,7 @@
           <el-progress :percentage="completenessScore" :status="completenessScore >= 80 ? 'success' : 'warning'" :format="() => completenessScore + '分'" />
           <ul class="score-items">
             <li :class="{ error: !processInfo.name }">流程名称：{{ processInfo.name || '未设置' }}</li>
-            <li :class="{ error: !formConfig.startForm }">启动表单：{{ formConfig.startForm || '未关联' }}</li>
+            <li :class="{ error: !flowFormConfig.startForm }">启动表单：{{ flowFormConfig.startForm || '未关联' }}</li>
             <li>任务表单：{{ taskFormCount }} 个</li>
           </ul>
         </div>
@@ -1099,39 +1099,39 @@
 </template>
 
 <script setup name="WorkflowDesigner">
-import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 // ========== 导入流程设计器组合式函数模块 ==========
-import { useDashboard } from './composables/useDashboard'
-import { useCollaboration } from './composables/useCollaboration'
-import { useComments } from './composables/useComments'
-import { useVersion } from './composables/useVersion'
-import { useFlowStats } from './composables/useFlowStats'
-import { useExport } from './composables/useExport'
-import { useNodeSearch } from './composables/useNodeSearch'
-import { useContextMenu } from './composables/useContextMenu'
-import { useBatchOperation } from './composables/useBatchOperation'
-import { useNodeProperties } from './composables/useNodeProperties'
-import { useAutoLayout } from './composables/useAutoLayout'
-import { useSimulation } from './composables/useSimulation'
-import { useTemplate } from './composables/useTemplate'
-import { useFlowForms } from './composables/useFlowForms'
-import { useShortcuts } from './composables/useShortcuts'
+// 核心组合式函数
+import {
+  useBpmnModeler,
+  useFlowElements,
+  useFlowPersistence,
+  useDashboard,
+  useCollaboration,
+  useComments,
+  useVersion,
+  useFlowStats,
+  useExport,
+  useNodeSearch,
+  useContextMenu,
+  useBatchOperation,
+  useNodeProperties,
+  useAutoLayout,
+  useSimulation,
+  useTemplate,
+  useFlowForms,
+  useShortcuts
+} from './index.js'
+// 常量
+import { BPMN_ELEMENTS, ACTION_TO_ELEMENT, ACTION_MESSAGES, SKIP_SUCCESS_ACTIONS } from './constants/bpmnElements'
+import { DESIGNER_CONFIG, DEFAULT_SHORTCUTS, PROCESS_CATEGORIES } from './constants/designerConfig'
+// 工具函数
 import { validateBpmn } from './utils/bpmnValidator'
 import { getFlowStatistics } from './utils/bpmnStatistics'
 import { debounce, throttle } from './utils/commonUtils'
 
-import BpmnModeler from 'bpmn-js/lib/Modeler'
 import request from '@/utils/request'
 import router from '@/router'
-import {
-  BpmnPropertiesPanelModule,
-  BpmnPropertiesProviderModule,
-  CamundaPlatformPropertiesProviderModule
-} from 'bpmn-js-properties-panel'
-import '@bpmn-io/properties-panel/assets/properties-panel.css'
-import 'bpmn-js/dist/assets/diagram-js.css'
-import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css'
-import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   DocumentAdd,
@@ -1165,29 +1165,124 @@ import {
   Delete
 } from '@element-plus/icons-vue'
 
-// 1. BPMN 核心组件
+// ========== 1. 核心组合式函数调用 ==========
+// BPMN 画布和属性面板引用
 const bpmnCanvas = ref(null)
 const propertiesPanel = ref(null)
 const minimap = ref(null)
-const bpmnModeler = ref(null)
-const currentDiagram = ref(null)
-const processName = ref('')
-const activePanels = ref('events')
-const currentZoom = ref(100)
-const gridEnabled = ref(true)
-const showMinimap = ref(false)
-// 2. 保存/部署状态
-const deploying = ref(false)
-const deployed = ref(false)
-const saved = ref(false)
-const autoSaving = ref(false)
-const lastSavedTime = ref(null)
-const hasUnsavedChanges = ref(false)
-// 3. UI 面板显示控制
+
+// 流程信息
+const processInfo = ref({
+  name: '',
+  id: '',
+  version: '1.0',
+  description: '',
+  category: ''
+})
+
+// 使用 useBpmnModeler - BPMN 模型器管理
+const {
+  bpmnModeler,
+  currentZoom,
+  isInitialized,
+  importXML,
+  saveXML,
+  saveSVG,
+  undo: undoModel,
+  redo: redoModel,
+  zoom: zoomModel,
+  initModeler,
+  disposeModeler
+} = useBpmnModeler(bpmnCanvas, propertiesPanel)
+
+// 使用 useFlowElements - 流程元素操作
+const {
+  selectedNode,
+  handlePaletteClick,
+  deleteSelected,
+  undo,
+  redo,
+  zoomIn,
+  zoomOut,
+  zoomFit,
+  setZoom,
+  updateNodeProperties,
+  getCanvasCenter,
+  createBpmnElement
+} = useFlowElements(bpmnModeler)
+
+// 使用 useFlowPersistence - 流程保存与部署
+const {
+  saving,
+  deploying,
+  saved,
+  deployed,
+  autoSaving,
+  lastSavedTime,
+  hasUnsavedChanges,
+  deployedDefinitions,
+  doSave,
+  saveToServer,
+  deployToServer,
+  deployDiagram,
+  enableAutoSave,
+  disableAutoSave,
+  loadDeployedDefinitions
+} = useFlowPersistence({
+  bpmnModeler,
+  processInfo,
+  onSaved: (data) => {
+    console.log('保存成功', data)
+    processInfoVisible.value = false
+  },
+  onDeployed: (data) => {
+    console.log('部署成功', data)
+  }
+})
+
+// 使用 useFlowStats - 流程统计
+const {
+  flowStats,
+  nodeList,
+  quickStats,
+  calculateStats,
+  getNodeList
+} = useFlowStats(bpmnModeler)
+
+// 使用 useExport - 导出功能
+const {
+  exporting,
+  exportOptionsVisible,
+  exportOptions,
+  exportBpmn,
+  exportSvg,
+  exportPng,
+  exportPdf,
+  downloadFile
+} = useExport({ bpmnModeler, processInfo })
+
+// 使用 useFlowForms - 表单配置管理
+const {
+  formList: flowFormList,
+  taskList: flowTaskList,
+  formConfig: flowFormConfig,
+  loading: formLoading,
+  loadFormList,
+  loadUserTasks,
+  saveFormConfig: saveFlowFormConfig,
+  loadFormConfig,
+  clearSelection: clearTaskSelection,
+  getFormName
+} = useFlowForms({ bpmnModeler, processInfo })
+
+
+// ========== 2. UI 状态 ==========
+// UI 面板显示控制
 const processInfoVisible = ref(false)
 const formConfigVisible = ref(false)
 const helpVisible = ref(false)
 const launchVisible = ref(false)
+const activePanels = ref(['events']) // 默认展开事件面板
 const templateVisible = ref(false)
 const templateTab = ref('save')
 const savingTemplate = ref(false)
@@ -1197,22 +1292,13 @@ const nodeListVisible = ref(false)
 const contextMenuVisible = ref(false)
 const contextMenuX = ref(0)
 const contextMenuY = ref(0)
-// 4. 搜索功能
+
+// 搜索功能
 const searchNodeText = ref("")
 const searchResults = ref([])
 const currentSearchIndex = ref(-1)
 
-const flowStats = ref(null)
-const nodeList = ref([])
-
-// 快速统计（计算属性）
-const quickStats = computed(() => {
-  if (!flowStats.value) return { nodes: 0, flows: 0 }
-  return {
-    nodes: flowStats.value.totalNodes || 0,
-    flows: flowStats.value.totalFlows || 0
-  }
-})
+// 右键菜单目标
 const contextMenuTarget = ref(null)
 
 // 批量操作 - 使用 useBatchOperation 组合式函数
@@ -1317,7 +1403,7 @@ const {
   resetShortcuts,
   getShortcutAction,
   handleKeyDown
-} = useShortcuts(shortcutActions)
+} = useShortcuts({})
 
 // 快捷键列表（用于显示）
 const shortcutList = ref([
@@ -1380,14 +1466,7 @@ const {
   getCommentTypeIcon
 } = useComments({ bpmnModeler, processInfo })
 
-// 导出选项
-// 10. 导出选项
-const exportOptionsVisible = ref(false)
-const exportOptions = reactive({
-  format: 'bpmn',
-  include: ['formConfig'],
-  filename: ''
-})
+// 导出选项由 useExport 管理
 
 const commonTemplates = ref([
   { id: 1, name: '请假流程', description: '包含申请、审批、销假流程', nodeCount: 5, icon: 'Document', bpmn: '' },
@@ -1464,8 +1543,7 @@ const BPMN_FRAGMENTS = {
 
 
 
-// 11. 流程数据与状态
-const selectedNode = ref(null)
+// 流程启动状态
 const launching = ref(false)
 
 // 版本管理 - 使用 useVersion 组合式函数
@@ -1497,123 +1575,17 @@ const {
 const formList = ref([])
 const taskList = ref([])
 let autoSaveTimer = null
-const deployedDefinitions = ref([])
 const startFormComponents = ref([])
 
-// 12. 流程信息
-const processInfo = ref({
-  name: '',
-  id: '',
-  version: '1.0',
-  description: '',
-  category: ''
-})
+// 流程信息已在组合式函数中定义
 
 const formConfig = ref({
   startForm: '',
   tasks: []
 })
 
-// ===== 设计师配置常量 =====
-const DESIGNER_CONFIG = {
-  palette: {
-    width: 260,
-    minWidth: 200,
-    maxWidth: 320
-  },
-  propertiesPanel: {
-    width: 340,
-    minWidth: 280,
-    maxWidth: 400
-  },
-  grid: {
-    size: 20,
-    color: 'rgba(64, 158, 255, 0.03)'
-  },
-  zoom: {
-    min: 0.1,
-    max: 4,
-    step: 0.1
-  },
-  autoSave: {
-    enabled: true,
-    interval: 30000, // 30 秒
-    maxBackups: 5
-  }
-}
 
-// ===== BPMN 元素配置常量 =====
-const BPMN_ELEMENTS = {
-  // 开始事件
-  START_EVENT: { type: 'bpmn:StartEvent', name: '开始', offset: { x: 0, y: 0 } },
-  TIMER_START: { type: 'bpmn:StartEvent', name: '定时开始', offset: { x: 0, y: 0 }, eventDefinitions: [{ $type: 'bpmn:TimerEventDefinition' }] },
-  MESSAGE_START: { type: 'bpmn:StartEvent', name: '消息开始', offset: { x: 0, y: 0 }, eventDefinitions: [{ $type: 'bpmn:MessageEventDefinition' }] },
-  
-  // 结束事件
-  END_EVENT: { type: 'bpmn:EndEvent', name: '结束', offset: { x: 150, y: 0 } },
-  MESSAGE_END: { type: 'bpmn:EndEvent', name: '消息结束', offset: { x: 150, y: 0 }, eventDefinitions: [{ $type: 'bpmn:MessageEventDefinition' }] },
-  ERROR_END: { type: 'bpmn:EndEvent', name: '错误结束', offset: { x: 150, y: 0 }, eventDefinitions: [{ $type: 'bpmn:ErrorEventDefinition' }] },
-  TERMINATE_END: { type: 'bpmn:EndEvent', name: '终止结束', offset: { x: 150, y: 0 }, eventDefinitions: [{ $type: 'bpmn:TerminateEventDefinition' }] },
-  
-  // 任务
-  USER_TASK: { type: 'bpmn:UserTask', name: '用户任务', offset: { x: 150, y: 0 } },
-  SERVICE_TASK: { type: 'bpmn:ServiceTask', name: '服务任务', offset: { x: 150, y: 0 } },
-  SCRIPT_TASK: { type: 'bpmn:ScriptTask', name: '脚本任务', offset: { x: 150, y: 0 } },
-  SEND_TASK: { type: 'bpmn:SendTask', name: '发送任务', offset: { x: 150, y: 0 } },
-  RECEIVE_TASK: { type: 'bpmn:ReceiveTask', name: '接收任务', offset: { x: 150, y: 0 } },
-  MANUAL_TASK: { type: 'bpmn:ManualTask', name: '手动任务', offset: { x: 150, y: 0 } },
-  
-  // 网关
-  EXCLUSIVE_GATEWAY: { type: 'bpmn:ExclusiveGateway', name: '排他网关', offset: { x: 150, y: 0 } },
-  PARALLEL_GATEWAY: { type: 'bpmn:ParallelGateway', name: '并行网关', offset: { x: 150, y: 0 } },
-  INCLUSIVE_GATEWAY: { type: 'bpmn:InclusiveGateway', name: '包容网关', offset: { x: 150, y: 0 } },
-  EVENT_GATEWAY: { type: 'bpmn:EventBasedGateway', name: '事件网关', offset: { x: 150, y: 0 } },
-  
-  // 数据
-  DATA_OBJECT: { type: 'bpmn:DataObjectReference', name: '数据对象', offset: { x: 150, y: 100 } },
-  DATA_STORE: { type: 'bpmn:DataStoreReference', name: '数据存储', offset: { x: 150, y: 100 } },
-  
-  // 子流程
-  SUBPROCESS: { type: 'bpmn:SubProcess', name: '子流程', offset: { x: 0, y: 0 } },
-  TRANSACTION: { type: 'bpmn:Transaction', name: '事务', offset: { x: 0, y: 0 } },
-  EVENT_SUBPROCESS: { type: 'bpmn:SubProcess', name: '事件子流程', offset: { x: 0, y: 0 }, triggeredByEvent: true }
-}
 
-// 操作提示信息
-const ACTION_MESSAGES = {
-  'create-sequence-flow': '请按住 Ctrl 键，从起始元素拖拽到目标元素创建连接',
-  'create-message-flow': '请在两个元素间创建消息流',
-  'create-association': '请按 Ctrl 键点击元素创建关联'
-}
-
-// 不需要成功提示的操作
-const SKIP_SUCCESS_ACTIONS = ['create-sequence-flow', 'create-message-flow', 'create-association']
-
-// 操作到元素配置的映射
-const ACTION_TO_ELEMENT = {
-  'create-start-event': 'START_EVENT',
-  'create-timer-start': 'TIMER_START',
-  'create-message-start': 'MESSAGE_START',
-  'create-end-event': 'END_EVENT',
-  'create-message-end': 'MESSAGE_END',
-  'create-error-end': 'ERROR_END',
-  'create-terminate-end': 'TERMINATE_END',
-  'create-user-task': 'USER_TASK',
-  'create-service-task': 'SERVICE_TASK',
-  'create-script-task': 'SCRIPT_TASK',
-  'create-send-task': 'SEND_TASK',
-  'create-receive-task': 'RECEIVE_TASK',
-  'create-manual-task': 'MANUAL_TASK',
-  'create-exclusive-gateway': 'EXCLUSIVE_GATEWAY',
-  'create-parallel-gateway': 'PARALLEL_GATEWAY',
-  'create-inclusive-gateway': 'INCLUSIVE_GATEWAY',
-  'create-event-gateway': 'EVENT_GATEWAY',
-  'create-data-object': 'DATA_OBJECT',
-  'create-data-store': 'DATA_STORE',
-  'create-subprocess': 'SUBPROCESS',
-  'create-transaction': 'TRANSACTION',
-  'create-event-subprocess': 'EVENT_SUBPROCESS'
-}
 
 const launchData = ref({
   processDefinitionId: '',
@@ -1623,92 +1595,23 @@ const launchData = ref({
 
 
 
-// 默认的 BPMN 2.0 XML - 包含 SAP NetWeaver BPM 风格的初始流程
-const defaultBpmnXml = `<?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-                  xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
-                  id="Definitions_1"
-                  targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn:process id="Process_1" name="新流程" isExecutable="true" camunda:versionTag="1.0.0">
-  </bpmn:process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-    </bpmndi:BPMNPlane>
-  </bpmndi:BPMNDiagram>
-</bpmn:definitions>`
+
 
 // 快捷键配置（支持自定义）
-const defaultShortcuts = {
-  'Ctrl-N': { action: 'newDiagram', desc: '新建流程' },
-  'Ctrl-O': { action: 'openFile', desc: '打开文件' },
-  'Ctrl-S': { action: 'saveDiagram', desc: '保存流程' },
-  'Ctrl-Shift-S': { action: 'saveAsDiagram', desc: '另存为' },
-  'Ctrl-D': { action: 'duplicateProcess', desc: '复制流程' },
-  'Ctrl-Z': { action: 'undo', desc: '撤销' },
-  'Ctrl-Y': { action: 'redo', desc: '重做' },
-  'Delete': { action: 'deleteSelected', desc: '删除' },
-  'Backspace': { action: 'deleteSelected', desc: '删除' },
-  '+': { action: 'zoomIn', desc: '放大' },
-  '-': { action: 'zoomOut', desc: '缩小' },
-  '0': { action: 'zoomFit', desc: '适应画布' },
-  'Ctrl-P': { action: 'previewDiagram', desc: '预览' },
-  'Ctrl-B': { action: 'deployDiagram', desc: '部署' },
-  'Ctrl-H': { action: 'showHelp', desc: '帮助' },
-  'Ctrl-F': { action: 'searchNode', desc: '搜索节点' },
-  'F5': { action: 'refreshDiagram', desc: '刷新' }
-}
-
 // 快捷键动作映射
-const shortcutActions = {
-  newDiagram: () => newDiagram(),
-  openFile: () => openFile(),
-  saveDiagram: () => saveDiagram(),
-  saveAsDiagram: () => saveAsDiagram(),
-  duplicateProcess: () => duplicateProcess(),
-  undo: () => undo(),
-  redo: () => redo(),
-  deleteSelected: () => deleteSelected(),
-  zoomIn: () => zoomIn(),
-  zoomOut: () => zoomOut(),
-  zoomFit: () => zoomFit(),
-  previewDiagram: () => previewDiagram(),
-  deployDiagram: () => deployDiagram(),
-  showHelp: () => showHelp(),
-  searchNode: () => { searchNodeText.value = ''; searchNode() },
-  refreshDiagram: () => loadLastDiagram()
-}
 
-// 键盘事件处理（优化版）
-const handleKeyDownLegacy = (e) => {
-  // 忽略输入框内的快捷键
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-    return
-  }
-  
-  const key = []
-  if (e.ctrlKey || e.metaKey) key.push('Ctrl')
-  if (e.shiftKey) key.push('Shift')
-  if (e.altKey) key.push('Alt')
-  key.push(e.key)
-  
-  const shortcut = key.join('-')
-  const config = defaultShortcuts[shortcut]
-  
-  if (config && shortcutActions[config.action]) {
-    e.preventDefault()
-    shortcutActions[config.action]()
-  }
-}
+
+
+
 
 onMounted(() => {
-  initBpmnModeler()
-  initPalette()
-  document.addEventListener('keydown', handleKeyDown)
-  initContextMenu()
+  // 初始化 BPMN Modeler
+  initModeler()
+  // 初始化画布事件
+  initCanvasEvents()
+  // 加载上一个图表
   loadLastDiagram()
+  loadDeployedDefinitions()
   
   // 监听页面关闭，提醒未保存的更改
   window.addEventListener('beforeunload', (e) => {
@@ -1720,180 +1623,62 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if (bpmnModeler.value) {
-    bpmnModeler.value.destroy()
-  }
-  document.removeEventListener('keydown', handleKeyDown)
+  // 清理 Modeler 资源
+  disposeModeler()
 })
-
-// 初始化 BPMN 建模器
-const initBpmnModeler = () => {
-  bpmnModeler.value = new BpmnModeler({
-    container: bpmnCanvas.value,
-    propertiesPanel: {
-      parent: propertiesPanel.value
-    },
-    additionalModules: [
-      BpmnPropertiesPanelModule,
-      BpmnPropertiesProviderModule,
-      CamundaPlatformPropertiesProviderModule
-    ],
-    palette: {
-      visible: false // 使用自定义工具栏
-    }
-  })
-
-  // 加载默认图表
-  bpmnModeler.value.importXML(defaultBpmnXml, (err) => {
-    if (err) {
-      console.error('流程设计器初始化失败:', err)
-      return
-    }
-  })
-
-  // 监听视图变化更新缩放比例
-  const canvas = bpmnModeler.value.get('canvas')
-  const eventBus = bpmnModeler.value.get('eventBus')
-  eventBus.on('canvas.viewbox.changed', ({ viewbox }) => {
-    currentZoom.value = Math.round(100 / viewbox.scale)
-  })
-
-  // 监听选择变化
-  eventBus.on('selection.changed', (event) => {
-    const newSelection = event.newSelection
-    if (newSelection && newSelection.length > 0) {
-      const selected = newSelection[0]
-      const businessObject = selected.businessObject
-      if (businessObject && businessObject.$type !== 'bpmn:Process' && businessObject.$type !== 'bpmn:SequenceFlow') {
-        selectedNode.value = {
-          id: businessObject.id,
-          name: businessObject.name || '',
-          type: businessObject.$type,
-          assignee: businessObject.assignee || '',
-          assigneeType: 'user',
-          serviceClass: businessObject.implementation || '',
-          method: ''
-        }
-      } else {
-        selectedNode.value = null
-      }
-    } else {
-      selectedNode.value = null
-    }
-  })
-
-  // 监听命令执行以更新撤销/重做状态
-  eventBus.on('commandStack.changed', () => {
-    // 可以在这里更新撤销/重做按钮状态
-  })
+// ========== 3. 函数包装器（用于模板绑定） ==========
+// 流程操作
+const newDiagram = () => {
+  ElMessageBox.confirm('确定要新建流程吗？未保存的更改将丢失。', '提示', { type: 'warning' })
+    .then(() => importXML(DEFAULT_BPMN_XML))
+    .catch(() => {})
 }
 
-// 初始化工具栏
-const initPalette = () => {
-  const paletteItems = document.querySelectorAll('.palette-item')
-  paletteItems.forEach(item => {
-    item.addEventListener('click', () => {
-      handlePaletteClick(item.dataset.action)
+const openFile = () => {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = '.bpmn,.xml'
+  input.onchange = (e) => {
+    const file = e.target.files[0]
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      importXML(event.target.result)
+      ElMessage.success('打开文件成功')
+    }
+    reader.readAsText(file)
+  }
+  input.click()
+}
+
+const saveDiagram = async () => {
+  if (!processInfo.value.name) {
+    processInfoVisible.value = true
+    return
+  }
+  await doSave()
+}
+
+const saveAsDiagram = async () => {
+  processInfoVisible.value = true
+}
+
+const restoreFromBackup = () => {
+  const backup = localStorage.getItem('workflow_auto_backup')
+  if (!backup) {
+    ElMessage.warning('没有找到备份数据')
+    return
+  }
+  ElMessageBox.confirm('确定要恢复备份吗？当前未保存的更改将丢失。', '提示', { type: 'warning' })
+    .then(() => {
+      const data = JSON.parse(backup)
+      importXML(data.xml)
+      ElMessage.success('恢复备份成功')
     })
-  })
+    .catch(() => {})
 }
 
-// 处理节点键盘导航
-const handleNodeNavigation = (key) => {
-  const modeling = bpmnModeler.value.get('modeling')
-  const elementRegistry = bpmnModeler.value.get('elementRegistry')
-  if (!selectedNode.value || !selectedNode.value.id) return
-  const element = elementRegistry.get(selectedNode.value.id)
-
-  if (!element) return
-
-  // 使用 event 全局变量或者通过参数传递
-  const step = 10 // 默认移动距离
-
-  let newX = element.x
-  let newY = element.y
-
-  switch (key) {
-    case 'ArrowUp':
-      newY -= step
-      break
-    case 'ArrowDown':
-      newY += step
-      break
-    case 'ArrowLeft':
-      newX -= step
-      break
-    case 'ArrowRight':
-      newX += step
-      break
-  }
-
-  modeling.moveElements([element], { x: newX - element.x, y: newY - element.y }, element.parent)
-}
-
-// 辅助函数：创建 BPMN 元素
-const createBpmnElement = (type, name, position = { x: 0, y: 0 }, extraProps = {}) => {
-  const modeling = bpmnModeler.value.get('modeling')
-  const canvas = bpmnModeler.value.get('canvas')
-  const rootElement = canvas.getRootElement()
-  
-  const shape = { type, name, ...extraProps }
-  modeling.createShape(shape, position, rootElement)
-}
-
-// 辅助函数：获取画布中心位置
-const getCanvasCenter = () => {
-  const canvas = bpmnModeler.value.get('canvas')
-  const viewbox = canvas.viewbox()
-  return { x: viewbox.x + viewbox.width / 2, y: viewbox.y + viewbox.height / 2 }
-}
-// 处理工具栏点击（优化版）
-const handlePaletteClick = (action) => {
-  // 处理连接类操作
-  if (ACTION_MESSAGES[action]) {
-    ElMessage.info(ACTION_MESSAGES[action])
-    return
-  }
-  
-  // 获取元素配置
-  const elementKey = ACTION_TO_ELEMENT[action]
-  if (!elementKey || !BPMN_ELEMENTS[elementKey]) {
-    ElMessage.warning('未知操作：' + action)
-    return
-  }
-  
-  const config = BPMN_ELEMENTS[elementKey]
-  const center = getCanvasCenter()
-  const position = {
-    x: center.x + config.offset.x,
-    y: center.y + config.offset.y
-  }
-  
-  try {
-    // 构建元素对象
-    const element = {
-      type: config.type,
-      name: config.name,
-      ...config
-    }
-    // 删除不需要的位置属性
-    delete element.offset
-    
-    createBpmnElement(config.type, config.name, position, element)
-    
-    // 显示成功提示（连接类操作除外）
-    if (!SKIP_SUCCESS_ACTIONS.includes(action)) {
-      ElMessage.success('已添加元素')
-    }
-  } catch (err) {
-    console.error('创建元素失败:', err)
-    ElMessage.error('创建元素失败：' + err.message)
-  }
-}
-const openBatchDialog = () => {
-  batchVisible.value = true
-}
-
+// 导出功能包装器
+// 画布控制
 // 自动布局对话框
 const openAutoLayoutLegacy = () => {
   autoLayoutVisible.value = true
@@ -1905,454 +1690,82 @@ const openTemplateLibLegacy = () => {
 }
 
 // 适应画布
-const resetViewPort = () => {
-  if (bpmnModeler.value) {
-    const canvas = bpmnModeler.value.get('canvas')
-    canvas.zoom('fit-viewport')
-  }
-}
-
 // 新建流程
-const newDiagram = () => {
-  ElMessageBox.confirm('确定要新建流程吗？未保存的更改将丢失。', '提示', {
-    type: 'warning'
-  }).then(() => {
-    bpmnModeler.value.importXML(defaultBpmnXml, (err) => {
-      if (err) {
-        ElMessage.error('新建流程失败：' + err.message)
-        return
-      }
-      currentDiagram.value = null
-      processName.value = ''
-      processInfo.value = { name: '', id: '', version: '1.0', description: '', category: '' }
-      ElMessage.success('新建流程成功')
-    })
-  }).catch(() => {})
-}
-
 // 打开文件
-const openFile = () => {
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.accept = '.bpmn,.xml'
-  input.onchange = (e) => {
-    const file = e.target.files[0]
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      const xml = event.target.result
-      try {
-        bpmnModeler.value.importXML(xml)
-        ElMessage.success('打开文件成功')
-        // 解析流程名称
-        const parser = new DOMParser()
-        const xmlDoc = parser.parseFromString(xml, 'text/xml')
-        const process = xmlDoc.getElementsByTagName('bpmn:process')[0]
-        if (process) {
-          processName.value = process.getAttribute('name') || ''
-          processInfo.value.id = process.getAttribute('id') || ''
-          processInfo.value.name = processName.value
-        }
-      } catch (err) {
-        ElMessage.error('打开文件失败：' + err.message)
-      }
-    }
-    reader.readAsText(file)
-  }
-  input.click()
-}
-
-// 保存流程
-const saveDiagram = async () => {
-  if (!processName.value) {
-    processInfoVisible.value = true
-    return
-  }
-  await doSave()
-}
-
 // 另存为
-const saveAsDiagram = async () => {
-  processInfoVisible.value = true
-}
-
-const doSave = async () => {
-  let { xml } = await bpmnModeler.value.saveXML({ format: true })
-  
-  // 自动修复 isExecutable 属性
-  if (xml.includes('isExecutable="false"')) {
-    xml = xml.replace(/isExecutable="false"/g, 'isExecutable="true"')
-    console.log('已自动修复 isExecutable 属性')
-  }
-  
-  // 验证 BPMN（移除 isExecutable 检查，因为已自动修复）
-  const validationError = validateBpmnNoCheck(xml)
-  if (validationError) {
-    ElMessage.error(validationError)
-    return
-  }
-  
-  try {
-    const result = await saveToServer({
-      name: processInfo.value.name || processName.value,
-      id: processInfo.value.id,
-      version: processInfo.value.version,
-      description: processInfo.value.description,
-      category: processInfo.value.category,
-      bpmnXml: xml
-    })
-    if (result) {
-      ElMessage.success('保存成功')
-      processInfoVisible.value = false
-    }
-  } catch (err) {
-    ElMessage.error('保存失败：' + err.message)
-  }
-}
-
-const saveProcessInfo = () => {
-  if (!processInfo.value.name) {
-    ElMessage.warning('请输入流程名称')
-    return
-  }
-  processName.value = processInfo.value.name
-  doSave()
-}
-
-
-// 验证 BPMN（不检查 isExecutable，因为已自动修复）
-const validateBpmnNoCheck = (xml) => {
-  try {
-    const parser = new DOMParser()
-    const xmlDoc = parser.parseFromString(xml, 'text/xml')
-    
-    // 检查开始事件数量
-    const startEvents = xmlDoc.getElementsByTagName('bpmn:startEvent')
-    if (startEvents.length === 0) {
-      return '流程必须包含至少一个开始事件'
-    }
-    if (startEvents.length > 1) {
-      return '流程只能包含一个开始事件，当前有 ' + startEvents.length + ' 个'
-    }
-    
-    // 检查结束事件
-    const endEvents = xmlDoc.getElementsByTagName('bpmn:endEvent')
-    if (endEvents.length === 0) {
-      return '流程必须包含至少一个结束事件'
-    }
-    
-    return null
-  } catch (e) {
-    console.error('BPMN 验证失败:', e)
-    return 'BPMN 验证失败：' + e.message
-  }
-}
-
-// 自动保存
-const enableAutoSave = () => {
-  // 监听画布变化
-  if (bpmnModeler.value) {
-    const canvas = bpmnModeler.value.get('canvas')
-    const eventBus = bpmnModeler.value.get('eventBus')
-    eventBus.on('commandStack.changed', () => {
-      hasUnsavedChanges.value = true
-      // 防抖自动保存（3 秒后）
-      if (autoSaveTimer) clearTimeout(autoSaveTimer)
-      autoSaveTimer = setTimeout(() => {
-        if (hasUnsavedChanges.value && saved.value) {
-          autoSave()
-        }
-      }, 3000)
-    })
-  }
-}
-
-// 自动备份到本地存储
-const autoBackup = async () => {
-  try {
-    const { xml } = await bpmnModeler.value.saveXML({ format: true })
-    const backup = {
-      xml,
-      name: processInfo.value.name,
-      timestamp: new Date().toISOString()
-    }
-    localStorage.setItem('workflow_auto_backup', JSON.stringify(backup))
-    console.log('自动备份完成')
-  } catch (err) {
-    console.error('自动备份失败:', err)
-  }
-}
-
-const autoSave = async () => {
-  if (!processInfo.value.id || !hasUnsavedChanges.value) return
-  
-  autoSaving.value = true
-  try {
-    const { xml } = await bpmnModeler.value.saveXML({ format: true })
-    await saveToServer({
-      name: processInfo.value.name,
-      id: processInfo.value.id,
-      version: processInfo.value.version,
-      description: processInfo.value.description,
-      category: processInfo.value.category,
-      bpmnXml: xml,
-      autoSave: true
-    })
-    lastSavedTime.value = new Date()
-    hasUnsavedChanges.value = false
-    
-    // 同时进行本地备份
-    await autoBackup()
-    
-    ElMessage.success('自动保存成功')
-  } catch (err) {
-    console.error('自动保存失败:', err)
-    ElMessage.error('自动保存失败，但已保存到本地备份')
-    await autoBackup()
-  } finally {
-    autoSaving.value = false
-  }
-}
-
 // 恢复本地备份
-const restoreFromBackup = () => {
-  const backupStr = localStorage.getItem('workflow_auto_backup')
-  if (!backupStr) {
-    ElMessage.info('没有找到本地备份')
-    return
-  }
-  
-  try {
-    const backup = JSON.parse(backupStr)
-    ElMessageBox.confirm(
-      `发现本地备份，时间：${backup.timestamp}，是否恢复？`,
-      '恢复备份',
-      { confirmButtonText: '恢复', cancelButtonText: '取消', type: 'warning' }
-    ).then(async () => {
-      await bpmnModeler.value.importXML(backup.xml)
-      processInfo.value.name = backup.name
-      ElMessage.success('备份已恢复')
-    }).catch(() => {})
-  } catch (err) {
-    console.error('恢复备份失败:', err)
-    ElMessage.error('恢复备份失败')
-  }
-}
-
 // 保存到服务器
-const saveToServer = async (params) => {
-  console.log('保存流程到服务器:', params)
-  try {
-    const { data } = await request.post('/system/workflow/save', {
-      name: params.name,
-      bpmnXml: params.bpmnXml,
-      category: params.category || 'default',
-      description: params.description
-    })
-    if (data && data.code === 200) {
-      saved.value = true
-      processInfo.value.id = params.id || Date.now().toString()
-      processInfo.value.version = params.version || '1.0'
-      return true
-    } else if (data && data.code === 401) {
-      ElMessage.error('登录已过期，请重新登录')
-      return false
-    }
-    saved.value = true
-    return true
-  } catch (error) {
-    console.error('保存失败:', error)
-    ElMessage.error('保存失败：' + (error.response?.data?.message || error.message))
-    if (error.response?.status === 401) {
-      setTimeout(() => {
-        router.push('/login')
-      }, 1500)
-    }
-    return false
-  }
-}
-
 // 部署到服务器
-const deployToServer = async (params) => {
-  console.log('部署流程到服务器:', params)
-  try {
-    const { data } = await request.post('/system/workflow/deploy', {
-      name: params.name,
-      bpmnXml: params.bpmnXml
-    })
-    if (data && data.code === 200) {
-      deployed.value = true
-      loadDeployedDefinitions()
-      return true
-    } else if (data && data.code === 401) {
-      ElMessage.error('登录已过期，请重新登录')
-      return false
-    }
-    deployed.value = true
-    loadDeployedDefinitions()
-    return true
-  } catch (error) {
-    console.error('部署失败:', error)
-    ElMessage.error('部署失败：' + (error.response?.data?.message || error.message))
-    if (error.response?.status === 401) {
-      setTimeout(() => {
-        router.push('/login')
-      }, 1500)
-    }
-    return false
-  }
-}
-
 // 打开表单配置
-const openFormConfig = async () => {
-  // 加载表单列表
-  await loadFormList()
-  // 解析 BPMN 获取用户任务列表
-  await loadUserTasks()
-  formConfigVisible.value = true
-}
-
 // 加载表单列表
-const loadFormList = async () => {
-  try {
-    const { data } = await request.get('/system/form-definition/list', {
-      params: { pageNum: 1, pageSize: 100, status: 1 }
-    })
-    formList.value = data?.records || []
-  } catch (error) {
-    console.error('加载表单列表失败:', error)
-  }
-}
-
 // 加载用户任务列表
-const loadUserTasks = async () => {
-  try {
-    const { xml } = await bpmnModeler.value.saveXML()
-    const parser = new DOMParser()
-    const xmlDoc = parser.parseFromString(xml, 'text/xml')
-    
-    const userTasks = xmlDoc.getElementsByTagName('bpmn:userTask')
-    const tasks = []
-    for (let i = 0; i < userTasks.length; i++) {
-      const task = userTasks[i]
-      tasks.push({
-        id: task.getAttribute('id'),
-        name: task.getAttribute('name') || '未命名任务',
-        formKey: '',
-        assigneeType: 'user',
-        assignee: '',
-        selected: false
-      })
-    }
-    taskList.value = tasks
-  } catch (error) {
-    console.error('加载用户任务失败:', error)
-    ElMessage.error('加载任务节点失败')
-  }
-}
-
 // 批量设置处理人类型
 const tableRef = ref(null)
 
-const batchSetAssigneeType = () => {
-  if (!tableRef.value) {
-    ElMessage.warning('表格未加载')
-    return
-  }
-  const selectedRows = tableRef.value.getSelectionRows()
-  if (selectedRows.length === 0) {
-    ElMessage.warning('请先选择任务')
-    return
-  }
-  
-  ElMessageBox.prompt('请选择处理人类型', '批量设置处理人类型', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    inputType: 'select',
-    inputOptions: [
-      { label: '指定用户', value: 'user' },
-      { label: '部门负责人', value: 'deptManager' },
-      { label: '岗位', value: 'position' },
-      { label: '变量', value: 'variable' }
-    ]
-  }).then(({ value }) => {
-    selectedRows.forEach(task => {
-      task.assigneeType = value
-    })
-    ElMessage.success(`已为 ${selectedRows.length} 个任务设置处理人类型`)
-  }).catch(() => {})
-}
-
 // 清空选择
-const clearSelection = () => {
-  taskList.value.forEach(t => t.selected = false)
-}
-
 // 保存表单配置
-const saveFormConfig = async () => {
-  if (!formConfig.value.startForm) {
-    ElMessage.warning('请选择启动表单')
-    return
-  }
-  
-  try {
-    const config = {
-      processDefinitionId: processInfo.value.id,
-      startForm: formConfig.value.startForm,
-      tasks: taskList.value.map(t => ({
-        taskDefinitionKey: t.id,
-        formKey: t.formKey,
-        assigneeType: t.assigneeType,
-        assignee: t.assignee
-      }))
+// 加载已部署的流程定义
+// 加载启动表单
+// 发起流程
+// 复制流程
+// 显示版本历史
+// 加载版本
+// 删除版本
+// 保存为模板
+// 保存模板
+// 导入模板
+// 处理模板文件
+const handleTemplateFileLegacy = (file) => {
+  const reader = new FileReader()
+  reader.onload = async (e) => {
+    try {
+      const templateData = JSON.parse(e.target.result)
+      if (templateData.bpmnXml) {
+        await bpmnModeler.value.importXML(templateData.bpmnXml)
+        processInfo.value.name = templateData.name?.replace(' 模板', '') || '新流程'
+        hasUnsavedChanges.value = true
+        ElMessage.success('模板导入成功')
+        templateVisible.value = false
+      } else {
+        ElMessage.error('无效的模板文件')
+      }
+    } catch (error) {
+      console.error('导入模板失败:', error)
+      ElMessage.error('导入模板失败：文件格式不正确')
     }
-    
-    // 保存表单配置到服务器
-    await request.post('/system/workflow/form/config', config)
-    
-    ElMessage.success('表单配置已保存')
-    formConfigVisible.value = false
-  } catch (error) {
-    console.error('保存表单配置失败:', error)
-    ElMessage.error('保存表单配置失败')
   }
+  reader.readAsText(file.raw)
 }
 
-// 加载已部署的流程定义
-const loadDeployedDefinitions = async () => {
-  try {
-    const { data } = await request.get('/system/workflow/definition/list', {
-      params: { pageNum: 1, pageSize: 100 }
-    })
-    deployedDefinitions.value = data?.records || []
-  } catch (error) {
-    console.error('加载流程定义失败:', error)
-  }
+// 打开流程发起对话框
+const launchProcess = () => {
+  launchVisible.value = true
 }
 
 // 加载启动表单
 const loadStartForm = async () => {
-  const def = deployedDefinitions.value.find(d => d.id === launchData.value.processDefinitionId)
-  if (!def) return
-  
-  startFormComponents.value = []
+  if (!launchData.value.processDefinitionId) return
   
   try {
-    // 获取流程关联的启动表单
-    const { data } = await request.get(`/system/workflow/form/start/${def.key}`)
-    if (data?.formContent) {
-      try {
-        startFormComponents.value = JSON.parse(data.formContent)
-      } catch (e) {
-        console.error('表单 Schema 解析失败:', e)
-        // 如果解析失败，尝试直接使用数组
-        if (Array.isArray(data.formContent)) {
-          startFormComponents.value = data.formContent
+    // 使用路径变量而不是查询参数
+    const { data } = await request.get(`/system/workflow/form/start/${launchData.value.processDefinitionId}`)
+    
+    // 解析后端返回的表单 schema
+    // 后端返回格式：{ formKey, formName, formContent }
+    // formContent 是 JSON 字符串格式的表单 schema
+    if (data && data.code === 200 && data.data) {
+      const formContent = data.data.formContent
+      if (formContent) {
+        try {
+          // 解析表单 schema
+          const schema = typeof formContent === 'string' ? JSON.parse(formContent) : formContent
+          // 从 schema 中提取 components
+          startFormComponents.value = schema?.fields || schema?.components || schema?.items || []
+        } catch (e) {
+          console.error('解析表单 schema 失败:', e)
+          startFormComponents.value = []
         }
-      }
-    } else if (data?.formSchema) {
-      try {
-        startFormComponents.value = JSON.parse(data.formSchema)
-      } catch (e) {
+      } else {
         startFormComponents.value = []
       }
     } else {
@@ -2367,210 +1780,35 @@ const loadStartForm = async () => {
 // 发起流程
 const submitLaunch = async () => {
   if (!launchData.value.processDefinitionId) {
-    ElMessage.warning('请选择流程定义')
-    return
-  }
-  
-  // 验证业务 Key
-  if (!launchData.value.businessKey) {
-    ElMessage.warning('请输入业务 Key（如：请假申请 -20240101-001）')
+    ElMessage.warning('请选择流程')
     return
   }
   
   launching.value = true
   try {
-    const result = await request.post('/system/workflow/instance/start', {
+    const { data } = await request.post('/system/workflow/launch', {
       processDefinitionId: launchData.value.processDefinitionId,
       businessKey: launchData.value.businessKey,
-      variables: launchData.value.formValues
+      formValues: launchData.value.formValues
     })
     
-    ElMessage.success({
-      message: '流程发起成功！实例 ID: ' + (result.data?.processInstanceId || '未知'),
-      duration: 3000
-    })
-    launchVisible.value = false
-    // 重置数据
-    launchData.value = { processDefinitionId: '', businessKey: '', formValues: {} }
-    startFormComponents.value = []
-    deployedDefinitions.value = []
+    if (data && data.code === 200) {
+      ElMessage.success('流程发起成功')
+      launchVisible.value = false
+      launchData.value = {
+        processDefinitionId: '',
+        businessKey: '',
+        formValues: {}
+      }
+    } else {
+      ElMessage.error(data?.message || '流程发起失败')
+    }
   } catch (error) {
-    console.error('发起流程失败:', error)
-    ElMessage.error('发起流程失败：' + (error.response?.data?.message || error.message || '未知错误'))
+    console.error('流程发起失败:', error)
+    ElMessage.error('流程发起失败：' + (error.response?.data?.message || error.message))
   } finally {
     launching.value = false
   }
-}
-
-// 复制流程
-const duplicateProcess = async () => {
-  if (!processInfo.value.id) {
-    ElMessage.warning('请先保存流程')
-    return
-  }
-  
-  try {
-    // 获取当前流程定义
-    const { data } = await request.get(`/system/workflow/definition/${processInfo.value.id}`)
-    if (!data) {
-      ElMessage.error('流程不存在')
-      return
-    }
-    
-    // 复制流程信息
-    processInfo.value = {
-      name: data.name + ' (副本)',
-      id: '',
-      version: '1.0',
-      description: data.description,
-      category: data.category
-    }
-    processName.value = processInfo.value.name
-    
-    // 获取 BPMN 并重新保存
-    const { xml } = await bpmnModeler.value.saveXML({ format: true })
-    const result = await saveToServer({
-      name: processInfo.value.name,
-      bpmnXml: xml,
-      category: processInfo.value.category,
-      description: processInfo.value.description
-    })
-    
-    if (result) {
-      ElMessage.success('流程复制成功')
-      hasUnsavedChanges.value = false
-    }
-  } catch (error) {
-    console.error('复制流程失败:', error)
-    ElMessage.error('复制流程失败')
-  }
-}
-
-// 显示版本历史
-const showVersionHistoryLegacy = async () => {
-  if (!processInfo.value.id) {
-    ElMessage.warning('流程未保存')
-    return
-  }
-  
-  try {
-    const { data } = await request.get('/system/workflow/definition/list', {
-      params: { name: processInfo.value.name }
-    })
-    versionList.value = data?.records || []
-    versionVisible.value = true
-  } catch (error) {
-    console.error('加载版本历史失败:', error)
-    ElMessage.error('加载版本历史失败')
-  }
-}
-
-// 加载版本
-const loadVersionLegacy = async (version) => {
-  try {
-    const { data } = await request.get(`/system/workflow/definition/bpmn/${version.id}`)
-    if (data?.bpmnXml) {
-      await bpmnModeler.value.importXML(data.bpmnXml)
-      processInfo.value.version = version.version
-      ElMessage.success('版本加载成功')
-      versionVisible.value = false
-    }
-  } catch (error) {
-    console.error('加载版本失败:', error)
-    ElMessage.error('加载版本失败')
-  }
-}
-
-// 删除版本
-const deleteVersionLegacy = async (version) => {
-  try {
-    await ElMessageBox.confirm('确定要删除此版本吗？', '提示', {
-      type: 'warning'
-    })
-    await request.delete(`/system/workflow/definition/${version.deploymentId}`)
-    ElMessage.success('删除成功')
-    showVersionHistoryLegacy()
-  } catch (error) {
-    if (error !== 'cancel') {
-      console.error('删除失败:', error)
-      ElMessage.error('删除失败')
-    }
-  }
-}
-
-// 保存为模板
-const exportAsTemplateLegacy = () => {
-  if (!saved.value) {
-    ElMessage.warning('请先保存流程')
-    return
-  }
-  templateForm.name = processName.value + ' 模板'
-  templateForm.description = ''
-  templateTab.value = 'save'
-  templateVisible.value = true
-}
-
-// 保存模板
-const saveAsTemplateLegacy = async () => {
-  if (!templateForm.name) {
-    ElMessage.warning('请输入模板名称')
-    return
-  }
-  savingTemplate.value = true
-  try {
-    const { xml } = await bpmnModeler.value.saveXML({ format: true })
-    const templateData = {
-      name: templateForm.name,
-      category: templateForm.category,
-      description: templateForm.description,
-      bpmnXml: xml,
-      createTime: new Date().toISOString()
-    }
-    // 下载模板文件
-    const blob = new Blob([JSON.stringify(templateData, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = templateForm.name + '.template.json'
-    a.click()
-    URL.revokeObjectURL(url)
-    ElMessage.success('模板保存成功')
-    templateVisible.value = false
-  } catch (error) {
-    console.error('保存模板失败:', error)
-    ElMessage.error('保存模板失败')
-  } finally {
-    savingTemplate.value = false
-  }
-}
-
-// 导入模板
-const importTemplateShow = () => {
-  templateTab.value = 'import'
-  templateVisible.value = true
-}
-
-// 处理模板文件
-const handleTemplateFileLegacy = (file) => {
-  const reader = new FileReader()
-  reader.onload = async (e) => {
-    try {
-      const templateData = JSON.parse(e.target.result)
-      if (templateData.bpmnXml) {
-        await bpmnModeler.value.importXML(templateData.bpmnXml)
-        processName.value = templateData.name?.replace(' 模板', '') || '新流程'
-        hasUnsavedChanges.value = true
-        ElMessage.success('模板导入成功')
-        templateVisible.value = false
-      } else {
-        ElMessage.error('无效的模板文件')
-      }
-    } catch (error) {
-      console.error('导入模板失败:', error)
-      ElMessage.error('导入模板失败：文件格式不正确')
-    }
-  }
-  reader.readAsText(file.raw)
 }
 
 // 获取节点类型名称
@@ -2588,33 +1826,6 @@ const getNodeTypeName = (type) => {
 }
 
 // 打开节点属性对话框
-const openNodeProps = () => {
-  if (!selectedNode.value) {
-    ElMessage.warning('请先选择一个节点')
-    return
-  }
-  
-  // 从 BPMN 元素中读取最新属性
-  const elementRegistry = bpmnModeler.value.get('elementRegistry')
-  const element = elementRegistry.get(selectedNode.value.id)
-  
-  if (element) {
-    const bo = element.businessObject
-    
-    // 读取现有属性
-    selectedNode.value = {
-      ...selectedNode.value,
-      documentation: bo.documentation?.[0]?.body || '',
-      timerExpression: bo.eventDefinitions?.[0]?.timeDuration?.body || '',
-      conditionExpression: bo.conditionExpression?.body || '',
-      resultVariable: bo['camunda:resultVariable'] || '',
-      assigneeType: bo['camunda:assigneeType'] || 'user'
-    }
-  }
-  
-  nodePropsVisible.value = true
-}
-
 // 保存节点属性
 // 复制到剪贴板
 const copyToClipboard = async (text) => {
@@ -2635,132 +1846,11 @@ const copyToClipboard = async (text) => {
   }
 }
 
-const saveNodeProps = () => {
-  if (!selectedNode.value) return
-  const elementRegistry = bpmnModeler.value.get('elementRegistry')
-  const modeling = bpmnModeler.value.get('modeling')
-  const element = elementRegistry.get(selectedNode.value.id)
-  
-  if (element) {
-    const bo = element.businessObject
-    const updates = {
-      name: selectedNode.value.name || ''
-    }
-    
-    // 用户任务属性
-    if (selectedNode.value.type === 'bpmn:UserTask' || selectedNode.value.type === 'userTask') {
-      updates.assignee = selectedNode.value.assignee || ''
-      if (selectedNode.value.assigneeType) {
-        updates['camunda:assigneeType'] = selectedNode.value.assigneeType
-      }
-    }
-    
-    // 服务任务属性
-    if (selectedNode.value.type === 'bpmn:ServiceTask' || selectedNode.value.type === 'serviceTask') {
-      updates['camunda:class'] = selectedNode.value.serviceClass || ''
-      if (selectedNode.value.method) {
-        updates['camunda:method'] = selectedNode.value.method
-      }
-      if (selectedNode.value.resultVariable) {
-        updates['camunda:resultVariable'] = selectedNode.value.resultVariable
-      }
-    }
-    
-    // 文档注释
-    if (selectedNode.value.documentation) {
-      updates.documentation = [{ body: selectedNode.value.documentation }]
-    }
-    
-    // 定时器表达式
-    if (selectedNode.value.timerExpression) {
-      updates.eventDefinitions = [{
-        $type: 'bpmn:TimerEventDefinition',
-        timeDuration: { body: selectedNode.value.timerExpression }
-      }]
-    }
-    
-    // 条件表达式
-    if (selectedNode.value.conditionExpression !== undefined) {
-      updates.conditionExpression = { body: selectedNode.value.conditionExpression }
-    }
-    
-    modeling.updateProperties(element, updates)
-    hasUnsavedChanges.value = true
-    ElMessage.success('节点属性已更新')
-  }
-  nodePropsVisible.value = false
-}
-
 // 显示帮助
-const showHelp = () => {
-  helpVisible.value = true
-}
-
 // 打开流程发起对话框
-const launchProcess = () => {
-  if (!deployed.value) {
-    ElMessage.warning('请先部署流程')
-    return
-  }
-  launchData.value = { processDefinitionId: '', businessKey: '', formValues: {} }
-  startFormComponents.value = []
-  launchVisible.value = true
-  loadDeployedDefinitions()
-}
-
 // 下载 BPMN
-const downloadBpmn = async () => {
-  const { xml } = await bpmnModeler.value.saveXML({ format: true })
-  downloadFile(xml, (processName.value || 'workflow') + '.bpmn', 'application/xml')
-  ElMessage.success('下载 BPMN 成功')
-}
-
 // 下载 SVG
-const downloadDiagram = async () => {
-  try {
-    const { svg } = await bpmnModeler.value.saveSVG()
-    downloadFile(svg, (processName.value || 'workflow') + '.svg', 'image/svg+xml')
-    ElMessage.success('下载 SVG 成功')
-  } catch (err) {
-    ElMessage.error('下载失败：' + err.message)
-  }
-}
-
 // 下载 PNG
-const downloadPng = async () => {
-  try {
-    const { svg } = await bpmnModeler.value.saveSVG()
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    const img = new Image()
-
-    img.onload = () => {
-      canvas.width = img.width
-      canvas.height = img.height
-      ctx.drawImage(img, 0, 0)
-      const a = document.createElement('a')
-      a.download = (processName.value || 'workflow') + '.png'
-      a.href = canvas.toDataURL('image/png')
-      a.click()
-      ElMessage.success('下载 PNG 成功')
-    }
-
-    img.src = 'data:image/svg+xml;base64,' + btoa(svg)
-  } catch (err) {
-    ElMessage.error('下载失败：' + err.message)
-  }
-}
-
-const downloadFile = (content, filename, type) => {
-  const blob = new Blob([content], { type })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  a.click()
-  URL.revokeObjectURL(url)
-}
-
 // 撤销
 // 命令栈操作
 const executeCommand = (action) => {
@@ -2773,31 +1863,7 @@ const executeCommand = (action) => {
   actions[action]?.()
 }
 
-const undo = () => {
-  executeCommand('undo')
-  ElMessage.success('已撤销')
-}
-
-const redo = () => {
-  executeCommand('redo')
-  ElMessage.success('已重做')
-}
-
 // 删除选中元素
-const deleteSelected = () => {
-  const modeling = bpmnModeler.value.get('modeling')
-  const selection = bpmnModeler.value.get('selection')
-  const selected = selection.get()
-  
-  if (selected.length > 0) {
-    modeling.removeElements(selected)
-    ElMessage.success('已删除')
-  } else {
-    ElMessage.warning('请先选择要删除的元素')
-  }
-}
-
-
 // 缩放控制
 const zoomCanvas = (action) => {
   const canvas = bpmnModeler.value.get('canvas')
@@ -2809,34 +1875,8 @@ const zoomCanvas = (action) => {
   canvas.zoom(actions[action] || 'step-in')
 }
 
-const zoomIn = () => zoomCanvas('in')
-const zoomOut = () => zoomCanvas('out')
-const zoomFit = () => zoomCanvas('fit')
-
-// 设置缩放比例
-const setZoom = (percent) => {
-  const canvas = bpmnModeler.value.get('canvas')
-  const viewbox = canvas.viewbox()
-  const scale = percent / 100
-  canvas.zoom(viewbox.scale / scale)
-  currentZoom.value = percent
-}
-
 // 切换网格
-const toggleGrid = () => {
-  const canvas = bpmnModeler.value.get('canvas')
-  if (gridEnabled.value) {
-    canvas.addMarker('grid-enabled')
-  } else {
-    canvas.removeMarker('grid-enabled')
-  }
-}
-
 // 切换迷你地图
-const toggleMinimap = () => {
-  showMinimap.value = !showMinimap.value
-}
-
 // 切换属性面板
 const toggleProperties = () => {
   const panel = document.querySelector('.properties-panel-container')
@@ -2972,167 +2012,7 @@ const validateDiagramDetailed = async () => {
 }
 
 
-const validateDiagram = () => {
-  const elementRegistry = bpmnModeler.value.get('elementRegistry')
-  const elements = elementRegistry.getAll()
-  const root = elementRegistry.getRoot()
-
-  // 获取流程定义
-  const processElements = elements.filter(e => e.type === 'bpmn:Process' && e !== root)
-  const issues = []
-
-  if (processElements.length === 0) {
-    ElMessage.warning('流程中没有任何元素')
-    return false
-  }
-
-  // 检查是否有开始事件
-  const startEvents = elements.filter(e => e.type === 'bpmn:StartEvent')
-  if (startEvents.length === 0) {
-    issues.push('缺少开始事件')
-  } else if (startEvents.length > 1) {
-    issues.push('存在多个开始事件')
-  }
-
-  // 检查是否有结束事件
-  const endEvents = elements.filter(e => e.type === 'bpmn:EndEvent')
-  if (endEvents.length === 0) {
-    issues.push('缺少结束事件')
-  }
-
-  // 检查用户任务
-  const userTasks = elements.filter(e => e.type === 'bpmn:UserTask')
-  userTasks.forEach(task => {
-    if (!task.businessObject.name) {
-      issues.push(`用户任务 "${task.id}" 缺少名称`)
-    }
-  })
-
-  // 检查是否有孤立元素（没有连接的元素）
-  const flows = elements.filter(e => e.type === 'bpmn:SequenceFlow')
-  const flowSourceIds = new Set(flows.map(f => f.source?.id))
-  const flowTargetIds = new Set(flows.map(f => f.target?.id))
-  
-  const activityTypes = ['bpmn:StartEvent', 'bpmn:EndEvent', 'bpmn:UserTask', 'bpmn:ServiceTask', 'bpmn:ExclusiveGateway', 'bpmn:ParallelGateway']
-  const activities = elements.filter(e => activityTypes.includes(e.type))
-  
-  activities.forEach(activity => {
-    if (!flowSourceIds.has(activity.id) && !flowTargetIds.has(activity.id) && activity.type !== 'bpmn:StartEvent') {
-      issues.push(`孤立元素："${activity.businessObject.name || activity.id}" 没有连接`)
-    }
-  })
-
-  // 检查网关是否有正确的分支/汇聚
-  const gateways = elements.filter(e => e.type === 'bpmn:ExclusiveGateway' || e.type === 'bpmn:ParallelGateway')
-  gateways.forEach(gw => {
-    const incoming = flows.filter(f => f.target?.id === gw.id).length
-    const outgoing = flows.filter(f => f.source?.id === gw.id).length
-    if (incoming === 0 && outgoing === 0) {
-      issues.push(`孤立网关："${gw.businessObject.name || gw.id}"`)
-    }
-  })
-
-  if (issues.length > 0) {
-    ElMessageBox.alert(
-      '<ul style="max-height: 300px; overflow-y: auto; text-align: left;">' + 
-      issues.map(i => `<li style="color: #f56c6c; margin: 5px 0;">${i}</li>`).join('') + 
-      '</ul>',
-      '流程验证失败',
-      {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '关闭',
-        showClose: true,
-        type: 'warning'
-      }
-    )
-    return false
-  }
-
-  ElMessage.success('流程验证通过！共检查：' + activities.length + ' 个节点，' + flows.length + ' 个连线')
-  return true
-}
 // 增强验证 - 添加流程健康度检查
-const enhancedValidate = () => {
-  const elementRegistry = bpmnModeler.value.get('elementRegistry')
-  const elements = elementRegistry.getAll()
-  const flows = elements.filter(e => e.type === 'bpmn:SequenceFlow')
-  
-  const warnings = []
-  const suggestions = []
-  
-  // 检查循环
-  const graph = buildGraph(elements, flows)
-  const hasCycle = detectCycle(graph)
-  if (hasCycle) {
-    warnings.push('流程中存在循环路径')
-  }
-  
-  // 检查过长的流程链
-  const longestPath = findLongestPath(graph)
-  if (longestPath > 15) {
-    suggestions.push(`流程链过长 (${longestPath} 个节点)，建议拆分为子流程`)
-  }
-  
-  // 检查网关平衡
-  const gateways = elements.filter(e => e.type === 'bpmn:ExclusiveGateway' || e.type === 'bpmn:ParallelGateway')
-  gateways.forEach(gw => {
-    const incoming = flows.filter(f => f.target?.id === gw.id).length
-    const outgoing = flows.filter(f => f.source?.id === gw.id).length
-    if (outgoing < 2) {
-      warnings.push(`网关 "${gw.businessObject.name || gw.id}" 只有一个输出分支`)
-    }
-    if (incoming === 0 && outgoing > 0) {
-      suggestions.push(`网关 "${gw.businessObject.name || gw.id}" 没有输入，可能是起点`)
-    }
-  })
-  
-  // 检查未分配处理人的用户任务
-  const userTasks = elements.filter(e => e.type === 'bpmn:UserTask')
-  userTasks.forEach(task => {
-    const bo = task.businessObject
-    if (!bo.assignee && !bo.candidateUsers?.length && !bo.candidateGroups?.length) {
-      warnings.push(`用户任务 "${bo.name || task.id}" 未分配处理人`)
-    }
-  })
-  
-  // 检查 service task 实现
-  const serviceTasks = elements.filter(e => e.type === 'bpmn:ServiceTask')
-  serviceTasks.forEach(task => {
-    const bo = task.businessObject
-    const impl = bo.implementation || bo.class || bo.delegateExpression
-    if (!impl) {
-      warnings.push(`服务任务 "${bo.name || task.id}" 未配置实现类`)
-    }
-  })
-  
-  // 显示报告
-  if (warnings.length > 0 || suggestions.length > 0) {
-    let html = '<div style="text-align: left; max-height: 400px; overflow-y: auto;">'
-    if (warnings.length > 0) {
-      html += '<h4 style="color: #E6A23C;">⚠️ 警告 (' + warnings.length + ')</h4><ul style="color: #E6A23C;">'
-      html += warnings.map(w => '<li>' + w + '</li>').join('')
-      html += '</ul>'
-    }
-    if (suggestions.length > 0) {
-      html += '<h4 style="color: #909399;">💡 建议 (' + suggestions.length + ')</h4><ul style="color: #909399;">'
-      html += suggestions.map(s => '<li>' + s + '</li>').join('')
-      html += '</ul>'
-    }
-    html += '</div>'
-    
-    ElMessageBox.alert(html, '流程健康度检查', {
-      dangerouslyUseHTMLString: true,
-      confirmButtonText: '关闭',
-      showClose: true,
-      type: 'warning'
-    })
-    return false
-  }
-  
-  ElMessage.success('流程健康度检查通过！')
-  return true
-}
-
 // 构建图
 const buildGraph = (elements, flows) => {
   const graph = new Map()
@@ -3196,23 +2076,6 @@ const findLongestPath = (graph) => {
 
 
 // 预览流程
-const previewDiagram = async () => {
-  try {
-    const { svg } = await bpmnModeler.value.saveSVG()
-    await ElMessageBox.alert(
-      `<div style="max-height: 600px; overflow: auto; text-align: center;">${svg}</div>`,
-      '流程预览',
-      {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '关闭',
-        showClose: true
-      }
-    )
-  } catch (err) {
-    ElMessage.error('预览失败：' + err.message)
-  }
-}
-
 // 部署流程
 // 部署选项
 const deployOptions = {
@@ -3220,31 +2083,7 @@ const deployOptions = {
   notifyUsers: false
 }
 
-const deployDiagram = async () => {
-  if (!processName.value) {
-    ElMessage.warning('请先保存流程')
-    return
-  }
 
-  // 部署前先验证
-  const validation = await validateDiagramDetailed()
-  if (!validation.valid) {
-    ElMessageBox.confirm(
-      `流程存在 ${validation.warnings.length} 个警告，是否继续部署？\n\n` + 
-      validation.warnings.join('\n'),
-      '验证警告',
-      { confirmButtonText: '继续部署', cancelButtonText: '取消', type: 'warning' }
-    ).then(() => performDeployment()).catch(() => {})
-    return
-  }
-
-  // 二次确认
-  ElMessageBox.confirm(
-    `确定要部署流程「${processInfo.value.name}」吗？\n这将覆盖服务器上同名的流程定义。`,
-    '部署确认',
-    { confirmButtonText: '确定部署', cancelButtonText: '取消', type: 'info' }
-  ).then(performDeployment).catch(() => {})
-}
 
 // 执行部署
 const performDeployment = async () => {
@@ -3258,7 +2097,7 @@ const performDeployment = async () => {
     await new Promise(resolve => setTimeout(resolve, 1500))
     
     const result = await deployToServer({
-      name: processInfo.value.name || processName.value,
+      name: processInfo.value.name || processInfo.value.name,
       bpmnXml: xml,
       version: processInfo.value.version,
       overwrite: deployOptions.overwrite
@@ -3304,7 +2143,292 @@ const saveDeploymentHistory = (record) => {
   localStorage.setItem('deploymentHistory', JSON.stringify(history))
 }
 
-// 加载上次编辑的图表（本地存储）
+
+// 初始化画布事件
+const initCanvasEvents = () => {
+  if (!bpmnModeler.value) return
+  
+  const eventBus = bpmnModeler.value.get('eventBus')
+  
+  // 监听元素变化，标记未保存
+  eventBus.on('commandStack.changed', () => {
+    hasUnsavedChanges.value = true
+  })
+  
+  // 监听元素点击
+  eventBus.on('element.click', (event) => {
+    const element = event.element
+    if (element && element.id !== '__implicitroot') {
+      // 可以在这里添加元素点击处理逻辑
+    }
+  })
+}
+
+// 网格开关状态
+const gridEnabled = ref(true)
+
+// 切换网格
+const toggleGrid = () => {
+  gridEnabled.value = !gridEnabled.value
+  if (!bpmnModeler.value) return
+  const canvas = bpmnModeler.value.get('canvas')
+  // 简单切换网格样式
+  const gridContainer = document.querySelector('.bjs-grid')
+  if (gridContainer) {
+    gridContainer.style.display = gridEnabled.value ? 'block' : 'none'
+  }
+}
+
+// 显示统计面板
+const showStats = () => { statsVisible.value = true }
+
+// 显示节点列表
+const showNodeList = () => { nodeListVisible.value = true }
+
+// 显示小地图
+const showMinimap = ref(false)
+
+// 切换小地图
+const toggleMinimap = () => {
+  showMinimap.value = !showMinimap.value
+}
+
+// 导出选项
+const exportWithOptions = ref(false)
+
+// 下载 BPMN
+const downloadBpmn = async () => {
+  const { xml } = await bpmnModeler.value.saveXML({ format: true })
+  const blob = new Blob([xml], { type: 'application/bpmn20-xml' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = (processInfo.value.name || '流程') + '.bpmn'
+  a.click()
+  URL.revokeObjectURL(url)
+  ElMessage.success('下载 BPMN 成功')
+}
+
+// 下载图表
+const downloadDiagram = downloadBpmn
+
+// 下载 PNG
+const downloadPng = async () => {
+  const { svg } = await bpmnModeler.value.saveSVG()
+  const blob = new Blob([svg], { type: 'image/svg+xml' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = (processInfo.value.name || '流程') + '.svg'
+  a.click()
+  URL.revokeObjectURL(url)
+  ElMessage.success('下载 SVG 成功')
+}
+
+// 打开节点属性
+const openNodeProps = () => {
+  nodePropsVisible.value = true
+}
+
+// 验证流程
+const validateDiagram = async () => {
+  const { xml } = await bpmnModeler.value.saveXML()
+  const parser = new DOMParser()
+  const xmlDoc = parser.parseFromString(xml, 'text/xml')
+  
+  const startEvents = xmlDoc.getElementsByTagName('bpmn:startEvent')
+  const endEvents = xmlDoc.getElementsByTagName('bpmn:endEvent')
+  
+  if (startEvents.length === 0) {
+    ElMessage.error('流程缺少开始事件')
+    return false
+  }
+  if (endEvents.length === 0) {
+    ElMessage.error('流程缺少结束事件')
+    return false
+  }
+  ElMessage.success('流程验证通过')
+  return true
+}
+
+// 增强验证
+const enhancedValidate = async () => {
+  const valid = await validateDiagram()
+  if (!valid) return false
+  // 可以添加更多验证逻辑
+  return true
+}
+
+// 预览流程
+const previewDiagram = () => {
+  ElMessage.info('预览功能开发中')
+}
+
+// 复制流程
+const duplicateProcess = async () => {
+  const { xml } = await bpmnModeler.value.saveXML()
+  processInfo.value.name = processInfo.value.name + '_副本'
+  processInfo.value.id = ''
+  await bpmnModeler.value.importXML(xml)
+  ElMessage.success('流程复制成功')
+}
+
+// 显示版本历史
+const showVersionHistory = () => {
+  versionVisible.value = true
+}
+
+// 打开批量操作对话框
+const openBatchDialog = () => {
+  batchVisible.value = true
+}
+
+// 打开推荐
+const openRecommendation = () => {
+  ElMessage.info('智能推荐功能开发中')
+}
+
+// 打开图例
+const openLegend = () => {
+  legendVisible.value = true
+}
+
+// 打开协作
+const openCollab = () => {
+  collabVisible.value = true
+}
+
+// 显示帮助
+const showHelp = () => {
+  helpVisible.value = true
+}
+
+// 重置视图
+const resetViewPort = () => {
+  if (!bpmnModeler.value) return
+  const canvas = bpmnModeler.value.get('canvas')
+  canvas.zoom('fit-viewport')
+  ElMessage.success('视图已重置')
+}
+
+
+// 打开表单配置
+const openFormConfig = async () => {
+  if (!saved.value) {
+    ElMessage.warning('请先保存流程')
+    return
+  }
+  
+  // 加载表单列表
+  await loadFormList()
+  
+  // 加载用户任务
+  await loadUserTasks()
+  
+  // 加载已保存的配置
+  if (processInfo.value.id) {
+    const savedConfig = await loadFormConfig(processInfo.value.id)
+    if (savedConfig) {
+      // 应用启动表单配置
+      if (savedConfig.startForm) {
+        flowFormConfig.startForm = savedConfig.startForm
+      }
+      // 应用配置到任务列表
+      if (savedConfig.tasks) {
+        savedConfig.tasks.forEach(savedTask => {
+          const task = flowTaskList.value.find(t => t.id === savedTask.taskDefinitionKey)
+          if (task) {
+            task.formKey = savedTask.formKey || ''
+            task.assigneeType = savedTask.assigneeType || 'user'
+            task.assignee = savedTask.assignee || ''
+          }
+        })
+      }
+    }
+  }
+  
+  formConfigVisible.value = true
+}
+
+// 保存表单配置
+const saveFormConfig = async () => {
+  const result = await saveFlowFormConfig()
+  if (result) {
+    formConfigVisible.value = false
+  }
+}
+
+// 批量设置处理人类型
+const batchSetAssigneeType = () => {
+  const selectedRows = tableRef.value?.getSelectionRows?.() || []
+  if (selectedRows.length === 0) {
+    ElMessage.warning('请先选择任务')
+    return
+  }
+  
+  ElMessageBox.prompt('请输入处理人类型', '批量设置', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    inputType: 'select',
+    inputOptions: [
+      { label: '指定用户', value: 'user' },
+      { label: '部门负责人', value: 'deptManager' },
+      { label: '岗位', value: 'position' },
+      { label: '变量', value: 'variable' }
+    ]
+  }).then(({ value }) => {
+    if (value) {
+      selectedRows.forEach(task => {
+        task.assigneeType = value
+      })
+      ElMessage.success(`已为 ${selectedRows.length} 个任务设置处理人类型`)
+    }
+  }).catch(() => {})
+}
+
+// 批量设置处理人
+const batchSetAssignee = () => {
+  const selectedRows = tableRef.value?.getSelectionRows?.() || []
+  if (selectedRows.length === 0) {
+    ElMessage.warning('请先选择任务')
+    return
+  }
+  
+  ElMessageBox.prompt('请输入处理人', '批量设置', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消'
+  }).then(({ value }) => {
+    if (value) {
+      selectedRows.forEach(task => {
+        task.assignee = value
+      })
+      ElMessage.success(`已为 ${selectedRows.length} 个任务设置处理人`)
+    }
+  }).catch(() => {})
+}
+
+// 批量设置表单
+const batchSetForm = () => {
+  const selectedRows = tableRef.value?.getSelectionRows?.() || []
+  if (selectedRows.length === 0) {
+    ElMessage.warning('请先选择任务')
+    return
+  }
+  
+  ElMessageBox.prompt('请输入表单 Key', '批量设置', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消'
+  }).then(({ value }) => {
+    if (value) {
+      selectedRows.forEach(task => {
+        task.formKey = value
+      })
+      ElMessage.success(`已为 ${selectedRows.length} 个任务设置表单`)
+    }
+  }).catch(() => {})
+}
+
+
 const loadLastDiagram = () => {
   const saved = localStorage.getItem('lastDiagram')
   if (saved) {
@@ -3347,66 +2471,6 @@ const formatTime = (date) => {
 }
 
 // 流程统计
-const showStats = () => {
-  const elementRegistry = bpmnModeler.value.get('elementRegistry')
-  const elements = elementRegistry.getAll()
-  
-  const stats = {
-    totalNodes: 0,
-    totalFlows: 0,
-    startEvents: 0,
-    endEvents: 0,
-    userTasks: 0,
-    serviceTasks: 0,
-    scriptTasks: 0,
-    sendReceiveTasks: 0,
-    exclusiveGateways: 0,
-    parallelGateways: 0,
-    inclusiveGateways: 0,
-    subProcesses: 0
-  }
-  
-  elements.forEach(el => {
-    const type = el.type
-    if (type === 'bpmn:SequenceFlow') {
-      stats.totalFlows++
-    } else if (type === 'bpmn:StartEvent') {
-      stats.startEvents++
-      stats.totalNodes++
-    } else if (type === 'bpmn:EndEvent') {
-      stats.endEvents++
-      stats.totalNodes++
-    } else if (type === 'bpmn:UserTask') {
-      stats.userTasks++
-      stats.totalNodes++
-    } else if (type === 'bpmn:ServiceTask') {
-      stats.serviceTasks++
-      stats.totalNodes++
-    } else if (type === 'bpmn:ScriptTask') {
-      stats.scriptTasks++
-      stats.totalNodes++
-    } else if (type === 'bpmn:SendTask' || type === 'bpmn:ReceiveTask') {
-      stats.sendReceiveTasks++
-      stats.totalNodes++
-    } else if (type === 'bpmn:ExclusiveGateway') {
-      stats.exclusiveGateways++
-      stats.totalNodes++
-    } else if (type === 'bpmn:ParallelGateway') {
-      stats.parallelGateways++
-      stats.totalNodes++
-    } else if (type === 'bpmn:InclusiveGateway') {
-      stats.inclusiveGateways++
-      stats.totalNodes++
-    } else if (type === 'bpmn:SubProcess') {
-      stats.subProcesses++
-      stats.totalNodes++
-    }
-  })
-  
-  flowStats.value = stats
-  statsVisible.value = true
-}
-
 // 复杂度计算
 const complexityScore = computed(() => {
   if (!flowStats.value) return 0
@@ -3435,22 +2499,6 @@ const complexityStatus = computed(() => {
 })
 
 // 显示节点列表
-const showNodeList = () => {
-  const elementRegistry = bpmnModeler.value.get('elementRegistry')
-  const elements = elementRegistry.getAll()
-  
-  nodeList.value = elements
-    .filter(el => el.type && el.type.startsWith('bpmn:') && el.type !== 'bpmn:SequenceFlow')
-    .map(el => ({
-      id: el.id,
-      name: el.businessObject?.name || '',
-      type: el.type,
-      assignee: el.businessObject?.assignee || ''
-    }))
-  
-  nodeListVisible.value = true
-}
-
 // 获取节点标签类型
 const getNodeTagType = (type) => {
   const typeMap = {
@@ -3487,34 +2535,6 @@ const editNodeProps = (row) => {
 }
 
 // 搜索节点（增强版 - 支持查找所有匹配项和导航）
-const searchNode = () => {
-  if (!searchNodeText.value) {
-    ElMessage.warning('请输入搜索内容')
-    return
-  }
-  
-  const elementRegistry = bpmnModeler.value.get('elementRegistry')
-  const elements = elementRegistry.getAll()
-  const searchText = searchNodeText.value.toLowerCase()
-  
-  // 查找所有匹配的节点
-  searchResults.value = elements.filter(el => {
-    const id = el.id?.toLowerCase() || ''
-    const name = el.businessObject?.name?.toLowerCase() || ''
-    const desc = el.businessObject?.documentation?.[0]?.body?.toLowerCase() || ''
-    return id.includes(searchText) || name.includes(searchText) || desc.includes(searchText)
-  })
-  
-  if (searchResults.value.length === 0) {
-    ElMessage.info('未找到匹配的节点')
-    currentSearchIndex.value = -1
-    return
-  }
-  
-  currentSearchIndex.value = 0
-  navigateToSearchResult(0)
-}
-
 // 查找下一个
 const searchNext = () => {
   if (searchResults.value.length === 0) {
@@ -3595,28 +2615,6 @@ const highlightElementLegacy = (element, color = '#409EFF', duration = 2000) => 
 }
 
 // 右键菜单
-const initContextMenu = () => {
-  const canvas = bpmnCanvas.value
-  if (!canvas) return
-  
-  canvas.addEventListener('contextmenu', (e) => {
-    e.preventDefault()
-    const elementRegistry = bpmnModeler.value.get('elementRegistry')
-    const element = elementRegistry.getElement(e.target)
-    
-    if (element) {
-      contextMenuTarget.value = element
-      contextMenuX.value = e.clientX
-      contextMenuY.value = e.clientY
-      contextMenuVisible.value = true
-    }
-  })
-  
-  document.addEventListener('click', () => {
-    contextMenuVisible.value = false
-  })
-}
-
 // 右键菜单操作
 const contextMenuAction = (action) => {
   contextMenuVisible.value = false
@@ -4015,12 +3013,6 @@ const clearSimulationHighlight = () => {
 }
 
 // ========== 智能推荐功能 ==========
-const openRecommendation = () => {
-  recommendationForm.processType = ''
-  recommendations.value = []
-  recommendationVisible.value = true
-}
-
 const onProcessTypeChange = () => {
   const type = recommendationForm.processType
   recommendations.value = getRecommendationsByType(type)
@@ -4155,13 +3147,6 @@ const getCommentTypeNameLegacy = (type) => {
 }
 
 // ========== 导出功能 ==========
-const exportWithOptions = () => {
-  exportOptions.format = 'bpmn'
-  exportOptions.include = ['formConfig']
-  exportOptions.filename = processInfo.value.name || 'workflow'
-  exportOptionsVisible.value = true
-}
-
 const confirmExport = async () => {
   try {
     let content = ''
@@ -4263,15 +3248,7 @@ const saveShortcutsLegacy = () => {
 }
 
 // ========== 图例功能 ==========
-const openLegend = () => {
-  legendVisible.value = true
-}
-
 // ========== 协作编辑功能 ==========
-const openCollab = () => {
-  collabVisible.value = true
-}
-
 const toggleLock = () => {
   isLocked.value = !isLocked.value
   ElMessage.success(isLocked.value ? '流程已锁定' : '流程已解锁')

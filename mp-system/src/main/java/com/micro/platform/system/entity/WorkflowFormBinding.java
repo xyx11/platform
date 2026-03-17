@@ -63,6 +63,18 @@ public class WorkflowFormBinding implements Serializable {
     private Integer formType;
 
     /**
+     * 状态：0-停用，1-启用
+     */
+    @TableField("status")
+    private Integer status;
+
+    /**
+     * 备注
+     */
+    @TableField("remark")
+    private String remark;
+
+    /**
      * 表单 Schema（JSON）
      */
     @TableField("form_schema")
@@ -167,6 +179,22 @@ public class WorkflowFormBinding implements Serializable {
 
     public void setFormType(Integer formType) {
         this.formType = formType;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getFormSchema() {

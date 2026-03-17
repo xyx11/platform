@@ -3,6 +3,7 @@
  */
 
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { logger } from '@/utils/logger'
 
 /**
  * 默认快捷键配置
@@ -49,7 +50,7 @@ export function useShortcuts(actionHandlers = {}) {
       try {
         customShortcuts.value = JSON.parse(saved)
       } catch (e) {
-        console.error('加载快捷键配置失败:', e)
+        logger.error('加载快捷键配置失败:', e)
       }
     }
   }

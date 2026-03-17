@@ -22,7 +22,7 @@ export function parseTime(time, pattern = '{y}-{m}-{d} {h}:{i}:{s}') {
 
   if (isNaN(date.getTime())) return ''
 
-  const format = pattern || '{y}-{m}-{d} {h}:{i}:{s}'
+  let format = pattern || '{y}-{m}-{d} {h}:{i}:{s}'
   const o = {
     'm+': date.getMonth() + 1,
     'd+': date.getDate(),

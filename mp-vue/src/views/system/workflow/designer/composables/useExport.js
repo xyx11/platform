@@ -5,6 +5,7 @@
 
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { logger } from '@/utils/logger'
 
 /**
  * 导出选项
@@ -73,7 +74,7 @@ export function useExport(options = {}) {
       downloadFile(svg, filename, 'image/svg+xml')
       return svg
     } catch (err) {
-      console.error('导出 SVG 失败:', err)
+      logger.error('导出 SVG 失败:', err)
       throw err
     }
   }
@@ -119,7 +120,7 @@ export function useExport(options = {}) {
         img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)))
       })
     } catch (err) {
-      console.error('导出 PNG 失败:', err)
+      logger.error('导出 PNG 失败:', err)
       throw err
     }
   }
@@ -179,7 +180,7 @@ export function useExport(options = {}) {
       ElMessage.success(`导出 ${EXPORT_OPTIONS[format].label} 成功`)
       return result
     } catch (err) {
-      console.error('导出失败:', err)
+      logger.error('导出失败:', err)
       ElMessage.error('导出失败：' + err.message)
       throw err
     } finally {

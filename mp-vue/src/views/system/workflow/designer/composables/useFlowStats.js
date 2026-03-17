@@ -6,6 +6,7 @@
 import { ref, computed } from 'vue'
 import { getFlowStatistics, calculateComplexity, getComplexityLevel } from '../utils/bpmnStatistics'
 import { validateBpmn } from '../utils/bpmnValidator'
+import { logger } from '@/utils/logger'
 
 /**
  * 流程统计与健康度
@@ -164,7 +165,7 @@ export function useFlowStats(bpmnModeler) {
         flowCount: flows.length
       }
     } catch (error) {
-      console.error('健康检查失败:', error)
+      logger.error('健康检查失败:', error)
       issues.push({ type: 'error', message: '健康检查失败：' + error.message })
     } finally {
       isAnalyzing.value = false
@@ -296,11 +297,43 @@ export function useFlowStats(bpmnModeler) {
     stats.value = getElementStats()
   }
 
+  /**
+   * 获取节点列表
+   */
+  const getNodeList = () => {
+    if (!bpmnModeler?.value) return []
+
+    const elementRegistry = bpmnModeler.value.get('elementRegistry')
+    const elements = elementRegistry.getAll()
+
+    return elements
+      .filter(el => el.type?.includes('Task') || el.type?.includes('Event') || el.type?.includes('Gateway'))
+      .map(el => ({
+        id: el.id,
+        name: el.businessObject?.name || el.id,
+        type: el.type
+      }))
+  }
+
   return {
     // 状态
     stats,
     healthIssues,
     isAnalyzing,
+
+    // 计算属性 - 快速统计
+    quickStats: computed(() => {
+      const elementStats = getElementStats()
+      return {
+        nodes: elementStats?.total || 0,
+        flows: elementStats?.flows || 0,
+        startEvents: elementStats?.startEvents || 0,
+        endEvents: elementStats?.endEvents || 0,
+        tasks: elementStats?.tasks || 0,
+        gateways: elementStats?.gateways || 0
+      }
+    }),
+    nodeList: computed(() => getNodeList()),
 
     // 计算属性
     complexity: computed(() => calculateFlowComplexity()),
@@ -313,6 +346,7 @@ export function useFlowStats(bpmnModeler) {
     refreshStats,
     buildGraph,
     findLongestPath,
-    detectCycle
+    detectCycle,
+    getNodeList
   }
 }

@@ -3,6 +3,8 @@
  * 管理流程设计器的本地备份和模板存储
  */
 
+import { logger } from '@/utils/logger'
+
 const STORAGE_KEYS = {
   AUTO_BACKUP: 'workflow-auto-backup',
   TEMPLATES: 'workflow-templates',
@@ -31,9 +33,9 @@ export function saveAutoBackup(xml, name) {
   try {
     const backup = new BackupData(xml, name)
     localStorage.setItem(STORAGE_KEYS.AUTO_BACKUP, JSON.stringify(backup))
-    console.log('自动备份完成:', backup.timestamp)
+    logger.log('自动备份完成:', backup.timestamp)
   } catch (err) {
-    console.error('保存自动备份失败:', err)
+    logger.error('保存自动备份失败:', err)
   }
 }
 
@@ -47,7 +49,7 @@ export function getAutoBackup() {
   try {
     return JSON.parse(backupStr)
   } catch (err) {
-    console.error('解析自动备份失败:', err)
+    logger.error('解析自动备份失败:', err)
     return null
   }
 }
@@ -80,7 +82,7 @@ export function saveTemplate(template) {
     localStorage.setItem(STORAGE_KEYS.TEMPLATES, JSON.stringify(templates))
     return template.id
   } catch (err) {
-    console.error('保存模板失败:', err)
+    logger.error('保存模板失败:', err)
     return null
   }
 }
@@ -94,7 +96,7 @@ export function getTemplates() {
     const templatesStr = localStorage.getItem(STORAGE_KEYS.TEMPLATES)
     return templatesStr ? JSON.parse(templatesStr) : []
   } catch (err) {
-    console.error('解析模板列表失败:', err)
+    logger.error('解析模板列表失败:', err)
     return []
   }
 }
@@ -110,7 +112,7 @@ export function deleteTemplate(templateId) {
     localStorage.setItem(STORAGE_KEYS.TEMPLATES, JSON.stringify(filtered))
     return true
   } catch (err) {
-    console.error('删除模板失败:', err)
+    logger.error('删除模板失败:', err)
     return false
   }
 }
@@ -140,7 +142,7 @@ export function updateTemplate(templateId, updates) {
     localStorage.setItem(STORAGE_KEYS.TEMPLATES, JSON.stringify(templates))
     return true
   } catch (err) {
-    console.error('更新模板失败:', err)
+    logger.error('更新模板失败:', err)
     return false
   }
 }

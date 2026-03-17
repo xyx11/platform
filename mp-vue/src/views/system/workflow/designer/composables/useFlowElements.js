@@ -6,6 +6,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { BPMN_ELEMENTS, ACTION_TO_ELEMENT, ACTION_MESSAGES, SKIP_SUCCESS_ACTIONS } from '../constants/bpmnElements'
+import { logger } from '@/utils/logger'
 
 /**
  * 流程元素操作
@@ -74,7 +75,7 @@ export function useFlowElements(bpmnModeler) {
         ElMessage.success('已添加元素')
       }
     } catch (err) {
-      console.error('创建元素失败:', err)
+      logger.error('创建元素失败:', err)
       ElMessage.error('创建元素失败：' + err.message)
     }
   }

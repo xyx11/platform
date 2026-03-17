@@ -2,6 +2,8 @@
  * BPMN 验证工具函数
  */
 
+import { logger } from '@/utils/logger'
+
 /**
  * BPMN 基础验证规则
  */
@@ -184,7 +186,7 @@ export function validateBpmnSimple(xml) {
 
     return null
   } catch (e) {
-    console.error('BPMN 验证失败:', e)
+    logger.error('BPMN 验证失败:', e)
     return 'BPMN 验证失败：' + e.message
   }
 }

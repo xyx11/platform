@@ -5,6 +5,7 @@
 
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { logger } from '@/utils/logger'
 
 /**
  * 批量操作类型
@@ -90,7 +91,7 @@ export function useBatchOperation(options = {}) {
       affectedNodes.value = count
       return count
     } catch (error) {
-      console.error('统计节点失败:', error)
+      logger.error('统计节点失败:', error)
       return 0
     }
   }
@@ -185,7 +186,7 @@ export function useBatchOperation(options = {}) {
       batchVisible.value = false
       return true
     } catch (error) {
-      console.error('批量操作失败:', error)
+      logger.error('批量操作失败:', error)
       ElMessage.error('批量操作失败：' + error.message)
       return false
     }

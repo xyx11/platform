@@ -5,6 +5,7 @@
 
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import { ElMessage } from 'element-plus'
+import { logger } from '@/utils/logger'
 
 /**
  * 用户状态
@@ -166,7 +167,7 @@ export function useCollaboration(options = {}) {
    */
   const sendHeartbeat = () => {
     // 模拟发送心跳
-    console.log('发送心跳...', currentUser)
+    logger.log('发送心跳...', currentUser)
   }
 
   /**
@@ -195,7 +196,7 @@ export function useCollaboration(options = {}) {
     if (!connected.value) return
 
     // 模拟同步
-    console.log('同步数据...')
+    logger.log('同步数据...')
   }
 
   /**
@@ -294,7 +295,7 @@ export function useCollaboration(options = {}) {
     if (!connected.value) return
 
     // 模拟广播变更
-    console.log('广播变更:', type, context)
+    logger.log('广播变更:', type, context)
   }
 
   /**

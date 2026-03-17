@@ -1,5 +1,6 @@
 package com.micro.platform.system.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.micro.platform.common.core.result.Result;
 import com.micro.platform.common.log.annotation.OperationLog;
 import com.micro.platform.common.log.annotation.OperationType;
@@ -31,11 +32,18 @@ public class WorkflowFormController {
     @Operation(summary = "获取表单绑定列表")
     @PreAuthorize("@ss.hasPermission('system:workflow:query')")
     @OperationLog(module = "工作流表单", type = OperationType.QUERY)
-    public Result<List<WorkflowFormBinding>> getFormBindingList(
+    public Result<Page<WorkflowFormBinding>> getFormBindingList(
             @RequestParam(required = false) String processDefinitionKey,
-            @RequestParam(required = false) String taskDefinitionKey) {
-        List<WorkflowFormBinding> list = workflowFormService.getFormBindings(processDefinitionKey, taskDefinitionKey);
-        return Result.success(list);
+            @RequestParam(required = false) String taskDefinitionKey,
+            @RequestParam(required = false) String formName,
+            @RequestParam(required = false) String formKey,
+            @RequestParam(required = false) Integer formType,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        Page<WorkflowFormBinding> page = workflowFormService.getFormBindingsPage(
+                processDefinitionKey, taskDefinitionKey, formName, formKey, formType, status, pageNum, pageSize);
+        return Result.success(page);
     }
 
     @GetMapping("/process/{processDefinitionKey}")
@@ -91,5 +99,14 @@ public class WorkflowFormController {
     public Result<Map<String, Object>> getTaskForm(@PathVariable String taskDefinitionKey) {
         Map<String, Object> form = workflowFormService.getTaskForm(taskDefinitionKey);
         return Result.success(form);
+    }
+
+    @PostMapping("/status")
+    @Operation(summary = "更新表单状态")
+    @PreAuthorize("@ss.hasPermission('system:workflow:save')")
+    @OperationLog(module = "工作流表单", type = OperationType.UPDATE)
+    public Result<Void> updateFormStatus(@RequestBody WorkflowFormBinding binding) {
+        workflowFormService.updateFormStatus(binding);
+        return Result.success();
     }
 }

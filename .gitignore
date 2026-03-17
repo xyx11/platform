@@ -57,3 +57,4 @@ logs/*.log
 mp-common/*/target/
 mp-*/target/
 mp-gateway/src/main/resources/application-local.yml
+logs/*.log

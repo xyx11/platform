@@ -3,7 +3,7 @@
  * 封装上下文菜单、快捷操作等功能
  */
 
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
 /**
@@ -224,11 +224,85 @@ export function useContextMenu(options = {}) {
       return
     }
 
-    // bpmn-js 本身不支持对齐，需要手动计算位置
-    ElMessage.info('对齐功能需要选中多个元素')
+    const modeling = bpmnModeler.value.get('modeling')
+    const elementRegistry = bpmnModeler.value.get('elementRegistry')
 
-    // TODO: 实现对齐逻辑
-    // 这里只是一个框架，实际需要对齐需要计算元素位置
+    // 获取所有选中元素的 bounds
+    const bounds = selected.map(el => {
+      const di = elementRegistry.get(el.id).di
+      return {
+        element: el,
+        x: di.bounds.x,
+        y: di.bounds.y,
+        width: di.bounds.width,
+        height: di.bounds.height
+      }
+    })
+
+    try {
+      switch (alignment) {
+        case 'alignLeft': {
+          const minX = Math.min(...bounds.map(b => b.x))
+          bounds.forEach(b => {
+            if (b.element !== bounds[0].element) {
+              modeling.moveElements([b.element], { x: minX - b.x, y: 0 })
+            }
+          })
+          break
+        }
+        case 'alignRight': {
+          const maxX = Math.max(...bounds.map(b => b.x + b.width))
+          bounds.forEach(b => {
+            if (b.element !== bounds[0].element) {
+              modeling.moveElements([b.element], { x: maxX - (b.x + b.width), y: 0 })
+            }
+          })
+          break
+        }
+        case 'alignCenter': {
+          const minX = Math.min(...bounds.map(b => b.x))
+          const maxX = Math.max(...bounds.map(b => b.x + b.width))
+          const centerX = (minX + maxX) / 2
+          bounds.forEach(b => {
+            const newX = centerX - b.width / 2
+            modeling.moveElements([b.element], { x: newX - b.x, y: 0 })
+          })
+          break
+        }
+        case 'alignTop': {
+          const minY = Math.min(...bounds.map(b => b.y))
+          bounds.forEach(b => {
+            if (b.element !== bounds[0].element) {
+              modeling.moveElements([b.element], { x: 0, y: minY - b.y })
+            }
+          })
+          break
+        }
+        case 'alignBottom': {
+          const maxY = Math.max(...bounds.map(b => b.y + b.height))
+          bounds.forEach(b => {
+            if (b.element !== bounds[0].element) {
+              modeling.moveElements([b.element], { x: 0, y: maxY - (b.y + b.height) })
+            }
+          })
+          break
+        }
+        case 'alignMiddle': {
+          const minY = Math.min(...bounds.map(b => b.y))
+          const maxY = Math.max(...bounds.map(b => b.y + b.height))
+          const centerY = (minY + maxY) / 2
+          bounds.forEach(b => {
+            const newY = centerY - b.height / 2
+            modeling.moveElements([b.element], { x: 0, y: newY - b.y })
+          })
+          break
+        }
+      }
+      ElMessage.success('已对齐')
+    } catch (error) {
+      console.error('对齐操作失败:', error)
+      ElMessage.error('对齐失败：' + error.message)
+    }
   }
 
   /**
